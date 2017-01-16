@@ -1,0 +1,1 @@
+catlog = ['File','Edite','Image','Process','Selection','Analysis','Plugins','Window','Help']

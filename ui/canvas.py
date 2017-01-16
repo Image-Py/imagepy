@@ -1,0 +1,213 @@
+"""
+Created on Wed Oct 12 14:15:01 2016
+
+@author: yxl
+"""
+import wx
+import numpy as np
+from math import ceil
+from core.managers import ToolsManager
+
+def cross(r1, r2):
+    x,y = max(r1[0], r2[0]),max(r1[1], r2[1])
+    w = min(r1[0]+r1[2], r2[0]+r2[2])-x
+    h = min(r1[1]+r1[3], r2[1]+r2[3])-y
+    return [x, y, w, h]        
+
+def multiply(r, kx, ky): 
+    r = [r[0]*kx, r[1]*ky, r[2]*kx, r[3]*ky]
+    return [ceil(i) for i in r]
+     
+def lay(r1, r2):
+    if r2[2]<=r1[2]:r2[0]=(r1[2]-r2[2])/2+r1[0]
+    elif r2[0]>r1[0]:r2[0]=r1[0]
+    elif r2[0]+r2[2]<r1[0]+r1[2]:
+        r2[0]=r1[0]+r1[2]-r2[2]
+            
+    if r2[3]<=r1[3]:r2[1]=(r1[3]-r2[3])/2+r1[1]
+    elif r2[1]>r1[1]:r2[1]=r1[1]
+    elif r2[1]+r2[3]<r1[1]+r1[3]:
+        r2[1]=r1[1]+r1[3]-r2[3]
+        
+def trans(r1, r2):
+    return [r2[0]-r1[0], r2[1]-r1[1], r2[2], r2[3]]
+
+class Canvas (wx.Panel):
+    scales = [0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 8, 10]
+    def __init__(self, parent ):
+        wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(300,300), style = wx.TAB_TRAVERSAL )
+        self.initBuffer()
+        self.bindEvents()
+        self.scaleidx = 4
+        self.oldscale = 1
+        self.o = (0,0)
+        self.reInitBuffer = True
+        self.resized = True
+        self.ips = None
+        self.scrsize = wx.DisplaySize()
+        
+    def on_mouseevent(self, me):
+        tool = self.ips.tool
+        if tool == None : tool = ToolsManager.curtool
+        if tool==None:return
+        x,y = self.to_data_coor(me.GetX(), me.GetY())
+        sta = [me.AltDown(), me.ControlDown(), me.ShiftDown()]
+        if me.ButtonDown():tool.mouse_down(self.ips, x, y, me.GetButton(), alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)
+        if me.ButtonUp():tool.mouse_up(self.ips, x, y, me.GetButton(), alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)   
+        if me.Moving():tool.mouse_move(self.ips, x, y, None, alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)
+        btn = [me.LeftIsDown(), me.MiddleIsDown(), me.RightIsDown(),True].index(True)
+        if me.Dragging():tool.mouse_move(self.ips, x, y, 0 if btn==3 else btn+1, alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)
+        wheel = np.sign(me.GetWheelRotation())
+        if wheel!=0:tool.mouse_wheel(self.ips, x, y, wheel, alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)
+        if hasattr(tool, 'cursor'):
+            self.SetCursor(wx.StockCursor(tool.cursor))
+        else : self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+        
+    def bindEvents(self):
+        for event, handler in [ \
+                (wx.EVT_SIZE, self.on_size),
+                (wx.EVT_MOUSE_EVENTS, self.on_mouseevent),      # Draw
+                (wx.EVT_IDLE, self.on_idle),
+                (wx.EVT_PAINT, self.on_paint)]: # Start drawing]:
+            self.Bind(event, handler)       
+        
+    def initBuffer(self):
+        box = self.GetClientSize()
+        self.buffer = wx.EmptyBitmap(box.width, box.height)
+        self.box = [0,0,box[0],box[1]]
+        
+    def self_fit(self):
+        print 'self fit'
+        for i in [4,3,2,1,0]:
+            best = i
+            if self.ips.size[1]*self.scales[i]<=self.scrsize[0]*0.9 and\
+            self.ips.size[0]*self.scales[i]<=self.scrsize[1]*0.9:
+                break
+        self.zoom(self.scales[best], 0, 0)
+        
+        
+    def set_ips(self, ips):
+        self.ips = ips
+        self.imgbox = [0,0,ips.size[1],ips.size[0]]
+        self.bmp = wx.EmptyImage(ips.size[1], ips.size[0])
+        
+    def zoom(self, k, x, y):
+        print 'scale', k
+        k1 = self.oldscale * 1.0
+        self.oldscale = k2 = k
+        self.imgbox[0] = self.imgbox[0] + (k1-k2)*x
+        self.imgbox[1] = self.imgbox[1] + (k1-k2)*y
+        self.imgbox[2] = self.ips.size[1] * k2
+        self.imgbox[3] = self.ips.size[0] * k2
+        lay(self.box, self.imgbox)
+        if self.imgbox[2]<=self.scrsize[0]*0.9 and\
+        self.imgbox[3]<=self.scrsize[1]*0.9:
+            self.SetBestFittingSize((self.imgbox[2], self.imgbox[3]))
+            self.resized=True
+    
+    def move(self, dx, dy):
+        if self.imgbox[2]<=self.box[2] and self.imgbox[3]<=self.box[3]:return
+        self.imgbox[0] += dx
+        self.imgbox[1] += dy
+        self.update()
+        
+    def on_size(self, event):
+        self.reInitBuffer = True
+
+    def on_idle(self, event):
+        if self.reInitBuffer:
+            self.initBuffer()
+            #print 'resized update'
+            self.update()
+            self.reInitBuffer = False
+            self.ips.update = False
+            print 'resize'
+        if self.ips.scrchanged:
+            self.set_ips(self.ips)
+            self.ips.scrchanged = False
+            print 'scr changed'
+        if self.ips.update:
+            #print 'normal update'
+            self.update()
+            self.ips.update = False
+            print 'update'
+    
+    def on_paint(self, event):
+        wx.BufferedPaintDC(self, self.buffer)
+        
+    def draw_image(self, dc, img, rect, scale=None):
+        win = cross(self.box, rect)
+        win2 = trans(rect,win)
+        sx = sy = 1.0/scale
+        if scale==None:
+            sx = img.Width*1.0/rect[2]
+            sy = img.Height*1.0/rect[3]
+        bmp = img.GetSubImage(multiply(win2, sx, sy))
+        bmp = bmp.Scale(ceil(bmp.Width/sx), ceil(bmp.Height/sy))
+        dc.DrawBitmap(wx.BitmapFromImage(bmp), win[0], win[1])
+        if self.ips.roi != None:
+            self.ips.roi.draw(dc, self.to_panel_coor)
+        if self.ips.mark != None:
+            self.ips.mark.draw(dc, self.to_panel_coor)
+        
+    def update(self):
+        print '---'
+        if self.ips == None: return
+        lay(self.box, self.imgbox)
+        dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
+        
+        dc.BeginDrawing()
+        dc.Clear()
+        self.bmp.SetData(np.getbuffer(self.ips.lookup()))
+        self.draw_image(dc, self.bmp, self.imgbox, self.scales[self.scaleidx])
+        if self.ips.roi != None:
+            self.ips.roi.draw(dc, self.to_panel_coor)
+        if self.ips.mark != None:
+            self.ips.mark.draw(dc, self.to_panel_coor)
+        dc.EndDrawing()
+        
+    def zoomout(self, x, y):
+        if self.scaleidx == len(self.scales)-1:return
+        #x,y = self.to_data_coor(x, y)
+        self.scaleidx += 1
+        self.zoom(self.scales[self.scaleidx],x,y)
+        if not self.resized:self.ips.update = True
+        
+    def zoomin(self, x, y):
+        if self.scaleidx == 0:return
+        #x,y = self.to_data_coor(x, y)
+        self.scaleidx -= 1      
+        self.zoom(self.scales[self.scaleidx], x,y)
+        if not self.resized:self.ips.update = True
+    
+    def to_data_coor(self, x, y):
+        x = (x - self.box[0] - self.imgbox[0])
+        y = (y - self.box[1] - self.imgbox[1])
+        return (x/self.scales[self.scaleidx], y/self.scales[self.scaleidx])
+        
+    def to_panel_coor(self, x, y):
+        x = x * self.scales[self.scaleidx] + self.imgbox[0] + self.box[0]
+        y = y * self.scales[self.scaleidx] + self.imgbox[1] + self.box[1]
+        return x,y
+        
+if __name__=='__main__':
+    import sys
+    sys.path.append('../')
+    import numpy as np
+    from imageplus import ImagePlus
+    from scipy.misc import imread
+    img = imread('../imgs/flower.jpg')
+    app = wx.PySimpleApp()
+    frame = wx.Frame(None)
+    canvas = Canvas(frame)
+    ips = ImagePlus(img)
+    canvas.set_ips(ips)
+    canvas.fit = frame
+    canvas.set_handler(TestTool())
+    frame.Fit()
+    frame.Show(True)
+    app.MainLoop() 
+    
+    
+    #r1 = [0,0,20,10]
+    #r2 = [1,2,10,10]

@@ -1,0 +1,1 @@
+catlog = ['threshold_plg','graystairs_plg','brightcons_plg','-','colorbalance_plg','colorstairs_plg']
