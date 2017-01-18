@@ -5,9 +5,10 @@ Created on Sat Nov 26 01:26:25 2016
 @author: yxl
 """
 from core.pixcel import bliter
-from core.engines import Simple, Tool
+from core.engines import Simple, Tool, Filter
 import numpy as np
-from core.managers import ClipBoardManager
+from core.managers import ClipBoardManager, ColorManager
+from core.roi.rectangleroi import RectangleRoi
 
 class PasteMove(Tool):
     def __init__(self):
@@ -43,7 +44,7 @@ class PasteMove(Tool):
             self.ox, self.oy = x, y
             ips.update = True
     
-class Plugin(Simple):
+class Paste(Simple):
     title = 'Paste'
     note = ['all']
     
@@ -62,3 +63,61 @@ class Plugin(Simple):
         ips.tool = PasteMove()
         #nimg.affine_transform(img, np.eye(2), output=buf, offset=()
         
+class Clear(Filter):
+    title = 'Clear'
+    note = ['req_roi', 'all', 'auto_snap', 'not_channel']
+
+    #process
+    def run(self, ips, img, buf, para=None):
+        buf[ips.get_msk()] = ColorManager.get_back(img.ndim==2)
+        
+class ClearOut(Filter):
+    title = 'Clear Out'
+    note = ['req_roi', 'all', 'auto_snap', 'not_channel']
+
+    #process
+    def run(self, ips, img, buf, para=None):
+        buf[ips.get_msk('out')] = ColorManager.get_back(img.ndim==2)
+        
+class Copy(Simple):
+    title = 'Copy'
+    note = ['all']
+    
+    #process
+    def run(self, ips, imgs, para = None):
+        if ips.roi == None:
+            ClipBoardManager.img = ips.get_subimg().copy()
+            ClipBoardManager.roi = RectangleRoi(0, 0, ips.size[1], ips.size[0])
+        else:
+            box = ips.roi.get_box()
+            ClipBoardManager.img = ips.get_subimg().copy()
+            ClipBoardManager.roi = ips.roi.affine(np.eye(2), (-box[0], -box[1]))
+            
+class Sketch(Filter):
+    title = 'Sketch'
+    note = ['req_roi', 'all', 'auto_snap', 'not_channel']
+    
+    #parameter
+    para = {'width':1}
+    view = [(int, (0,30), 0,  u'width', 'width', 'pix')]
+
+    #process
+    def run(self, ips, img, buf, para = None):
+        buf[ips.get_msk(para['width'])] = ColorManager.get_front(img.ndim==2)
+        
+class Fill(Filter):
+    title = 'Fill'
+    note = ['req_roi', 'all', 'auto_snap', 'not_channel']
+
+    #process
+    def run(self, ips, img, buf, para=None):
+        buf[ips.get_msk()] = ColorManager.get_front(img.ndim==2)
+        
+class Undo(Simple):
+    title = 'Undo'
+    note = ['all']
+    #process
+    def run(self, ips, img, buf, para=None):
+        ips.swap()
+        
+plgs = [Undo, '-', Copy, Paste, Sketch, Fill, '-', Clear, ClearOut]

@@ -1,1 +1,1 @@
-catlog = ['undo_plg', '-', 'copy_plg', 'paste_plg', 'draw_plg', 'fill_plg', '-', 'clear_plg', 'clearout_plg']
+#
