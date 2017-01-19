@@ -162,8 +162,8 @@ class ParaDialog (wx.Dialog):
             mint.append(t.GetSize()[0])
             minu.append(u.GetSize()[0])
         for t,u in self.tus:
-            t.SetBestFittingSize((max(mint),-1))
-            u.SetBestFittingSize((max(minu),-1))
+            t.SetInitialSize((max(mint),-1))
+            u.SetInitialSize((max(minu),-1))
         self.Fit()
         
     def para_check(self, para, key):

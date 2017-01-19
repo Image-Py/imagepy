@@ -155,6 +155,6 @@ class Plugin(Tool):
         trans = np.array([[self.para['kx'],0],[0, self.para['ky']]])
         offset = o[::-1]-trans.dot(self.orio)
         if self.para['msk'] and self.bufroi!=None:ips.roi = self.bufroi.affine(trans, offset)
-        if self.para['img'] and ips.get_msk('out')!=None: 
+        if self.para['img'] and not ips.get_msk('out') is None: 
             buf[ips.get_msk('out')] = img[ips.get_msk('out')]
         ips.update = True

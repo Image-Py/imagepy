@@ -59,7 +59,7 @@ class ImagePlus:
         
     def get_msk(self, mode='in'):
         if self.roi==None:return None
-        if self.msk == None:
+        if self.msk is None:
             self.msk = np.zeros(self.size, dtype=np.bool)
         if self.roi.update or mode!=self.mskmode:
             self.msk[:] = 0
@@ -84,13 +84,13 @@ class ImagePlus:
         return self.get_img()[s1, s2]
         
     def snapshot(self):
-        if self.snap==None:
+        if self.snap is None:
             self.snap = self.get_img().copy()
         else: self.snap[...] = self.get_img()
         
     def reset(self, msk=False):
-        if self.snap!=None:
-            if msk and self.get_msk('out')!=None:
+        if not self.snap is None:
+            if msk and  not self.get_msk('out') is None:
                 msk = self.get_msk('out')
                 self.imgs[self.cur][msk] = self.snap[msk]
             else : self.imgs[self.cur][:] = self.snap
@@ -106,7 +106,7 @@ class ImagePlus:
             return self.get_img()
             
     def swap(self):
-        if self.snap==None:return
+        if self.snap is None:return
         self.snap, self.imgs[self.cur] = self.imgs[self.cur], self.snap
 
 if __name__=='__main__':

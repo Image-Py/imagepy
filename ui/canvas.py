@@ -102,7 +102,7 @@ class Canvas (wx.Panel):
         lay(self.box, self.imgbox)
         if self.imgbox[2]<=self.scrsize[0]*0.9 and\
         self.imgbox[3]<=self.scrsize[1]*0.9:
-            self.SetBestFittingSize((self.imgbox[2], self.imgbox[3]))
+            self.SetInitialSize((self.imgbox[2], self.imgbox[3]))
             self.resized=True
     
     def move(self, dx, dy):

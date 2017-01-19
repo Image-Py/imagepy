@@ -13,6 +13,7 @@ class CanvasFrame(wx.Frame):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         
         self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+        self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
         sizer = wx.BoxSizer( wx.VERTICAL )
         self.txt_info = wx.StaticText( self, wx.ID_ANY, u'500*500 pixels 173k', wx.DefaultPosition, wx.DefaultSize, 0 )
         self.txt_info.Wrap( -1 )
@@ -25,7 +26,7 @@ class CanvasFrame(wx.Frame):
         
         self.page = wx.ScrollBar( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SB_HORIZONTAL)
         self.page.SetScrollbar(0,0,0,0, refresh=True)
-        sizer.Add( self.page, 0, wx.ALL|wx.EXPAND, 5 )
+        sizer.Add( self.page, 0, wx.ALL|wx.EXPAND, 0 )
         #self.page.Hide()
         self.SetSizer(sizer)
         self.Layout()

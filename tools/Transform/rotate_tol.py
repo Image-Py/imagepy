@@ -92,7 +92,6 @@ class Plugin(Tool):
         self.going = False
         
     def run(self, ips, img, buf, para = None):
-        print 'kkkkk'
         if para == None: para = self.para
         a = para['ang']/180.0*np.pi
         trans = np.array([[np.cos(a),-np.sin(a)],[np.sin(a),np.cos(a)]])
@@ -105,6 +104,6 @@ class Plugin(Tool):
                 for i in range(ips.chanels):
                     nimg.affine_transform(img[:,:,i], trans, output=buf[:,:,i], offset=offset)
         if self.para['msk'] and self.bufroi!=None:ips.roi = self.bufroi.affine(trans, o[::-1]-trans.dot(o[::-1]))
-        if self.para['img'] and ips.get_msk('out')!=None: 
+        if self.para['img'] and not ips.get_msk('out') is None: 
             buf[ips.get_msk('out')] = img[ips.get_msk('out')]
         ips.update = True

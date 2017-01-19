@@ -15,7 +15,7 @@ def process_chanels(plg, ips, src, des, para):
     if ips.chanels>1 and not 'not_channel' in plg.note:
         for i in range(ips.chanels):
             rst = plg.run(ips, src[:,:,i], des[:,:,i], para)
-            if not rst is des and rst!=None:
+            if not rst is des and not rst is None:
                 des[:,:,i] = rst
     else:
         rst = plg.run(ips, src, des, para)
@@ -29,7 +29,7 @@ def process_one(plg, ips, src, img, para):
     if transint: buf =  img.astype(np.int32)
     if transfloat: buf = img.astype(np.float32)
     rst = process_chanels(plg, ips, src, buf if transint or transfloat else img, para)
-    if not img is rst and rst != None:
+    if not img is rst and not rst is None:
         np.clip(rst, ips.range[0], ips.range[1], out=img)
     if 'auto_msk' in plg.note and ips.get_msk()!=None:
         msk = True-ips.get_msk()

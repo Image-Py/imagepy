@@ -23,7 +23,8 @@ def extend_plugins(path, lst, err):
             rst.append(Macros(i[:-3], cmds))
         else:
             try:
-                plg = __import__(path.replace('/','.')+'.'+i[:-3],'','',[''])
+                rpath = path.replace('/', '.').replace('\\','.')
+                plg = __import__(rpath+'.'+i[:-3],'','',[''])
                 if hasattr(plg, 'plgs'):
                     rst.extend([j for j in plg.plgs])
                     for p in plg.plgs:
@@ -63,7 +64,8 @@ def build_plugins(path, err=None):
             subtree.append(i)
     if len(subtree)==0:return []
     
-    pg = __import__(path.replace('/','.'),'','',[''])
+    rpath = path.replace('/', '.').replace('\\','.')
+    pg = __import__(rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
         subtree = sort_plugins(pg.catlog, subtree)
@@ -84,7 +86,8 @@ def extend_tools(path, lst, err):
             rst.append((Macros(i[:-3], cmds),  path+'/'+i[:-3]+'.gif'))
         else:
             try:
-                plg = __import__(path.replace('/','.')+'.'+i,'','',[''])
+                rpath = path.replace('/', '.').replace('\\','.')
+                plg = __import__(rpath+'.'+i,'','',[''])
                 if hasattr(plg, 'plgs'): 
                     for i,j in plg.plgs: rst.append((i, path+'/'+j))
                 else: rst.append((plg.Plugin, path+'/'+i.split('_')[0]+'.gif'))
@@ -120,8 +123,8 @@ def build_tools(path, err=None):
             elif i[-3:] == '.mc':
                 subtree.append(i)
     if len(subtree)==0:return []
-        
-    pg = __import__(path.replace('/','.'),'','',[''])
+    rpath = path.replace('/', '.').replace('\\','.')
+    pg = __import__(rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
         subtree = sort_tools(pg.catlog, subtree)
