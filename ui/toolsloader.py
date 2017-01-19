@@ -72,8 +72,7 @@ def add_tools(bar, data, curids=[]):
     box.Layout()
     bar.Refresh()
     if curids==None:
-        sp = wx.StaticText( bar, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 2,-1 ), 0 )
-	#sp.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVEBORDER ) )
-	box.Add( sp, 0, wx.ALL|wx.EXPAND, 2 )
+        sp = wx.StaticLine( bar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
+        box.Add( sp, 0, wx.ALL|wx.EXPAND, 2 )
         box.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
         
