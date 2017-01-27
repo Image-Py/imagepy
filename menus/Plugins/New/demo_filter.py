@@ -15,8 +15,8 @@ class Plugin(Filter):
     view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
 
     # handle the image, img -> buf
-    def run(self, ips, img, buf, para = None):
-        nimg.gaussian_filter(img, para['sigma'], output=buf)
+    def run(self, ips, snap, img, para = None):
+        nimg.gaussian_filter(snap, para['sigma'], output=img)
         
 # you can also write muti class in the current modal then:
 # plgs = [class1, class2...]

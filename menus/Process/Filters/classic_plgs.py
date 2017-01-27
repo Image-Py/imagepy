@@ -11,8 +11,8 @@ class Gaussian(Filter):
     view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
 
     #process
-    def run(self, ips, img, buf, para = None):
-        nimg.gaussian_filter(img, para['sigma'], output=buf)
+    def run(self, ips, snap, img, para = None):
+        nimg.gaussian_filter(snap, para['sigma'], output=img)
         
 class Gaussian_laplace(Filter):
     title = 'Gaussian Laplace'
@@ -23,8 +23,8 @@ class Gaussian_laplace(Filter):
     view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
 
     #process
-    def run(self, ips, img, buf, para = None):
-        nimg.gaussian_laplace(img, para['sigma'], output=buf)
+    def run(self, ips, snap, img, para = None):
+        nimg.gaussian_laplace(snap, para['sigma'], output=img)
         
 class Maximum(Filter):
     title = 'Maximum'
@@ -35,8 +35,8 @@ class Maximum(Filter):
     view = [(float, (0,30), 1,  'size', 'size', 'pix')]
 
     #process
-    def run(self, ips, img, buf, para = None):
-        nimg.maximum_filter(img, para['size'], output=buf)
+    def run(self, ips, snap, img, para = None):
+        nimg.maximum_filter(snap, para['size'], output=img)
 
 class Minimum(Filter):
     title = 'Minimum'
@@ -47,8 +47,8 @@ class Minimum(Filter):
     view = [(float, (0,30), 1,  'size', 'size', 'pix')]
 
     #process
-    def run(self, ips, img, buf, para = None):
-        nimg.minimum_filter(img, para['size'], output=buf)
+    def run(self, ips, snap, img, para = None):
+        nimg.minimum_filter(snap, para['size'], output=img)
         
 class Median(Filter):
     title = 'Median'
@@ -59,8 +59,8 @@ class Median(Filter):
     view = [(float, (0,30), 1,  'size', 'size', 'pix')]
 
     #process
-    def run(self, ips, img, buf, para = None):
-        nimg.median_filter(img, para['size'], output=buf)
+    def run(self, ips, snap, img, para = None):
+        nimg.median_filter(snap, para['size'], output=img)
         
 class Prewitt(Filter):
     title = 'Prewitt'
@@ -75,8 +75,25 @@ class Sobel(Filter):
     note = ['all', 'auto_msk', 'auto_snap','preview']
 
     #process
-    def run(self, ips, img, buf, para = None):
-        nimg.sobel(img, output=buf)
+    def run(self, ips, snap, img, para = None):
+        nimg.sobel(snap, output=img)
+        
+class USM(Filter):
+    title = 'Unsharp Mask'
+    note = ['all', 'auto_msk', 'auto_snap', '2int', 'preview']
+
+    #parameter
+    para = {'sigma':2, 'weight':0.5}
+    view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix'),
+            (float, (0,5), 1,  'weight', 'weight', '')]
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        nimg.gaussian_filter(snap, para['sigma'], output=img)
+        img -= snap
+        img *= -para['weight']
+        img += snap
+        
         
 class Gaussian3D(Simple):
     title = 'Gaussian3D'
@@ -90,4 +107,4 @@ class Gaussian3D(Simple):
     def run(self, ips, img, para = None):
         nimg.gaussian_filter(img, para['sigma'], output=img)
         
-plgs = [Gaussian, Gaussian_laplace,'-', Maximum, Minimum, Median, '-', Prewitt, Sobel, '-', Gaussian3D]
+plgs = [Gaussian, Gaussian_laplace,'-', Maximum, Minimum, Median, '-', Prewitt, Sobel, '-', USM, '-', Gaussian3D]

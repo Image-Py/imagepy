@@ -22,8 +22,9 @@ class OpenFile(Free):
 
 class OpenUrl(Free):
     title = 'Open Url'
-    para = {'url':''}
-    view = [(str, 'Url:', 'url', '')]
+    para = {'url':'http://data.imagepy.org/testdata/yxdragon.jpg'}
+    view = [('lab', 'Input the URL, eg. http://data.imagepy.org/testdata/yxdragon.jpg'),
+            (str, 'Url:', 'url', '')]
     
     def run(self, para = None):
         try:

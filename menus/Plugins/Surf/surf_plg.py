@@ -30,10 +30,10 @@ class Surf(Filter):
             (bool, 'extended', 'ext'),
             (bool, 'upright', 'upright')]
             
-    def run(self, ips, src, des, para):
+    def run(self, ips, snap, img, para):
         detector = cv2.SURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
             nOctaveLayers=para['int'], upright=para['upright'],extended=para['ext'])
-        kps = detector.detect(des)
+        kps = detector.detect(img)
         ips.surf_keypoint = kps
         ips.mark = FeatMark(kps)
         IPy.write('Detect completed, %s points found!'%len(kps), 'Surf')

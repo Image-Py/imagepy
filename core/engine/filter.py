@@ -6,7 +6,7 @@ Created on Fri Dec  2 23:48:33 2016
 """
 
 from ui.panelconfig import ParaDialog
-from core.managers import TextLogManager
+from core.managers import TextLogManager, WindowsManager
 import numpy as np
 import IPy
 import wx
@@ -59,6 +59,7 @@ def process_stack(plg, ips, src, imgs, para):
     
 class Filter:
     title = 'Filter'
+    modal = True
     note = []
     'all, 8_bit, 16_bit, rgb, float, not_channel, not_slice, req_roi, auto_snap, auto_msk, preview, 2int, 2float'
     para = None
@@ -68,18 +69,18 @@ class Filter:
         if ips==None:ips = IPy.get_ips()
         self.dialog = None
         self.ips = ips
-    
-    def load(self, ips):return True
         
     def show(self):
-        if self.view==None:return wx.ID_OK
-        self.dialog = ParaDialog(IPy.get_window(), self.title)
-        self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=True)
+        self.dialog = ParaDialog(WindowsManager.get(), self.title)
+        self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
         self.dialog.set_handle(lambda x:self.preview(self.para))
-        return self.dialog.ShowModal()
+        if self.modal: return self.dialog.ShowModal()
+        self.dialog.on_ok = lambda : self.ok(self.ips)
+        self.dialog.on_cancel = lambda : self.cancel(self.ips)
+        self.dialog.Show()
     
-    def run(self, ips, img, buf, para = None):
-        return 255-buf
+    def run(self, ips, snap, img, para = None):
+        return 255-img
         
     def check(self, ips):
         note = self.note
@@ -108,38 +109,50 @@ class Filter:
         process_one(self, self.ips, self.ips.snap, self.ips.get_img(), para)
         self.ips.update = True
         
+    def load(self, ips):return True
+          
+    def ok(self, ips, para=None):
+        if para == None:
+            para = self.para
+            if not 'not_slice' in self.note and ips.get_nslices()>1:
+                if para == None:para = {}
+            if para!=None and para.has_key('stack'):del para['stack']
+        win = TextLogManager.get('Recorder')
+        if ips.get_nslices()==1 or 'not_slice' in self.note:
+            process_one(self, ips, ips.snap, ips.get_img(), para)
+            if win!=None: win.append('%s>%s'%(self.title, para))
+        elif ips.get_nslices()>1:
+            has, rst = para.has_key('stack'), None
+            if not has:
+                rst = IPy.yes_no('run every slice in current stacks?')
+            if 'auto_snap' in self.note:ips.swap()
+            if has and para['stack'] or rst == 'yes':
+                para['stack'] = True
+                process_stack(self, ips, ips.snap, ips.imgs, para)
+                if win!=None: win.append('%s>%s'%(self.title, para))
+            elif has and not para['stack'] or rst == 'no': 
+                para['stack'] = False
+                process_one(self, ips, ips.snap, ips.get_img(), para)
+                if win!=None: win.append('%s>%s'%(self.title, para))
+            elif rst == 'cancel': pass
+        ips.update = True
+        
+    def cancel(self, ips):
+        if 'auto_snap' in self.note:
+            ips.swap()
+            ips.update = True
+            
     def start(self, para=None):
         ips = self.ips
         if not self.check(ips):return
         if not self.load(ips):return
         if 'auto_snap' in self.note:ips.snapshot()
-        if para!=None or self.show() == wx.ID_OK:
-            if para == None:
-                para = self.para
-                if not 'not_slice' in self.note and ips.get_nslices()>1:
-                    if para == None:para = {}
-                if para!=None and para.has_key('stack'):del para['stack']
-            win = TextLogManager.get('Recorder')
-            if ips.get_nslices()==1 or 'not_slice' in self.note:
-                process_one(self, ips, ips.snap, ips.get_img(), para)
-                if win!=None: win.append('%s>%s'%(self.title, para))
-            elif ips.get_nslices()>1:
-                has, rst = para.has_key('stack'), None
-                if not has:
-                    rst = IPy.yes_no('run every slice in current stacks?')
-                if 'auto_snap' in self.note:ips.swap()
-                if has and para['stack'] or rst == 'yes':
-                    para['stack'] = True
-                    process_stack(self, ips, ips.snap, ips.imgs, para)
-                    if win!=None: win.append('%s>%s'%(self.title, para))
-                elif has and not para['stack'] or rst == 'no': 
-                    para['stack'] = False
-                    process_one(self, ips, ips.snap, ips.get_img(), para)
-                    if win!=None: win.append('%s>%s'%(self.title, para))
-                elif rst == 'cancel': pass
-            ips.update = True
-        else : 
-            if 'auto_snap' in self.note:
-                ips.swap()
-                ips.update = True
-        if self.dialog!=None:self.dialog.Destroy()
+        
+        if para!=None or self.view==None:
+            self.on_ok(ips, para)
+        elif self.modal:
+            if self.show() == wx.ID_OK:
+                self.ok(ips)
+            else:self.cancle(ips)
+            self.dialog.Destroy()
+        else: self.show()

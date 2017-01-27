@@ -68,16 +68,16 @@ class Clear(Filter):
     note = ['req_roi', 'all', 'auto_snap', 'not_channel']
 
     #process
-    def run(self, ips, img, buf, para=None):
-        buf[ips.get_msk()] = ColorManager.get_back(img.ndim==2)
+    def run(self, ips, snap, img, para=None):
+        img[ips.get_msk()] = ColorManager.get_back(snap.ndim==2)
         
 class ClearOut(Filter):
     title = 'Clear Out'
     note = ['req_roi', 'all', 'auto_snap', 'not_channel']
 
     #process
-    def run(self, ips, img, buf, para=None):
-        buf[ips.get_msk('out')] = ColorManager.get_back(img.ndim==2)
+    def run(self, ips, snap, img, para=None):
+        img[ips.get_msk('out')] = ColorManager.get_back(snap.ndim==2)
         
 class Copy(Simple):
     title = 'Copy'
@@ -102,16 +102,16 @@ class Sketch(Filter):
     view = [(int, (0,30), 0,  u'width', 'width', 'pix')]
 
     #process
-    def run(self, ips, img, buf, para = None):
-        buf[ips.get_msk(para['width'])] = ColorManager.get_front(img.ndim==2)
+    def run(self, ips, snap, img, para = None):
+        img[ips.get_msk(para['width'])] = ColorManager.get_front(snap.ndim==2)
         
 class Fill(Filter):
     title = 'Fill'
     note = ['req_roi', 'all', 'auto_snap', 'not_channel']
 
     #process
-    def run(self, ips, img, buf, para=None):
-        buf[ips.get_msk()] = ColorManager.get_front(img.ndim==2)
+    def run(self, ips, snap, img, para=None):
+        img[ips.get_msk()] = ColorManager.get_front(snap.ndim==2)
         
 class Undo(Simple):
     title = 'Undo'
@@ -120,4 +120,12 @@ class Undo(Simple):
     def run(self, ips, img, buf, para=None):
         ips.swap()
         
-plgs = [Undo, '-', Copy, Paste, Sketch, Fill, '-', Clear, ClearOut]
+class Invert(Filter):
+    title = 'Invert'
+    note = ['all', 'auto_msk', 'auto_snap', 'preview']
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        np.subtract(ips.range[1], snap, out=img)
+        
+plgs = [Undo, '-', Copy, Paste, Sketch, Fill, Invert, '-', Clear, ClearOut]

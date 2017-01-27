@@ -14,9 +14,8 @@ class ThresholdDialog(ParaDialog):
     def init_view(self, items, para, hist):
         self.histcvs = HistCanvas(self)
         self.histcvs.set_hist(hist)
-        print hist
         self.add_ctrl('hist', self.histcvs)
-        ParaDialog.init_view(self, items, para, True)
+        ParaDialog.init_view(self, items, para, True, False)
     
     def para_check(self, para, key):
         if key=='thr1':para['thr2'] = max(para['thr1'], para['thr2'])
@@ -26,6 +25,7 @@ class ThresholdDialog(ParaDialog):
         return True
         
 class Plugin(Filter):
+    modal = False
     title = 'Threshold'
     note = ['all', 'auto_msk', 'auto_snap','preview']
     
@@ -39,12 +39,19 @@ class Plugin(Filter):
         ips.lut = self.lut.copy()
         return True
         
+    def cancel(self, ips):
+        ips.lut = self.lut
+        ips.update = True
+        
     def show(self):
+        print 'threshold show'
         self.dialog = ThresholdDialog(IPy.get_window(), self.title)
         hist = np.histogram(self.ips.get_img(),range(257))[0]
         self.dialog.init_view(self.view, self.para, (hist*(100.0/hist.max())).astype(np.uint8))
         self.dialog.set_handle(lambda x:self.preview(self.para))
-        return self.dialog.ShowModal()
+        self.dialog.on_ok = lambda : self.ok(self.ips)
+        self.dialog.on_cancel = lambda : self.cancel(self.ips)
+        self.dialog.Show()
 
     def preview(self, para):
         self.ips.lut[:] = self.lut
@@ -53,9 +60,9 @@ class Plugin(Filter):
         self.ips.update = True
     
     #process
-    def run(self, ips, img, buf, para = None):
+    def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         ips.lut = self.lut
-        buf[:] = 0
-        buf[img>=para['thr2']] = 255
-        buf[img<para['thr1']] = 255
+        img[:] = 0
+        img[snap>=para['thr2']] = 255
+        img[snap<para['thr1']] = 255

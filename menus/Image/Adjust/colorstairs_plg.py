@@ -70,12 +70,11 @@ class Plugin(Filter):
         return self.dialog.ShowModal()
 
     #process
-    def run(self, ips, img, buf, para = None):
+    def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         for i, c in zip([0,1,2],['red','green','blue']):
-            buf[:,:,i] = img[:,:,i]
-            buf[:,:,i] -= para['t1_'+c]
-            buf[:,:,i] *= 255.0/max(para['t2_'+c]-para['t1_'+c], 1)
-            buf[:,:,i][img[:,:,i]<para['t1_'+c]] = 0
-            buf[:,:,i][img[:,:,i]>para['t2_'+c]] = 255
-        return buf
+            img[:,:,i] = snap[:,:,i]
+            img[:,:,i] -= para['t1_'+c]
+            img[:,:,i] *= 255.0/max(para['t2_'+c]-para['t1_'+c], 1)
+            img[:,:,i][snap[:,:,i]<para['t1_'+c]] = 0
+            img[:,:,i][snap[:,:,i]>para['t2_'+c]] = 255

@@ -31,10 +31,10 @@ class Plugin(Filter):
         self.ips.update = True
         
     #process
-    def run(self, ips, img, buf, para = None):
+    def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         ips.lut = self.lut
-        msk = buf>para['thr']
+        msk = img>para['thr']
         con = 1 if para['con']=='4-Connect' else 2
         strc = generate_binary_structure(2, con)
         msk = label(msk, strc, output = np.uint16)

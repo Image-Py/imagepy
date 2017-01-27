@@ -63,17 +63,16 @@ class Plugin(Filter):
         return self.dialog.ShowModal()
 
     #process
-    def run(self, ips, img, buf, para = None):
+    def run(self, ips, snap, img, para = None):
         for i, c in zip([0,1,2],['red','green','blue']):
             mid = 128-para['b_'+c]
             length = 255/np.tan(para['c_'+c]/180.0*np.pi)
-            buf[:,:,i] = img[:,:,i]
+            img[:,:,i] = snap[:,:,i]
             if mid-length/2>0:
-                buf[:,:,i] -= mid-length/2
-                buf[:,:,i] *= 255.0/length
+                img[:,:,i] -= mid-length/2
+                img[:,:,i] *= 255.0/length
             else:
-                buf[:,:,i] *= 255.0/length
-                buf[:,:,i] -= (mid-length/2)/length*255
-            buf[:,:,i][img[:,:,i]<mid-length/2] = 0
-            buf[:,:,i][img[:,:,i]>mid+length/2] = 255
-        return buf
+                img[:,:,i] *= 255.0/length
+                img[:,:,i] -= (mid-length/2)/length*255
+            img[:,:,i][snap[:,:,i]<mid-length/2] = 0
+            img[:,:,i][snap[:,:,i]>mid+length/2] = 255

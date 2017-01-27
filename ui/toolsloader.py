@@ -67,7 +67,7 @@ def add_tools(bar, data, curids=[]):
         btn.Bind(wx.EVT_LEFT_DOWN, lambda x, p=i[0]:f(p(), x))
         btn.Bind( wx.EVT_ENTER_WINDOW, lambda x, p='"%s" Tool'%i[0].title: set_info(p))        
         if not isinstance(i[0], Macros) and issubclass(i[0], Tool):
-            btn.Bind(wx.EVT_LEFT_DCLICK, lambda x, p=i[0]:p().config())
+            btn.Bind(wx.EVT_LEFT_DCLICK, lambda x, p=i[0]:p().show())
         btn.SetDefault()
     box.Layout()
     bar.Refresh()

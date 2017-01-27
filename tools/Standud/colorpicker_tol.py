@@ -9,13 +9,13 @@ from core.managers import ColorManager
 
 class Plugin(Tool):
     title = 'Color Picker'
-    cfgp = {'front':(255,255,255), 'back':(0,0,0)}
-    cfgv = [('color', 'front', 'front', 'color'),
+    para = {'front':(255,255,255), 'back':(0,0,0)}
+    view = [('color', 'front', 'front', 'color'),
             ('color', 'back', 'back', 'color')]
         
-    def on_config(self, para):
-        ColorManager.set_front(para['front'])
-        ColorManager.set_back(para['back'])
+    def config(self):
+        ColorManager.set_front(self.para['front'])
+        ColorManager.set_back(self.para['back'])
         
     def mouse_down(self, ips, x, y, btn, **key):
         if btn == 1:ColorManager.set_front(ips.get_img()[int(y), int(x)])

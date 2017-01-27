@@ -73,6 +73,12 @@ class CanvasFrame(wx.Frame):
         self.txt_info.SetLabel(lab)
         if ips.get_nslices() == self.opage:return
         self.opage = ips.get_nslices()
+        if ips.get_nslices()==1 and self.page.Shown:
+            self.page.Hide()
+            self.Fit()
+        elif not self.page.Shown:
+            self.page.Show()
+            self.Fit()
         self.page.SetScrollbar(0, 0, ips.get_nslices()-1, 0, refresh=True)
         print 'o'
         #self.page.Show()

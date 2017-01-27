@@ -11,14 +11,16 @@ class ToolsManager:
     @classmethod
     def set(cls, tool):
         if tool.__class__ == cls.curtool.__class__:return
-        if cls.curtool!=None: cls.curtool.on_switch()
+        if cls.curtool!=None: cls.curtool.switch()
         cls.curtool = tool
         
     @classmethod
     def add(cls, tol):cls.tools[tol.title] = tol
         
     @classmethod
-    def get(cls, name):return cls.tools[name]
+    def get(cls, name=None):
+        if name==None:return cls.curtool
+        return cls.tools[name]
         
 class PluginsManager:
     plgs = {}

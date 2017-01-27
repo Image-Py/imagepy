@@ -49,19 +49,18 @@ class Plugin(Filter):
         return self.dialog.ShowModal()
 
     #process
-    def run(self, ips, img, buf, para = None):
+    def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         mid = 128-para['bright']
         length = 255/np.tan(para['contrast']/180.0*np.pi)
         print 255/np.tan(para['contrast']/180.0*np.pi)/2
         print mid-length/2, mid+length/2
-        buf[:] = img
+        img[:] = snap
         if mid-length/2>0:
-            buf -= mid-length/2
-            buf *= 255.0/length
+            img -= mid-length/2
+            img *= 255.0/length
         else:
-            buf *= 255.0/length
-            buf -= (mid-length/2)/length*255
-        buf[img<mid-length/2] = 0
-        buf[img>mid+length/2] = 255
-        return buf
+            img *= 255.0/length
+            img -= (mid-length/2)/length*255
+        img[snap<mid-length/2] = 0
+        img[snap>mid+length/2] = 255

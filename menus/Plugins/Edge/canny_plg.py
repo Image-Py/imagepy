@@ -6,7 +6,7 @@ from core.engines import Filter
 
 class Plugin(Filter):
     title = 'Canny'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    note = ['all', 'auto_msk', 'auto_snap', 'preview']
     
     para = {'sigma':1.0, 'low_threshold':10, 'high_threshold':20}
     
@@ -16,6 +16,6 @@ class Plugin(Filter):
             ('slide',(0,30), 'high_threshold', 'high_threshold','')]
 
     #process
-    def run(self, ips, img, buf, para = None):
-        return feature.canny(img, sigma=para['sigma'], low_threshold=para[
+    def run(self, ips, snap, img, para = None):
+        return feature.canny(snap, sigma=para['sigma'], low_threshold=para[
             'low_threshold'], high_threshold=para['high_threshold'], mask=ips.get_msk())*255
