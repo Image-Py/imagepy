@@ -15,12 +15,12 @@ The first example: mathematical operations, filter operations.
 <table>
     <tr>
       <td rowspan="2"><img src="http://idoc.imagepy.org/imgs/p2.png"/> </td>
-      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p3.png"/> <br>asd</br></td>
-      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p4.png"/> <br>asd</br></td>
+      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p3.png"/> <br>Original Image</br></td>
+      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p4.png"/> <br>Color Balance</br></td>
     </tr>
     <tr>
-      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p5.png"/><br>asd</br></td>
-      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p6.png"/><br>asd</br></td>
+      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p5.png"/><br>Gauss Laplace</br></td>
+      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p6.png"/><br>UnSharp Mask</br></td>
     </tr>
 </table>
 
