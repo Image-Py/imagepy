@@ -9,10 +9,15 @@ https://github.com/yxdragon/imagepy.git###
 [p2]: /home/yxl/Desktop/imagepydoc/imgs/p2.png "fasfas"
 [p3]: /home/yxl/Desktop/imagepydoc/imgs/p3.png "fasfas"
 
-    | 水果        | 价格    |  数量  |
-    | --------   | -----:   | :----: |
-    | 香蕉        | $1      |   5    |
-    | 苹果        | $1      |   6    |
-    | 草莓        | $1      |   7    |
+<table>
+  <tr>
+    <th>Month</th>
+    <th>Savings</th>
+  </tr>
+  <tr>
+    <td>January</td>
+    <td>$100</td>
+  </tr>
+</table>
 
 main interface
