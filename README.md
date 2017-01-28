@@ -6,7 +6,7 @@ ImagePy Basic Tutorial
 
 main interface
 --------------
-![](./imgs/p1.png "title")  
+![](http://idoc.imagepy.org/imgs/p1.png "title")  
 The main interface consists of four parts, from top to bottom by the title bar, menu bar, toolbar, status bar. 
 Here are a few examples to illustrate what ImagePy can do.
 
@@ -14,39 +14,39 @@ The first example: mathematical operations, filter operations.
 --------------------------------------------------------------
 <table>
     <tr>
-      <td rowspan="2"><img src="./imgs/p2.png"/> </td>
-      <td align="center", valign="top"><img src="./imgs/p3.png"/> <br>asd</br></td>
-      <td align="center", valign="top"><img src="./imgs/p4.png"/> <br>asd</br></td>
+      <td rowspan="2"><img src="http://idoc.imagepy.org/imgs/p2.png"/> </td>
+      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p3.png"/> <br>asd</br></td>
+      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p4.png"/> <br>asd</br></td>
     </tr>
     <tr>
-      <td align="center", valign="top"><img src="./imgs/p5.png"/><br>asd</br></td>
-      <td align="center", valign="top"><img src="./imgs/p6.png"/><br>asd</br></td>
+      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p5.png"/><br>asd</br></td>
+      <td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p6.png"/><br>asd</br></td>
     </tr>
 </table>
 
 **Selection introduction**:
 Selection refers to processing the image only in the the specific identification areas on the image. ImagePy supports single point, multi-point, single line, multi-line, rectangular, circular, arbitrary polygon and free curve selection .It can superimpose something using Shift key, hollow out something using Ctrl key. In addition, all the selection objects can carry on expansion, shrink, convex hull and other geometric operations.
 
-![](./imgs/p10.png "title") ![](./imgs/p11.png "title") ![](./imgs/p12.png "title")  
+![](http://idoc.imagepy.org/imgs/p10.png "title") ![](http://idoc.imagepy.org/imgs/p11.png "title") ![](http://idoc.imagepy.org/imgs/p12.png "title")  
 4)Rectangular selection 5)rectangle + free curve (stroke) 6)free curve (Buffer)  
 
 **Geometric transformation:**ImagePy supports geometric transformations .It can carry out rotation ,translation and other conventional matrix transformations. What’s more, these rotations are interactive and support selection.  
 
-![](./imgs/p13.png "title") ![](./imgs/p14.png "title") ![](./imgs/p15.png "title")  
+![](http://idoc.imagepy.org/imgs/p13.png "title") ![](http://idoc.imagepy.org/imgs/p14.png "title") ![](http://idoc.imagepy.org/imgs/p15.png "title")  
 1) Image rotation 2)Rotation in circular selection 3)Scaling in circular selection  
 
 The second example: An example of a cell count
 ----------------------------------------------
 
 **Look up table introduction:**  
-![](./imgs/p16.png "title") ![](./imgs/p17.png "title") ![](./imgs/p18.png "title")  
+![](http://idoc.imagepy.org/imgs/p16.png "title") ![](http://idoc.imagepy.org/imgs/p17.png "title") ![](http://idoc.imagepy.org/imgs/p18.png "title")  
 1)Original image 2)red look up table 3)ICA look up table
 
 **Index color** is also called false color. The essence of it is to map the gray color to a predefined spectrum. The index color does not increase the amount of information in the image, but does enhance the visual contrast.
 
-![](./imgs/p19.png "title") ![](./imgs/p20.png "title") ![](./imgs/p21.png "title")  
+![](http://idoc.imagepy.org/imgs/p19.png "title") ![](http://idoc.imagepy.org/imgs/p20.png "title") ![](http://idoc.imagepy.org/imgs/p21.png "title")  
 1)Gaussian Blur 2)USM Sharpen 3)Threshold  
-![](./imgs/p22.png "title") ![](./imgs/p23.png "title") ![](./imgs/p24.png "title")  
+![](http://idoc.imagepy.org/imgs/p22.png "title") ![](http://idoc.imagepy.org/imgs/p23.png "title") ![](http://idoc.imagepy.org/imgs/p24.png "title")  
 4)Label, the index color 5)The calculation area centroid 6)Pixel statistics  
 
 Here, for a cell under a microscope, we organize image and go on number statistics.  
@@ -66,13 +66,13 @@ The third examples: Image matching
 Use the Surf feature matching algorithm implemented in OpenCV.
 <table>
     <tr>
-      <td rowspan="2" valign="top"><img src="./imgs/p25.png"/> </td>
-      <td align="center"><img src="./imgs/p26.png"/></td>
+      <td rowspan="2" valign="top"><img src="http://idoc.imagepy.org/imgs/p25.png"/> </td>
+      <td align="center"><img src="http://idoc.imagepy.org/imgs/p26.png"/></td>
     </tr>
     <tr>
       <td align="center">
-        <img src="./imgs/p27.png"/>
-        <img src="./imgs/p28.png"/>
+        <img src="http://idoc.imagepy.org/imgs/p27.png"/>
+        <img src="http://idoc.imagepy.org/imgs/p28.png"/>
       </td>
     </tr>
 </table>
@@ -85,7 +85,7 @@ The fourth example: Dem Reconstruction
 --------------------------------------
 It accesses the mayavi library, builts-in a large number of three-dimensional reconstructions, three-dimensional visualization functions.  
 
-![](./imgs/p29.png "title") ![](./imgs/p30.png "title")  
+![](http://idoc.imagepy.org/imgs/p29.png "title") ![](http://idoc.imagepy.org/imgs/p30.png "title")  
 1) Dem image 2) Reconstructed 3D Surface
 
 **Dem** is the digital elevation model, which means that the brightness of the image represents the elevation. Through the Dem data, you can calculate the height, slope. You can draw contours, and carry on surface reconstruction.
@@ -97,12 +97,12 @@ It represents that the following is a dental MicroCT data .And the data were fil
 
 <table>
     <tr>
-        <td><img src="./imgs/p31.png"/></td>
-        <td valign="top"><img src="./imgs/p32.png"/></td>
+        <td><img src="http://idoc.imagepy.org/imgs/p31.png"/></td>
+        <td valign="top"><img src="http://idoc.imagepy.org/imgs/p32.png"/></td>
     </tr>
         <tr>
-        <td><img src="./imgs/p33.png"/></td>
-        <td><img src="./imgs/p34.png"/></td>
+        <td><img src="http://idoc.imagepy.org/imgs/p33.png"/></td>
+        <td><img src="http://idoc.imagepy.org/imgs/p34.png"/></td>
     </tr>
 </table>
 
@@ -120,27 +120,27 @@ Plugins and macros:
 
 In fact, inside ImagePy, each functional component is plug-in (all menus, tools). The implementation of each function, in essence, is through interaction to get a group of parameters and then acts on the current image. We can view the plug-in's organizational structure by Plugin Tree Veiw, find plug-ins quickly by Plugin List View, record macros by Macros Recorder , batch process when needed and do series of related functions to improve work efficiency.
 
-![](./imgs/p35.png "title") ![](./imgs/p36.png "title")  
+![](http://idoc.imagepy.org/imgs/p35.png "title") ![](http://idoc.imagepy.org/imgs/p36.png "title")  
 From the two views above, you can have a global view of all the plug-ins, like viewing its related information, introduction, source code. You can quickly find the command. You can run the related command directly by double-click.  
 
 **Macro Recording of Cell Count Example:**  
 We open the Plugins -> Macros -> Macros Recorder plug-in, and then re-operate the cell counting process ...
 
 <table>
-    <td><img src="./imgs/p16.png"/></td>
-    <td><img src="./imgs/p19.png"/></td>
-    <td><img src="./imgs/p20.png"/></td>
-    <td><img src="./imgs/p21.png"/></td>
-    <td><img src="./imgs/p37.png"/></td>
-    <td><img src="./imgs/p22.png"/></td>
-    <td><img src="./imgs/p24.png"/></td>
+    <td><img src="http://idoc.imagepy.org/imgs/p16.png"/></td>
+    <td><img src="http://idoc.imagepy.org/imgs/p19.png"/></td>
+    <td><img src="http://idoc.imagepy.org/imgs/p20.png"/></td>
+    <td><img src="http://idoc.imagepy.org/imgs/p21.png"/></td>
+    <td><img src="http://idoc.imagepy.org/imgs/p37.png"/></td>
+    <td><img src="http://idoc.imagepy.org/imgs/p22.png"/></td>
+    <td><img src="http://idoc.imagepy.org/imgs/p24.png"/></td>
 </table>
 
 After each step, Macros Recorder will add a log. All completed, you can get the following log:
 
 These logs, each line essentially records “plug-in name> {parameter}”. Click “Run> Run Macros (F5)” to perform each action of the record in turn. You can also use the mouse to select a line or a few lines. Click “Run> Run Line (F6)” to implement the selected line. In addition macros have the following characteristics.
 
-![](./imgs/p38.png "title") ![](./imgs/p16.png "title") ![](./imgs/p22.png "title") 
+![](http://idoc.imagepy.org/imgs/p38.png "title") ![](http://idoc.imagepy.org/imgs/p16.png "title") ![](http://idoc.imagepy.org/imgs/p22.png "title") 
 
 1. You can save a file where the suffix of macro is (.mc). You can run the specified macro file via Plugins -> Macros -> Run Macros.  
 2. Put the macro file on the menus directory or any of its subdirectories in the project. Starting once again, the macro will be loaded as a menu item. The title is the file name. In fact, some project function are in series by the macro.  
@@ -168,7 +168,7 @@ class Gaussian(Filter):
         nimg.gaussian_filter(snap, para['sigma'], output=img)
 ```
 
-![](./imgs/p39.png "title") ![](./imgs/p40.png "title")  
+![](http://idoc.imagepy.org/imgs/p39.png "title") ![](http://idoc.imagepy.org/imgs/p40.png "title")  
 1)dialog auto-build 2)result with a oval selection.  
 
 Create Filter:  
@@ -220,7 +220,7 @@ class Plugin(Tool):
   def mouse_wheel(self, ips, x, y, d, **key):pass
 ```
 
-![](./imgs/p41.png "title") ![](./imgs/p42.png "title")   
+![](http://idoc.imagepy.org/imgs/p41.png "title") ![](http://idoc.imagepy.org/imgs/p42.png "title")   
 1)config the line width 2)draw with difference line width  
 
 **Create Tool:**
@@ -242,12 +242,12 @@ I used ImageJ for a long time and also used to use Python for scientific computi
 3. Python has simple grammar so it is easy to learn. It is a good choice for non-computer professionals.  
 4. Python has a wealth of third-party extensions, such as Scikit-image, OpenCV, Matplotlib, Mayavi and so on.  
 5. Almost all scientific computing class libraries are based on Numpy! so the framework can be built easily.  
-6. 6)Python can be extended by C/C++ with ctypes.  
+6. Python can be extended by C/C++ with ctypes.  
 
 Because of busy work, I wrote ImagePy in my spare time. All of the development work lasted about two months. Personally I think that this efficiency is mainly due to a large number of third-party libraries of Python as well as the project’s "borrowlism " design ideas. The project uses wxpython as the interface library, Numpy as the base data type. Because the time is short, many interactive details of the plug-in will exist problems, you can give a positive feedback to me. I do my best to safeguard the healthy growth of this project.  
 
 [https://github.com/yxdragon/imagepy.git](https://github.com/yxdragon/imagepy.git)
 
-![](./imgs/p43.png "title")  
+![](http://idoc.imagepy.org/imgs/p43.png "title")  
 It is me, yxdragon.  
 Email:imagepy@sina.com  
