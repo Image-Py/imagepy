@@ -6,47 +6,47 @@ ImagePy Basic Tutorial
 
 main interface
 --------------
-![](http://idoc.imagepy.org/imgs/p1.png "title")  
+![](./imgs/p1.png "title")  
 The main interface consists of four parts, from top to bottom by the title bar, menu bar, toolbar, status bar. 
 Here are a few examples to illustrate what ImagePy can do.
 
 The first example: mathematical operations, filter operations.
 --------------------------------------------------------------
 <table>
-  	<tr>
-  		<td rowspan="2"><img src="http://idoc.imagepy.org/imgs/p2.png"/> </td>
-  		<td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p3.png"/> <br>asd</br></td>
-  		<td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p4.png"/> <br>asd</br></td>
-  	</tr>
-  	<tr>
-  		<td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p5.png"/><br>asd</br></td>
-  		<td align="center", valign="top"><img src="http://idoc.imagepy.org/imgs/p6.png"/><br>asd</br></td>
-  	</tr>
+    <tr>
+      <td rowspan="2"><img src="./imgs/p2.png"/> </td>
+      <td align="center", valign="top"><img src="./imgs/p3.png"/> <br>asd</br></td>
+      <td align="center", valign="top"><img src="./imgs/p4.png"/> <br>asd</br></td>
+    </tr>
+    <tr>
+      <td align="center", valign="top"><img src="./imgs/p5.png"/><br>asd</br></td>
+      <td align="center", valign="top"><img src="./imgs/p6.png"/><br>asd</br></td>
+    </tr>
 </table>
 
 **Selection introduction**:
 Selection refers to processing the image only in the the specific identification areas on the image. ImagePy supports single point, multi-point, single line, multi-line, rectangular, circular, arbitrary polygon and free curve selection .It can superimpose something using Shift key, hollow out something using Ctrl key. In addition, all the selection objects can carry on expansion, shrink, convex hull and other geometric operations.
 
-![](http://idoc.imagepy.org/imgs/p10.png "title") ![](http://idoc.imagepy.org/imgs/p11.png "title") ![](http://idoc.imagepy.org/imgs/p12.png "title")  
+![](./imgs/p10.png "title") ![](./imgs/p11.png "title") ![](./imgs/p12.png "title")  
 4)Rectangular selection 5)rectangle + free curve (stroke) 6)free curve (Buffer)  
 
 **Geometric transformation:**ImagePy supports geometric transformations .It can carry out rotation ,translation and other conventional matrix transformations. What’s more, these rotations are interactive and support selection.  
 
-![](http://idoc.imagepy.org/imgs/p13.png "title") ![](http://idoc.imagepy.org/imgs/p14.png "title") ![](http://idoc.imagepy.org/imgs/p15.png "title")  
+![](./imgs/p13.png "title") ![](./imgs/p14.png "title") ![](./imgs/p15.png "title")  
 1) Image rotation 2)Rotation in circular selection 3)Scaling in circular selection  
 
 The second example: An example of a cell count
 ----------------------------------------------
 
 **Look up table introduction:**  
-![](http://idoc.imagepy.org/imgs/p16.png "title") ![](http://idoc.imagepy.org/imgs/p17.png "title") ![](http://idoc.imagepy.org/imgs/p18.png "title")  
+![](./imgs/p16.png "title") ![](./imgs/p17.png "title") ![](./imgs/p18.png "title")  
 1)Original image 2)red look up table 3)ICA look up table
 
 **Index color** is also called false color. The essence of it is to map the gray color to a predefined spectrum. The index color does not increase the amount of information in the image, but does enhance the visual contrast.
 
-![](http://idoc.imagepy.org/imgs/p19.png "title") ![](http://idoc.imagepy.org/imgs/p20.png "title") ![](http://idoc.imagepy.org/imgs/p21.png "title")  
+![](./imgs/p19.png "title") ![](./imgs/p20.png "title") ![](./imgs/p21.png "title")  
 1)Gaussian Blur 2)USM Sharpen 3)Threshold  
-![](http://idoc.imagepy.org/imgs/p22.png "title") ![](http://idoc.imagepy.org/imgs/p23.png "title") ![](http://idoc.imagepy.org/imgs/p24.png "title")  
+![](./imgs/p22.png "title") ![](./imgs/p23.png "title") ![](./imgs/p24.png "title")  
 4)Label, the index color 5)The calculation area centroid 6)Pixel statistics  
 
 Here, for a cell under a microscope, we organize image and go on number statistics.  
@@ -64,17 +64,17 @@ The third examples: Image matching
 ----------------------------------
 
 Use the Surf feature matching algorithm implemented in OpenCV.
-<table cellpadding="1dp">
-  	<tr>
-  		<td rowspan="2" valign="top" cellpadding="1dp"><img src="http://idoc.imagepy.org/imgs/p25.png"/> </td>
-  		<td align="center" cellpadding="1dp"><img src="http://idoc.imagepy.org/imgs/p26.png"/></td>
-  	</tr>
-  	<tr>
-  		<td align="center">
-  			<img src="http://idoc.imagepy.org/imgs/p27.png"/>
-  			<img src="http://idoc.imagepy.org/imgs/p28.png"/>
-  		</td>
-  	</tr>
+<table>
+    <tr>
+      <td rowspan="2" valign="top"><img src="./imgs/p25.png"/> </td>
+      <td align="center"><img src="./imgs/p26.png"/></td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="./imgs/p27.png"/>
+        <img src="./imgs/p28.png"/>
+      </td>
+    </tr>
 </table>
 
 1. The two graphs are covered by points, that is, Surf feature points, where the correct match is shown in yellow.  
@@ -85,7 +85,7 @@ The fourth example: Dem Reconstruction
 --------------------------------------
 It accesses the mayavi library, builts-in a large number of three-dimensional reconstructions, three-dimensional visualization functions.  
 
-![](http://idoc.imagepy.org/imgs/p29.png "title") ![](http://idoc.imagepy.org/imgs/p30.png "title")  
+![](./imgs/p29.png "title") ![](./imgs/p30.png "title")  
 1) Dem image 2) Reconstructed 3D Surface
 
 **Dem** is the digital elevation model, which means that the brightness of the image represents the elevation. Through the Dem data, you can calculate the height, slope. You can draw contours, and carry on surface reconstruction.
@@ -95,14 +95,17 @@ The fifth example: CT data 3D reconstruction
 
 It represents that the following is a dental MicroCT data .And the data were filtered, segmented and three-dimensional reconstructed, visually operated.
 
-<div>
-	<div style="float:left;margin:3px"><img src="http://idoc.imagepy.org/imgs/p31.png"/> </div>
-	<div style="float:left;margin:3px"><img src="http://idoc.imagepy.org/imgs/p32.png"/> </div>
-	<div style="clear:both"></div>
-	<div style="float:left;margin:3px"><img src="http://idoc.imagepy.org/imgs/p33.png"/> </div>
-	<div style="float:left;margin:3px"><img src="http://idoc.imagepy.org/imgs/p34.png"/> </div>
-	<div style="clear:both"></div>
-</div>
+<table>
+    <tr>
+        <td><img src="./imgs/p31.png"/></td>
+        <td valign="top"><img src="./imgs/p32.png"/></td>
+    </tr>
+        <tr>
+        <td><img src="./imgs/p33.png"/></td>
+        <td><img src="./imgs/p34.png"/></td>
+    </tr>
+</table>
+
 
 
 
@@ -117,28 +120,27 @@ Plugins and macros:
 
 In fact, inside ImagePy, each functional component is plug-in (all menus, tools). The implementation of each function, in essence, is through interaction to get a group of parameters and then acts on the current image. We can view the plug-in's organizational structure by Plugin Tree Veiw, find plug-ins quickly by Plugin List View, record macros by Macros Recorder , batch process when needed and do series of related functions to improve work efficiency.
 
-![](http://idoc.imagepy.org/imgs/p35.png "title") ![](http://idoc.imagepy.org/imgs/p36.png "title")  
+![](./imgs/p35.png "title") ![](./imgs/p36.png "title")  
 From the two views above, you can have a global view of all the plug-ins, like viewing its related information, introduction, source code. You can quickly find the command. You can run the related command directly by double-click.  
 
 **Macro Recording of Cell Count Example:**  
 We open the Plugins -> Macros -> Macros Recorder plug-in, and then re-operate the cell counting process ...
 
-<div>
-  	<div style="float:left;width:14%;margin:1px"><img src="http://idoc.imagepy.org/imgs/p16.png"/></div>
-  	<div style="float:left;width:14%;margin:1px"><img src="http://idoc.imagepy.org/imgs/p19.png"/></div>
-  	<div style="float:left;width:14%;margin:1px"><img src="http://idoc.imagepy.org/imgs/p20.png"/></div>
-  	<div style="float:left;width:14%;margin:1px"><img src="http://idoc.imagepy.org/imgs/p21.png"/></div>
-  	<div style="float:left;width:14%;margin:1px"><img src="http://idoc.imagepy.org/imgs/p37.png"/></div>
-  	<div style="float:left;width:14%;margin:1px"><img src="http://idoc.imagepy.org/imgs/p22.png"/></div>
-  	<div style="float:left;width:14%;margin:1px"><img src="http://idoc.imagepy.org/imgs/p24.png"/></div>
-  	<div style="clear:both">
-</div>
+<table>
+    <td><img src="./imgs/p16.png"/></td>
+    <td><img src="./imgs/p19.png"/></td>
+    <td><img src="./imgs/p20.png"/></td>
+    <td><img src="./imgs/p21.png"/></td>
+    <td><img src="./imgs/p37.png"/></td>
+    <td><img src="./imgs/p22.png"/></td>
+    <td><img src="./imgs/p24.png"/></td>
+</table>
 
 After each step, Macros Recorder will add a log. All completed, you can get the following log:
 
 These logs, each line essentially records “plug-in name> {parameter}”. Click “Run> Run Macros (F5)” to perform each action of the record in turn. You can also use the mouse to select a line or a few lines. Click “Run> Run Line (F6)” to implement the selected line. In addition macros have the following characteristics.
 
-![](http://idoc.imagepy.org/imgs/p38.png "title") ![](http://idoc.imagepy.org/imgs/p16.png "title") ![](http://idoc.imagepy.org/imgs/p22.png "title") 
+![](./imgs/p38.png "title") ![](./imgs/p16.png "title") ![](./imgs/p22.png "title") 
 
 1. You can save a file where the suffix of macro is (.mc). You can run the specified macro file via Plugins -> Macros -> Run Macros.  
 2. Put the macro file on the menus directory or any of its subdirectories in the project. Starting once again, the macro will be loaded as a menu item. The title is the file name. In fact, some project function are in series by the macro.  
@@ -166,7 +168,7 @@ class Gaussian(Filter):
         nimg.gaussian_filter(snap, para['sigma'], output=img)
 ```
 
-![](http://idoc.imagepy.org/imgs/p39.png "title") ![](http://idoc.imagepy.org/imgs/p40.png "title")  
+![](./imgs/p39.png "title") ![](./imgs/p40.png "title")  
 1)dialog auto-build 2)result with a oval selection.  
 
 Create Filter:  
@@ -193,32 +195,32 @@ from core.engines import Tool
 import wx
 
 class Plugin(Tool):
-	title = 'Pencil'
-	para = {'width':1}
-	view = [(int, (0,30), 0, 'width', 'width', 'pix')]
+  title = 'Pencil'
+  para = {'width':1}
+  view = [(int, (0,30), 0, 'width', 'width', 'pix')]
 
-	def __init__(self):
-		self.sta = 0
-		self.paint = paint.Paint()
-		self.cursor = wx.CURSOR_CROSS
+  def __init__(self):
+    self.sta = 0
+    self.paint = paint.Paint()
+    self.cursor = wx.CURSOR_CROSS
 
-	def mouse_down(self, ips, x, y, btn, **key):
-		self.sta = 1
-		self.paint.set_curpt(x,y)
-		ips.snapshot()
+  def mouse_down(self, ips, x, y, btn, **key):
+    self.sta = 1
+    self.paint.set_curpt(x,y)
+    ips.snapshot()
 
-	def mouse_up(self, ips, x, y, btn, **key):
-		self.sta = 0
+  def mouse_up(self, ips, x, y, btn, **key):
+    self.sta = 0
 
-	def mouse_move(self, ips, x, y, btn, **key):
-		if self.sta==0:return
-		self.paint.lineto(ips.get_img(),x,y, self.para['width'])
-		ips.update = True
+  def mouse_move(self, ips, x, y, btn, **key):
+    if self.sta==0:return
+    self.paint.lineto(ips.get_img(),x,y, self.para['width'])
+    ips.update = True
 
-	def mouse_wheel(self, ips, x, y, d, **key):pass
+  def mouse_wheel(self, ips, x, y, d, **key):pass
 ```
 
-![](http://idoc.imagepy.org/imgs/p41.png "title") ![](http://idoc.imagepy.org/imgs/p42.png "title")   
+![](./imgs/p41.png "title") ![](./imgs/p42.png "title")   
 1)config the line width 2)draw with difference line width  
 
 **Create Tool:**
@@ -246,6 +248,6 @@ Because of busy work, I wrote ImagePy in my spare time. All of the development w
 
 [https://github.com/yxdragon/imagepy.git](https://github.com/yxdragon/imagepy.git)
 
-![](http://idoc.imagepy.org/imgs/p43.png "title")  
+![](./imgs/p43.png "title")  
 It is me, yxdragon.  
 Email:imagepy@sina.com  
