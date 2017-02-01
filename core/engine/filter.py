@@ -19,7 +19,7 @@ def process_chanels(plg, ips, src, des, para):
                 des[:,:,i] = rst
     else:
         rst = plg.run(ips, src, des, para)
-        if not rst is des and rst!=None:
+        if not rst is des and not rst is None:
             des[:] = rst
     return des
     
@@ -31,7 +31,7 @@ def process_one(plg, ips, src, img, para):
     rst = process_chanels(plg, ips, src, buf if transint or transfloat else img, para)
     if not img is rst and not rst is None:
         np.clip(rst, ips.range[0], ips.range[1], out=img)
-    if 'auto_msk' in plg.note and ips.get_msk()!=None:
+    if 'auto_msk' in plg.note and not ips.get_msk() is None:
         msk = True-ips.get_msk()
         img[msk] = src[msk]
     return img
@@ -50,7 +50,7 @@ def process_stack(plg, ips, src, imgs, para):
         rst = process_chanels(plg, ips, src, buf if transint or transfloat else i, para)
         if not i is rst and rst != None:
             np.clip(rst, ips.range[0], ips.range[1], out=i)
-        if 'auto_msk' in plg.note and ips.get_msk()!=None:
+        if 'auto_msk' in plg.note and not ips.get_msk() is None:
             msk = True - ips.get_msk()
             i[msk] = src[msk]
     IPy.curapp.set_progress(0)
@@ -149,10 +149,10 @@ class Filter:
         if 'auto_snap' in self.note:ips.snapshot()
         
         if para!=None or self.view==None:
-            self.on_ok(ips, para)
+            self.ok(ips, para)
         elif self.modal:
             if self.show() == wx.ID_OK:
                 self.ok(ips)
-            else:self.cancle(ips)
+            else:self.cancel(ips)
             self.dialog.Destroy()
         else: self.show()
