@@ -15,15 +15,16 @@ class Plugin(Tool):
         self.odx, self.ody = 0, 0
             
     def mouse_down(self, ips, x, y, btn, **key):
+        lim = 5.0/key['canvas'].get_scale()
         if btn==1:
             if ips.roi!=None:
-                self.curobj = ips.roi.pick(x, y)
+                self.curobj = ips.roi.pick(x, y, lim)
             if self.curobj!=None:return
             if not isinstance(ips.roi, pointroi.PointRoi):
                 ips.roi = pointroi.PointRoi()
             if not key['shift']:del ips.roi.body[:]
             ips.roi.add((x,y))
-            self.curobj = ips.roi.pick(x,y)
+            self.curobj = ips.roi.pick(x,y, lim)
             ips.update = True
             self.odx, self.ody = x, y
     
@@ -32,9 +33,10 @@ class Plugin(Tool):
     
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
+        lim = 5.0/key['canvas'].get_scale()
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
-            if ips.roi.snap(x, y)!=None:
+            if ips.roi.snap(x, y, lim)!=None:
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
             ips.roi.draged(self.odx, self.ody, x, y, self.curobj)

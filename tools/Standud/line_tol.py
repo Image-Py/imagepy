@@ -24,8 +24,6 @@ class Linebuf:
         a = self.buf
         self.buf = []
         return a
-        
-from core.engines import Tool
 
 class Plugin(Tool):
     title = 'Line'
@@ -36,12 +34,13 @@ class Plugin(Tool):
         self.odx,self.ody = 0, 0
             
     def mouse_down(self, ips, x, y, btn, **key):
+        lim = 5.0/key['canvas'].get_scale()  
         ips.mark = self.helper
         if btn==1:
             # 如果有没有在绘制中，且已经有roi，则试图选取
             if not self.doing:
                 if ips.roi!= None:
-                    self.curobj = ips.roi.pick(x, y)
+                    self.curobj = ips.roi.pick(x, y, lim)
                 if self.curobj!=None:return
                     
                 if ips.roi == None:
@@ -67,9 +66,10 @@ class Plugin(Tool):
     
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
+        lim = 5.0/key['canvas'].get_scale()          
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
-            if ips.roi.snap(x, y)!=None:
+            if ips.roi.snap(x, y, lim)!=None:
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
             ips.roi.draged(self.odx, self.ody, x, y, self.curobj)

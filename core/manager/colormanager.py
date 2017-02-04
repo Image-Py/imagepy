@@ -51,8 +51,8 @@ class ColorManager:
         return np.dot((cls.wr,cls.wg,cls.wb), cls.backcolor)
         
     @classmethod
-    def get_lut(cls, name='grey'):
-        if name=='grey':
+    def get_lut(cls, name='grays'):
+        if name=='grays':
             lut = np.arange(256).reshape((-1,1))
             return (lut*np.ones((1,3))).astype(np.uint8)
         else: return cls.luts[name].copy()

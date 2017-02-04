@@ -11,7 +11,7 @@ import IPy
 
 class Union(Simple):
     title = 'Union'
-    note = ['all']
+    note = ['all', 'req_roi']
     para = {'name':''}
     
     def load(self, ips):
@@ -28,7 +28,7 @@ class Union(Simple):
         
 class Diff(Simple):
     title = 'Difference'
-    note = ['all']
+    note = ['all', 'req_roi']
     para = {'name':''}
     
     def load(self, ips):

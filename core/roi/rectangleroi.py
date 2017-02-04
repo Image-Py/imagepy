@@ -18,15 +18,15 @@ class RectangleRoi(ROI):
         self.lt, self.tp, self.rt, self.bm = l, t, r, b
         self.commit()
     
-    def snap(self, x, y):
-        if abs(x-self.lt)<3 and abs(y-(self.tp+self.bm)/2)<3:return 'l'
-        if abs(x-self.rt)<3 and abs(y-(self.tp+self.bm)/2)<3:return 'r'
-        if abs(x-(self.lt+self.rt)/2)<3 and abs(y-self.tp)<3:return 't'
-        if abs(x-(self.lt+self.rt)/2)<3 and abs(y-self.bm)<3:return 'b'
-        if abs(x-self.lt)<3 and abs(y-self.tp)<3:return 'lt'
-        if abs(x-self.rt)<3 and abs(y-self.bm)<3:return 'rb'
-        if abs(x-self.rt)<3 and abs(y-self.tp)<3:return 'rt'
-        if abs(x-self.lt)<3 and abs(y-self.bm)<3:return 'lb'
+    def snap(self, x, y, lim):
+        if abs(x-self.lt)<lim and abs(y-(self.tp+self.bm)/2)<lim:return 'l'
+        if abs(x-self.rt)<lim and abs(y-(self.tp+self.bm)/2)<lim:return 'r'
+        if abs(x-(self.lt+self.rt)/2)<lim and abs(y-self.tp)<lim:return 't'
+        if abs(x-(self.lt+self.rt)/2)<lim and abs(y-self.bm)<lim:return 'b'
+        if abs(x-self.lt)<lim and abs(y-self.tp)<lim:return 'lt'
+        if abs(x-self.rt)<lim and abs(y-self.bm)<lim:return 'rb'
+        if abs(x-self.rt)<lim and abs(y-self.tp)<lim:return 'rt'
+        if abs(x-self.lt)<lim and abs(y-self.bm)<lim:return 'lb'
         return None
     
     def commit(self):
@@ -38,8 +38,8 @@ class RectangleRoi(ROI):
             self.body = [(l,b),(r,b),(r,t),(l,t),(l,b)]
             return True
         
-    def pick(self, x, y):
-        rst = self.snap(x,y)
+    def pick(self, x, y, lim):
+        rst = self.snap(x,y, lim)
         if rst != None:return rst
         if (x-self.lt)*(x-self.rt)<0 and (y-self.tp)*(y-self.bm)<0:
             return True

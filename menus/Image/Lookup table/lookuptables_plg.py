@@ -12,7 +12,6 @@ import numpy as np
 from core.engines import Free
 
 class Plugin(Free):
-    note = ['no_img']
     def __init__(self, key):
         self.title = key
     
@@ -38,6 +37,9 @@ class Plugin(Free):
         return self
           
 plgs = [Plugin(i) for i in ColorManager.luts.keys()]
+for i in range(len(plgs)):
+    if plgs[i].title == 'Grays':
+        plgs.insert(0, plgs.pop(i))
 
 if __name__ == '__main__':
     print ColorManager.luts.keys()

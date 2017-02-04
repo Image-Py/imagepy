@@ -180,14 +180,17 @@ class Canvas (wx.Panel):
         self.zoom(self.scales[self.scaleidx], x,y)
         if not self.resized:self.ips.update = True
     
+    def get_scale(self):
+        return self.scales[self.scaleidx]
+        
     def to_data_coor(self, x, y):
         x = (x - self.box[0] - self.imgbox[0])
         y = (y - self.box[1] - self.imgbox[1])
-        return (x/self.scales[self.scaleidx], y/self.scales[self.scaleidx])
+        return (x/self.get_scale(), y/self.get_scale())
         
     def to_panel_coor(self, x, y):
-        x = x * self.scales[self.scaleidx] + self.imgbox[0] + self.box[0]
-        y = y * self.scales[self.scaleidx] + self.imgbox[1] + self.box[1]
+        x = x * self.get_scale() + self.imgbox[0] + self.box[0]
+        y = y * self.get_scale() + self.imgbox[1] + self.box[1]
         return x,y
         
 if __name__=='__main__':

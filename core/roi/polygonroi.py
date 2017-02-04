@@ -59,17 +59,17 @@ class PolygonRoi(ROI):
         self.body = parse_mpoly(rst)
         self.update, self.infoupdate = True, True
         
-    def snap(self, x, y):
+    def snap(self, x, y, lim):
         if not self.issimple():return None
-        cur, minl = None, 1000
+        cur, minl = None, 10000
         for i in self.body[0][0]:
             d = (i[0]-x)**2+(i[1]-y)**2
             if d < minl:cur,minl = i,d
-        if minl>9:return None
+        if minl**0.5>lim:return None
         return self.body[0][0], self.body[0][0].index(cur)
 
-    def pick(self, x, y):
-        rst = self.snap(x, y)
+    def pick(self, x, y, lim):
+        rst = self.snap(x, y, lim)
         if rst!=None:return rst
                 
         pgs = []

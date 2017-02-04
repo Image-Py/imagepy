@@ -19,11 +19,12 @@ class Plugin(Tool):
         self.helper = Polygonbuf()
             
     def mouse_down(self, ips, x, y, btn, **key): 
+        lim = 5.0/key['canvas'].get_scale()
         ips.mark = self.helper
         if btn==1:
             if not self.doing:
                 if ips.roi!= None:
-                    self.curobj = ips.roi.pick(x, y)
+                    self.curobj = ips.roi.pick(x, y, lim)
                 if not self.curobj in (None,True):return
                 self.oper = '+'
                 if ips.roi==None or not hasattr(ips.roi, 'topolygon'):
@@ -66,9 +67,10 @@ class Plugin(Tool):
         
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
+        lim = 5.0/key['canvas'].get_scale()         
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
-            if ips.roi.snap(x, y)!=None:
+            if ips.roi.snap(x, y, lim)!=None:
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
             if ips.roi.dtype == 'polygon' and self.doing:

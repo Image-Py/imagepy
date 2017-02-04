@@ -24,13 +24,13 @@ class LineRoi(ROI):
             self.update, self.infoupdate = True, True
             return True
     
-    def snap(self, x, y):
+    def snap(self, x, y, lim):
         minl, idx = 1000, None
         for i in self.body:
             for j in i:
                 d = (j[0]-x)**2+(j[1]-y)**2
                 if d < minl:minl,idx = d,(i, i.index(j))
-        return idx if minl<9 else None
+        return idx if minl**0.5<lim else None
         
     def countbox(self):
         self.box = [1000,1000,-1000,-1000]
@@ -47,8 +47,8 @@ class LineRoi(ROI):
             self.infoupdate=False
         return self.box
         
-    def pick(self, x, y):
-        return self.snap(x, y)
+    def pick(self, x, y, lim):
+        return self.snap(x, y, lim)
 
     def draged(self, ox, oy, nx, ny, i):
         i[0][i[1]] = (nx, ny)

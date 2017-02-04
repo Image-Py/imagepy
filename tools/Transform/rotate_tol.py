@@ -17,8 +17,9 @@ class RotateTool(Tool):
         self.para = plg.para
         self.moving = False
         
-    def mouse_down(self, ips, x, y, btn, **key):        
-        if abs(x-self.para['ox'])<3 and abs(y-self.para['oy'])<3:
+    def mouse_down(self, ips, x, y, btn, **key):  
+        lim = 5.0/key['canvas'].get_scale() 
+        if abs(x-self.para['ox'])<lim and abs(y-self.para['oy'])<lim:
             self.moving = True
         
     def mouse_up(self, ips, x, y, btn, **key):
@@ -26,9 +27,10 @@ class RotateTool(Tool):
         else : self.plg.preview(self.para)
         
     def mouse_move(self, ips, x, y, btn, **key):
+        lim = 5.0/key['canvas'].get_scale()
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
-            if abs(x-self.para['ox'])<3 and abs(y-self.para['oy']<3):
+            if abs(x-self.para['ox'])<lim and abs(y-self.para['oy']<lim):
                 self.cursor = wx.CURSOR_HAND
         elif self.moving:
             self.para['ox'], self.para['oy'] = x, y
@@ -45,7 +47,7 @@ class RotateTool(Tool):
 
 class Plugin(Filter):
     modal = False
-    title = 'ttt'
+    title = 'Rotate'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'ang':0, 'ox':0, 'oy':0, 'img':True, 'msk':False}
     view = [(int, (0,360), 0, 'angle', 'ang', 'degree'),

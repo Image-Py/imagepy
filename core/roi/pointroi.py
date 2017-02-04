@@ -10,8 +10,8 @@ from roi import ROI, affine
 
 class PointRoi(ROI):
     dtype = 'point'
-    def __init__(self, body=[]):
-        self.body = body
+    def __init__(self, body=None):
+        self.body = body if body!=None else []
         self.update = body!=[]
         self.infoupdate = body!=[]
         
@@ -19,16 +19,16 @@ class PointRoi(ROI):
         self.body.append(p)
         self.update, self.infoupdate = True, True
     
-    def snap(self, x, y):
+    def snap(self, x, y, lim):
         cur, minl = None, 1000
         for i in self.body:
             d = (i[0]-x)**2+(i[1]-y)**2
             if d < minl:cur,minl = i,d
-        if minl>9:return None
+        if minl**0.5>lim:return None
         return self.body.index(cur)
         
-    def pick(self, x, y):
-        return self.snap(x, y)
+    def pick(self, x, y, lim):
+        return self.snap(x, y, lim)
         
     def draged(self, ox, oy, nx, ny, i):
         self.body[i] = (nx, ny)

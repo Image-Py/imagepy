@@ -20,7 +20,7 @@ class ImagePlus:
         self.mark = None
         self.msk = None
         self.mskmode = None
-        self.lut = ColorManager.get_lut('grey')
+        self.lut = ColorManager.get_lut('grays')
         self.tool = None
         
     def set_title(self, title):

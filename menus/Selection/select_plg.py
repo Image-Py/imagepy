@@ -25,7 +25,7 @@ class SelectNone(Simple):
         
 class Add2Manager(Simple):
     title = 'Add To Manager'
-    note = ['all']
+    note = ['all', 'req_roi']
     para = {'name':''}
     view = [(str, 'Name', 'name', '')]
 
@@ -51,7 +51,7 @@ class LoadRoi(Simple):
         
 class Inflate(Simple):
     title = 'Inflate'
-    note = ['all']
+    note = ['all', 'req_roi']
     para = {'r':5}
     view = [(int, (1,100),0, 'radius', 'r','pix')]
 
@@ -60,7 +60,7 @@ class Inflate(Simple):
         
 class Shrink(Simple):
     title = 'Shrink'
-    note = ['all']
+    note = ['all', 'req_roi']
     para = {'r':5}
     view = [(int, (1,100),0, 'radius', 'r','pix')]
 
@@ -69,21 +69,21 @@ class Shrink(Simple):
         
 class Convex(Simple):
     title = 'Convex Hull'
-    note = ['all']
+    note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
         ips.roi = ips.roi.convex()
         
 class Box(Simple):
     title = 'Bound Box'
-    note = ['all']
+    note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
         ips.roi = ips.roi.bounds()
         
 class Clip(Simple):
     title = 'Clip Roi'
-    note = ['all']
+    note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
         rect = RectangleRoi(0,0,ips.size[1],ips.size[0])
@@ -91,7 +91,7 @@ class Clip(Simple):
         
 class Invert(Simple):
     title = 'Invert Roi'
-    note = ['all']
+    note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
         rect = RectangleRoi(0,0,ips.size[1],ips.size[0])

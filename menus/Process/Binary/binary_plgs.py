@@ -62,4 +62,4 @@ class EDT(Filter):
     def run(self, ips, snap, img, para = None):
         return nimg.distance_transform_edt(snap)
         
-plgs = [Dilation, Erosion, Closing, Opening, FillHoles, EDT]
+plgs = [Dilation, Erosion, '-', Closing, Opening, '-', FillHoles, EDT]
