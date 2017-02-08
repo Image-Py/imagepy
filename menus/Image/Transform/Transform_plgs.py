@@ -28,8 +28,8 @@ class Rotate(Filter):
         offset = o-trans.dot(o)
         nimg.affine_transform(snap, trans, output=img, offset=offset)
         
-class Zoom(Filter):
-    title = 'Zoom'
+class Scale(Filter):
+    title = 'Scale'
     note = ['all', 'auto_msk', 'auto_snap','preview']
     
     #parameter
@@ -48,4 +48,4 @@ class Zoom(Filter):
         offset = o-trans.dot(o)
         nimg.affine_transform(snap, trans, output=img, offset=offset)
 
-plgs = [Rotate, Zoom]
+plgs = [Rotate, Scale]

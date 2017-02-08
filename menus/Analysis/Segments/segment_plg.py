@@ -12,7 +12,7 @@ from core.managers import WindowsManager
 from core.roi.pointroi import PointRoi
 
 class Statistic(Simple):
-    title = 'Segments statistic'
+    title = 'Segments Statistic'
     note = ['8-bit', '16-bit']
     
     para = {'lab':None, 'max':True, 'min':True,'mean':False,'var':False,'std':False,'sum':False}
@@ -20,7 +20,6 @@ class Statistic(Simple):
             (bool, 'Max', 'max'),
             (bool, 'Min', 'min'),
             (bool, 'Mean', 'mean'),
-            (bool, 'Variance', 'var'),
             (bool, 'Standard', 'std'),
             (bool, 'Sum', 'sum')]
             

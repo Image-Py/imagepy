@@ -45,6 +45,16 @@ class Erosion(Filter):
         nimg.binary_erosion(snap, output=img)
         img *= 255
         
+class Outline(Filter):
+    title = 'Binary Outline'
+    note = ['all', 'auto_msk', 'auto_snap','preview']
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        nimg.binary_dilation(snap, output=img)
+        img *= 255
+        img -= snap
+        
 class FillHoles(Filter):
     title = 'Fill Holes'
     note = ['all', 'auto_msk', 'auto_snap','preview']
@@ -62,4 +72,4 @@ class EDT(Filter):
     def run(self, ips, snap, img, para = None):
         return nimg.distance_transform_edt(snap)
         
-plgs = [Dilation, Erosion, '-', Closing, Opening, '-', FillHoles, EDT]
+plgs = [Dilation, Erosion, '-', Closing, Opening, '-', Outline, FillHoles, EDT]
