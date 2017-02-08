@@ -18,7 +18,7 @@ import IPy
 import numpy as np
 
 class Balance_Dialog(ParaDialog):
-    def init_view(self, para, img):
+    def init_view(self, para, view, img):
         hists = [np.histogram(img[:,:,i],range(257))[0] for i in (0,1,2)]
         hists = [(i*(100.0/i.max())).astype(np.uint8) for i in hists]
         self.redcvs = HistCanvas(self)
@@ -29,14 +29,14 @@ class Balance_Dialog(ParaDialog):
         self.bluecvs.set_hist(hists[2])
         
         self.add_ctrl('red', self.redcvs)
-        self.parse(('slide', (0,255), 'Low', 't1_red', ''))
-        self.parse(('slide', (0,255), 'High', 't2_red', ''))
+        self.parse(view[0])
+        self.parse(view[1])
         self.add_ctrl('green', self.greencvs)
-        self.parse(('slide', (0,255), 'Low', 't1_green', ''))
-        self.parse(('slide', (0,255), 'High', 't2_green', ''))
+        self.parse(view[2])
+        self.parse(view[3])
         self.add_ctrl('blue', self.bluecvs)
-        self.parse(('slide', (0,255), 'Low', 't1_blue', ''))
-        self.parse(('slide', (0,255), 'High', 't2_blue', ''))
+        self.parse(view[4])
+        self.parse(view[5])
         
         self.add_check('Preview', 'preview')
         self.add_confirm(True)
@@ -62,10 +62,15 @@ class Plugin(Filter):
     
     #parameter
     para = {'t1_red':0, 't2_red':255,'t1_green':0, 't2_green':255,'t1_blue':0, 't2_blue':255}
-        
+    view = [('slide', (0,255), 'Low', 't1_red', ''),
+            ('slide', (0,255), 'High', 't2_red', ''),
+            ('slide', (0,255), 'Low', 't1_green', ''),
+            ('slide', (0,255), 'High', 't2_green', ''),
+            ('slide', (0,255), 'Low', 't1_blue', ''),
+            ('slide', (0,255), 'High', 't2_blue', '')]
     def show(self):
         self.dialog = Balance_Dialog(IPy.get_window(), self.title)
-        self.dialog.init_view(self.para, self.ips.get_img())
+        self.dialog.init_view(self.para, self.view, self.ips.get_img())
         self.dialog.set_handle(lambda x:self.preview(self.para))
         return self.dialog.ShowModal()
 

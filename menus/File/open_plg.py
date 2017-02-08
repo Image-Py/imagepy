@@ -11,13 +11,15 @@ class OpenFile(Free):
     
     def show(self):
         filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif'
-        return IPy.getpath('save..', filt, self.para)
+        return IPy.getpath('Open..', filt, self.para)
     #process
     def run(self, para = None):
         path = para['path']
         fp, fn = os.path.split(path)
         fn, fe = os.path.splitext(fn) 
         img = imread(path)
+        if img.ndim==3 and img.shape[2]==4:
+            img = img[:,:,:3].copy()
         IPy.show_img([img], fn)
 
 class OpenUrl(Free):

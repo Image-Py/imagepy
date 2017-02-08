@@ -48,8 +48,9 @@ class Plugin(Filter):
         return self.dialog.ShowModal()
 
     #process
-    def run(self, ips, snap, buf, para = None):
+    def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
+        img[:] = snap
         img -= para['thr1']
         img *= 255.0/max(para['thr2']-para['thr1'], 1)
         img[snap<para['thr1']] = 0
