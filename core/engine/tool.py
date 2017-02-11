@@ -13,7 +13,7 @@ class Tool:
            
     def show(self):
         if self.view == None:return
-        rst = IPy.getpara(self.title, self.view, self.para)
+        rst = IPy.get_para(self.title, self.view, self.para)
         if rst!=None : self.config()
     
     def config(self):pass

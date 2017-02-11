@@ -205,9 +205,11 @@ if __name__ == '__main__':
             (bool, 'Preview', 'preview')]
     data = {'r':1.2, 'slide':0,  'preview':True, 'color':(0,255,0)}
                  
+
+    
     app = wx.PySimpleApp()
     pd = ParaDialog(None, 'Test')
-    pd.init_view(view, data)
+    pd.init_view(view, para)
     pd.pack()
     pd.ShowModal()
     print data

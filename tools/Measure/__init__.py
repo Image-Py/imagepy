@@ -1,1 +1,1 @@
-catlog = ['coordinate_tol', 'distance_tol', 'angle_tol']
+catlog = ['coordinate_tol', 'distance_tol', 'angle_tol', 'area_tol']

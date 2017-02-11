@@ -2,8 +2,6 @@
 from skimage import feature
 from core.engines import Filter
 
-
-
 class Plugin(Filter):
     title = 'Canny'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']

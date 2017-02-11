@@ -58,7 +58,7 @@ def getdir(title, filt, para=None):
     dialog.Destroy()
     return rst if para!=None else path
     
-def getpara(title, view, para):
+def get_para(title, view, para):
     pd = ParaDialog(curapp, title)
     pd.init_view(view, para)
     rst = pd.ShowModal()

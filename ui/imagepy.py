@@ -1,17 +1,16 @@
 import wx, os, sys
 import pluginloader, toolsloader, IPy
+import time, thread
 
 class ImagePy(wx.Frame):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', size = wx.Size(560,-1), pos = wx.DefaultPosition, style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         self.SetSizeHintsSz( wx.Size( 560,-1 ), wx.DefaultSize )
-        self.Layout()
         IPy.curapp = self
         self.menubar = pluginloader.buildMenuBarByPath(self, 'menus')
         self.SetMenuBar( self.menubar )
-        
+        self.busy = 'first'
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizertool = wx.BoxSizer( wx.HORIZONTAL )
         self.toolbar = toolsloader.build_tools(self, 'tools')
         
         #self.toolbar.Realize() 
@@ -28,21 +27,42 @@ class ImagePy(wx.Frame):
         self.txt_info.Wrap( -1 )
         #self.txt_info.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_INFOBK ) )
         sizersta.Add( self.txt_info, 1, wx.ALIGN_BOTTOM|wx.BOTTOM|wx.LEFT|wx.RIGHT, 2 )
-        self.pro_bar = wx.Gauge( stapanel, wx.ID_ANY, 100, wx.DefaultPosition, wx.Size( 100,15 ), wx.GA_HORIZONTAL )
+        self.pro_bar = wx.Gauge( stapanel, wx.ID_ANY, 100, wx.DefaultPosition, wx.Size( 100,15 ), wx.GA_HORIZONTAL )     
         sizersta.Add( self.pro_bar, 0, wx.ALIGN_BOTTOM|wx.BOTTOM|wx.LEFT|wx.RIGHT, 2 )
         stapanel.SetSizer(sizersta)
         sizer.Add(stapanel, 0, wx.EXPAND, 5 )        
         self.SetSizer( sizer )
         
         self.Centre( wx.BOTH )
+        self.Layout()
         self.Fit()
         self.update = False
         
+        thread.start_new_thread(self.hold, ())
+        
+    def hold(self):
+        i = 0
+        while True:
+            time.sleep(0.05)
+            try: self.busy = self.busy
+            except Exception:break
+            if self.busy==False: continue
+            i += 5
+            wx.CallAfter(self.set_progress, i)
+            if i>=100:i=0
+            if i==0 and self.busy=='first':
+                self.busy = False
+                wx.CallAfter(self.set_progress, 0)
+
     def set_info(self, value):
         self.txt_info.SetLabel(value)
         
     def set_progress(self, value):
         self.pro_bar.SetValue(value)
+        if value==0 and self.busy!=True:
+            self.pro_bar.Hide()
+        elif not self.pro_bar.IsShown():
+            self.pro_bar.Show()
         self.pro_bar.Update()
         
     def set_color(self, value):

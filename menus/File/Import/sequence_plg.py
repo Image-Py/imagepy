@@ -16,7 +16,7 @@ from core.engines import Free
 class Plugin(Free):
     title = 'Import Sequence'
     
-    para = {'path':'./', 'start':0, 'step':1}
+    para = {'path':'./', 'start':0, 'step':1, 'title':'sequence'}
 
     def show(self):
         filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif'
@@ -24,11 +24,11 @@ class Plugin(Free):
         
         files = self.getfiles(self.para['path'])
         nfs = len(files)
-        self.view = [(int, (0, nfs-1), 0, 'Start', 'start', '0~%s'%(nfs-1)),
+        self.view = [(str, 'Title','title',''), (int, (0, nfs-1), 0, 'Start', 'start', '0~%s'%(nfs-1)),
             (int, (0, nfs-1), 0, 'Step', 'step', '')]
         
         if rst!=wx.ID_OK:return rst
-        return IPy.getpara('Import sequence', self.view, self.para)
+        return IPy.get_para('Import sequence', self.view, self.para)
         
             
     def getfiles(self, name):
@@ -59,12 +59,7 @@ class Plugin(Free):
         files = self.getfiles(para['path'])
         files.sort()
         imgs = self.readimgs(files[para['start']::para['step']], img.shape, img.dtype)
-        
-        img = imread(para['path'])
-        ips = ImagePlus(imgs)
-        frame = CanvasFrame()
-        frame.set_ips(ips)
-        frame.Show()
+        IPy.show_img(imgs, para['title'])
         
 
 if __name__ == '__main__':
