@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import wx
+import wx, platform
 from core.managers import WindowsManager, TableLogManager
 from widgets import NumCtrl, ColorCtrl
         
@@ -117,7 +117,7 @@ class ParaDialog (wx.Dialog):
         lab_title = wx.StaticText( self, wx.ID_ANY, title, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )        
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        iswin = platform.system() == 'Windows':
+        iswin = platform.system() == 'Windows'
         lab  = 0 if iswin else wx.SL_LABELS
         ctrl = wx.Slider( self, wx.ID_ANY, 50, rang[0], rang[1], wx.DefaultPosition, wx.Size( -1,-1 ), wx.SL_HORIZONTAL|lab )
         self.ctrl_dic[key] = ctrl
