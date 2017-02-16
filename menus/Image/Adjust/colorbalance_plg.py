@@ -75,10 +75,10 @@ class Plugin(Filter):
             length = 255/np.tan(para['c_'+c]/180.0*np.pi)
             img[:,:,i] = snap[:,:,i]
             if mid-length/2>0:
-                img[:,:,i] -= mid-length/2
-                img[:,:,i] *= 255.0/length
+                np.subtract(img[:,:,i], mid-length/2, out=img[:,:,i], casting='unsafe')
+                np.multiply(img[:,:,i], 255.0/length, out=img[:,:,i], casting='unsafe')
             else:
-                img[:,:,i] *= 255.0/length
-                img[:,:,i] -= (mid-length/2)/length*255
+                np.multiply(img[:,:,i], 255.0/length, out=img[:,:,i], casting='unsafe')
+                np.subtract(img[:,:,i], (mid-length/2)/length*255, out=img[:,:,i], casting='unsafe')
             img[:,:,i][snap[:,:,i]<mid-length/2] = 0
             img[:,:,i][snap[:,:,i]>mid+length/2] = 255

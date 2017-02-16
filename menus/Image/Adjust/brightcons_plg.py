@@ -57,10 +57,10 @@ class Plugin(Filter):
         print mid-length/2, mid+length/2
         img[:] = snap
         if mid-length/2>0:
-            img -= mid-length/2
-            img *= 255.0/length
+            np.subtract(img, mid-length/2, out=img, casting='unsafe')
+            np.multiply(img, 255.0/length, out=img, casting='unsafe')
         else:
-            img *= 255.0/length
-            img -= (mid-length/2)/length*255
+            np.multiply(img, 255.0/length, out=img, casting='unsafe')
+            np.subtract(img, (mid-length/2)/length*255, out=img, casting='unsafe')
         img[snap<mid-length/2] = 0
         img[snap>mid+length/2] = 255

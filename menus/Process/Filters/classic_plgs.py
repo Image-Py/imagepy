@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 import scipy.ndimage as nimg
 from core.engines import Filter, Simple
+import numpy as np
 
 class Gaussian(Filter):
     title = 'Gaussian'
@@ -91,7 +92,7 @@ class USM(Filter):
     def run(self, ips, snap, img, para = None):
         nimg.gaussian_filter(snap, para['sigma'], output=img)
         img -= snap
-        img *= -para['weight']
+        np.multiply(img, -para['weight'], out=img, casting='unsafe')
         img += snap
         
         

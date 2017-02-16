@@ -13,7 +13,7 @@ class Add_plg(Filter):
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         img[:] = snap
-        img += para['num']
+        np.add(img, para['num'], out=img, casting='unsafe')
         
 class Multiply_plg(Filter):
     title = 'Multiply'
@@ -26,7 +26,7 @@ class Multiply_plg(Filter):
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para     
         img[:] = snap
-        img *= para['num']
+        np.multiply(img, para['num'], out=img, casting='unsafe')
         
 class Max_plg(Filter):
     title = 'Max'

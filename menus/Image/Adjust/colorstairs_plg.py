@@ -79,7 +79,8 @@ class Plugin(Filter):
         if para == None: para = self.para
         for i, c in zip([0,1,2],['red','green','blue']):
             img[:,:,i] = snap[:,:,i]
-            img[:,:,i] -= para['t1_'+c]
-            img[:,:,i] *= 255.0/max(para['t2_'+c]-para['t1_'+c], 1)
+            np.subtract(img[:,:,i], para['t1_'+c], out=img[:,:,i], casting='unsafe')
+            k = 255.0/max(para['t2_'+c]-para['t1_'+c], 1)
+            np.multiply(img[:,:,i], k, out=img[:,:,i], casting='unsafe')
             img[:,:,i][snap[:,:,i]<para['t1_'+c]] = 0
             img[:,:,i][snap[:,:,i]>para['t2_'+c]] = 255

@@ -51,7 +51,8 @@ class Plugin(Filter):
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         img[:] = snap
-        img -= para['thr1']
-        img *= 255.0/max(para['thr2']-para['thr1'], 1)
+        np.subtract(img, para['thr1'], out=img, casting='unsafe')
+        k = 255.0/max(para['thr2']-para['thr1'], 1)
+        np.multiply(img, k, out=img, casting='unsafe')
         img[snap<para['thr1']] = 0
         img[snap>para['thr2']] = 255

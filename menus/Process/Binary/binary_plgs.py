@@ -11,7 +11,7 @@ from core.engines import Filter
 
 class Closing(Filter):
     title = 'Binary Closeing'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -20,7 +20,7 @@ class Closing(Filter):
         
 class Opening(Filter):
     title = 'Binary Opening'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -29,7 +29,7 @@ class Opening(Filter):
         
 class Dilation(Filter):
     title = 'Binary Dilation'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -38,7 +38,7 @@ class Dilation(Filter):
         
 class Erosion(Filter):
     title = 'Binary Erosion'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -47,7 +47,7 @@ class Erosion(Filter):
         
 class Outline(Filter):
     title = 'Binary Outline'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -57,7 +57,7 @@ class Outline(Filter):
         
 class FillHoles(Filter):
     title = 'Fill Holes'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
     #process
     def run(self, ips, snap, img, para = None):

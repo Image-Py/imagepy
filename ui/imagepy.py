@@ -1,7 +1,18 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jan 14 23:23:30 2017
+
+@author: yxl
+"""
 import wx, os, sys
 import pluginloader, toolsloader, IPy
+from core.manager import configmanager
 import time, thread
 
+class FileDrop(wx.FileDropTarget):
+    def OnDropFiles(self, x, y, path):
+        IPy.run_macros(["Open>{'path':'%s'}"%i for i in path])
+        
 class ImagePy(wx.Frame):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', size = wx.Size(560,-1), pos = wx.DefaultPosition, style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
@@ -30,6 +41,11 @@ class ImagePy(wx.Frame):
         self.pro_bar = wx.Gauge( stapanel, wx.ID_ANY, 100, wx.DefaultPosition, wx.Size( 100,15 ), wx.GA_HORIZONTAL )     
         sizersta.Add( self.pro_bar, 0, wx.ALIGN_BOTTOM|wx.BOTTOM|wx.LEFT|wx.RIGHT, 2 )
         stapanel.SetSizer(sizersta)
+        
+        
+        stapanel.SetDropTarget(FileDrop())
+        
+        
         sizer.Add(stapanel, 0, wx.EXPAND, 5 )        
         self.SetSizer( sizer )
         
@@ -38,6 +54,7 @@ class ImagePy(wx.Frame):
         self.Fit()
         self.update = False
         
+        self.Bind(wx.EVT_CLOSE, self.on_close)
         thread.start_new_thread(self.hold, ())
         
     def hold(self):
@@ -67,6 +84,10 @@ class ImagePy(wx.Frame):
         
     def set_color(self, value):
         self.line_color.SetBackgroundColour(value)
+        
+    def on_close(self, event):
+        configmanager.ConfigManager.write()
+        self.Destroy()
         
     def __del__( self ):
         pass

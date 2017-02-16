@@ -4,7 +4,7 @@ Created on Sat Oct 15 10:03:00 2016
 
 @author: yxl
 """
-import wx
+import wx, os
 from ui.panelconfig import ParaDialog
 from core import managers
 
@@ -39,13 +39,19 @@ def yes_no(info, title='image-py'):
     return dic[rst]
     
 def getpath(title, filt, para=None):
-    dialog = wx.FileDialog(curapp, title, './', '', filt, wx.SAVE)
+    dpath = managers.ConfigManager.get('DefaultPath')
+    print dpath
+    if dpath ==None: dpath = './'
+    dialog = wx.FileDialog(curapp, title, dpath, '', filt, wx.OPEN)
     rst = dialog.ShowModal() 
     path = None
     if rst == wx.ID_OK:
         path = dialog.GetPath()
+        dpath = os.path.split(path)[0]
+        managers.ConfigManager.set('DefaultPath', dpath)
         if para!=None:para['path'] = path
     dialog.Destroy()
+    
     return rst if para!=None else path
     
 def getdir(title, filt, para=None):
