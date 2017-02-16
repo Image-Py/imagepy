@@ -10,14 +10,14 @@ class ConfigManager:
     cfg = {}
     @classmethod
     def read(cls):
-        if os.path.exists('pref.cfg'):
-            pkl_file = open('pref.cfg','rb')
+        if os.path.exists('preference.cfg'):
+            pkl_file = open('preference.cfg','rb')
             cls.cfg = pickle.load(pkl_file)
             pkl_file.close()
          
     @classmethod
     def write(cls):
-        pkl_file = open('pref.cfg', 'wb')
+        pkl_file = open('preference.cfg', 'wb')
         cls = pickle.dump(cls.cfg, pkl_file, 0)
         pkl_file.close()
     
