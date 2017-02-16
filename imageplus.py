@@ -100,7 +100,7 @@ class ImagePlus:
             return self.lut[self.get_img()]
         if self.chanels==1 and self.dtype==np.uint16:
             k = 255.0/self.range[1]
-            bf = np.multiply(self.get_img(), k, dtype=np.uint8)
+            bf = np.multiply(self.get_img(), k, dtype=np.uint8, casting='unsafe')
             return self.lut[bf]
         if self.chanels==3 and self.dtype==np.uint8:
             return self.get_img()

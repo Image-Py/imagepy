@@ -108,11 +108,11 @@ class Mark(Simple):
             data.append(pos[:,0])
             data.append(pos[:,1])  
         if para['mode'] == 'Max':
-            pos = np.round(ndimage.minimum_position(img, lab, index), 2)[:,::-1]
+            pos = np.round(ndimage.maximum_position(img, lab, index), 2)[:,::-1]
             data.append(pos[:,0])
             data.append(pos[:,1])
         if para['mode'] == 'Min':
-            pos = np.round(ndimage.maximum_position(img, lab, index), 2)[:,::-1]
+            pos = np.round(ndimage.minimum_position(img, lab, index), 2)[:,::-1]
             data.append(pos[:,0])
             data.append(pos[:,1])       
         body = [tuple(i) for i in pos]
