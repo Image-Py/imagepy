@@ -87,10 +87,10 @@ class ParaDialog (wx.Dialog):
         lab_title = wx.StaticText( self, wx.ID_ANY, title, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )        
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        ctrl = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, chos, 0 )
+        ctrl = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, [str(i) for i in chos], 0 )
         ctrl.SetSelection(0)
         ctrl.SetValue = lambda x:ctrl.SetSelection(chos.index(x))
-        ctrl.GetValue = lambda : chos[ctrl.GetSelection()]
+        ctrl.GetValue = lambda : tp(chos[ctrl.GetSelection()])
         self.ctrl_dic[key] = ctrl
         ctrl.Bind( wx.EVT_CHOICE, lambda x : self.para_changed(key))
         sizer.Add( ctrl, 2, wx.ALL, 5 )
