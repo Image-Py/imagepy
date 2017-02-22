@@ -23,7 +23,6 @@ class Plugin(Free):
 
     #process
     def run(self, para = None):
-        print para
         path = para['path']
         fp, fn = os.path.split(path)
         fn, fe = os.path.splitext(fn) 

@@ -8,4 +8,4 @@ Package:File
 
 '''
 
-catlog = ['new_plg', '-', 'open_plg', 'Samples', '-', 'Import', 'save_plg', 'Save as', '-', 'exit_plg']
+catlog = ['new_plg', '-', 'open_plg', 'Open Recent', 'Samples', '-', 'Import', 'save_plg', 'Save As', '-', 'exit_plg']

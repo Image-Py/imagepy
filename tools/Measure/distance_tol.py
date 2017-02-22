@@ -9,6 +9,7 @@ import wx
 from core.engines import Tool
 import numpy as np
 from numpy.linalg import norm
+from setting import Setting
 
 class Distance:
     dtype = 'distance'
@@ -37,8 +38,8 @@ class Distance:
         i[0][i[1]] = (nx, ny)
         
     def draw(self, dc, f):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
-        dc.SetTextForeground((255,255,255))
+        dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
+        dc.SetTextForeground(Setting['tcolor'])
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetPointSize(8)
         dc.SetFont(font)

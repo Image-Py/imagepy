@@ -1,6 +1,7 @@
 import wx,os,sys
 from scipy.misc import imread
 import cStringIO, urllib2
+from core import managers
 import IPy
 
 from core.engines import Free
@@ -15,6 +16,9 @@ class OpenFile(Free):
     #process
     def run(self, para = None):
         path = para['path']
+        recent = __import__("menus.File.Open Recent.recent_plgs",'','',[''])
+        recent.add(path)
+
         fp, fn = os.path.split(path)
         fn, fe = os.path.splitext(fn) 
         img = imread(path)

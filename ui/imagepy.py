@@ -57,6 +57,10 @@ class ImagePy(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.on_close)
         thread.start_new_thread(self.hold, ())
         
+    def reload_plugins(self):
+        for i in range(self.menubar.GetMenuCount()): self.menubar.Remove(0)
+        pluginloader.buildMenuBarByPath(self, 'menus', self.menubar)
+        
     def hold(self):
         i = 0
         while True:

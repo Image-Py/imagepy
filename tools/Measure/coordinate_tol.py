@@ -7,6 +7,7 @@ Created on Thu Feb  2 23:04:46 2017
 
 import wx
 from core.engines import Tool
+from setting import Setting
 
 class Coordinate:
     dtype = 'coordinate'
@@ -31,8 +32,8 @@ class Coordinate:
         self.body[i] = (nx, ny)
         
     def draw(self, dc, f):
-        dc.SetPen(wx.Pen((255,255,255), width=1, style=wx.SOLID))
-        dc.SetTextForeground((255,255,255))
+        dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
+        dc.SetTextForeground(Setting['tcolor'])
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetPointSize(8)
         dc.SetFont(font)

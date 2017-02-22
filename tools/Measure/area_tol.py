@@ -8,6 +8,7 @@ Created on Sat Feb  4 13:31:36 2017
 import wx
 from shapely.geometry import Polygon, Point
 from core.engines import Tool
+from setting import Setting
     
 class Area:
     dtype = 'area'
@@ -55,8 +56,8 @@ class Area:
                 i[0][0] = (nx, ny)
             
     def draw(self, dc, f):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
-        dc.SetTextForeground((255,255,255))
+        dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
+        dc.SetTextForeground(Setting['tcolor'])
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetPointSize(8)
         dc.SetFont(font)

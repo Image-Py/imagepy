@@ -39,8 +39,7 @@ def yes_no(info, title='image-py'):
     return dic[rst]
     
 def getpath(title, filt, para=None):
-    dpath = managers.ConfigManager.get('DefaultPath')
-    print dpath
+    dpath = managers.ConfigManager.get('defaultpath')
     if dpath ==None: dpath = './'
     dialog = wx.FileDialog(curapp, title, dpath, '', filt, wx.OPEN)
     rst = dialog.ShowModal() 
@@ -48,7 +47,7 @@ def getpath(title, filt, para=None):
     if rst == wx.ID_OK:
         path = dialog.GetPath()
         dpath = os.path.split(path)[0]
-        managers.ConfigManager.set('DefaultPath', dpath)
+        managers.ConfigManager.set('defaultpath', dpath)
         if para!=None:para['path'] = path
     dialog.Destroy()
     

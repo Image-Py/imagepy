@@ -214,5 +214,4 @@ if __name__ == '__main__':
     pd.init_view(view, para)
     pd.pack()
     pd.ShowModal()
-    print data
     app.MainLoop() 

@@ -23,7 +23,6 @@ class ConfigManager:
     
     @classmethod
     def get(cls, key):
-        print cls.cfg
         if cls.cfg.has_key(key):
             return cls.cfg[key]
         return None
@@ -31,7 +30,6 @@ class ConfigManager:
     @classmethod  
     def set(cls, key, value):
         cls.cfg[key] = value   
-        print cls.cfg
     
 ConfigManager.read()
 

@@ -2,16 +2,12 @@
 import wx  
 from core.loader import loader
 
-def buildMenuBarByPath(parent, path):
-    global host
-    host = parent
+def buildMenuBarByPath(parent, path, menuBar=None):
     data = loader.build_plugins(path)
-    menuBar = buildMenuBar(parent, data)
-    host = None
-    return menuBar
+    return buildMenuBar(parent, data, menuBar)
 
-def buildMenuBar(parent, data):
-    menuBar = wx.MenuBar()
+def buildMenuBar(parent, data, menuBar=None):
+    if menuBar==None:menuBar = wx.MenuBar()
     for i in data[1]:
         if i[1] == []:continue
         menuBar.Append(buildMenu(parent, i,i[0].title),i[0].title)
