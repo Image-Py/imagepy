@@ -29,6 +29,6 @@ class Plugin(Tool):
     def mouse_move(self, ips, x, y, btn, **key):
         if self.sta==0:return
         self.paint.lineto(ips.get_img(),x,y, self.para['width'])
-        ips.update = True
+        ips.update = 'pix'
         
     def mouse_wheel(self, ips, x, y, d, **key):pass

@@ -10,6 +10,7 @@ from core.engines import Macros
 from core.managers import ToolsManager,PluginsManager
 import sys
 
+first = [0,0]
 def extend_plugins(path, lst, err):
     rst = []
     for i in lst:
@@ -71,9 +72,10 @@ def build_plugins(path, err=None):
         subtree = sort_plugins(pg.catlog, subtree)
     subtree = extend_plugins(path, subtree, err)
     
-    if root and len(err)>0:
+    if first[0]==0 and root and len(err)>0:
         IPy.write('some plugin may be not loaded, but not affect otheres!')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
+    if root : first[0]=1
     return (pg, subtree)  
     
 def extend_tools(path, lst, err):
@@ -129,9 +131,10 @@ def build_tools(path, err=None):
     if hasattr(pg, 'catlog'):
         subtree = sort_tools(pg.catlog, subtree)
     if not root:subtree = extend_tools(path, subtree, err)    
-    elif len(err)>0: 
+    elif first[1]==0 and len(err)>0: 
         IPy.write('tools not loaded:')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
+    if root : first[1]=1
     return (pg, subtree)
     
 if __name__ == "__main__":

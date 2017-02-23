@@ -4,7 +4,6 @@ Created on Tue Jan 10 22:33:33 2017
 
 @author: yxl
 """
-
 from core.engines import Simple
 from mayavi import mlab
 from scipy.ndimage.filters import gaussian_filter

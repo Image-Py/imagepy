@@ -155,9 +155,6 @@ class Canvas (wx.Panel):
         dc.DrawBitmap(wx.BitmapFromImage(bmp), win[0], win[1])
         
     def update(self, pix):
-        print '---'
-        from time import time
-        a = time()
         if self.ips == None: return
         lay(self.box, self.imgbox)
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
@@ -176,7 +173,6 @@ class Canvas (wx.Panel):
         if self.ips.mark != None:
             self.ips.mark.draw(cdc, self.to_panel_coor)
         cdc.EndDrawing()
-        print time() - a
         
     def zoomout(self, x, y):
         if self.scaleidx == len(self.scales)-1:return
