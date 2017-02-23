@@ -75,5 +75,5 @@ class Simple:
             win = TextLogManager.get('Recorder')
             if win!=None: win.append('%s>%s'%(self.title, para))
             self.run(self.ips, self.ips.imgs, para)
-            self.ips.update = True
+            self.ips.update = 'pix'
         if self.dialog!=None:self.dialog.Destroy()

@@ -107,7 +107,7 @@ class Filter:
         
     def preview(self, para):
         process_one(self, self.ips, self.ips.snap, self.ips.get_img(), para)
-        self.ips.update = True
+        self.ips.update = 'pix'
         
     def load(self, ips):return True
           
@@ -135,12 +135,12 @@ class Filter:
                 process_one(self, ips, ips.snap, ips.get_img(), para)
                 if win!=None: win.append('%s>%s'%(self.title, para))
             elif rst == 'cancel': pass
-        ips.update = True
+        ips.update = 'pix'
         
     def cancel(self, ips):
         if 'auto_snap' in self.note:
             ips.swap()
-            ips.update = True
+            ips.update = 'pix'
             
     def start(self, para=None):
         ips = self.ips

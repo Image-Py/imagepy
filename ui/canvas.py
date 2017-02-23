@@ -45,6 +45,7 @@ class Canvas (wx.Panel):
         self.resized = True
         self.ips = None
         self.scrsize = wx.DisplaySize()
+        self.s = 0
         
     def on_mouseevent(self, me):
         tool = self.ips.tool
@@ -77,12 +78,12 @@ class Canvas (wx.Panel):
         self.box = [0,0,box[0],box[1]]
         
     def self_fit(self):
-        print 'self fit'
         for i in [4,3,2,1,0]:
             best = i
             if self.ips.size[1]*self.scales[i]<=self.scrsize[0]*0.9 and\
             self.ips.size[0]*self.scales[i]<=self.scrsize[1]*0.9:
                 break
+        self.scaleidx = best
         self.zoom(self.scales[best], 0, 0)
         
         
@@ -109,7 +110,7 @@ class Canvas (wx.Panel):
         if self.imgbox[2]<=self.box[2] and self.imgbox[3]<=self.box[3]:return
         self.imgbox[0] += dx
         self.imgbox[1] += dy
-        self.update()
+        self.update(True)
         
     def on_size(self, event):
         self.reInitBuffer = True
@@ -118,7 +119,7 @@ class Canvas (wx.Panel):
         if self.reInitBuffer:
             self.initBuffer()
             #print 'resized update'
-            self.update()
+            self.update(True)
             self.reInitBuffer = False
             self.ips.update = False
             print 'resize'
@@ -126,14 +127,21 @@ class Canvas (wx.Panel):
             self.set_ips(self.ips)
             self.ips.scrchanged = False
             print 'scr changed'
-        if self.ips.update:
+        if self.ips.update != False:
             #print 'normal update'
-            self.update()
+            self.update(self.ips.update == 'pix')
             self.ips.update = False
             print 'update'
     
     def on_paint(self, event):
         wx.BufferedPaintDC(self, self.buffer)
+        cdc = wx.ClientDC(self)
+        cdc.BeginDrawing()
+        if self.ips.roi != None:
+            self.ips.roi.draw(cdc, self.to_panel_coor)
+        if self.ips.mark != None:
+            self.ips.mark.draw(cdc, self.to_panel_coor)
+        cdc.EndDrawing()
         
     def draw_image(self, dc, img, rect, scale=None):
         win = cross(self.box, rect)
@@ -145,40 +153,44 @@ class Canvas (wx.Panel):
         bmp = img.GetSubImage(multiply(win2, sx, sy))
         bmp = bmp.Scale(ceil(bmp.Width/sx), ceil(bmp.Height/sy))
         dc.DrawBitmap(wx.BitmapFromImage(bmp), win[0], win[1])
-        if self.ips.roi != None:
-            self.ips.roi.draw(dc, self.to_panel_coor)
-        if self.ips.mark != None:
-            self.ips.mark.draw(dc, self.to_panel_coor)
         
-    def update(self):
+    def update(self, pix):
         print '---'
+        from time import time
+        a = time()
         if self.ips == None: return
         lay(self.box, self.imgbox)
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
-        
         dc.BeginDrawing()
-        dc.Clear()
-        self.bmp.SetData(np.getbuffer(self.ips.lookup()))
-        self.draw_image(dc, self.bmp, self.imgbox, self.scales[self.scaleidx])
-        if self.ips.roi != None:
-            self.ips.roi.draw(dc, self.to_panel_coor)
-        if self.ips.mark != None:
-            self.ips.mark.draw(dc, self.to_panel_coor)
+        if pix:
+            dc.Clear()
+            self.bmp.SetData(np.getbuffer(self.ips.lookup()))
+            self.draw_image(dc, self.bmp, self.imgbox, self.scales[self.scaleidx])
+            
         dc.EndDrawing()
+        dc.UnMask()
+        cdc = wx.ClientDC(self)
+        cdc.BeginDrawing()
+        if self.ips.roi != None:
+            self.ips.roi.draw(cdc, self.to_panel_coor)
+        if self.ips.mark != None:
+            self.ips.mark.draw(cdc, self.to_panel_coor)
+        cdc.EndDrawing()
+        print time() - a
         
     def zoomout(self, x, y):
         if self.scaleidx == len(self.scales)-1:return
         #x,y = self.to_data_coor(x, y)
         self.scaleidx += 1
         self.zoom(self.scales[self.scaleidx],x,y)
-        if not self.resized:self.ips.update = True
+        self.ips.update = 'pix'
         
     def zoomin(self, x, y):
         if self.scaleidx == 0:return
         #x,y = self.to_data_coor(x, y)
         self.scaleidx -= 1      
         self.zoom(self.scales[self.scaleidx], x,y)
-        if not self.resized:self.ips.update = True
+        self.ips.update = 'pix'
     
     def get_scale(self):
         return self.scales[self.scaleidx]

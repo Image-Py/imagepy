@@ -41,7 +41,7 @@ class Plugin(Filter):
         
     def cancel(self, ips):
         ips.lut = self.lut
-        ips.update = True
+        ips.update = 'pix'
         
     def show(self):
         print 'threshold show'
@@ -57,7 +57,7 @@ class Plugin(Filter):
         self.ips.lut[:] = self.lut
         self.ips.lut[:para['thr1']] = [0,255,0]
         self.ips.lut[para['thr2']:] = [255,0,0]
-        self.ips.update = True
+        self.ips.update = 'pix'
     
     #process
     def run(self, ips, snap, img, para = None):

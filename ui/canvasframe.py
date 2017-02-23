@@ -91,7 +91,7 @@ class CanvasFrame(wx.Frame):
             
     def on_scroll(self, event):
         self.ips.cur = self.page.GetThumbPosition()
-        self.ips.update = True
+        self.ips.update = 'pix'
         
         
         
