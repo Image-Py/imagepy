@@ -11,7 +11,7 @@ import time, thread
 
 class FileDrop(wx.FileDropTarget):
     def OnDropFiles(self, x, y, path):
-        IPy.run_macros(["Open>{'path':'%s'}"%i for i in path])
+        IPy.run_macros(["Open>{'path':%s}"%repr(i) for i in path])
         
 class ImagePy(wx.Frame):
     def __init__( self, parent ):

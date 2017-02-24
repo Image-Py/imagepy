@@ -96,7 +96,7 @@ class TableLog(wx.Frame):
         dialog=wx.FileDialog(self,'Csv',style=wx.SAVE)
         if dialog.ShowModal()==wx.ID_OK:
             self.file=dialog.GetPath()
-            self.save_tab(self.file, '\r/n')
+            self.save_tab(self.file, ',')
         dialog.Destroy()
         
     def OnClose(self,event):

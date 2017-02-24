@@ -8,6 +8,7 @@ Created on Thu Feb  2 23:04:46 2017
 import wx
 from core.engines import Tool
 from setting import Setting
+import IPy
 
 class Coordinate:
     dtype = 'coordinate'
@@ -42,6 +43,11 @@ class Coordinate:
             dc.DrawCircle(x, y, 2)
             dc.DrawText('(%d,%d)'%(x,y), x, y)
 
+    def report(self, title):
+        rst = self.body
+        titles = ['OX', 'OY']
+        IPy.table(title, rst, titles)
+
 class Plugin(Tool):
     title = 'Coordinate'
     def __init__(self):
@@ -49,6 +55,10 @@ class Plugin(Tool):
         self.odx, self.ody = 0, 0
             
     def mouse_down(self, ips, x, y, btn, **key):
+        if key['ctrl'] and key['alt']:
+            if isinstance(ips.mark, Coordinate):
+                ips.mark.report(ips.title)
+            return
         lim = 5.0/key['canvas'].get_scale() 
         if btn==1:
             if isinstance(ips.mark, Coordinate):

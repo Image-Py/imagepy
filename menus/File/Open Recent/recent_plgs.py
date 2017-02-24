@@ -11,7 +11,7 @@ import IPy
 recent = managers.ConfigManager.get('recent')
 
 def f(path):
-	return Macros(path, ["Open>{'path':'%s'}"%path])
+	return Macros(path, ["Open>{'path':%s}"%repr(path)])
 
 def add(path):
 	global recent, plgs

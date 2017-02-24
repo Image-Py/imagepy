@@ -10,6 +10,7 @@ from core.engines import Tool
 import numpy as np
 from numpy.linalg import norm
 from setting import Setting
+import IPy
 
 class Distance:
     dtype = 'distance'
@@ -55,6 +56,19 @@ class Distance:
             for i,j in zip(dis, mid):
                 dc.DrawTextPoint('%d'%i, f(*j))
 
+    def report(self, title):
+        rst = []
+        for line in self.body:
+            pts = np.array(line)
+            dis = norm((pts[:-1]-pts[1:]), axis=1).round(1)
+            rst.append(list(dis))
+        lens = [len(i) for i in rst]
+        maxlen = max(lens)
+        fill = [[0]*(maxlen-i) for i in lens]
+        rst = [i+j for i,j in zip(rst, fill)]
+        titles = ['L%s'%(i+1) for i in range(maxlen)]
+        IPy.table(title, rst, titles)
+
 class Plugin(Tool):
     title = 'Distance'
     def __init__(self):
@@ -63,6 +77,11 @@ class Plugin(Tool):
         self.odx,self.ody = 0, 0
             
     def mouse_down(self, ips, x, y, btn, **key):
+        if key['ctrl'] and key['alt']:
+            if isinstance(ips.mark, Distance):
+                ips.mark.report(ips.title)
+            return
+
         lim = 5.0/key['canvas'].get_scale()
         if btn==1:
             # 如果有没有在绘制中，且已经有roi，则试图选取
@@ -90,7 +109,7 @@ class Plugin(Tool):
         ips.update = True
     
     def mouse_up(self, ips, x, y, btn, **key):
-        self.curpts = None
+        self.curobj = None
     
     def mouse_move(self, ips, x, y, btn, **key):
         if not isinstance(ips.mark, Distance):return

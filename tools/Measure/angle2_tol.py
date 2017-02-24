@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Feb  3 23:11:13 2017
+Created on Fri Feb  3 22:21:32 2017
 
 @author: yxl
 """
+
 import wx
 from core.engines import Tool
 import numpy as np
@@ -19,7 +20,7 @@ class Angle:
         
     def addline(self):
         line = self.buf
-        if len(line)>2:
+        if len(line)!=2 or line[0] !=line[-1]:
             self.body.append(line)
         self.buf = []
     
@@ -49,33 +50,29 @@ class Angle:
             dc.DrawLines([f(*i) for i in line])
             for i in line:dc.DrawCirclePoint(f(*i),2)
             pts = np.array(line)
-            v1 = pts[:-2]-pts[1:-1]
-            v2 = pts[2:]-pts[1:-1]
-            a = np.sum(v1*v2, axis=1)*1.0
-            a/=norm(v1,axis=1)*norm(v2,axis=1)
-            ang = np.arccos(a)/np.pi*180
-            for i,j in zip(ang,line[1:-1]):
+            mid = (pts[:-1]+pts[1:])/2
+
+            dxy = (pts[:-1]-pts[1:])
+            dxy[:,1][dxy[:,1]==0] = 1
+            l = norm(dxy, axis=1)*-np.sign(dxy[:,1])
+            ang = np.round(np.arccos(dxy[:,0]/l)/np.pi*180,0)
+            for i,j in zip(ang, mid):
                 dc.DrawTextPoint('%d'%i, f(*j))
 
     def report(self, title):
-        rst = []
+        rst, titles = [], ['K']
         for line in self.body:
             pts = np.array(line)
-            v1 = pts[:-2]-pts[1:-1]
-            v2 = pts[2:]-pts[1:-1]
-            a = np.sum(v1*v2, axis=1)*1.0
-            a/=norm(v1,axis=1)*norm(v2,axis=1)
-            ang = np.arccos(a)/np.pi*180
-            rst.append(list(ang.round(1)))
-        lens = [len(i) for i in rst]
-        maxlen = max(lens)
-        fill = [[0]*(maxlen-i) for i in lens]
-        rst = [i+j for i,j in zip(rst, fill)]
-        titles = ['A%s'%(i+1) for i in range(maxlen)]
+            mid = (pts[:-1]+pts[1:])/2
+
+            dxy = (pts[:-1]-pts[1:])
+            dxy[:,1][dxy[:,1]==0] = 1
+            l = norm(dxy, axis=1)*-np.sign(dxy[:,1])
+            rst.append(np.round(np.arccos(dxy[:,0]/l)/np.pi*180,1))
         IPy.table(title, rst, titles)
-                
+
 class Plugin(Tool):
-    title = 'Angle'
+    title = 'Angle2'
     def __init__(self):
         self.curobj = None
         self.doing = False
@@ -86,7 +83,7 @@ class Plugin(Tool):
             if isinstance(ips.mark, Angle):
                 ips.mark.report(ips.title)
             return
-        lim = 5.0/key['canvas'].get_scale() 
+        lim = 5.0/key['canvas'].get_scale()
         if btn==1:
             # 如果有没有在绘制中，且已经有roi，则试图选取
             if not self.doing:
@@ -102,18 +99,18 @@ class Plugin(Tool):
                 else: ips.mark = None
             if self.doing:
                 ips.mark.buf.append((x,y))
+                ips.mark.buf.append((x,y))
                 self.curobj = (ips.mark.buf, -1)
                 self.odx, self.ody = x,y
-            
-        elif btn==3:
-            if self.doing:
-                ips.mark.buf.append((x,y))
-                self.doing = False
-                ips.mark.addline()
+
         ips.update = True
     
     def mouse_up(self, ips, x, y, btn, **key):
         self.curobj = None
+        if self.doing:
+            ips.mark.addline()
+        self.doing = False
+        ips.update = True
     
     def mouse_move(self, ips, x, y, btn, **key):
         if not isinstance(ips.mark, Angle):return

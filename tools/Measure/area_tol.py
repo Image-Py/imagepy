@@ -9,6 +9,7 @@ import wx
 from shapely.geometry import Polygon, Point
 from core.engines import Tool
 from setting import Setting
+import IPy
     
 class Area:
     dtype = 'area'
@@ -54,6 +55,15 @@ class Area:
             if i[1]==0:i[0][-1] = (nx,ny)
             if i[1]==len(i[0])-1:
                 i[0][0] = (nx, ny)
+
+    def report(self, title):
+        rst = []
+        titles = ['Area', 'OX', 'OY']
+        for pg in self.body:
+            plg = Polygon(pg)
+            area, xy = plg.area, plg.centroid
+            rst.append([round(i,1) for i in [area, xy.x, xy.y]])
+        IPy.table(title, rst, titles)
             
     def draw(self, dc, f):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
@@ -78,6 +88,11 @@ class Plugin(Tool):
         self.doing = False
             
     def mouse_down(self, ips, x, y, btn, **key): 
+        if key['ctrl'] and key['alt']:
+            if isinstance(ips.mark, Area):
+                ips.mark.report(ips.title)
+            return
+
         lim = 5.0/key['canvas'].get_scale() 
         if btn==1:
             if not self.doing:
@@ -114,6 +129,9 @@ class Plugin(Tool):
             ips.mark.draged(self.odx, self.ody, x, y, self.curobj)
             ips.update = True
         self.odx, self.ody = x, y
+
+    def mouse_up(self, ips, x, y, btn, **key):
+        self.curobj = None
         
     def on_switch(self):
         print 'hahaha'

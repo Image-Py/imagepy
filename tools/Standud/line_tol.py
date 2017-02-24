@@ -39,14 +39,18 @@ class Plugin(Tool):
         if btn==1:
             # 如果有没有在绘制中，且已经有roi，则试图选取
             if not self.doing:
+                print ips.roi
+                print self.curobj
                 if ips.roi!= None:
                     self.curobj = ips.roi.pick(x, y, lim)
                 if self.curobj!=None:return
                     
                 if ips.roi == None:
+                    print 1
                     ips.roi = lineroi.LineRoi()
                     self.doing = True
                 elif ips.roi.dtype=='line' and key['shift']:
+                    print 2
                     self.doing = True
                 else: ips.roi = None
             if self.doing:
@@ -62,7 +66,7 @@ class Plugin(Tool):
         ips.update = True
     
     def mouse_up(self, ips, x, y, btn, **key):
-        self.curpts = None
+        self.curobj = None
     
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
