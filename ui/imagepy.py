@@ -27,8 +27,8 @@ class ImagePy(wx.Frame):
         #self.toolbar.Realize() 
         #sizertool.Add(self.toolbar, 1, 0, 5 )
         #sizertool.Add(self.morebar, 0, 0, 5)
-        sizer.Add(self.toolbar, 1, wx.EXPAND, 5 )
-        
+        sizer.Add(self.toolbar, 0, wx.EXPAND, 5 )
+        sizer.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
         self.line_color = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
         #self.line_color.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
         sizer.Add(self.line_color, 0, wx.EXPAND |wx.ALL, 0 )
