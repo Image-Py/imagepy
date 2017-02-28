@@ -174,7 +174,7 @@ class Plugin(Tool):
   def mouse_wheel(self, ips, x, y, d, **key):pass
 ```
 
-![](http://idoc.imagepy.org/imgs/paniter.png "painter")
+![](http://idoc.imagepy.org/imgs/painter.png "painter")
 
 **Create Tool:**
 
