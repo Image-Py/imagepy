@@ -31,7 +31,7 @@ class Plugin(Free):
             return
         else:
             plus.lut = ColorManager.get_lut(self.title)
-            plus.update = True
+            plus.update = 'pix'
     
     def __call__(self):
         return self
