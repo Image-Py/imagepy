@@ -26,7 +26,7 @@ class ParaDialog (wx.Dialog):
         if state=='cancel' and self.on_cancel:self.on_cancel()
         
     def add_confirm(self, modal=True):
-        self.lst.AddSpacer(( 0, 0), 1, wx.EXPAND, 5 )
+        self.lst.AddStretchSpacer(1)
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         self.btn_OK = wx.Button( self, wx.ID_OK, 'OK')
         sizer.Add( self.btn_OK, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )

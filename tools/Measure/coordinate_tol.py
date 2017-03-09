@@ -35,8 +35,7 @@ class Coordinate:
     def draw(self, dc, f):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetPointSize(8)
+        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         dc.SetFont(font)
         for i in self.body:
             x,y = f(*i)

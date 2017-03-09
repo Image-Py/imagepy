@@ -84,11 +84,11 @@ class Plugin(Filter):
     def draw(self, dc, f):
         dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))
         sox, soy = f(self.para['ox'], self.para['oy'])
-        dc.DrawCirclePoint((sox, soy), 5)
+        dc.DrawCircle((sox, soy), 5)
         a = np.linspace(0, 2*np.pi, 20)
         dc.DrawLines(zip(sox+np.cos(a)*40, soy+np.sin(a)*40))
         a = self.para['ang']*np.pi/180
-        dc.DrawCirclePoint((sox+np.cos(a)*40, soy+np.sin(a)*40), 3)
+        dc.DrawCircle((sox+np.cos(a)*40, soy+np.sin(a)*40), 3)
         
     def run(self, ips, img, buf, para = None):
         if para == None: para = self.para

@@ -12,7 +12,7 @@ import IPy
 
 class GenericTable(wx.grid.PyGridTableBase):
     def __init__(self, data, colLabels=None, rowLabels=None):
-        wx.grid.PyGridTableBase.__init__(self)
+        wx.grid.GridTableBase.__init__(self)
         self.data = data
         self.rowLabels = rowLabels
         self.colLabels = colLabels
@@ -30,14 +30,14 @@ class GenericTable(wx.grid.PyGridTableBase):
         
     def GetRowLabelValue(self, row):
         if self.rowLabels:
-            return self.rowLabels[row]
-        else: return row + 1
+            return str(self.rowLabels[row])
+        else: return str(row + 1)
             
     def IsEmptyCell(self, row, col):
             return False
             
     def GetValue(self, row, col):
-        return self.data[row][col]
+        return str(self.data[row][col])
         
     def SetValue(self, row, col, value):
         pass      

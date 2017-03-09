@@ -61,8 +61,8 @@ class Canvas (wx.Panel):
         wheel = np.sign(me.GetWheelRotation())
         if wheel!=0:tool.mouse_wheel(self.ips, x, y, wheel, alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)
         if hasattr(tool, 'cursor'):
-            self.SetCursor(wx.StockCursor(tool.cursor))
-        else : self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+            self.SetCursor(wx.Cursor(tool.cursor))
+        else : self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
         
     def bindEvents(self):
         for event, handler in [ \
@@ -74,7 +74,7 @@ class Canvas (wx.Panel):
         
     def initBuffer(self):
         box = self.GetClientSize()
-        self.buffer = wx.EmptyBitmap(box.width, box.height)
+        self.buffer = wx.Bitmap(box.width, box.height)
         self.box = [0,0,box[0],box[1]]
         
     def self_fit(self):
@@ -90,7 +90,7 @@ class Canvas (wx.Panel):
     def set_ips(self, ips):
         self.ips = ips
         self.imgbox = [0,0,ips.size[1],ips.size[0]]
-        self.bmp = wx.EmptyImage(ips.size[1], ips.size[0])
+        self.bmp = wx.Image(ips.size[1], ips.size[0])
         
     def zoom(self, k, x, y):
         print 'scale', k
@@ -136,12 +136,12 @@ class Canvas (wx.Panel):
     def on_paint(self, event):
         wx.BufferedPaintDC(self, self.buffer)
         cdc = wx.ClientDC(self)
-        cdc.BeginDrawing()
+        #cdc.BeginDrawing()
         if self.ips.roi != None:
             self.ips.roi.draw(cdc, self.to_panel_coor)
         if self.ips.mark != None:
             self.ips.mark.draw(cdc, self.to_panel_coor)
-        cdc.EndDrawing()
+        #cdc.EndDrawing()
         
     def draw_image(self, dc, img, rect, scale=None):
         win = cross(self.box, rect)
@@ -152,27 +152,27 @@ class Canvas (wx.Panel):
             sy = img.Height*1.0/rect[3]
         bmp = img.GetSubImage(multiply(win2, sx, sy))
         bmp = bmp.Scale(ceil(bmp.Width/sx), ceil(bmp.Height/sy))
-        dc.DrawBitmap(wx.BitmapFromImage(bmp), win[0], win[1])
+        dc.DrawBitmap(wx.Bitmap(bmp), win[0], win[1])
         
     def update(self, pix):
         if self.ips == None: return
         lay(self.box, self.imgbox)
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
-        dc.BeginDrawing()
+        #dc.BeginDrawing()
         if pix:
             dc.Clear()
             self.bmp.SetData(np.getbuffer(self.ips.lookup()))
             self.draw_image(dc, self.bmp, self.imgbox, self.scales[self.scaleidx])
             
-        dc.EndDrawing()
+        #dc.EndDrawing()
         dc.UnMask()
         cdc = wx.ClientDC(self)
-        cdc.BeginDrawing()
+        #cdc.BeginDrawing()
         if self.ips.roi != None:
             self.ips.roi.draw(cdc, self.to_panel_coor)
         if self.ips.mark != None:
             self.ips.mark.draw(cdc, self.to_panel_coor)
-        cdc.EndDrawing()
+        #cdc.EndDrawing()
         
     def zoomout(self, x, y):
         if self.scaleidx == len(self.scales)-1:return

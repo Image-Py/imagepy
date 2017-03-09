@@ -40,14 +40,13 @@ class Angle:
     def draw(self, dc, f):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetPointSize(8)
+        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         dc.SetFont(font)
         dc.DrawLines([f(*i) for i in self.buf])
-        for i in self.buf:dc.DrawCirclePoint(f(*i),2)
+        for i in self.buf:dc.DrawCircle(f(*i),2)
         for line in self.body:
             dc.DrawLines([f(*i) for i in line])
-            for i in line:dc.DrawCirclePoint(f(*i),2)
+            for i in line:dc.DrawCircle(f(*i),2)
             pts = np.array(line)
             v1 = pts[:-2]-pts[1:-1]
             v2 = pts[2:]-pts[1:-1]
@@ -55,7 +54,7 @@ class Angle:
             a/=norm(v1,axis=1)*norm(v2,axis=1)
             ang = np.arccos(a)/np.pi*180
             for i,j in zip(ang,line[1:-1]):
-                dc.DrawTextPoint('%d'%i, f(*j))
+                dc.DrawText('%d'%i, f(*j))
 
     def report(self, title):
         rst = []

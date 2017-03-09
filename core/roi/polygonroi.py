@@ -127,7 +127,7 @@ class PolygonRoi(ROI):
         for pg in self.body:
             dc.DrawLines([f(*i) for i in pg[0]])
             if self.issimple():
-                for i in pg[0]: dc.DrawCirclePoint(f(*i),2)
+                for i in pg[0]: dc.DrawCircle(f(*i),2)
             for hole in pg[1]:
                 dc.DrawLines([f(*i) for i in hole])
             

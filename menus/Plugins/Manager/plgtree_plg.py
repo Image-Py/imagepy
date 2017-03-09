@@ -14,7 +14,7 @@ from wx.py.editor import EditorFrame
 class TreeFrame ( wx.Frame ):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Plugins Tree", pos = wx.DefaultPosition, size = wx.Size( 452,300 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-        self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.HORIZONTAL )
         
         self.tre_plugins = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE )

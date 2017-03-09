@@ -58,7 +58,7 @@ class LineRoi(ROI):
         dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
         for line in self.body:
             dc.DrawLines([f(*i) for i in line])
-            for i in line:dc.DrawCirclePoint(f(*i),2)
+            for i in line:dc.DrawCircle(f(*i),2)
         #for i in self.buf:
         
     def affine(self, m, o):

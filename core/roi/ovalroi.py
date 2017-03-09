@@ -76,7 +76,7 @@ class OvalRoi(ROI):
         dc.DrawLines([f(*i) for i in self.body])
         for i in [self.lt, (self.lt+self.rt)/2, self.rt]:
             for j in [self.tp, (self.tp+self.bm)/2, self.bm]:
-                dc.DrawCirclePoint(f(i,j),2)
+                dc.DrawCircle(f(i,j),2)
                 
     def sketch(self, img, w=1, color=None):
         pen = paint.Paint()

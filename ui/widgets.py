@@ -20,7 +20,7 @@ class HistCanvas(wx.Panel):
 
     def init_buf(self):
         box = self.GetClientSize()
-        self.buffer = wx.EmptyBitmap(box.width, box.height)
+        self.buffer = wx.Bitmap(box.width, box.height)
         
     def on_size(self, event):
         self.init_buf()
@@ -45,7 +45,6 @@ class HistCanvas(wx.Panel):
     def draw(self):
         if self.hist == None:return
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
-        dc.BeginDrawing()
         dc.Clear()
         dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID))
         w, h = self.GetClientSize()
@@ -54,7 +53,6 @@ class HistCanvas(wx.Panel):
             dc.DrawLine(i,80,i,80-self.hist[i])
         dc.SetPen(wx.Pen((0,0,0), width=1, style=wx.SOLID))
         dc.DrawLine(self.x1, 80, self.x2, 0)
-        dc.EndDrawing()
         print 'draw'
         
 class NumCtrl(wx.TextCtrl):

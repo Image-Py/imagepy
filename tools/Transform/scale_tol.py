@@ -83,11 +83,11 @@ class Plugin(Filter):
                 (self.rt,self.tp),(self.lt,self.tp),(self.lt,self.bm)]
         dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))
         dc.DrawLines([f(*i) for i in body])
-        for i in body:dc.DrawCirclePoint(f(*i),2)
-        dc.DrawCirclePoint(f(self.lt, (self.tp+self.bm)/2),2)
-        dc.DrawCirclePoint(f(self.rt, (self.tp+self.bm)/2),2)
-        dc.DrawCirclePoint(f((self.lt+self.rt)/2, self.tp),2)
-        dc.DrawCirclePoint(f((self.lt+self.rt)/2, self.bm),2)
+        for i in body:dc.DrawCircle(f(*i),2)
+        dc.DrawCircle(f(self.lt, (self.tp+self.bm)/2),2)
+        dc.DrawCircle(f(self.rt, (self.tp+self.bm)/2),2)
+        dc.DrawCircle(f((self.lt+self.rt)/2, self.tp),2)
+        dc.DrawCircle(f((self.lt+self.rt)/2, self.bm),2)
         
     def load(self, ips):      
         self.bufroi = ips.roi
@@ -123,7 +123,7 @@ class Plugin(Filter):
             self.tp = self.para['oy']+self.orih*self.para['ky']/2
 
     def ok(self, ips, para=None):
-        Filter.on_ok(self, ips, para)
+        Filter.ok(self, ips, para)
         ips.mark = None
         ips.tool = None
         

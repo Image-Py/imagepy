@@ -17,7 +17,7 @@ class FeatMark:
         
     def draw(self, dc, f):
         for i in self.feats:
-            dc.DrawCirclePoint(f(i.pt), 3)
+            dc.DrawCircle(f(i.pt), 3)
             
 class Surf(Filter):
     title = 'Surf Detect'
@@ -74,14 +74,14 @@ class Pick(Tool):
         #dc.SetPen(wx.TRANSPARENT_PEN)
         dc.SetBrush(wx.Brush((0,0,255)))
         if self.style:
-            for i in self.pts:dc.DrawCirclePoint(f(*i.pt), 3)
+            for i in self.pts:dc.DrawCircle(f(*i.pt), 3)
         tidx = self.pair[:,1-self.host][self.msk]
         dc.SetBrush(wx.Brush((255,255,0)))
         for i in tidx:
-            dc.DrawCirclePoint(f(*self.pts[i].pt), 3)
+            dc.DrawCircle(f(*self.pts[i].pt), 3)
         if self.cur!=-1:
             dc.SetBrush(wx.Brush((255,0,0)))
-            dc.DrawCirclePoint(f(*self.pts[self.cur].pt), 3)
+            dc.DrawCircle(f(*self.pts[self.cur].pt), 3)
     
 class Match(Simple):
     title = 'Surf Matcher'

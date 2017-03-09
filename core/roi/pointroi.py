@@ -58,7 +58,7 @@ class PointRoi(ROI):
     def draw(self, dc, f):
         dc.SetPen(wx.Pen((255,255,255), width=1, style=wx.SOLID))
         for i in self.body:
-            dc.DrawCirclePoint(f(*i), 2)
+            dc.DrawCircle(f(*i), 2)
                 
     def sketch(self, img, w=1, color=None):
         pen = paint.Paint()

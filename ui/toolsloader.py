@@ -30,7 +30,7 @@ def menu_drop(parent, toolbar, data, btn, e):
     menu = wx.Menu()
     for i in data[1][1:]:
         item = wx.MenuItem(menu, wx.ID_ANY, i[0].title, wx.EmptyString, wx.ITEM_NORMAL )
-        menu.AppendItem(item)
+        menu.Append(item)
         parent.Bind(wx.EVT_MENU, lambda x,p=i[1]:add_tools(toolbar, p), item)
     parent.PopupMenu( menu )
     menu.Destroy()
@@ -57,7 +57,7 @@ def add_tools(bar, data, curids=[]):
         for i in curids:
             bar.RemoveChild(i)
             box.Hide(i)
-            box.Remove(i)
+            box.Detach(i)
     if curids!=None:del curids[:]
     for i in data:
         btn = wx.BitmapButton(bar, wx.ID_ANY, wx.Bitmap(i[1]), wx.DefaultPosition, (30, 30), wx.BU_AUTODRAW|wx.RAISED_BORDER )        
@@ -74,5 +74,5 @@ def add_tools(bar, data, curids=[]):
     if curids==None:
         sp = wx.StaticLine( bar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
         box.Add( sp, 0, wx.ALL|wx.EXPAND, 2 )
-        box.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+        box.AddStretchSpacer(1)
         

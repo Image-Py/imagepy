@@ -11,24 +11,24 @@ class NewFilter(Free):
     title = 'New Filter'
 
     def run(self, para = None):
-        EditorFrame(filename='./Menus/Plugins/New/demo_filter.py').Show()
+        EditorFrame(filename='./menus/Plugins/New/demo_filter.py').Show()
         
 class NewSimple(Free):
     title = 'New Simple'
 
     def run(self, para = None):
-        EditorFrame(filename='./Menus/Plugins/New/demo_simple.py').Show()
+        EditorFrame(filename='./menus/Plugins/New/demo_simple.py').Show()
         
 class NewFree(Free):
     title = 'New Free'
 
     def run(self, para = None):
-        EditorFrame(filename='./Menus/Plugins/New/demo_free.py').Show()
+        EditorFrame(filename='./menus/Plugins/New/demo_free.py').Show()
         
 class NewTool(Free):
     title = 'New Tool'
 
     def run(self, para = None):
-        EditorFrame(filename='./Menus/Plugins/New/demo_tool.py').Show()
+        EditorFrame(filename='./menus/Plugins/New/demo_tool.py').Show()
         
 plgs = [NewFilter, NewSimple, NewFree, NewTool]

@@ -68,18 +68,17 @@ class Area:
     def draw(self, dc, f):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetPointSize(8)
+        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         dc.SetFont(font)
         dc.DrawLines([f(*i) for i in self.buf])
-        for i in self.buf:dc.DrawCirclePoint(f(*i),2)
+        for i in self.buf:dc.DrawCircle(f(*i),2)
             
         for pg in self.body:
             plg = Polygon(pg)
             dc.DrawLines([f(*i) for i in pg])
-            for i in pg: dc.DrawCirclePoint(f(*i),2)
+            for i in pg: dc.DrawCircle(f(*i),2)
             area, xy = plg.area, plg.centroid
-            dc.DrawTextPoint('%.1f'%area, f(xy.x, xy.y))
+            dc.DrawText('%.1f'%area, f(xy.x, xy.y))
 
 class Plugin(Tool):
     title = 'Area'

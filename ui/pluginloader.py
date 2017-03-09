@@ -18,7 +18,7 @@ def buildMenu(parent, item, curpath):
     for i in item[1]:
         if isinstance(i, tuple):
             nextpath = curpath + '.' + i[0].title
-            menu.AppendMenu(-1,i[0].title,buildMenu(parent, i,nextpath))
+            menu.Append(-1,i[0].title,buildMenu(parent, i,nextpath))
         else: 
             buildItem(parent, menu, i)
     return menu
@@ -29,4 +29,4 @@ def buildItem(parent, root, plg):
         return
     mi = wx.MenuItem(root, -1, plg.title)
     parent.Bind(wx.EVT_MENU, lambda x, p=plg:p().start(), mi)
-    root.AppendItem(mi)
+    root.Append(mi)
