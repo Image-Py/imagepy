@@ -91,6 +91,7 @@ class Canvas (wx.Panel):
         self.ips = ips
         self.imgbox = [0,0,ips.size[1],ips.size[0]]
         self.bmp = wx.Image(ips.size[1], ips.size[0])
+        self.self_fit()
         
     def zoom(self, k, x, y):
         print 'scale', k
@@ -150,7 +151,8 @@ class Canvas (wx.Panel):
         if scale==None:
             sx = img.Width*1.0/rect[2]
             sy = img.Height*1.0/rect[3]
-        bmp = img.GetSubImage(multiply(win2, sx, sy))
+        box = multiply(win2, sx, sy)
+        bmp = img.GetSubImage(box)
         bmp = bmp.Scale(ceil(bmp.Width/sx), ceil(bmp.Height/sy))
         dc.DrawBitmap(wx.Bitmap(bmp), win[0], win[1])
         

@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 testdata/
-menus/Extend/
+Extend/
 
 # C extensions
 *.so

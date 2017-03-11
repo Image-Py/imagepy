@@ -19,7 +19,8 @@ class Plugin(Free):
     para = {'path':'./', 'start':0, 'step':1, 'title':'sequence'}
 
     def show(self):
-        filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif'
+        filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG \
+        files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif|TIF files (*.tif)|*.tif'
         rst = IPy.getpath('Import sequence', filt, self.para)
         
         files = self.getfiles(self.para['path'])

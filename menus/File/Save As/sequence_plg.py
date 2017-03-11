@@ -18,7 +18,7 @@ class Plugin(Simple):
 
     def show(self):
         self.para['name'] = self.ips.title
-        rst = IPy.getpara('Save sequence', self.view, self.para)    
+        rst = IPy.get_para('Save sequence', self.view, self.para)    
         if rst!=wx.ID_OK:return rst
         return IPy.getdir('Save sequence', '', self.para)
 

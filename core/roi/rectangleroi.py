@@ -30,7 +30,10 @@ class RectangleRoi(ROI):
         return None
     
     def commit(self):
+        box = self.lt, self.rt, self.tp, self.bm
+        self.lt, self.rt, self.tp, self.bm = [int(round(i)) for i in box]
         l,r,t,b = self.lt, self.rt, self.tp, self.bm
+        
         self.update = True
         if l==r or t==b: 
             self.body = [];return False

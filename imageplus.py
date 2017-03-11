@@ -81,6 +81,7 @@ class ImagePlus:
     def get_subimg(self, s1=None, s2=None):
         if s1==None:
             s1, s2 = self.get_rect()
+            print s1, s2
         return self.get_img()[s1, s2]
         
     def snapshot(self):

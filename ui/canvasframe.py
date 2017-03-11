@@ -87,7 +87,6 @@ class CanvasFrame(wx.Frame):
         self.ips = ips
         self.set_info(ips)
         self.canvas.set_ips(ips)
-        self.canvas.self_fit()
             
     def on_scroll(self, event):
         self.ips.cur = self.page.GetThumbPosition()

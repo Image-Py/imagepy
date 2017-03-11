@@ -39,10 +39,7 @@ class Plugin(Filter):
         strc = generate_binary_structure(2, con)
         msk = label(msk, strc, output = np.uint16)
         
-        nips = ImagePlus([msk[0]], ips.title+'-label') 
-        frame = CanvasFrame(IPy.curapp)
-        frame.set_ips(nips)
-        frame.Show()
+        IPy.show_img([msk[0]], ips.title+'-label') 
         
         
         

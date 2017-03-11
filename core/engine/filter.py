@@ -45,7 +45,7 @@ def process_stack(plg, ips, src, imgs, para):
     if transfloat: buf = imgs[0].astype(np.float32)
     for i,n in zip(imgs,range(len(imgs))):
         IPy.curapp.set_progress(round((n+1)*100.0/len(imgs)))
-        src[:] = i
+        if 'auto_snap' in plg.note : src[:] = i
         if transint or transfloat: buf[:] = i
         rst = process_chanels(plg, ips, src, buf if transint or transfloat else i, para)
         if not i is rst and rst != None:
