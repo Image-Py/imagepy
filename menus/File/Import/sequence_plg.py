@@ -15,8 +15,7 @@ from core.engines import Free
 
 class Plugin(Free):
     title = 'Import Sequence'
-    
-    para = {'path':'./', 'start':0, 'step':1, 'title':'sequence'}
+    para = {'path':'./', 'start':0, 'end':0, 'step':1, 'title':'sequence'}
 
     def show(self):
         filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG \
@@ -25,8 +24,11 @@ class Plugin(Free):
         
         files = self.getfiles(self.para['path'])
         nfs = len(files)
-        self.view = [(str, 'Title','title',''), (int, (0, nfs-1), 0, 'Start', 'start', '0~%s'%(nfs-1)),
-            (int, (0, nfs-1), 0, 'Step', 'step', '')]
+        self.para['end'] = nfs-1
+        self.view = [(str, 'Title','title',''), 
+                     (int, (0, nfs-1), 0, 'Start', 'start', '0~%s'%(nfs-1)),
+                     (int, (0, nfs-1), 0, 'End', 'end', '0~%s'%(nfs-1)),
+                     (int, (0, nfs-1), 0, 'Step', 'step', '')]
         
         if rst!=wx.ID_OK:return rst
         return IPy.get_para('Import sequence', self.view, self.para)
@@ -59,7 +61,7 @@ class Plugin(Free):
             return
         files = self.getfiles(para['path'])
         files.sort()
-        imgs = self.readimgs(files[para['start']::para['step']], img.shape, img.dtype)
+        imgs = self.readimgs(files[para['start']:para['end']+1:para['step']], img.shape, img.dtype)
         IPy.show_img(imgs, para['title'])
         
 

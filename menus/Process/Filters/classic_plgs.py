@@ -57,7 +57,7 @@ class Median(Filter):
     
     #parameter
     para = {'size':2}
-    view = [(float, (0,30), 1,  'size', 'size', 'pix')]
+    view = [(int, (0,30), 0,  'size', 'size', 'pix')]
 
     #process
     def run(self, ips, snap, img, para = None):
