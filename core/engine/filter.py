@@ -125,7 +125,7 @@ class Filter:
             has, rst = para.has_key('stack'), None
             if not has:
                 rst = IPy.yes_no('run every slice in current stacks?')
-            if 'auto_snap' in self.note:ips.swap()
+            if 'auto_snap' in self.note and self.modal:ips.swap()
             if has and para['stack'] or rst == 'yes':
                 para['stack'] = True
                 process_stack(self, ips, ips.snap, ips.imgs, para)

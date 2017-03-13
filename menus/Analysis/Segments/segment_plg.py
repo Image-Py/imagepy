@@ -17,11 +17,11 @@ class Statistic(Simple):
     
     para = {'lab':None, 'max':True, 'min':True,'mean':False,'var':False,'std':False,'sum':False}
     view = [('img', 'Label', 'lab', ''),
-            (bool, 'Max', 'max'),
-            (bool, 'Min', 'min'),
-            (bool, 'Mean', 'mean'),
-            (bool, 'Standard', 'std'),
-            (bool, 'Sum', 'sum')]
+            (bool, 'max', 'max'),
+            (bool, 'min', 'min'),
+            (bool, 'mean', 'mean'),
+            (bool, 'standard', 'std'),
+            (bool, 'sum', 'sum')]
             
     #process
     def run(self, ips, imgs, para = None):
@@ -50,39 +50,48 @@ class Position(Simple):
     title = 'Segments Position'
     note = ['8-bit', '16-bit']
     
-    para = {'lab':None, 'center':True,'max':False, 'min':False}
+    para = {'lab':None, 'center':True,'max':False, 'min':False, 'slice':False}
     view = [('img', 'Label', 'lab', ''),
             (bool, 'Center', 'center'),
             (bool, 'Max', 'max'),
-            (bool, 'Min', 'min')]
+            (bool, 'Min', 'min'),
+            (bool, 'Slice', 'slice')]
 
     #process
     def run(self, ips, imgs, para = None):
-        lab = WindowsManager.get(para['lab']).ips.get_img()
-        if lab.dtype != np.uint8 and lab.dtype != np.uint16:
+        if not para['slice']:
+            imgs = [ips.get_img()]
+            labs = [WindowsManager.get(para['lab']).ips.get_img()]
+        else: labs = WindowsManager.get(para['lab']).ips.imgs
+
+        if not labs[0].dtype in (np.uint8, np.uint16):
             IPy.alert('Label image must be in type 8-bit or 16-bit')
             return
-        index = range(1, lab.max()+1)
-        titles = ['Center-X','Center-Y', 'Max-X','Max-Y','Min-X','Min-Y']
-        key = {'Max-X':'max','Max-Y':'max','Min-X':'min','Min-Y':'min','Center-X':'center','Center-Y':'center'}
-        titles = ['value'] + [i for i in titles if para[key[i]]]
-        
-        data = [index]
-        img = ips.get_img()
-        if img is lab: img = img>0
-        if para['center']:
-            pos = np.round(ndimage.center_of_mass(img, lab, index), 2)
-            data.append(pos[:,0])
-            data.append(pos[:,1])  
-        if para['max']:
-            pos = np.round(ndimage.minimum_position(img, lab, index), 2)
-            data.append(pos[:,0])
-            data.append(pos[:,1])
-        if para['min']:
-            pos = np.round(ndimage.maximum_position(img, lab, index), 2)
-            data.append(pos[:,0])
-            data.append(pos[:,1])       
-        data = zip(*data)
+        data = []
+        for i in range(len(imgs)):
+            img, lab = imgs[i], labs[i]
+            index = range(1, lab.max()+1)
+            titles = ['Center-X','Center-Y', 'Max-X','Max-Y','Min-X','Min-Y']
+            key = {'Max-X':'max','Max-Y':'max','Min-X':'min','Min-Y':'min','Center-X':'center','Center-Y':'center'}
+            titles = ['slice','value'] + [j for j in titles if para[key[j]]]
+            
+            dt = [[i]*len(index), index]
+            if not para['slice']:
+                titles, dt = titles[1:], dt[1:]
+            if img is lab: img = img>0
+            if para['center']:
+                pos = np.round(ndimage.center_of_mass(img, lab, index), 2)
+                dt.append(pos[:,0])
+                dt.append(pos[:,1])  
+            if para['max']:
+                pos = np.round(ndimage.minimum_position(img, lab, index), 2)
+                dt.append(pos[:,0])
+                dt.append(pos[:,1])
+            if para['min']:
+                pos = np.round(ndimage.maximum_position(img, lab, index), 2)
+                dt.append(pos[:,0])
+                dt.append(pos[:,1])       
+            data.extend(zip(*dt))
         IPy.table(ips.title+'-position', data, titles)
         
 class Mark(Simple):

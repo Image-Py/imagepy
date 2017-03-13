@@ -56,7 +56,7 @@ class TextLog(wx.Frame):
         self.Bind(wx.EVT_RIGHT_DOWN,self.OnRClick)
 
     def OnOpen(self,event):
-        dialog=wx.FileDialog(None,'wxpython Notebook',style=wx.OPEN)
+        dialog=wx.FileDialog(None,'wxpython Notebook',style=wx.FD_OPEN)
         if dialog.ShowModal()==wx.ID_OK:
             self.file=dialog.GetPath()
             file=open(self.file)
@@ -66,7 +66,7 @@ class TextLog(wx.Frame):
 
     def OnSave(self,event):
         if self.file=='':
-            dialog=wx.FileDialog(None,'wxpython Notebook',style=wx.SAVE)
+            dialog=wx.FileDialog(None,'wxpython Notebook',style=wx.FD_SAVE)
             if dialog.ShowModal()==wx.ID_OK:
                 self.file=dialog.GetPath()
                 self.text.SaveFile(self.file)
@@ -75,7 +75,7 @@ class TextLog(wx.Frame):
             self.text.SaveFile(self.file)
 
     def OnSaveAs(self,event):
-        dialog=wx.FileDialog(None,'wxpython notebook',style=wx.SAVE)
+        dialog=wx.FileDialog(None,'wxpython notebook',style=wx.FD_SAVE)
         if dialog.ShowModal()==wx.ID_OK:
             self.file=dialog.GetPath()
             self.text.SaveFile(self.file)

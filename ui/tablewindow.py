@@ -10,7 +10,7 @@ import wx.grid
 from core.managers import TableLogManager
 import IPy
 
-class GenericTable(wx.grid.PyGridTableBase):
+class GenericTable(wx.grid.GridTableBase):
     def __init__(self, data, colLabels=None, rowLabels=None):
         wx.grid.GridTableBase.__init__(self)
         self.data = data
@@ -53,7 +53,17 @@ class TableLog(wx.Frame):
         self.data, self.cols, self.rows = data, cols, rows
         tableBase = GenericTable(data, cols, rows)
         self.grid = wx.grid.Grid(self)
-        self.grid.SetTable(tableBase)
+        #self.grid.SetTable(tableBase)
+        self.grid.CreateGrid(len(data), len(data[0]))
+        if cols!=None:
+            for col in range(len(cols)):
+                self.grid.SetColLabelValue(col, cols[col])
+        if rows!=None:
+            for row in range(len(rows)):
+                self.grid.SetColLabelValue(row, rows[row])
+        for row in range(len(data)):
+            for col in range(len(data[0])):
+                self.grid.SetCellValue(row, col,str(data[row][col]))
         self.grid.AutoSize()
         
         menus = [('File(&F)',[
@@ -86,14 +96,14 @@ class TableLog(wx.Frame):
         f.close()
         
     def OnSaveTab(self,event):
-        dialog=wx.FileDialog(self,'Tab',style=wx.SAVE)
+        dialog=wx.FileDialog(self,'Tab',style=wx.FD_SAVE)
         if dialog.ShowModal()==wx.ID_OK:
             self.file=dialog.GetPath()
             self.save_tab(self.file, '\t')
         dialog.Destroy()
 
     def OnSaveCsv(self,event):
-        dialog=wx.FileDialog(self,'Csv',style=wx.SAVE)
+        dialog=wx.FileDialog(self,'Csv',style=wx.FD_SAVE)
         if dialog.ShowModal()==wx.ID_OK:
             self.file=dialog.GetPath()
             self.save_tab(self.file, ',')

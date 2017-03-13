@@ -12,20 +12,28 @@ class Histogram(Simple):
     title = 'Histogram'
     note = ['8-bit', '16-bit']
     
-    para = {'fre':True}
-    view = [(bool, 'Count frequence', 'fre')]
+    para = {'fre':True, 'slice':False}
+    view = [(bool, 'count frequence', 'fre'),
+            (bool, 'each slices', 'slice')]
         
     #process
     def run(self, ips, imgs, para = None):
-        maxv = ips.range[1]
-        ct = np.histogram(ips.get_img(), maxv+1, [0,maxv+1])[0]
-        titles = ['value','count']
-        data = [range(maxv+1), ct]
-        if self.para['fre']:
-            fre = ct/float(ct.sum())
-            titles.append('frequence')
-            data.append(fre.round(4))
-        data = zip(*data)
+        if not para['slice']: imgs = [ips.get_img()]
+        data = []
+        for i in range(len(imgs)):
+            maxv = imgs[i].max()
+            ct = np.histogram(imgs[i], maxv, [1,maxv+1])[0]
+            titles = ['slice','value','count']
+            dt = [[i]*len(ct), range(maxv+1), ct]
+            if not para['slice']:
+                titles, dt = titles[1:], dt[1:]
+            if self.para['fre']:
+                fre = ct/float(ct.sum())
+                titles.append('frequence')
+                dt.append(fre.round(4))
+            dt = zip(*dt)
+            data.extend(dt)
+
         IPy.table(ips.title+'-histogram', data, titles)
         
 class Statistic(Simple):

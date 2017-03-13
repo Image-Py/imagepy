@@ -44,7 +44,8 @@ class Plugin(Simple):
                 if ips.is3d: imgs=imgs[:, sc, sr].copy()
                 else: imgs = [i[sc,sr].copy() for i in imgs]
             ipsd = ImagePlus(imgs, name)
-            ipsd.roi = ips.roi.affine(np.eye(2), (-sr.start, -sc.start))
+            if ips.roi != None:
+                ipsd.roi = ips.roi.affine(np.eye(2), (-sr.start, -sc.start))
                 
         frame = CanvasFrame(IPy.curapp)
         frame.set_ips(ipsd)
