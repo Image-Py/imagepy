@@ -46,7 +46,5 @@ class Plugin(Simple):
             ipsd = ImagePlus(imgs, name)
             if ips.roi != None:
                 ipsd.roi = ips.roi.affine(np.eye(2), (-sr.start, -sc.start))
-                
-        frame = CanvasFrame(IPy.curapp)
-        frame.set_ips(ipsd)
-        frame.Show()
+        
+        IPy.show_ips(ipsd)

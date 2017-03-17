@@ -20,16 +20,20 @@ def get_ips():
     if win==None:return None
     return win.canvas.ips
     
-def showimg(imgs, title):
-    from imageplus import ImagePlus
+def showips(ips):
     from ui.canvasframe import CanvasFrame
-    ips = ImagePlus(imgs, title)
     frame = CanvasFrame(curapp)
     frame.set_ips(ips)
     frame.Show()
     
 def show_img(imgs, title):
-    callafter(showimg, *(imgs, title))
+    from imageplus import ImagePlus
+    ips = ImagePlus(imgs, title)
+    callafter(showips, ips)
+    wx.Yield()
+
+def show_ips(ips):
+    callafter(showips, ips)
     wx.Yield()
     
 def alert_(info, title='image-py'):

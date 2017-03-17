@@ -32,7 +32,7 @@ class CanvasFrame(wx.Frame):
         self.Layout()
         
         self.Bind(wx.EVT_IDLE, self.on_idle)
-        self.Bind(wx.EVT_SCROLL_THUMBTRACK, self.on_scroll)
+        self.Bind(wx.EVT_SCROLL, self.on_scroll)
         self.Bind(wx.EVT_ACTIVATE, self.on_valid) 
         self.Bind(wx.EVT_CLOSE, self.on_close)
         self.canvas.Bind(wx.EVT_CHAR, self.on_key)
@@ -91,8 +91,8 @@ class CanvasFrame(wx.Frame):
     def on_scroll(self, event):
         self.ips.cur = self.page.GetThumbPosition()
         self.ips.update = 'pix'
-        
-        
+        self.on_idle(None)
+        self.canvas.on_idle(None)
         
 if __name__=='__main__':
     app = wx.PySimpleApp()
