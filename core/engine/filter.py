@@ -7,6 +7,7 @@ Created on Fri Dec  2 23:48:33 2016
 
 from ui.panelconfig import ParaDialog
 from core.managers import TextLogManager, WindowsManager
+import threading
 import numpy as np
 import IPy
 import wx
@@ -14,7 +15,7 @@ import wx
 def process_chanels(plg, ips, src, des, para):
     if ips.chanels>1 and not 'not_channel' in plg.note:
         for i in range(ips.chanels):
-            rst = plg.run(ips, src[:,:,i], des[:,:,i], para)
+            rst = plg.run(ips, src if src is None else src[:,:,i], des[:,:,i], para)
             if not rst is des and not rst is None:
                 des[:,:,i] = rst
     else:
@@ -44,7 +45,7 @@ def process_stack(plg, ips, src, imgs, para):
     if transint: buf =  imgs[0].astype(np.int32)
     if transfloat: buf = imgs[0].astype(np.float32)
     for i,n in zip(imgs,range(len(imgs))):
-        IPy.curapp.set_progress(round((n+1)*100.0/len(imgs)))
+        IPy.set_progress(round((n+1)*100.0/len(imgs)))
         if 'auto_snap' in plg.note : src[:] = i
         if transint or transfloat: buf[:] = i
         rst = process_chanels(plg, ips, src, buf if transint or transfloat else i, para)
@@ -53,7 +54,8 @@ def process_stack(plg, ips, src, imgs, para):
         if 'auto_msk' in plg.note and not ips.get_msk() is None:
             msk = True - ips.get_msk()
             i[msk] = src[msk]
-    IPy.curapp.set_progress(0)
+    IPy.set_progress(0)
+    ips.update = 'pix'
     print time()-start
     return imgs
     
@@ -111,7 +113,7 @@ class Filter:
         
     def load(self, ips):return True
           
-    def ok(self, ips, para=None):
+    def ok(self, ips, para=None, thd=True):
         if para == None:
             para = self.para
             if not 'not_slice' in self.note and ips.get_nslices()>1:
@@ -119,7 +121,12 @@ class Filter:
             if para!=None and para.has_key('stack'):del para['stack']
         win = TextLogManager.get('Recorder')
         if ips.get_nslices()==1 or 'not_slice' in self.note:
-            process_one(self, ips, ips.snap, ips.get_img(), para)
+            run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p)
+
+            thread = threading.Thread(None, run, ())
+            thread.start()
+            if not thd:thread.join()
+            #process_one(self, ips, ips.snap, ips.get_img(), para)
             if win!=None: win.append('%s>%s'%(self.title, para))
         elif ips.get_nslices()>1:
             has, rst = para.has_key('stack'), None
@@ -128,11 +135,22 @@ class Filter:
             if 'auto_snap' in self.note and self.modal:ips.swap()
             if has and para['stack'] or rst == 'yes':
                 para['stack'] = True
-                process_stack(self, ips, ips.snap, ips.imgs, para)
+                run = lambda p=para:process_stack(self, ips, ips.snap, ips.imgs, p)
+                
+                print 'new thread'
+                thread = threading.Thread(None, run, ())
+                thread.start()
+                if not thd:thread.join()
+                #process_stack(self, ips, ips.snap, ips.imgs, para)
                 if win!=None: win.append('%s>%s'%(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
-                process_one(self, ips, ips.snap, ips.get_img(), para)
+                run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p)
+                
+                thread = threading.Thread(None, run, ())
+                thread.start()
+                if thd:thread.join()
+                #process_one(self, ips, ips.snap, ips.get_img(), para)
                 if win!=None: win.append('%s>%s'%(self.title, para))
             elif rst == 'cancel': pass
         ips.update = 'pix'
@@ -142,17 +160,17 @@ class Filter:
             ips.swap()
             ips.update = 'pix'
             
-    def start(self, para=None):
+    def start(self, para=None, thd=True):
         ips = self.ips
         if not self.check(ips):return
         if not self.load(ips):return
         if 'auto_snap' in self.note:ips.snapshot()
         
         if para!=None or self.view==None:
-            self.ok(ips, para)
+            self.ok(ips, para, thd)
         elif self.modal:
             if self.show() == wx.ID_OK:
-                self.ok(ips)
+                self.ok(ips, None, thd)
             else:self.cancel(ips)
             self.dialog.Destroy()
         else: self.show()

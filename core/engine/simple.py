@@ -4,6 +4,7 @@ Created on Sat Dec  3 03:32:05 2016
 
 @author: yxl
 """
+import threading
 from ui.panelconfig import ParaDialog
 from core.managers import TextLogManager
 import IPy
@@ -66,7 +67,7 @@ class Simple:
             
         return True
         
-    def start(self, para=None):
+    def start(self, para=None, thd=True):
         #print self.title, para
         if not self.check(self.ips):return
         if not self.load(self.ips):return
@@ -74,6 +75,11 @@ class Simple:
             if para == None:para = self.para
             win = TextLogManager.get('Recorder')
             if win!=None: win.append('%s>%s'%(self.title, para))
-            self.run(self.ips, self.ips.imgs, para)
-            self.ips.update = 'pix'
+            def run(ips, imgs, p):
+                self.run(ips, imgs, p)
+                ips.update = 'pix'
+            f = lambda ips=self.ips, imgs=self.ips.imgs, p=para:run(ips, imgs, p)
+            thread = threading.Thread(None, f)
+            thread.start()
+            if not thd:thread.join()
         if self.dialog!=None:self.dialog.Destroy()

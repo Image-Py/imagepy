@@ -6,6 +6,7 @@ Created on Sat Dec  3 03:57:53 2016
 """
 from ui.panelconfig import ParaDialog
 from core.managers import TextLogManager
+import threading
 import IPy, wx
 
 class Free:
@@ -23,10 +24,17 @@ class Free:
         self.dialog.init_view(self.view, self.para, False, True)
         return self.dialog.ShowModal()
         
-    def start(self, para=None):
+    def start(self, para=None, thd=True):
         if not self.load():return
         if para!=None or self.show() == wx.ID_OK:
             if para==None:para = self.para
             win = TextLogManager.get('Recorder')
-            if win!=None: win.append('%s>%s'%(self.title, para))
-            self.run(para)
+            if win!=None: 
+                wx.CallAfter(win.append, '%s>%s'%(self.title, para))
+            #self.run(para)
+            run = lambda p=para:self.run(p)
+            
+            print thd, '--------------------new thread'
+            thread = threading.Thread(None, run, ())
+            thread.start()
+            if not thd: thread.join()

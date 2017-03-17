@@ -117,6 +117,7 @@ class Canvas (wx.Panel):
         self.reInitBuffer = True
 
     def on_idle(self, event):
+        if not self.IsShown() or self.ips==None:return
         if self.reInitBuffer:
             self.initBuffer()
             #print 'resized update'

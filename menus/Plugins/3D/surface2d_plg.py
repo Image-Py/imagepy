@@ -7,6 +7,7 @@ Created on Tue Jan 10 22:33:33 2017
 from core.engines import Simple
 from mayavi import mlab
 from scipy.ndimage.filters import gaussian_filter
+import IPy
 
 class Plugin(Simple):
     title = '2D Surface'
@@ -22,7 +23,7 @@ class Plugin(Simple):
         scale, sigma = para['scale'], para['sigma']
         imgblur = gaussian_filter(img[::scale,::scale], sigma)
         mlab.surf(imgblur, warp_scale=para['h'])
-        mlab.show()
+        IPy.callafter(mlab.show)
 
 if __name__ == '__main__':
     pass

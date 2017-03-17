@@ -49,12 +49,12 @@ class Plugin(Simple):
             bliter.blit(ips1.get_img(), ips2.get_img(), mode=para['op'])
         elif sl1>1 and sl2==1:
             for i in range(sl1):
-                IPy.curapp.set_progress(round(i*100.0/sl1))
+                IPy.set_progress(round(i*100.0/sl1))
                 bliter.blit(ips1.imgs[i], ips2.get_img(), mode=para['op'])
         elif sl1>1 and sl2>1:
             for i in range(sl1):
-                IPy.curapp.set_progress(round(i*100.0/sl1))
+                IPy.set_progress(round(i*100.0/sl1))
                 bliter.blit(ips1.imgs[i], ips2.imgs[i], mode=para['op'])
-        IPy.curapp.set_progress(0)
-        ips1.update = True
+        IPy.set_progress(0)
+        ips1.update = 'pix'
         

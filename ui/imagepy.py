@@ -7,7 +7,7 @@ Created on Sat Jan 14 23:23:30 2017
 import wx, os, sys
 import pluginloader, toolsloader, IPy
 from core.manager import configmanager
-import time, thread
+import time, threading
 
 class FileDrop(wx.FileDropTarget):
     def OnDropFiles(self, x, y, path):
@@ -55,7 +55,9 @@ class ImagePy(wx.Frame):
         self.update = False
         
         self.Bind(wx.EVT_CLOSE, self.on_close)
-        thread.start_new_thread(self.hold, ())
+        thread = threading.Thread(None, self.hold, ())  
+        thread.setDaemon(True)
+        thread.start()
         
     def reload_plugins(self):
         for i in range(self.menubar.GetMenuCount()): self.menubar.Remove(0)
@@ -64,9 +66,9 @@ class ImagePy(wx.Frame):
     def hold(self):
         i = 0
         while True:
+            if time == None: break
             time.sleep(0.05)
-            try: self.busy = self.busy
-            except Exception:break
+
             if self.busy==False: continue
             i += 5
             wx.CallAfter(self.set_progress, i)

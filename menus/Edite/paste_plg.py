@@ -16,7 +16,8 @@ class PasteMove(Tool):
         self.cx, self.cy = 0, 0
         
     def mouse_down(self, ips, x, y, btn, **key):    
-        goon = ips.roi.pick(x, y)
+        goon = ips.roi.pick(x, y, 0)
+        print goon
         if goon != True : 
             print 'end'
         else :
@@ -34,7 +35,7 @@ class PasteMove(Tool):
             bliter.blit(img, ci, y, x)
                         
             ips.reset(True)
-            ips.update = True
+            ips.update = 'pix'
         
     def mouse_move(self, ips, x, y, btn, **key):
         if self.moving==True and btn!=None:

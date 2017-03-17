@@ -6,6 +6,7 @@ Created on Thu Dec 29 01:48:23 2016
 """
 import IPy
 from core.managers import TextLogManager
+import threading
 
 class Macros:
     def __init__(self, title, cmds):
@@ -18,8 +19,13 @@ class Macros:
     def __call__(self):
         return self
         
-    def start(self, para=None):
+    def start(self, thd=False):
         win = TextLogManager.get('Recorder')
-        if win!=None: win.append('%s>None'%(self.title))
-        self.run()
+        if win!=None and self.title!=None:
+            win.append('%s>None'%(self.title))
+        if thd:
+            print thd, '--------------------new thread'
+            thread = threading.Thread(None, self.run, ())
+            thread.start()
+        else: self.run()
         

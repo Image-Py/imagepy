@@ -7,7 +7,8 @@ Created on Wed Dec 28 23:33:52 2016
 
 from ui.logwindow import TextLog
 from core.managers import PluginsManager
-import wx
+from core.engines import Macros
+import wx, IPy
 
 class MacrosEditor(TextLog):
     def __init__(self, title='Macros Editor'):
@@ -21,15 +22,11 @@ class MacrosEditor(TextLog):
         
     def run(self, event):
         cmds = self.text.GetValue().split('\n')
-        for i in cmds:
-            title, para = i.split('>')
-            PluginsManager.plgs[title]().start(eval(para))
+        Macros(None, cmds).start()
         
     def run_line(self, event):
         cmds = self.text.GetStringSelection().split('\n')
-        for i in cmds:
-            title, para = i.split('>')
-            PluginsManager.plgs[title]().start(eval(para))
+        Macros(None, cmds).start()
         
 if __name__ == '__main__':
 

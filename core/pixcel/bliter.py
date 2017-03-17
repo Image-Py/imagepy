@@ -11,8 +11,6 @@ def count_box(s1, s2, c, r):
     box1r = slice(max(0, r), min(s1[0], r+s2[0]))
     box2c = slice(max(-c, 0), min(s2[1], s1[1]-c))
     box2r = slice(max(-r, 0), min(s2[0], s1[0]-r))
-    print s1, s2, c, r
-    print box1c, box1r, box2c, box2r
     return (box1r, box1c), (box2r, box2c)
   
 def blit_copy(img1, img2):
@@ -54,8 +52,6 @@ def blit(img1, img2, c=0, r=0, mode='copy'):
     shp2 = img2.shape
     bx1, bx2 = count_box(shp1, shp2, c, r)
     if img1.ndim==2 and img2.ndim==2:
-        print img1.shape, bx1
-        print img2.shape, bx2
         funcs[mode](img1[bx1], img2[bx2])
     if img1.ndim==3 and img2.ndim==3:
         funcs[mode](img1[bx1], img2[bx2])

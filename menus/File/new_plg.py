@@ -34,10 +34,7 @@ class Plugin(Free):
         slices = para['slice']
         shape = (h,w,chanels) if chanels!=1 else (h,w)
         imgs = [np.zeros(shape, dtype=np.uint8) for i in range(slices)]
-        ips = ImagePlus(imgs, para['name'])
-        frame = CanvasFrame(IPy.curapp)
-        frame.set_ips(ips)
-        frame.Show()
+        IPy.show_img(imgs, para['name'])
 
 if __name__ == '__main__':
 	print Plugin.title

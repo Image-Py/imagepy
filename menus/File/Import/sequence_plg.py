@@ -42,14 +42,13 @@ class Plugin(Free):
     def readimgs(self, names, shape, dtype):
         imgs = []
         for i in range(len(names)):
-            IPy.curapp.set_progress(int(round((i+1.0)/len(names)*100)))
-            IPy.curapp.pro_bar.Refresh()
+            IPy.set_progress(int(round((i+1.0)/len(names)*100)))
             img = imread(names[i])
             if img.shape!=shape or img.dtype!=dtype:
                 print 'error:', names[i]
                 continue
             imgs.append(img)
-        IPy.curapp.set_progress(0)
+        IPy.set_progress(0)
         return imgs
     
     #process

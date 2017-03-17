@@ -8,20 +8,22 @@ Created on Wed Dec 28 23:24:43 2016
 from core.engines import Free
 from ui.macroseditor import MacrosEditor
 from core.managers import TextLogManager
-import IPy
+import IPy, wx
 
 class Recorder(Free):
     title = 'Macros Recorder'
     
     def run(self, para = None):
         if TextLogManager.get('Recorder')==None:
-            MacrosEditor('Recorder').Show()
+            f = lambda : MacrosEditor('Recorder').Show()
+            wx.CallAfter(f)
             
 class Edite(Free):
     title = 'Macros Editor'
     
     def run(self, para = None):
-        MacrosEditor(TextLogManager.name('Macros Editor')).Show()
+        f = lambda : MacrosEditor(TextLogManager.name('Macros Editor')).Show()
+        wx.CallAfter(f)
         
 class Run(Free):
     title = 'Run Macros'
