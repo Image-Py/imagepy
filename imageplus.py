@@ -22,6 +22,7 @@ class ImagePlus:
         self.mskmode = None
         self.lut = ColorManager.get_lut('grays')
         self.tool = None
+        self.data = None
         
     def set_title(self, title):
         self.title = WindowsManager.name(title)

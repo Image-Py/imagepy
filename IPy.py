@@ -84,7 +84,7 @@ def get_para(title, view, para):
     
 def table(title, data, cols=None, rows=None):
     from ui.tablewindow import TableLog
-    callafter(TableLog.table *(title, data, cols, rows))
+    callafter(TableLog.table, *(title, data, cols, rows))
     
 def write(cont, title='ImagePy'):
     from ui.logwindow import TextLog

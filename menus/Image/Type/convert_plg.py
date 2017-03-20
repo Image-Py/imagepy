@@ -23,9 +23,9 @@ class To8bit(Simple):
         else:
             img8 = []
             for i in range(n):
-                IPy.curapp.set_progress(round((i+1)*100.0/len(imgs)))
+                IPy.set_progress(round((i+1)*100.0/len(imgs)))
                 img8.append(imgs[i].mean(axis=2).astype(np.uint8))
-        IPy.curapp.set_progress(0)
+        IPy.set_progress(0)
         ips.set_imgs(img8)
         
 class ToRGB(Simple):

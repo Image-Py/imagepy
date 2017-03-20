@@ -24,7 +24,7 @@ def process_chanels(plg, ips, src, des, para):
             des[:] = rst
     return des
     
-def process_one(plg, ips, src, img, para):
+def process_one(plg, ips, src, img, para, update=False):
     transint = '2int' in plg.note and ips.dtype == np.uint8
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
     if transint: buf =  img.astype(np.int32)
@@ -35,6 +35,7 @@ def process_one(plg, ips, src, img, para):
     if 'auto_msk' in plg.note and not ips.get_msk() is None:
         msk = True-ips.get_msk()
         img[msk] = src[msk]
+    if update:ips.update = 'pix'
     return img
     
 def process_stack(plg, ips, src, imgs, para):
@@ -121,7 +122,7 @@ class Filter:
             if para!=None and para.has_key('stack'):del para['stack']
         win = TextLogManager.get('Recorder')
         if ips.get_nslices()==1 or 'not_slice' in self.note:
-            run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p)
+            run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p, True)
 
             thread = threading.Thread(None, run, ())
             thread.start()
@@ -145,7 +146,7 @@ class Filter:
                 if win!=None: win.append('%s>%s'%(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
-                run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p)
+                run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p, True)
                 
                 thread = threading.Thread(None, run, ())
                 thread.start()
@@ -153,7 +154,7 @@ class Filter:
                 #process_one(self, ips, ips.snap, ips.get_img(), para)
                 if win!=None: win.append('%s>%s'%(self.title, para))
             elif rst == 'cancel': pass
-        ips.update = 'pix'
+        #ips.update = 'pix'
         
     def cancel(self, ips):
         if 'auto_snap' in self.note:

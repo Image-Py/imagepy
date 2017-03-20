@@ -7,6 +7,7 @@ Created on Wed Dec 28 00:26:45 2016
 from core.engines import Filter
 from skimage.morphology import skeletonize
 from skimage.morphology import medial_axis
+import numpy as np
 
 class Skeleton(Filter):
     title = 'Skeleton'
@@ -18,20 +19,20 @@ class Skeleton(Filter):
         img *= 255
 
 class MedialAxis(Filter):
-	title = 'Medial Axis'
-	note = ['all', 'auto_msk', 'auto_snap', 'preview']
-	para = {'dis':False}
-	view = [(bool,'distance transform', 'dis')]
+    title = 'Medial Axis'
+    note = ['all', 'auto_msk', 'auto_snap', 'preview']
+    para = {'dis':False}
+    view = [(bool,'distance transform', 'dis')]
 
-	#process
-	def run(self, ips, snap, img, para = None):
-		rst = medial_axis(snap>0,return_distance=para['dis'])
-		if not para['dis']:
-			img[:] = rst
-			img *= 255
-		else:
-			img[:] = rst[0]
-			img *= rst[1]
+    #process
+    def run(self, ips, snap, img, para = None):
+        rst = medial_axis(snap>0,return_distance=para['dis'])
+        if not para['dis']:
+            img[:] = rst
+            img *= 255
+        else:
+            img[:] = rst[0]
+            np.multiply(img, rst[1], out=img, casting='unsafe')
 
 plgs = [Skeleton, MedialAxis]
 '''
@@ -76,14 +77,14 @@ def mid_axis(img):
     return img
 
 class MyMedialAxis(Filter):
-	title = 'My Medial Axis'
-	note = ['all', 'auto_msk', 'auto_snap', 'preview']
-	para = {'dis':False}
-	view = [(bool,'distance transform', 'dis')]
+  title = 'My Medial Axis'
+  note = ['all', 'auto_msk', 'auto_snap', 'preview']
+  para = {'dis':False}
+  view = [(bool,'distance transform', 'dis')]
 
-	#process
-	def run(self, ips, snap, img, para = None):
-		mid_axis(img)
+  #process
+  def run(self, ips, snap, img, para = None):
+    mid_axis(img)
 
 plgs = [Skeleton, MedialAxis, MyMedialAxis]
 
