@@ -122,12 +122,14 @@ class Filter:
             if para!=None and para.has_key('stack'):del para['stack']
         win = TextLogManager.get('Recorder')
         if ips.get_nslices()==1 or 'not_slice' in self.note:
+            process_one(self, ips, ips.snap, ips.get_img(), para)
+            '''
             run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p, True)
 
             thread = threading.Thread(None, run, ())
             thread.start()
             if not thd:thread.join()
-            #process_one(self, ips, ips.snap, ips.get_img(), para)
+            '''
             if win!=None: win.append('%s>%s'%(self.title, para))
         elif ips.get_nslices()>1:
             has, rst = para.has_key('stack'), None
@@ -136,22 +138,27 @@ class Filter:
             if 'auto_snap' in self.note and self.modal:ips.swap()
             if has and para['stack'] or rst == 'yes':
                 para['stack'] = True
+                process_stack(self, ips, ips.snap, ips.imgs, para)
+                '''
                 run = lambda p=para:process_stack(self, ips, ips.snap, ips.imgs, p)
                 
                 print 'new thread'
                 thread = threading.Thread(None, run, ())
                 thread.start()
                 if not thd:thread.join()
-                #process_stack(self, ips, ips.snap, ips.imgs, para)
+                '''
+                
                 if win!=None: win.append('%s>%s'%(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
+                process_one(self, ips, ips.snap, ips.get_img(), para)
+                ''' multithread
                 run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p, True)
                 
                 thread = threading.Thread(None, run, ())
                 thread.start()
                 if thd:thread.join()
-                #process_one(self, ips, ips.snap, ips.get_img(), para)
+                '''
                 if win!=None: win.append('%s>%s'%(self.title, para))
             elif rst == 'cancel': pass
         #ips.update = 'pix'

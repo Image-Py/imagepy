@@ -29,19 +29,25 @@ def showips(ips):
 def show_img(imgs, title):
     from imageplus import ImagePlus
     ips = ImagePlus(imgs, title)
+    showips(ips)
+    '''MT
     callafter(showips, ips)
     wx.Yield()
+    '''
 
 def show_ips(ips):
+    showips(ips)
+    ''' MT
     callafter(showips, ips)
     wx.Yield()
+    '''
     
-def alert_(info, title='image-py'):
+def alert(info, title='image-py'):
     dlg=wx.MessageDialog(curapp, info, title, wx.OK)
     dlg.ShowModal()
     dlg.Destroy()
 
-alert = lambda info, title='image-py':callafter(alert_, *(info, title))
+# MT alert = lambda info, title='image-py':callafter(alert_, *(info, title))
     
 def yes_no(info, title='image-py'):
     dlg = wx.MessageDialog(curapp, info, title, wx.YES_NO | wx.CANCEL) 
@@ -84,23 +90,27 @@ def get_para(title, view, para):
     
 def table(title, data, cols=None, rows=None):
     from ui.tablewindow import TableLog
-    callafter(TableLog.table, *(title, data, cols, rows))
+    TableLog.table(title, data, cols, rows)
+    # MT callafter(TableLog.table, *(title, data, cols, rows))
     
 def write(cont, title='ImagePy'):
     from ui.logwindow import TextLog
-    callafter(TextLog.write, *(cont, title))
+    TextLog.write(cont, title)
+    # MT callafter(TextLog.write, *(cont, title))
     
 def set_progress(i):
-    callafter(curapp.set_progress, i)
+    curapp.set_progress(i)
+    # MT callafter(curapp.set_progress, i)
     
 def set_info(i):
-    callafter(curapp.set_info, i)
+    curapp.set_info(i)
+    # MT callafter(curapp.set_info, i)
     
 def run_macros(cmds):
     for i in cmds:
         title, para = i.split('>')
         managers.PluginsManager.get(title)().start(eval(para), False)
-        wx.Yield()
+        # MT wx.Yield()
         
 if __name__ == '__main__':
     app = wx.App(False)

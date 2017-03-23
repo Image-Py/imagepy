@@ -75,6 +75,8 @@ class Simple:
             if para == None:para = self.para
             win = TextLogManager.get('Recorder')
             if win!=None: win.append('%s>%s'%(self.title, para))
+            self.run(ips, imgs, para)
+            '''
             def run(ips, imgs, p):
                 self.run(ips, imgs, p)
                 ips.update = 'pix'
@@ -82,4 +84,5 @@ class Simple:
             thread = threading.Thread(None, f)
             thread.start()
             if not thd:thread.join()
+            '''
         if self.dialog!=None:self.dialog.Destroy()

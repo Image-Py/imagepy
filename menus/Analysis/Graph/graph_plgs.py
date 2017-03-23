@@ -33,8 +33,6 @@ class Marker(Filter):
             if np.sum((v[:-1]==0)*(v[1:]>0))==2:
                 img[tuple(p)] = 2
         img[:] = np.array([0,255,128,255], dtype=np.uint8)[img]
-        print 'OK'
-        ips.update = 'pix'
 
 class Builder(Filter):
     title = 'Build Graph'

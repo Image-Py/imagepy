@@ -22,6 +22,7 @@ class Histogram(Simple):
         data = []
         for i in range(len(imgs)):
             maxv = imgs[i].max()
+            if maxv==0:continue
             ct = np.histogram(imgs[i], maxv, [1,maxv+1])[0]
             titles = ['slice','value','count']
             dt = [[i]*len(ct), range(maxv+1), ct]
@@ -61,6 +62,7 @@ class Statistic(Simple):
         if para['var']: rst.append(img.var().round(4))
         if para['std']: rst.append(img.std().round(4))
         return rst
+        
     #process
     def run(self, ips, imgs, para = None):
         titles = ['Max','Min','Mean','Variance','Standard']

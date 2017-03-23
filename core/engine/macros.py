@@ -23,9 +23,12 @@ class Macros:
         win = TextLogManager.get('Recorder')
         if win!=None and self.title!=None:
             win.append('%s>None'%(self.title))
+        self.run()
+        '''
         if thd:
             print thd, '--------------------new thread'
             thread = threading.Thread(None, self.run, ())
             thread.start()
         else: self.run()
+        '''
         

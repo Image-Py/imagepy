@@ -70,6 +70,7 @@ class Position(Simple):
         data = []
         for i in range(len(imgs)):
             img, lab = imgs[i], labs[i]
+            if lab.max()==0:continue
             index = range(1, lab.max()+1)
             titles = ['Center-X','Center-Y', 'Max-X','Max-Y','Min-X','Min-Y']
             key = {'Max-X':'max','Max-Y':'max','Min-X':'min','Min-Y':'min','Center-X':'center','Center-Y':'center'}

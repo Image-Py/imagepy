@@ -31,10 +31,12 @@ class Free:
             win = TextLogManager.get('Recorder')
             if win!=None: 
                 wx.CallAfter(win.append, '%s>%s'%(self.title, para))
-            #self.run(para)
+            self.run(para)
+            '''
             run = lambda p=para:self.run(p)
             
             print thd, '--------------------new thread'
             thread = threading.Thread(None, run, ())
             thread.start()
             if not thd: thread.join()
+            '''
