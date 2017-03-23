@@ -75,7 +75,7 @@ class Simple:
             if para == None:para = self.para
             win = TextLogManager.get('Recorder')
             if win!=None: win.append('%s>%s'%(self.title, para))
-            self.run(ips, imgs, para)
+            self.run(self.ips, self.ips.imgs, para)
             '''
             def run(ips, imgs, p):
                 self.run(ips, imgs, p)

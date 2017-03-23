@@ -40,7 +40,7 @@ class Coordinate:
         for i in self.body:
             x,y = f(*i)
             dc.DrawCircle(x, y, 2)
-            dc.DrawText('(%d,%d)'%(x,y), x, y)
+            dc.DrawText('(%d,%d)'%(i[0], i[1]), x, y)
 
     def report(self, title):
         rst = self.body
