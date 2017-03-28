@@ -76,6 +76,7 @@ class Simple:
             win = TextLogManager.get('Recorder')
             if win!=None: win.append('%s>%s'%(self.title, para))
             self.run(self.ips, self.ips.imgs, para)
+            self.ips.update = 'pix'
             '''
             def run(ips, imgs, p):
                 self.run(ips, imgs, p)

@@ -161,7 +161,7 @@ class Filter:
                 '''
                 if win!=None: win.append('%s>%s'%(self.title, para))
             elif rst == 'cancel': pass
-        #ips.update = 'pix'
+        ips.update = 'pix'
         
     def cancel(self, ips):
         if 'auto_snap' in self.note:

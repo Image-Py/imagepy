@@ -9,6 +9,7 @@ from core.engines import Macros
 import IPy
 
 recent = managers.ConfigManager.get('recent')
+if recent==None : recent = []
 
 def f(path):
 	return Macros(path, ["Open>{'path':%s}"%repr(path)])
