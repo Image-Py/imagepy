@@ -16,7 +16,7 @@ class Linebuf:
     def addpoint(self, p):
         self.buf.append(p)
         
-    def draw(self, dc, f):
+    def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen((0,255,255), width=1, style=wx.SOLID))
         dc.DrawLines([f(*i) for i in self.buf])
         for i in self.buf:dc.DrawCircle(f(*i),2)

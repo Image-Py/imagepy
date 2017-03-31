@@ -65,7 +65,7 @@ class Area:
             rst.append([round(i,1) for i in [area, xy.x, xy.y]])
         IPy.table(title, rst, titles)
             
-    def draw(self, dc, f):
+    def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
         font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)

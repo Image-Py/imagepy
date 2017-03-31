@@ -81,7 +81,7 @@ class Plugin(Filter):
         ips.mark = None
         ips.tool = None
         
-    def draw(self, dc, f):
+    def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))
         sox, soy = f(self.para['ox'], self.para['oy'])
         dc.DrawCircle((sox, soy), 5)

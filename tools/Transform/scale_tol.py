@@ -78,7 +78,7 @@ class Plugin(Filter):
             (bool, 'scale mask', 'msk')]
 
         
-    def draw(self, dc, f):
+    def draw(self, dc, f, **key):
         body = [(self.lt,self.bm),(self.rt,self.bm),
                 (self.rt,self.tp),(self.lt,self.tp),(self.lt,self.bm)]
         dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))
