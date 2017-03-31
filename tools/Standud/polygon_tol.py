@@ -14,7 +14,7 @@ class Polygonbuf:
     def addpoint(self, p):
         self.buf[0].append(p)
         
-    def draw(self, dc, f):
+    def draw(self, dc, f, n):
         dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))
         dc.DrawLines([f(*i) for i in self.buf[0]])
         for i in self.buf[0]: dc.DrawCircle(f(*i),2)

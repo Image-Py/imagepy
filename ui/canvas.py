@@ -142,7 +142,7 @@ class Canvas (wx.Panel):
         if self.ips.roi != None:
             self.ips.roi.draw(cdc, self.to_panel_coor)
         if self.ips.mark != None:
-            self.ips.mark.draw(cdc, self.to_panel_coor)
+            self.ips.mark.draw(cdc, self.to_panel_coor, self.ips.cur)
         #cdc.EndDrawing()
         
     def draw_image(self, dc, img, rect, scale=None):
@@ -174,7 +174,7 @@ class Canvas (wx.Panel):
         if self.ips.roi != None:
             self.ips.roi.draw(cdc, self.to_panel_coor)
         if self.ips.mark != None:
-            self.ips.mark.draw(cdc, self.to_panel_coor)
+            self.ips.mark.draw(cdc, self.to_panel_coor, self.ips.cur)
         #cdc.EndDrawing()
         
     def zoomout(self, x, y):
