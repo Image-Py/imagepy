@@ -11,7 +11,7 @@ from scipy import ndimage
 from core.managers import WindowsManager
 from core.roi.pointroi import PointRoi
 
-class Statistic(Simple):
+class Plugin(Simple):
     title = 'Segments Statistic'
     note = ['8-bit', '16-bit']
     
@@ -46,86 +46,3 @@ class Statistic(Simple):
         data = zip(*data)
         IPy.table(ips.title+'-segment', data, titles)
         
-class Position(Simple):
-    title = 'Segments Position'
-    note = ['8-bit', '16-bit']
-    
-    para = {'lab':None, 'center':True,'max':False, 'min':False, 'slice':False}
-    view = [('img', 'Label', 'lab', ''),
-            (bool, 'Center', 'center'),
-            (bool, 'Max', 'max'),
-            (bool, 'Min', 'min'),
-            (bool, 'Slice', 'slice')]
-
-    #process
-    def run(self, ips, imgs, para = None):
-        if not para['slice']:
-            imgs = [ips.get_img()]
-            labs = [WindowsManager.get(para['lab']).ips.get_img()]
-        else: labs = WindowsManager.get(para['lab']).ips.imgs
-
-        if not labs[0].dtype in (np.uint8, np.uint16):
-            IPy.alert('Label image must be in type 8-bit or 16-bit')
-            return
-        data = []
-        for i in range(len(imgs)):
-            img, lab = imgs[i], labs[i]
-            if lab.max()==0:continue
-            index = range(1, lab.max()+1)
-            titles = ['Center-X','Center-Y', 'Max-X','Max-Y','Min-X','Min-Y']
-            key = {'Max-X':'max','Max-Y':'max','Min-X':'min','Min-Y':'min','Center-X':'center','Center-Y':'center'}
-            titles = ['slice','value'] + [j for j in titles if para[key[j]]]
-            
-            dt = [[i]*len(index), index]
-            if not para['slice']:
-                titles, dt = titles[1:], dt[1:]
-            if img is lab: img = img>0
-            if para['center']:
-                pos = np.round(ndimage.center_of_mass(img, lab, index), 2)
-                dt.append(pos[:,0])
-                dt.append(pos[:,1])  
-            if para['max']:
-                pos = np.round(ndimage.minimum_position(img, lab, index), 2)
-                dt.append(pos[:,0])
-                dt.append(pos[:,1])
-            if para['min']:
-                pos = np.round(ndimage.maximum_position(img, lab, index), 2)
-                dt.append(pos[:,0])
-                dt.append(pos[:,1])       
-            data.extend(zip(*dt))
-        IPy.table(ips.title+'-position', data, titles)
-        
-class Mark(Simple):
-    title = 'Mark Points'
-    note = ['8-bit', '16-bit']
-    
-    para = {'lab':None, 'mode':'Max'}
-    view = [('img', 'Label', 'lab', ''),
-            (list, ('Max','Min','Center'), str, 'Point', 'mode', 'pts')]
-
-    #process
-    def run(self, ips, imgs, para = None):
-        lab = WindowsManager.get(para['lab']).ips.get_img()
-        if lab.dtype != np.uint8 and lab.dtype != np.uint16:
-            IPy.alert('Label image must be in type 8-bit or 16-bit')
-            return
-        index = range(1, lab.max()+1)
-        data = [index]
-        img = ips.get_img()
-        if img is lab: img = img>0
-        if para['mode'] == 'Center':
-            pos = np.round(ndimage.center_of_mass(img, lab, index), 2)[:,::-1]
-            data.append(pos[:,0])
-            data.append(pos[:,1])  
-        if para['mode'] == 'Max':
-            pos = np.round(ndimage.maximum_position(img, lab, index), 2)[:,::-1]
-            data.append(pos[:,0])
-            data.append(pos[:,1])
-        if para['mode'] == 'Min':
-            pos = np.round(ndimage.minimum_position(img, lab, index), 2)[:,::-1]
-            data.append(pos[:,0])
-            data.append(pos[:,1])       
-        body = [tuple(i) for i in pos]
-        ips.roi = PointRoi(body)
-        
-plgs = [Statistic, Position, Mark]
