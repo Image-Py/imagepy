@@ -6,13 +6,13 @@ Created on Sat Jan 14 23:23:30 2017
 """
 import wx, os, sys
 import pluginloader, toolsloader, IPy
-from core.manager import configmanager
+from core.managers import ConfigManager, PluginsManager
 import time, threading
 
 class FileDrop(wx.FileDropTarget):
     def OnDropFiles(self, x, y, path):
         IPy.run_macros(["Open>{'path':%s}"%repr(i) for i in path])
-        
+
 class ImagePy(wx.Frame):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', size = wx.Size(560,-1), pos = wx.DefaultPosition, style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
@@ -20,6 +20,8 @@ class ImagePy(wx.Frame):
         IPy.curapp = self
         self.menubar = pluginloader.buildMenuBarByPath(self, 'menus')
         self.SetMenuBar( self.menubar )
+        self.shortcut = pluginloader.buildShortcut(self)
+        self.SetAcceleratorTable(self.shortcut)
         self.busy = 'first'
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.toolbar = toolsloader.build_tools(self, 'tools')
@@ -92,7 +94,7 @@ class ImagePy(wx.Frame):
         self.line_color.SetBackgroundColour(value)
         
     def on_close(self, event):
-        configmanager.ConfigManager.write()
+        ConfigManager.write()
         self.Destroy()
         
     def __del__( self ):

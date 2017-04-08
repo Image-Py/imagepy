@@ -14,6 +14,27 @@ class Gaussian(Filter):
     #process
     def run(self, ips, snap, img, para = None):
         nimg.gaussian_filter(snap, para['sigma'], output=img)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         
 class Gaussian_laplace(Filter):
     title = 'Gaussian Laplace'

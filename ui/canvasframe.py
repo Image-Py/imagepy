@@ -4,9 +4,10 @@ Created on Fri Oct 14 01:24:41 2016
 
 @author: yxl
 """
-import wx
+import wx, IPy
 from canvas import Canvas
 from core.managers import WindowsManager
+from core.managers import ShotcutManager,PluginsManager
 
 class CanvasFrame(wx.Frame): 
     def __init__(self, parent=None):
@@ -41,6 +42,7 @@ class CanvasFrame(wx.Frame):
         self.opage = 0
         self.Fit() 
         WindowsManager.add(self)
+        self.SetAcceleratorTable(IPy.curapp.shortcut)        
         
     def on_idle(self, event):
         if self.ips.update:

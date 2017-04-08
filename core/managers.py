@@ -10,3 +10,4 @@ from manager.windowmanager import *
 from manager.roimanager import *
 from manager.clipbdmanager import *
 from manager.configmanager import *
+from manager.shotcutmanager import *
