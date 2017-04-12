@@ -5,12 +5,6 @@ Created on Sun Nov 27 00:56:00 2016
 @author: yxl
 """
 
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 18 22:56:50 2016
-
-@author: yxl
-"""
 from core.engines import Filter
 from ui.panelconfig import ParaDialog
 from ui.widgets import HistCanvas

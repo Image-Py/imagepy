@@ -94,7 +94,7 @@ class Canvas (wx.Panel):
         self.self_fit()
         
     def zoom(self, k, x, y):
-        print 'scale', k
+        # print 'scale', k
         k1 = self.oldscale * 1.0
         self.oldscale = k2 = k
         self.imgbox[0] = self.imgbox[0] + (k1-k2)*x
@@ -143,6 +143,8 @@ class Canvas (wx.Panel):
             self.ips.roi.draw(cdc, self.to_panel_coor)
         if self.ips.mark != None:
             self.ips.mark.draw(cdc, self.to_panel_coor, cur=self.ips.cur)
+        if self.ips.unit!=None:
+            self.draw_ruler(cdc)
         #cdc.EndDrawing()
         
     def draw_image(self, dc, img, rect, scale=None):
@@ -157,6 +159,22 @@ class Canvas (wx.Panel):
         bmp = bmp.Scale(ceil(bmp.Width/sx), ceil(bmp.Height/sy))
         dc.DrawBitmap(wx.Bitmap(bmp), win[0], win[1])
         
+    def draw_ruler(self, dc):
+        dc.SetPen(wx.Pen((255,255,255), width=2, style=wx.SOLID))
+        x1 = max(self.imgbox[0], self.box[0])+5
+        x2 = min(self.imgbox[2], self.box[2])+x1-10
+        pixs = (x2-x1+10)*self.ips.size[1]/10.0/self.imgbox[2]
+        h = min(self.imgbox[1]+self.imgbox[3],self.box[3])-5
+        dc.DrawLineList([(x1,h,x2,h)])
+        dc.DrawLineList([(i,h,i,h-8) for i in np.linspace(x1, x2, 3)])
+        dc.DrawLineList([(i,h,i,h-5) for i in np.linspace(x1, x2, 11)])
+
+        dc.SetTextForeground((255,255,255))
+        k, unit = self.ips.unit
+        text = 'Unit = %.1f %s'%(k*pixs, unit)
+        dw,dh = dc.GetTextExtent(text)
+        dc.DrawText(text, (x2-dw, h-10-dh))
+
     def update(self, pix):
         if self.ips == None: return
         lay(self.box, self.imgbox)
@@ -176,6 +194,8 @@ class Canvas (wx.Panel):
         if self.ips.mark != None:
             self.ips.mark.draw(cdc, self.to_panel_coor, cur=self.ips.cur)
         #cdc.EndDrawing()
+        if self.ips.unit!=None:
+            self.draw_ruler(cdc)
         
     def zoomout(self, x, y):
         if self.scaleidx == len(self.scales)-1:return
