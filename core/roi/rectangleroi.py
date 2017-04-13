@@ -72,7 +72,8 @@ class RectangleRoi(ROI):
         
     def draw(self, dc, f):
         dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
-        dc.DrawLines([f(*i) for i in self.body])
+        if(len(self.body)>1):
+            dc.DrawLines([f(*i) for i in self.body])
         for i in self.body:dc.DrawCircle(f(*i),2)
         dc.DrawCircle(f(self.lt, (self.tp+self.bm)/2),2)
         dc.DrawCircle(f(self.rt, (self.tp+self.bm)/2),2)

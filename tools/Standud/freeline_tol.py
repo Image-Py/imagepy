@@ -18,7 +18,8 @@ class Linebuf:
         
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen((0,255,255), width=1, style=wx.SOLID))
-        dc.DrawLines([f(*i) for i in self.buf])
+        if len(self.buf)>1:
+            dc.DrawLines([f(*i) for i in self.buf])
         for i in self.buf:dc.DrawCircle(f(*i),2)
     
     def pop(self):

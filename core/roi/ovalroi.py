@@ -73,7 +73,8 @@ class OvalRoi(ROI):
         
     def draw(self, dc, f):
         dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
-        dc.DrawLines([f(*i) for i in self.body])
+        if len(self.body)>1:
+            dc.DrawLines([f(*i) for i in self.body])
         for i in [self.lt, (self.lt+self.rt)/2, self.rt]:
             for j in [self.tp, (self.tp+self.bm)/2, self.bm]:
                 dc.DrawCircle(f(i,j),2)
