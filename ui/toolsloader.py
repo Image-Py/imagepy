@@ -5,6 +5,15 @@ import IPy
 from core.engines import Tool, Macros
 from core.loader import loader
 
+def make_bitmap(bmp):
+    buf = wx.EmptyBitmap(20, 20)
+    dc = wx.MemoryDC()
+    dc.SelectObject(buf)
+    dc.Clear()
+    dc.DrawBitmap(bmp, 2, 2, True)
+    dc.SelectObject(wx.NullBitmap)
+    return buf
+
 def build_tools(parent, path):
     global host
     host = parent
@@ -20,7 +29,7 @@ def buildToolsBar(parent, data):
     toolbar.SetSizer( box )
     #toolbar =  wx.ToolBar( parent, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TB_HORIZONTAL ) 
     add_tools(toolbar, data[1][0][1], None)
-    btn = wx.BitmapButton(toolbar, wx.ID_ANY, wx.Bitmap('tools/drop.gif'), wx.DefaultPosition, (30,30), wx.BU_AUTODRAW)
+    btn = wx.BitmapButton(toolbar, wx.ID_ANY, make_bitmap(wx.Bitmap('tools/drop.gif')), wx.DefaultPosition, (32, 32), wx.BU_AUTODRAW|wx.RAISED_BORDER)
     box.Add(btn)
     btn.Bind(wx.EVT_LEFT_DOWN, lambda x:menu_drop(parent, toolbar, data, btn, x))
     add_tools(toolbar, data[1][1][1])
@@ -60,7 +69,7 @@ def add_tools(bar, data, curids=[]):
             box.Detach(i)
     if curids!=None:del curids[:]
     for i in data:
-        btn = wx.BitmapButton(bar, wx.ID_ANY, wx.Bitmap(i[1]), wx.DefaultPosition, (30, 30), wx.BU_AUTODRAW|wx.RAISED_BORDER )        
+        btn = wx.BitmapButton(bar, wx.ID_ANY, make_bitmap(wx.Bitmap(i[1])), wx.DefaultPosition, (32,32), wx.BU_AUTODRAW|wx.RAISED_BORDER )        
         if curids!=None:curids.append(btn)        
         if curids==None:box.Add(btn)
         else: box.Insert(len(box.GetChildren())-2, btn)
