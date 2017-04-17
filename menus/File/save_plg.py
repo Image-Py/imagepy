@@ -17,7 +17,7 @@ class Plugin(Simple):
     
     def show(self):
         filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif'
-        return IPy.getpath('Save..', filt, 'sve', self.para)
+        return IPy.getpath('Save..', filt, 'save', self.para)
 
     #process
     def run(self, ips, img, para = None):
