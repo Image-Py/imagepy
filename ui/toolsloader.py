@@ -6,7 +6,7 @@ from core.engines import Tool, Macros
 from core.loader import loader
 
 def make_bitmap(bmp):
-    buf = wx.EmptyBitmap(20, 20)
+    buf = wx.Bitmap(20, 20)
     dc = wx.MemoryDC()
     dc.SelectObject(buf)
     dc.Clear()

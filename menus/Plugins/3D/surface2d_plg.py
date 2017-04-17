@@ -5,7 +5,7 @@ Created on Tue Jan 10 22:33:33 2017
 @author: yxl
 """
 from core.engines import Simple
-from mayavi import mlab
+
 from scipy.ndimage.filters import gaussian_filter
 import IPy
 
@@ -19,6 +19,7 @@ class Plugin(Simple):
             (float, (0.1,10), 1, 'scale z', 'h', '')]
     #process
     def run(self, ips, imgs, para = None):
+        from mayavi import mlab
         img = ips.get_img()
         scale, sigma = para['scale'], para['sigma']
         imgblur = gaussian_filter(img[::scale,::scale], sigma)

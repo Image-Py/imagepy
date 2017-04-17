@@ -20,7 +20,7 @@ class Plugin(Free):
     def show(self):
         filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG \
         files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif|TIF files (*.tif)|*.tif'
-        rst = IPy.getpath('Import sequence', filt, self.para)
+        rst = IPy.getpath('Import sequence', filt, 'open', self.para)
         
         files = self.getfiles(self.para['path'])
         nfs = len(files)

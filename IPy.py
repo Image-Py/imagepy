@@ -56,10 +56,11 @@ def yes_no(info, title='image-py'):
     dic = {wx.ID_YES:'yes', wx.ID_NO:'no', wx.ID_CANCEL:'cancel'}
     return dic[rst]
     
-def getpath(title, filt, para=None):
+def getpath(title, filt, k, para=None):
     dpath = managers.ConfigManager.get('defaultpath')
     if dpath ==None: dpath = './'
-    dialog = wx.FileDialog(curapp, title, dpath, '', filt, wx.FD_OPEN)
+    dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
+    dialog = wx.FileDialog(curapp, title, dpath, '', filt, dic[k])
     rst = dialog.ShowModal() 
     path = None
     if rst == wx.ID_OK:
@@ -98,6 +99,10 @@ def write(cont, title='ImagePy'):
     TextLog.write(cont, title)
     # MT callafter(TextLog.write, *(cont, title))
     
+def plot(title, gtitle='Graph', labelx='X-Unit', labely='Y-Unit'):
+    from ui.plotwindow import PlotFrame
+    return PlotFrame.get_frame(title, gtitle, labelx, labely)
+
 def set_progress(i):
     curapp.set_progress(i)
     # MT callafter(curapp.set_progress, i)

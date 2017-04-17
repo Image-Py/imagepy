@@ -124,3 +124,27 @@ class TableLogManager:
         if win==None:return
         cls.remove(name)
         win.Close()
+
+class PlotManager:
+    windows = {}
+    @classmethod
+    def get(cls, title):
+        if cls.windows.has_key(title):
+            return cls.windows[title]
+        return None
+
+    @classmethod
+    def add(cls, title, win):
+        cls.windows[title] = win
+
+    @classmethod
+    def remove(cls, name):
+        if cls.windows.has_key(name): 
+            cls.windows.pop(name)
+
+    @classmethod
+    def close(cls, name):
+        win = cls.get(name)
+        if win==None:return
+        cls.remove(name)
+        win.Close()

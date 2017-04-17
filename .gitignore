@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 testdata/
 menus/Extend/
+tools/Extend/
 
 # C extensions
 *.so

@@ -6,7 +6,6 @@ Created on Thu Jan 12 00:42:18 2017
 """
 
 from core.engines import Simple
-from mayavi import mlab
 
 class Plugin(Simple):
     title = '3D Surface'
@@ -21,6 +20,7 @@ class Plugin(Simple):
     
     #process
     def run(self, ips, imgs, para = None):
+        from mayavi import mlab
         volume = mlab.pipeline.scalar_field(ips.imgs)
         if para['sigma']!=0:
             volume = mlab.pipeline.user_defined(volume, filter='ImageGaussianSmooth')

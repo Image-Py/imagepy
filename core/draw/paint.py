@@ -43,10 +43,11 @@ class Paint:
         x, y = np.round((x,y)).astype(np.int)
         self.draw_pixs(img, xs[msk]+x, ys[msk]+y, color)
         
-    def draw_line(self, img, x1, y1, x2, y2,w=None, color=None):
+    def draw_line(self, img, x1, y1, x2, y2, w=None, color=None):
+        x1, y1, x2, y2 = [int(round(i)) for i in (x1, y1, x2, y2)]
         if w==None:w=self.width
         dx, dy = x2-x1, y2-y1
-        n = int(round(max(abs(dx)+1, abs(dy)+1)))
+        n = max(abs(dx), abs(dy)) + 1
         xs = np.linspace(x1, x2, n).round().astype(np.int16)
         ys = np.linspace(y1, y2, n).round().astype(np.int16)
         for x,y in zip(xs, ys):
@@ -66,5 +67,4 @@ class Paint:
         color = match_color(img, color)
         pgs = [pg] + holes
         polygonfill.fill(pgs, img, color)
-        
         

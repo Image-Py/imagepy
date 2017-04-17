@@ -28,7 +28,7 @@ class Plugin(Filter):
     def preview(self, para):
         self.ips.lut[:] = self.lut
         self.ips.lut[para['thr']:] = [255,0,0]
-        self.ips.update = True
+        self.ips.update = 'pix'
         
     #process
     def run(self, ips, snap, img, para = None):

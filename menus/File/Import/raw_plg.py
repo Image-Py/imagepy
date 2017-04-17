@@ -18,7 +18,7 @@ class Plugin(Free):
     
     def load(self):
         filt = 'RAW files (*.raw)|*.raw'
-        rst = IPy.getpath('Open..', filt, self.para)
+        rst = IPy.getpath('Open..', filt, 'open', self.para)
         if rst!=None:return True
 
     #process

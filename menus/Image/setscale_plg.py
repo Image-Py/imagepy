@@ -22,7 +22,7 @@ class ScaleDialog(ParaDialog):
         if key=='recent' and para[key] != 'Recent':
             k, u = para[key].split(' - ')
             para['k'], para['unit'] = float(k), u
-        self.reset()
+            self.reset()
         return True
 
 class Plugin(Simple):

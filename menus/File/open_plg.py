@@ -13,7 +13,7 @@ class OpenFile(Free):
     def show(self):
         filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG \
         files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif|TIF files (*.tif)|*.tif'
-        return IPy.getpath('Open..', filt, self.para)
+        return IPy.getpath('Open..', filt, 'open', self.para)
     #process
     def run(self, para = None):
         path = para['path']
