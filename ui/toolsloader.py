@@ -6,13 +6,9 @@ from core.engines import Tool, Macros
 from core.loader import loader
 
 def make_bitmap(bmp):
-    buf = wx.Bitmap(20, 20)
-    dc = wx.MemoryDC()
-    dc.SelectObject(buf)
-    dc.Clear()
-    dc.DrawBitmap(bmp, 2, 2, True)
-    dc.SelectObject(wx.NullBitmap)
-    return buf
+    img = bmp.ConvertToImage()
+    img.Resize((20, 20), (2, 2))
+    return img.ConvertToBitmap()
 
 def build_tools(parent, path):
     global host
@@ -46,6 +42,8 @@ def menu_drop(parent, toolbar, data, btn, e):
            
 def f(plg, e):
     plg.start()
+    print e.GetEventObject().SetBackgroundColour( 
+        wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
     if isinstance(plg, Tool): e.Skip()
         
 def set_info(value):
