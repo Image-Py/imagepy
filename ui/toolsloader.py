@@ -42,8 +42,8 @@ def menu_drop(parent, toolbar, data, btn, e):
            
 def f(plg, e):
     plg.start()
-    print e.GetEventObject().SetBackgroundColour( 
-        wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
+    #print e.GetEventObject().SetBackgroundColour( 
+    #    wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
     if isinstance(plg, Tool): e.Skip()
         
 def set_info(value):
