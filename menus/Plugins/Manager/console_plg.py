@@ -8,7 +8,7 @@ import numpy as np
 import scipy.ndimage as ndimg
 import IPy
 
-def getips():
+def get_ips():
     ips = IPy.get_ips()
     if ips is None:print 'no image opened!'
     return ips
