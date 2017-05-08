@@ -6,7 +6,7 @@ Created on Wed Oct 12 14:15:01 2016
 import wx
 import numpy as np
 from math import ceil
-from core.managers import ToolsManager
+from core.manager import ToolsManager
 
 def cross(r1, r2):
     x,y = max(r1[0], r2[0]),max(r1[1], r2[1])

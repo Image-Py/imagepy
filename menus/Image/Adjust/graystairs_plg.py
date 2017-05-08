@@ -11,7 +11,7 @@ Created on Fri Nov 18 22:56:50 2016
 
 @author: yxl
 """
-from core.engines import Filter
+from core.engine import Filter
 from ui.panelconfig import ParaDialog
 from ui.widgets import HistCanvas
 import IPy

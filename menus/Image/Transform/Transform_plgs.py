@@ -6,7 +6,7 @@ Created on Sat Nov 19 01:14:50 2016
 """
 import numpy as np
 import scipy.ndimage as nimg
-from core.engines import Filter
+from core.engine import Filter
 
 class Rotate(Filter):
     title = 'Rotate'

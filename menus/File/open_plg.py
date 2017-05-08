@@ -1,10 +1,10 @@
 import wx,os,sys
 from scipy.misc import imread
 import cStringIO, urllib2
-from core import managers
+from core import manager
 import IPy
 
-from core.engines import Free
+from core.engine import Free
 
 class OpenFile(Free):
     title = 'Open'

@@ -6,7 +6,7 @@ Created on Mon Dec 26 22:05:43 2016
 """
 
 import numpy as np
-from core.engines import Filter
+from core.engine import Filter
 from core.graph import builder
 from scipy.ndimage.filters import convolve
 import IPy

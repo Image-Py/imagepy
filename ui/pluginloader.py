@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 import wx  
 from core.loader import loader
-from core.managers import ShotcutManager, PluginsManager
+from core.manager import ShotcutManager, PluginsManager
 
 def buildMenuBarByPath(parent, path, menuBar=None):
     data = loader.build_plugins(path)

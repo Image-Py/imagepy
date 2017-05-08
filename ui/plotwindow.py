@@ -4,7 +4,7 @@ import os
 import wx, IPy
 import numpy as np
 from math import ceil
-from core.managers import PlotManager
+from core.manager import PlotManager
 
 class LineCanvas(wx.Panel):
     def __init__(self, parent):

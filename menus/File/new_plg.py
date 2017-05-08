@@ -11,7 +11,7 @@ from ui.canvasframe import CanvasFrame
 import numpy as np
 import IPy
 
-from core.engines import Free
+from core.engine import Free
 
 class Plugin(Free):
     '''

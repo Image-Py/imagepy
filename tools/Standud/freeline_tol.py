@@ -6,7 +6,7 @@ Created on Wed Oct 19 17:35:09 2016
 """
 from core.roi import lineroi
 import wx
-from core.engines import Tool
+from core.engine import Tool
 
 class Linebuf:
     title = 'Free Line'

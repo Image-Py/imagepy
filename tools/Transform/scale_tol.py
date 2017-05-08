@@ -8,7 +8,7 @@ Created on Wed Nov 23 23:10:57 2016
 
 import wx
 import numpy as np
-from core.engines import Tool, Filter
+from core.engine import Tool, Filter
 import scipy.ndimage as nimg
 
 class ScaleTool(Tool):

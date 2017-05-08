@@ -5,9 +5,9 @@ Created on Wed Dec 28 23:24:43 2016
 @author: yxl
 """
 
-from core.engines import Free
+from core.engine import Free
 from ui.macroseditor import MacrosEditor
-from core.managers import TextLogManager
+from core.manager import TextLogManager
 import IPy, wx
 
 class Recorder(Free):

@@ -7,7 +7,7 @@ Created on Wed Jan 25 23:51:12 2017
 
 import wx
 import numpy as np
-from core.engines import Tool, Filter
+from core.engine import Tool, Filter
 import scipy.ndimage as nimg
 
 #class RotateTool(Tool):

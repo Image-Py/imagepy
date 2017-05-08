@@ -5,10 +5,10 @@ Created on Sat Dec 17 09:58:55 2016
 @author: yxl
 """
 
-from core.engines import Simple
+from core.engine import Simple
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.managers import WindowsManager
+from core.manager import WindowsManager
 import IPy
 
 class Plugin(Simple):

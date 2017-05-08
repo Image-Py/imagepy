@@ -6,7 +6,7 @@ Created on Mon Dec 26 20:34:59 2016
 """
 import IPy
 import numpy as np
-from core.engines import Simple
+from core.engine import Simple
 
 class Histogram(Simple):
     title = 'Histogram'

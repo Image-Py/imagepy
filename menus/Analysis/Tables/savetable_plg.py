@@ -6,8 +6,8 @@ Created on Tue Dec 27 11:30:24 2016
 """
 import IPy
 import wx
-from core.engines import Free
-from core.managers import TableLogManager
+from core.engine import Free
+from core.manager import TableLogManager
 
 class Csv(Free):
     title = 'Save Table As CSV'

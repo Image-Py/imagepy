@@ -6,7 +6,7 @@ Created on Mon Dec 26 22:05:43 2016
 """
 
 import numpy as np
-from core.engines import Filter
+from core.engine import Filter
 from scipy.ndimage import label, generate_binary_structure
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame

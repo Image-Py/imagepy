@@ -5,7 +5,7 @@ Created on Mon Nov 28 01:57:11 2016
 @author: yxl
 """
 import numpy as np
-from core.engines import Simple
+from core.engine import Simple
 class ToStack(Simple):
     title = 'Trans to Stack'
     note = ['all','no_change','req_stack']

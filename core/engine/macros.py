@@ -5,7 +5,7 @@ Created on Thu Dec 29 01:48:23 2016
 @author: yxl
 """
 import IPy
-from core.managers import TextLogManager
+from core.manager import TextLogManager
 import threading
 
 class Macros:

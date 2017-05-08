@@ -6,8 +6,7 @@ Created on Fri Oct 14 01:24:41 2016
 """
 import wx, IPy
 from canvas import Canvas
-from core.managers import WindowsManager
-from core.managers import ShotcutManager,PluginsManager
+from core.manager import WindowsManager, ShotcutManager, PluginsManager
 
 class CanvasFrame(wx.Frame): 
     def __init__(self, parent=None):

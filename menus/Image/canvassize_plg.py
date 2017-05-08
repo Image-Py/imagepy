@@ -5,7 +5,7 @@ Created on Sun Dec 11 23:43:44 2016
 @author: yxl
 """
 
-from core.engines import Simple
+from core.engine import Simple
 import numpy as np
 from core.pixcel import bliter
 import IPy

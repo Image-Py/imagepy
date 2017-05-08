@@ -6,7 +6,7 @@ Created on Sat Jan 14 23:23:30 2017
 """
 import wx, os, sys
 import pluginloader, toolsloader, IPy
-from core.managers import ConfigManager, PluginsManager
+from core.manager import ConfigManager, PluginsManager
 import time, threading
 
 class FileDrop(wx.FileDropTarget):
@@ -18,13 +18,17 @@ class ImagePy(wx.Frame):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', size = wx.Size(560,-1), pos = wx.DefaultPosition, style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
         IPy.curapp = self
-        self.menubar = pluginloader.buildMenuBarByPath(self, 'menus')
+        path = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.dirname(path) + os.path.sep + 'menus'
+        self.menubar = pluginloader.buildMenuBarByPath(self, path)
         self.SetMenuBar( self.menubar )
         self.shortcut = pluginloader.buildShortcut(self)
         self.SetAcceleratorTable(self.shortcut)
         self.busy = 'first'
         sizer = wx.BoxSizer(wx.VERTICAL)
-        self.toolbar = toolsloader.build_tools(self, 'tools')
+        path = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.dirname(path) + os.path.sep + 'tools'
+        self.toolbar = toolsloader.build_tools(self, path)
         
         #self.toolbar.Realize() 
         #sizertool.Add(self.toolbar, 1, 0, 5 )

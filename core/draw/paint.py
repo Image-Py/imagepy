@@ -6,7 +6,7 @@ Created on Wed Oct 19 15:03:15 2016
 """
 import numpy as np
 from core.draw import polygonfill
-from core.managers import ColorManager
+from core.manager import ColorManager
 
 
 def match_color(img, color):

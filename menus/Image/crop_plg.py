@@ -5,7 +5,7 @@ Created on Wed Dec  7 02:32:31 2016
 @author: yxl
 """
 
-from core.engines import Simple
+from core.engine import Simple
 import numpy as np
 
 class Plugin(Simple):

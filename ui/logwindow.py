@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import wx     
 import IPy   
-from core.managers import TextLogManager
+from core.manager import TextLogManager
 
 class TextLog(wx.Frame):
     @classmethod

@@ -2,7 +2,7 @@
 import wx  
 import os
 import IPy
-from core.engines import Tool, Macros
+from core.engine import Tool, Macros
 from core.loader import loader
 
 def make_bitmap(bmp):
@@ -25,7 +25,9 @@ def buildToolsBar(parent, data):
     toolbar.SetSizer( box )
     #toolbar =  wx.ToolBar( parent, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TB_HORIZONTAL ) 
     add_tools(toolbar, data[1][0][1], None)
-    btn = wx.BitmapButton(toolbar, wx.ID_ANY, make_bitmap(wx.Bitmap('tools/drop.gif')), wx.DefaultPosition, (32, 32), wx.BU_AUTODRAW|wx.RAISED_BORDER)
+    path = os.path.abspath(os.path.dirname(__file__))
+    path = os.path.join(os.path.dirname(path), 'tools/drop.gif')
+    btn = wx.BitmapButton(toolbar, wx.ID_ANY, make_bitmap(wx.Bitmap(path)), wx.DefaultPosition, (32, 32), wx.BU_AUTODRAW|wx.RAISED_BORDER)
     box.Add(btn)
     btn.Bind(wx.EVT_LEFT_DOWN, lambda x:menu_drop(parent, toolbar, data, btn, x))
     add_tools(toolbar, data[1][1][1])

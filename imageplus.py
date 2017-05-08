@@ -1,5 +1,5 @@
 import numpy as np
-from core.managers import WindowsManager, ColorManager
+from core.manager import WindowsManager, ColorManager
 
 def get_img_type(imgs):
     if imgs[0].ndim==3:return 'rgb'

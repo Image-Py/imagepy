@@ -106,7 +106,7 @@ The examples above only list some of the functionality of the ImagePy. However, 
 ``` python
 # -*- coding: utf-8 -*
 import scipy.ndimage as nimg
-from core.engines import Filter
+from core.engine import Filter
 
 class Gaussian(Filter):
     title = 'Gaussian'
@@ -145,7 +145,7 @@ Another scenario is to interact on the canvas through the mouse, like the select
 
 ``` python
 from core.draw import paint
-from core.engines import Tool
+from core.engine import Tool
 import wx
 
 class Plugin(Tool):
@@ -178,7 +178,7 @@ class Plugin(Tool):
 
 **Create Tool:**
 
-1. Inherited from `Tool` in the `engines`.  
+1. Inherited from `Tool` in the `engine`.  
 2. Specify the `title`, which will be the tool name, and the message of the status bar.  
 3. Adds several methods to achieve mouse_down, mouse_up, mouse_move, mouse_wheel.  
 4. If the tool requires parameters (for example, pen width), use the dictionary to assign to `para`. Similarly, `view` specifies its interactive interface. When the tool is double-clicked, the dialog box will pop-up in accordance with the specified interface.  

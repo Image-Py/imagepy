@@ -6,8 +6,8 @@ Created on Fri Jan  6 23:45:59 2017
 """
 import IPy
 import os
-from core.engines import Macros
-from core.managers import ToolsManager,PluginsManager
+from core.engine import Macros
+from core.manager import ToolsManager,PluginsManager
 import sys
 
 first = [0,0]
@@ -25,6 +25,7 @@ def extend_plugins(path, lst, err):
         else:
             try:
                 rpath = path.replace('/', '.').replace('\\','.')
+                rpath = rpath.split('imagepy.')[1]
                 plg = __import__(rpath+'.'+i[:-3],'','',[''])
                 if hasattr(plg, 'plgs'):
                     rst.extend([j for j in plg.plgs])
@@ -66,6 +67,7 @@ def build_plugins(path, err=None):
     if len(subtree)==0:return []
     
     rpath = path.replace('/', '.').replace('\\','.')
+    rpath = rpath.split('imagepy.')[1]
     pg = __import__(rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
@@ -89,6 +91,7 @@ def extend_tools(path, lst, err):
         else:
             try:
                 rpath = path.replace('/', '.').replace('\\','.')
+                rpath = rpath.split('imagepy.')[1]
                 plg = __import__(rpath+'.'+i,'','',[''])
                 if hasattr(plg, 'plgs'): 
                     for i,j in plg.plgs: rst.append((i, path+'/'+j))
@@ -126,6 +129,7 @@ def build_tools(path, err=None):
                 subtree.append(i)
     if len(subtree)==0:return []
     rpath = path.replace('/', '.').replace('\\','.')
+    rpath = rpath.split('imagepy.')[1]
     pg = __import__(rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):

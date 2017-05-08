@@ -5,7 +5,7 @@ Created on Tue Dec  6 19:47:34 2016
 @author: yxl
 """
 
-from core.engines import Simple
+from core.engine import Simple
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
 import numpy as np

@@ -6,8 +6,8 @@ Created on Wed Dec 28 23:33:52 2016
 """
 
 from ui.logwindow import TextLog
-from core.managers import PluginsManager
-from core.engines import Macros
+from core.manager import PluginsManager
+from core.engine import Macros
 import wx, IPy
 
 class MacrosEditor(TextLog):

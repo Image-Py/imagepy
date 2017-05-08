@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 import numpy as np
-from core.engines import Filter
+from core.engine import Filter
 
 class Add_plg(Filter):
     title = 'Add'

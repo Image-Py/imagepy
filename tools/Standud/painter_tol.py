@@ -5,7 +5,7 @@ Created on Wed Oct 19 17:35:09 2016
 @author: yxl
 """
 from core.draw import paint
-from core.engines import Tool
+from core.engine import Tool
 import wx
 
 class Plugin(Tool):

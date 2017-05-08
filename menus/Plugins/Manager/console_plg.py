@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import wx
-from core.engines import Free
-from core.managers import PluginsManager
+from core.engine import Free
+from core.manager import PluginsManager
 from wx.py.shell import ShellFrame
-from core.managers import PluginsManager
 import numpy as np
 import scipy.ndimage as ndimg
 import IPy

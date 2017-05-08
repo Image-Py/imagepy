@@ -5,9 +5,9 @@ Created on Sat Nov 26 01:26:25 2016
 @author: yxl
 """
 from core.pixcel import bliter
-from core.engines import Simple, Tool, Filter
+from core.engine import Simple, Tool, Filter
 import numpy as np
-from core.managers import ClipBoardManager, ColorManager
+from core.manager import ClipBoardManager, ColorManager
 from core.roi.rectangleroi import RectangleRoi
 
 class PasteMove(Tool):

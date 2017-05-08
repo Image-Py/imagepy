@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from core.engines import Simple
+from core.engine import Simple
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.managers import ConfigManager
+from core.manager import ConfigManager
 from ui.panelconfig import ParaDialog
 import numpy as np
 import IPy

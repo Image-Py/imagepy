@@ -4,7 +4,7 @@ Created on Sat Nov 19 11:26:12 2016
 
 @author: yxl
 """
-from core.engines import Simple
+from core.engine import Simple
 class SetSlice(Simple):
     title = 'Set Slice'
     note = ['all']

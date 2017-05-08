@@ -4,7 +4,7 @@ Created on Wed Dec 28 00:26:45 2016
 
 @author: yxl
 """
-from core.engines import Free
+from core.engine import Free
 from wx.py.editor import EditorFrame
 
 class NewFilter(Free):

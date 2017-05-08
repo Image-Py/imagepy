@@ -4,7 +4,7 @@ Created on Wed Dec 28 00:26:45 2016
 
 @author: yxl
 """
-from core.engines import Filter
+from core.engine import Filter
 from skimage.morphology import skeletonize
 from skimage.morphology import medial_axis
 import numpy as np

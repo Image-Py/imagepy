@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from core.engines import Filter
+from core.engine import Filter
 from skimage.morphology import watershed
 from skimage.feature import peak_local_max
 import numpy as np

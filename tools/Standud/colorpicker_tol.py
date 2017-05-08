@@ -4,8 +4,8 @@ Created on Wed Oct 19 17:35:09 2016
 
 @author: yxl
 """
-from core.engines import Tool
-from core.managers import ColorManager
+from core.engine import Tool
+from core.manager import ColorManager
 
 class Plugin(Tool):
     title = 'Color Picker'

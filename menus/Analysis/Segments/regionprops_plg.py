@@ -6,8 +6,8 @@ Created on Tue Dec 27 01:06:59 2016
 """
 import IPy, wx
 import numpy as np
-from core.engines import Simple
-from core.managers import WindowsManager
+from core.engine import Simple
+from core.manager import WindowsManager
 from scipy.ndimage import label
 from skimage.measure import regionprops
 

@@ -5,7 +5,7 @@ Created on Wed Dec  7 23:03:28 2016
 @author: yxl
 """
 
-from core.engines import Simple
+from core.engine import Simple
 import scipy.ndimage as ndimg
 import numpy as np
 import IPy

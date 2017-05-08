@@ -6,7 +6,7 @@ Created on Sat Nov 19 14:05:12 2016
 """
 import IPy
 import webbrowser
-from core.engines import Free
+from core.engine import Free
 
 class About(Free):
     title = 'About'

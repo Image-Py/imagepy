@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 import scipy.ndimage as nimg
-from core.engines import Filter, Simple
+from core.engine import Filter, Simple
 import numpy as np
 
 class Gaussian(Filter):
@@ -14,27 +14,6 @@ class Gaussian(Filter):
     #process
     def run(self, ips, snap, img, para = None):
         nimg.gaussian_filter(snap, para['sigma'], output=img)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
         
 class Gaussian_laplace(Filter):
     title = 'Gaussian Laplace'

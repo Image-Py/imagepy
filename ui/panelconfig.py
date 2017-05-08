@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import wx, platform
-from core.managers import WindowsManager, TableLogManager
+from core.manager import WindowsManager, TableLogManager
 from widgets import NumCtrl, ColorCtrl
         
 class ParaDialog (wx.Dialog):

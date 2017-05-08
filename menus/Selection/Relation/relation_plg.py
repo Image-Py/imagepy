@@ -5,8 +5,8 @@ Created on Thu Dec 22 20:25:52 2016
 @author: yxl
 """
 
-from core.engines import Simple
-from core.managers import RoiManager
+from core.engine import Simple
+from core.manager import RoiManager
 import IPy
 
 class Union(Simple):

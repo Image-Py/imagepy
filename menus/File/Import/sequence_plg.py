@@ -11,7 +11,7 @@ from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
 from glob import glob
 import IPy
-from core.engines import Free
+from core.engine import Free
 
 class Plugin(Free):
     title = 'Import Sequence'

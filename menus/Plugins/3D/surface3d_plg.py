@@ -5,7 +5,7 @@ Created on Thu Jan 12 00:42:18 2017
 @author: yxl
 """
 
-from core.engines import Simple
+from core.engine import Simple
 
 class Plugin(Simple):
     title = '3D Surface'

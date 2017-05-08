@@ -4,8 +4,8 @@ Created on Sun Dec 18 22:31:12 2016
 
 @author: yxl
 """
-from core.managers import RoiManager
-from core.engines import Simple
+from core.manager import RoiManager
+from core.engine import Simple
 from core.roi.rectangleroi import RectangleRoi
 import IPy
 

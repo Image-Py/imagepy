@@ -7,9 +7,9 @@ Created on Mon Oct 17 21:13:42 2016
 import IPy
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.managers import ColorManager
+from core.manager import ColorManager
 import numpy as np
-from core.engines import Free
+from core.engine import Free
 
 class Plugin(Free):
     def __init__(self, key):

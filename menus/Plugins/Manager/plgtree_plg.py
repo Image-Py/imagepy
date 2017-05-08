@@ -5,7 +5,7 @@ Created on Sat Jan  7 01:00:02 2017
 @author: yxl
 """
 
-from core.engines import Free
+from core.engine import Free
 import wx
 import IPy
 from core.loader import loader

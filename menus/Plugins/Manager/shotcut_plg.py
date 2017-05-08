@@ -5,8 +5,8 @@ Created on Sat Jan  7 16:01:14 2017
 @author: yxl
 """
 import wx
-from core.engines import Free
-from core.managers import ShotcutManager,PluginsManager
+from core.engine import Free
+from core.manager import ShotcutManager,PluginsManager
 import IPy
 
 class VirtualListCtrl(wx.ListCtrl):

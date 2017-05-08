@@ -9,7 +9,7 @@ import wx
 import IPy
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.engines import Tool, Simple
+from core.engine import Tool, Simple
 
 class Cross:
     def __init__(self, w, h):

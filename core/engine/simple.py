@@ -6,7 +6,7 @@ Created on Sat Dec  3 03:32:05 2016
 """
 import threading
 from ui.panelconfig import ParaDialog
-from core.managers import TextLogManager
+from core.manager import TextLogManager
 import IPy
 import wx
 

@@ -5,7 +5,7 @@ Created on Mon Dec  5 03:19:13 2016
 @author: yxl
 """
 from scipy.misc import imsave
-from core.engines import Simple
+from core.engine import Simple
 import wx, IPy
 
 class Plugin(Simple):

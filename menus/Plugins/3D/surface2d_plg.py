@@ -4,7 +4,7 @@ Created on Tue Jan 10 22:33:33 2017
 
 @author: yxl
 """
-from core.engines import Simple
+from core.engine import Simple
 
 from scipy.ndimage.filters import gaussian_filter
 import IPy

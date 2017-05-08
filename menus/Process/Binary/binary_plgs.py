@@ -7,7 +7,7 @@ Created on Fri Nov 18 22:51:57 2016
 
 # -*- coding: utf-8 -*
 import scipy.ndimage as nimg
-from core.engines import Filter
+from core.engine import Filter
 
 class Closing(Filter):
     title = 'Binary Closeing'

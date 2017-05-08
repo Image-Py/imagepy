@@ -7,7 +7,7 @@ Created on Mon Dec 26 00:28:59 2016
 
 import wx
 import wx.grid
-from core.managers import TableLogManager
+from core.manager import TableLogManager
 import IPy
 
 class GenericTable(wx.grid.GridTableBase):

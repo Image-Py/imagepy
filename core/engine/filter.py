@@ -6,7 +6,7 @@ Created on Fri Dec  2 23:48:33 2016
 """
 
 from ui.panelconfig import ParaDialog
-from core.managers import TextLogManager, WindowsManager
+from core.manager import TextLogManager, WindowsManager
 import threading
 import numpy as np
 import IPy

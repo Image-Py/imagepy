@@ -4,7 +4,7 @@ import cStringIO, urllib2
 import IPy
 import numpy as np
 
-from core.engines import Free
+from core.engine import Free
 
 class Plugin(Free):
     title = 'Open Raw'

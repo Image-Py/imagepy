@@ -6,9 +6,9 @@ Created on Tue Dec 27 01:06:59 2016
 """
 import IPy
 import numpy as np
-from core.engines import Simple
+from core.engine import Simple
 from scipy import ndimage
-from core.managers import WindowsManager
+from core.manager import WindowsManager
 from core.roi.pointroi import PointRoi
 
 class Plugin(Simple):

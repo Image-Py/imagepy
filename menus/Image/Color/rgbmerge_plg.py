@@ -5,10 +5,10 @@ Created on Sat Dec 17 10:49:15 2016
 @author: yxl
 """
 
-from core.engines import Simple
+from core.engine import Simple
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.managers import WindowsManager
+from core.manager import WindowsManager
 import numpy as np
 import IPy
 

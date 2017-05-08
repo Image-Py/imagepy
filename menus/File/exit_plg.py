@@ -5,7 +5,7 @@ Created on Mon Dec  5 05:43:50 2016
 @author: yxl
 """
 import IPy
-from core.engines import Free
+from core.engine import Free
 
 class Plugin(Free):
     title = 'Exit'

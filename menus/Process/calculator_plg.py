@@ -4,10 +4,10 @@ Created on Thu Dec  1 01:22:19 2016
 
 @author: yxl
 """
-from core.managers import WindowsManager
+from core.manager import WindowsManager
 import IPy
 
-from core.engines import Simple
+from core.engine import Simple
 from core.pixcel import bliter
 
 class Plugin(Simple):

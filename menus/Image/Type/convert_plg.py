@@ -5,7 +5,7 @@ Created on Sat Dec 17 14:15:41 2016
 @author: yxl
 """
 import numpy as np
-from core.engines import Simple
+from core.engine import Simple
 import IPy
 
 class To8bit(Simple):

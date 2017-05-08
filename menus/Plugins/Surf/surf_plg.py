@@ -5,8 +5,8 @@ Created on Sun Jan  8 14:49:20 2017
 @author: yxl
 """
 import cv2, wx
-from core.engines import Filter, Simple, Tool
-from core.managers import WindowsManager
+from core.engine import Filter, Simple, Tool
+from core.manager import WindowsManager
 from matcher import Matcher
 import numpy as np
 import IPy
@@ -15,7 +15,7 @@ class FeatMark:
     def __init__(self, feats):
         self.feats = feats
         
-    def draw(self, dc, f):
+    def draw(self, dc, f, **key):
         for i in self.feats:
             dc.DrawCircle(f(i.pt), 3)
             
@@ -70,7 +70,7 @@ class Pick(Tool):
     def mouse_wheel(self, ips, x, y, d, **key):
         pass
         
-    def draw(self, dc, f):
+    def draw(self, dc, fdraw, **key):
         #dc.SetPen(wx.TRANSPARENT_PEN)
         dc.SetBrush(wx.Brush((0,0,255)))
         if self.style:
