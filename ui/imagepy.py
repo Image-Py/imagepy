@@ -9,8 +9,6 @@ import pluginloader, toolsloader, IPy
 from core.manager import ConfigManager, PluginsManager
 import time, threading
 
-print IPy.root_dir
-
 class FileDrop(wx.FileDropTarget):
     def OnDropFiles(self, x, y, path):
         IPy.run_macros(["Open>{'path':%s}"%repr(i) for i in path])

@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.DS_Store
+preference.cfg
 testdata/
 menus/Extend/
 tools/Extend/
