@@ -4,11 +4,12 @@ Created on Sat Oct 15 10:03:00 2016
 
 @author: yxl
 """
-import wx, os
-from ui.panelconfig import ParaDialog
-from core import manager
 
+import wx, os
+root_dir = os.path.abspath(os.path.dirname(__file__))
+from core import manager
 curapp = None
+
 
 callafter = wx.CallAfter
 
@@ -83,6 +84,7 @@ def getdir(title, filt, para=None):
     return rst if para!=None else path
     
 def get_para(title, view, para):
+    from ui.panelconfig import ParaDialog
     pd = ParaDialog(curapp, title)
     pd.init_view(view, para)
     rst = pd.ShowModal()

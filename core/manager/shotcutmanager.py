@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-import os
+import os, IPy
 
 class ShotcutManager:
     shotcuts = {}
     @classmethod
     def read(cls):
-        if os.path.exists('data/shotcut.cfg'):
-            pkl_file = open('data/shotcut.cfg','rb')
+        if os.path.exists(os.path.join(IPy.root_dir, 'data/shotcut.cfg')):
+            pkl_file = open(os.path.join(IPy.root_dir, 'data/shotcut.cfg'),'rb')
             cls.shotcuts = eval(pkl_file.readline())
             pkl_file.close()
          
     @classmethod
     def write(cls):
-        pkl_file = open('data/shotcut.cfg', 'wb')
+        pkl_file = open(os.path.join(IPy.root_dir, 'data/shotcut.cfg'), 'wb')
         pkl_file.write(str(cls.shotcuts))
         pkl_file.close()
     

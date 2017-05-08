@@ -8,7 +8,7 @@ import numpy as np, os, wx
 from glob import glob
 import IPy
 
-files = glob('data/luts/*.lut')
+files = glob(os.path.join(IPy.root_dir, 'data/luts/*.lut'))
 keys = [os.path.split(i)[1][:-4] for i in files]
 values = [np.fromfile(i, dtype=np.uint8).reshape((3,256)).T.copy() for i in files]
     

@@ -9,6 +9,8 @@ import pluginloader, toolsloader, IPy
 from core.manager import ConfigManager, PluginsManager
 import time, threading
 
+print IPy.root_dir
+
 class FileDrop(wx.FileDropTarget):
     def OnDropFiles(self, x, y, path):
         IPy.run_macros(["Open>{'path':%s}"%repr(i) for i in path])
@@ -16,18 +18,16 @@ class FileDrop(wx.FileDropTarget):
 class ImagePy(wx.Frame):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', size = wx.Size(560,-1), pos = wx.DefaultPosition, style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-        self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
+        self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize)
         IPy.curapp = self
-        path = os.path.dirname(os.path.abspath(__file__))
-        path = os.path.dirname(path) + os.path.sep + 'menus'
+        path = IPy.root_dir + os.path.sep + 'menus'
         self.menubar = pluginloader.buildMenuBarByPath(self, path)
         self.SetMenuBar( self.menubar )
         self.shortcut = pluginloader.buildShortcut(self)
         self.SetAcceleratorTable(self.shortcut)
         self.busy = 'first'
         sizer = wx.BoxSizer(wx.VERTICAL)
-        path = os.path.dirname(os.path.abspath(__file__))
-        path = os.path.dirname(path) + os.path.sep + 'tools'
+        path = IPy.root_dir + os.path.sep + 'tools'
         self.toolbar = toolsloader.build_tools(self, path)
         
         #self.toolbar.Realize() 
@@ -67,7 +67,9 @@ class ImagePy(wx.Frame):
         
     def reload_plugins(self):
         for i in range(self.menubar.GetMenuCount()): self.menubar.Remove(0)
-        pluginloader.buildMenuBarByPath(self, 'menus', self.menubar)
+        path = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.dirname(path) + os.path.sep + 'menus'
+        pluginloader.buildMenuBarByPath(self, path, self.menubar)
         
     def hold(self):
         i = 0

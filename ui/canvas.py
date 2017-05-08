@@ -124,16 +124,16 @@ class Canvas (wx.Panel):
             self.update(True)
             self.reInitBuffer = False
             self.ips.update = False
-            print 'resize'
+            #print 'resize'
         if self.ips.scrchanged:
             self.set_ips(self.ips)
             self.ips.scrchanged = False
-            print 'scr changed'
+            #print 'scr changed'
         if self.ips.update != False:
             #print 'normal update'
             self.update(self.ips.update == 'pix')
             self.ips.update = False
-            print 'update'
+            #print 'update'
     
     def on_paint(self, event):
         wx.BufferedPaintDC(self, self.buffer)
