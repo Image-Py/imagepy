@@ -6,28 +6,11 @@ Created on Wed Oct 19 17:35:09 2016
 """
 from core.roi import polygonroi
 import wx
+from .polygon_tol import Polygonbuf
 from core.engine import Tool
 
-class Polygonbuf:
-    def __init__(self):
-        self.buf = [[],[]]
-        
-    def addpoint(self, p):
-        self.buf[0].append(p)
-        
-    def draw(self, dc, f, **key):
-        dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))
-        if len(self.buf[0])>1:
-            dc.DrawLines([f(*i) for i in self.buf[0]])
-        for i in self.buf[0]: dc.DrawCircle(f(*i),2)
-    
-    def pop(self):
-        a = self.buf
-        self.buf = [[],[]]
-        return a
-
 class Plugin(Tool):
-    title = 'Polygon'
+    title = 'Free Area'
     def __init__(self):
         self.curobj = None
         self.doing = False
@@ -55,27 +38,30 @@ class Plugin(Tool):
                 else: ips.roi = None
             if self.doing:
                 self.helper.addpoint((x,y))
-                self.curobj = (self.helper.buf[0], -1)
                 self.odx, self.ody = x, y
-                
-        elif btn==3:
-            if self.doing:
-                self.helper.addpoint((x,y))
-                self.doing = False
-                ips.roi.commit(self.helper.pop(), self.oper)
+        ips.update = True
+        
+    def mouse_up(self, ips, x, y, btn, **key):
+        if self.doing:
+            self.helper.addpoint((x,y))
+            self.doing = False
+            self.curobj = None
+            ips.roi.commit(self.helper.pop(), self.oper)
         ips.update = True
     
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
-        lim = 5.0/key['canvas'].get_scale()        
+        lim = 5.0/key['canvas'].get_scale()
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if ips.roi.snap(x, y, lim)!=None:
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
-            ips.roi.draged(self.odx, self.ody, x, y, self.curobj)
+            if self.doing:
+                self.helper.addpoint((x,y))
+            elif self.curobj: ips.roi.draged(self.odx, self.ody, x, y, self.curobj)
             ips.update = True
         self.odx, self.ody = x, y
         
-    def on_switch(self):
-        print 'hahaha'
+    def mouse_wheel(self, ips, x, y, d, **key):
+        pass

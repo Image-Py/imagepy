@@ -1,1 +1,1 @@
-catlog = ['Standud','Transform','Stack']
+catlog = ['Standard','Transform','Stack']

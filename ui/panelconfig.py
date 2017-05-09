@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import wx, platform
 from core.manager import WindowsManager, TableLogManager
-from widgets import NumCtrl, ColorCtrl
+from .widgets import NumCtrl, ColorCtrl
         
 class ParaDialog (wx.Dialog):
     def __init__( self, parent, title):
@@ -31,7 +31,7 @@ class ParaDialog (wx.Dialog):
         self.btn_OK = wx.Button( self, wx.ID_OK, 'OK')
         sizer.Add( self.btn_OK, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
         
-        self.btn_cancel = wx.Button( self, wx.ID_CANCEL, u'Cancel')
+        self.btn_cancel = wx.Button( self, wx.ID_CANCEL, 'Cancel')
         sizer.Add( self.btn_cancel, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
         self.lst.Add(sizer, 0, wx.ALIGN_RIGHT, 5 )
         if not modal:
@@ -169,22 +169,22 @@ class ParaDialog (wx.Dialog):
         self.Fit()
         
     def para_check(self, para, key):
-        return sum([i==None for i in para.values()])==0
+        return sum([i==None for i in list(para.values())])==0
         
     def para_changed(self, key):
         para = self.para
-        for p in para.keys():
-            if self.ctrl_dic.has_key(p):
+        for p in list(para.keys()):
+            if p in self.ctrl_dic:
                 para[p] = self.ctrl_dic[p].GetValue()
         if not self.para_check(para, key):return
-        if not self.ctrl_dic.has_key('preview'):return
+        if 'preview' not in self.ctrl_dic:return
         if not self.ctrl_dic['preview'].GetValue():return
         self.handle(para)
         
     def reset(self, para=None):
         if para!=None:self.para = para
-        for p in self.para.keys():
-            if self.ctrl_dic.has_key(p):
+        for p in list(self.para.keys()):
+            if p in self.ctrl_dic:
                 self.ctrl_dic[p].SetValue(self.para[p])
             
     def get_para(self):
@@ -195,15 +195,15 @@ class ParaDialog (wx.Dialog):
         if handle==None: self.handle = self.handle_
         
     def handle_(self, para):
-        print para
+        print(para)
 
     def __del__( self ):
         pass
 
 if __name__ == '__main__':
-    view = [(float, (0,20), 1, u'半径', 'r', 'mm'),
-            ('slide', (-20,20), u'亮度', 'slide', 'mm'),
-            ('color', u'颜色', 'color', 'rgb'),
+    view = [(float, (0,20), 1, '半径', 'r', 'mm'),
+            ('slide', (-20,20), '亮度', 'slide', 'mm'),
+            ('color', '颜色', 'color', 'rgb'),
             (bool, 'Preview', 'preview')]
     data = {'r':1.2, 'slide':0,  'preview':True, 'color':(0,255,0)}
                  

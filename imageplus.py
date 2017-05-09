@@ -1,5 +1,5 @@
 import numpy as np
-from core.manager import WindowsManager, ColorManager
+from .core.manager import WindowsManager, ColorManager
 
 def get_img_type(imgs):
     if imgs[0].ndim==3:return 'rgb'
@@ -35,7 +35,7 @@ class ImagePlus:
         self.imgs = imgs
         
         self.height, self.width = self.size = self.imgs[0].shape[:2]
-        print self.height, self.width
+        print(self.height, self.width)
         self.imgtype = get_img_type(self.imgs)
         self.chanels = 1 if self.imgs[0].ndim==2 else self.imgs[0].shape[2]
         self.dtype = self.imgs[0].dtype
@@ -83,7 +83,7 @@ class ImagePlus:
     def get_subimg(self, s1=None, s2=None):
         if s1==None:
             s1, s2 = self.get_rect()
-            print s1, s2
+            print(s1, s2)
         return self.get_img()[s1, s2]
         
     def snapshot(self):
@@ -117,7 +117,7 @@ if __name__=='__main__':
     img = imread('results.bmp')
     ips = ImagePlus([img, 255-img])
     
-    from ui.canvasframe import CanvasFrame
+    from .ui.canvasframe import CanvasFrame
     import wx
     
     app = wx.PySimpleApp()

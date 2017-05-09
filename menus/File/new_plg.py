@@ -37,6 +37,6 @@ class Plugin(Free):
         IPy.show_img(imgs, para['name'])
 
 if __name__ == '__main__':
-	print Plugin.title
+	print(Plugin.title)
 	app = wx.App(False)
 	Plugin().run()

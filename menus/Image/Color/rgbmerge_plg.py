@@ -44,7 +44,7 @@ class Plugin(Simple):
             
         rgb = []
         w,h = imr.size
-        rgbs = zip(imr.imgs,img.imgs,imb.imgs)
+        rgbs = list(zip(imr.imgs,img.imgs,imb.imgs))
         for i in range(sr):
             IPy.curapp.set_progress(round((i+1)*100.0/sr))
             img = np.zeros((w,h,3), dtype=np.uint8)

@@ -8,7 +8,7 @@ Created on Fri Nov 11 12:10:17 2016
 import wx
 from core.draw import paint
 from core.roi.operator import affine
-from roi import ROI
+from .roi import ROI
 
 class LineRoi(ROI):
     dtype = 'line'

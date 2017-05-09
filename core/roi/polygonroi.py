@@ -10,7 +10,7 @@ from shapely.ops import cascaded_union
 from shapely.ops import polygonize
 from core.draw import paint
 from core.roi.operator import affine
-from roi import ROI
+from .roi import ROI
 
 def parse_poly(geom):
     out = list(geom.exterior.coords)

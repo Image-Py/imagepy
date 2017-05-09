@@ -13,7 +13,7 @@ keys = [os.path.split(i)[1][:-4] for i in files]
 values = [np.fromfile(i, dtype=np.uint8).reshape((3,256)).T.copy() for i in files]
     
 class ColorManager:
-    luts = dict(zip(keys, values))
+    luts = dict(list(zip(keys, values)))
     frontcolor = (255,255,0)
     backcolor = (0,0,0)
     wr, wg, wb = 1.0/3, 1.0/3, 1.0/3

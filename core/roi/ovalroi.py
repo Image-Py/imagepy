@@ -6,10 +6,10 @@ Created on Fri Nov 11 21:29:59 2016
 """
 
 import wx
-from polygonroi import PolygonRoi
+from .polygonroi import PolygonRoi
 import numpy as np
 from core.draw import paint
-from roi import ROI
+from .roi import ROI
 
 class OvalRoi(ROI):
     dtype = 'rect'

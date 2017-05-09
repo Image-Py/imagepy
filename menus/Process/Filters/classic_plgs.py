@@ -90,7 +90,7 @@ class USM(Filter):
 
     #process
     def run(self, ips, snap, img, para = None):
-        print 'haha'
+        print('haha')
         nimg.gaussian_filter(snap, para['sigma'], output=img)
         img -= snap
         np.multiply(img, -para['weight'], out=img, casting='unsafe')

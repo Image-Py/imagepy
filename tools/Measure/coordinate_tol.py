@@ -7,7 +7,7 @@ Created on Thu Feb  2 23:04:46 2017
 
 import wx
 from core.engine import Tool
-from setting import Setting
+from .setting import Setting
 import IPy
 
 class Coordinate:

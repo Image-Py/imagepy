@@ -21,7 +21,7 @@ class Builder(Simple):
 		img /= 100
 		rst = builder.build_graph(img)
 		ips.data = [graph2d.Graph(i,j) for i,j in rst]
-		print ips.data
+		print(ips.data)
 
 class Draw(Filter):
 	title = 'Draw Graph2D'

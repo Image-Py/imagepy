@@ -4,7 +4,7 @@ Created on Wed Dec 21 15:05:16 2016
 
 @author: yxl
 """
-from convert import roi2shape, shape2roi
+from .convert import roi2shape, shape2roi
 
 def affine(body, m, o):
     if isinstance(body, list):
@@ -22,7 +22,7 @@ class ROI:
         return shape2roi(roi2shape(self).convex_hull)
         
     def bounds(self):
-        from rectangleroi import RectangleRoi
+        from .rectangleroi import RectangleRoi
         box = roi2shape(self).bounds
         return RectangleRoi(*box)
         

@@ -9,7 +9,7 @@ import wx, IPy
 from core.engine import Tool
 import numpy as np
 from numpy.linalg import norm
-from setting import Setting
+from .setting import Setting
 from math import ceil
 
 class Profile:

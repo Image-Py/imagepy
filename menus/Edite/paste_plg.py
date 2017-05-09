@@ -17,9 +17,9 @@ class PasteMove(Tool):
         
     def mouse_down(self, ips, x, y, btn, **key):    
         goon = ips.roi.pick(x, y, 0)
-        print goon
+        print(goon)
         if goon != True : 
-            print 'end'
+            print('end')
         else :
             self.moving = True
             self.ox, self.oy = x, y
@@ -100,7 +100,7 @@ class Sketch(Filter):
     
     #parameter
     para = {'width':1}
-    view = [(int, (0,30), 0,  u'width', 'width', 'pix')]
+    view = [(int, (0,30), 0,  'width', 'width', 'pix')]
 
     #process
     def run(self, ips, snap, img, para = None):

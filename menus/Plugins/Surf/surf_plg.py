@@ -7,7 +7,7 @@ Created on Sun Jan  8 14:49:20 2017
 import cv2, wx
 from core.engine import Filter, Simple, Tool
 from core.manager import WindowsManager
-from matcher import Matcher
+from .matcher import Matcher
 import numpy as np
 import IPy
 
@@ -123,7 +123,7 @@ class Match(Simple):
                 mkp2.append( kp2[m.trainIdx] )
         p1 = np.float32([kp.pt for kp in mkp1])
         p2 = np.float32([kp.pt for kp in mkp2])
-        kp_pairs = zip(mkp1, mkp2)
+        kp_pairs = list(zip(mkp1, mkp2))
         return p1, p2, kp_pairs
     
     #process
@@ -161,7 +161,7 @@ class Match(Simple):
 plgs = [Surf, Match]
 
 if __name__ == '__main__':
-    from matcher import Matcher
+    from .matcher import Matcher
     
     detector = cv2.SURF(1000, nOctaves=3,
             nOctaveLayers=4, upright=False,

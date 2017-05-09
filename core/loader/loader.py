@@ -1,147 +1,175 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan  6 23:45:59 2017
-
 @author: yxl
 """
 import IPy
-import os
+import os,sys
 from core.engine import Macros
 from core.manager import ToolsManager,PluginsManager
-import sys
 
 first = [0,0]
-def extend_plugins(path, lst, err):
-    rst = []
-    for i in lst:
-        if isinstance(i, tuple) or i=='-': 
-            rst.append(i)
-            
-        elif i[-3:]=='.mc':
-            f = open(path+'/'+i)
-            cmds = f.readlines()
-            f.close()
-            rst.append(Macros(i[:-3], cmds))
-        else:
-            try:
-                rpath = path.replace('/', '.').replace('\\','.')
-                rpath = rpath.split('imagepy.')[1]
-                plg = __import__(rpath+'.'+i[:-3],'','',[''])
-                if hasattr(plg, 'plgs'):
-                    rst.extend([j for j in plg.plgs])
-                    for p in plg.plgs:
-                        if not isinstance(p, str):PluginsManager.add(p)
-                else: 
-                    rst.append(plg.Plugin)
-                    PluginsManager.add(plg.Plugin)
-            except Exception, e:
-                err.append((path, i, sys.exc_info()[1]))
+def _preprocess_path(currpath):
+    rootpath = IPy.root_dir
+    currpath = currpath.replace(".",os.path.sep)
+    if not os.path.exists(currpath):
+        currpath = os.path.join(IPyGL.rootpath,currpath)
+    rpath = currpath[len(rootpath):] if currpath.startswith(rootpath) else currpath
+    rpath = rpath.replace('/', '.').replace('\\','.')
+    rpath = rpath[1:] if rpath[0]=="." else rpath
 
-    return rst
-            
-def sort_plugins(catlog, lst):
-    rst = []
-    for i in catlog:
-        if i=='-':rst.append('-')
-        for j in lst:
-            if j[:-3]==i or j[0].title==i:
-                lst.remove(j)
-                rst.append(j)
-    rst.extend(lst)
-    return rst
-        
-def build_plugins(path, err=None):
+    return currpath, rpath
+
+
+def build_plugins(currpath, err=None,level = 1):
+    #TODO: what is the error?
     root = err==None
-    if err==None:err = []
+    if err==None: err = []
     subtree = []
-    cont = os.listdir(path)
-    for i in cont:
-        subp = os.path.join(path,i)
+    currpath,rpath = _preprocess_path(currpath)
+    paths = os.listdir(currpath)
+    for ipath in paths:
+        subp = os.path.join(currpath,ipath)
         if os.path.isdir(subp):
-            sub = build_plugins(subp, err)
-            if len(sub)!=0:subtree.append(sub)
-        elif i[-6:] in ('plg.py', 'lgs.py'):
-            subtree.append(i)
-        elif i[-3:] == '.mc':
-            subtree.append(i)
-    if len(subtree)==0:return []
-    
-    rpath = path.replace('/', '.').replace('\\','.')
-    rpath = rpath.split('imagepy.')[1]
+            sub = build_plugins(subp, err,level+1)
+            if len(sub)!=0:
+                subtree.append(sub)
+        elif ipath[-6:] in ('plg.py', 'lgs.py') or ipath[-3:]==".mc":
+            subtree.append(ipath)
+    # return subtree
+    if len(subtree)==0:
+        return []
+
     pg = __import__(rpath,'','',[''])
-    pg.title = os.path.basename(path)
+    pg.title = os.path.basename(currpath)
     if hasattr(pg, 'catlog'):
         subtree = sort_plugins(pg.catlog, subtree)
-    subtree = extend_plugins(path, subtree, err)
-    
+    subtree = extend_plugins(currpath, subtree, err)
+
     if first[0]==0 and root and len(err)>0:
         IPy.write('some plugin may be not loaded, but not affect otheres!')
-        for i in err: IPy.write('>>> %-50s%-20s%s'%i)
+        for e in err: IPy.write('>>> %-50s%-20s%s'%e)
     if root : first[0]=1
-    return (pg, subtree)  
-    
-def extend_tools(path, lst, err):
+    return (pg, subtree)
+
+
+def extend_plugins(currpath, lst, err):
     rst = []
-    for i in lst:
-        if i[-3:]=='.mc':
-            f = open(path+'/'+i)
-            cmds = f.readlines()
-            f.close()
-            rst.append((Macros(i[:-3], cmds),  path+'/'+i[:-3]+'.gif'))
+    currpath,rpath = _preprocess_path(currpath)
+
+    # ======================================================
+    for item in lst:
+        if isinstance(item, tuple) or item=='-':
+            rst.append(item)
+        elif item[-3:]=='.mc':
+            with open(os.path.join(currpath,item)) as f:
+                cmds = f.readlines()
+                print(cmds)
+                rst.append(Macros(item[:-3], cmds))
         else:
             try:
-                rpath = path.replace('/', '.').replace('\\','.')
-                rpath = rpath.split('imagepy.')[1]
-                plg = __import__(rpath+'.'+i,'','',[''])
-                if hasattr(plg, 'plgs'): 
-                    for i,j in plg.plgs: rst.append((i, path+'/'+j))
-                else: rst.append((plg.Plugin, path+'/'+i.split('_')[0]+'.gif'))
-            except Exception, e:
-                err.append((path, i, sys.exc_info()[1]))
-    for i in rst:ToolsManager.add(i[0])
+                #!TODO:Fixme!
+                # importlib.import_module()
+                plg = __import__(rpath+'.'+item[:-3],'','',[''])
+                if hasattr(plg, 'plgs'):
+                    rst.extend([x for x in plg.plgs])
+                    for x in plg.plgs:
+                        if not isinstance(x, str):
+                            PluginsManager.add(x)
+                else:
+                    rst.append(plg.Plugin)
+                    PluginsManager.add(plg.Plugin)
+            except Exception as e:
+                err.append((currpath, item, sys.exc_info()[1]))
+
     return rst
-            
-def sort_tools(catlog, lst):
+
+def sort_plugins(catlogs, lst):
     rst = []
-    for i in catlog:
-        if i=='-':rst.append('-')
-        for j in lst:
-            if j==i or j[0].title==i or j[:-3]==i:
-                lst.remove(j)
-                rst.append(j)
+    for catlog in catlogs:
+        if catlog=='-':
+            rst.append('-')
+        for item in lst:
+            if item[:-3] == catlog or item[0].title == catlog:
+                lst.remove(item)
+                rst.append(item)
     rst.extend(lst)
     return rst
-    
-def build_tools(path, err=None):
+
+def build_tools(currpath, err=None,level=1):
     root = err==None
     if err==None:err=[]
     subtree = []
-    cont = os.listdir(path)
-    for i in cont:
-        subp = os.path.join(path,i)
+    currpath,rpath = _preprocess_path(currpath)
+    paths = os.listdir(currpath)
+    for ipath in paths:
+        subp = os.path.join(currpath,ipath)
         if root and os.path.isdir(subp):
-            sub = build_tools(subp, err)
-            if len(sub)!=0:subtree.append(sub)
+            sub = build_tools(subp, err,level+1)
+            if len(sub)!=0:
+                subtree.append(sub)
         elif not root:
-            if i[len(i)-7:] in ('_tol.py', 'tols.py'):
-                subtree.append(i[:-3])
-            elif i[-3:] == '.mc':
-                subtree.append(i)
-    if len(subtree)==0:return []
-    rpath = path.replace('/', '.').replace('\\','.')
-    rpath = rpath.split('imagepy.')[1]
+            if ipath[-7:] in ('_tol.py', 'tols.py'):
+                subtree.append(ipath[:-3])
+            elif ipath[-3:]==".mc":
+                subtree.append(ipath)
+
+    # return subtree
+    if len(subtree)==0:
+        return []
+    print(rpath)
     pg = __import__(rpath,'','',[''])
-    pg.title = os.path.basename(path)
+    pg.title = os.path.basename(currpath)
     if hasattr(pg, 'catlog'):
         subtree = sort_tools(pg.catlog, subtree)
-    if not root:subtree = extend_tools(path, subtree, err)    
-    elif first[1]==0 and len(err)>0: 
+    if not root:
+        subtree = extend_tools(currpath, subtree, err)
+    elif first[1]==0 and len(err)>0:
         IPy.write('tools not loaded:')
-        for i in err: IPy.write('>>> %-50s%-20s%s'%i)
-    if root : first[1]=1
+        for e in err: IPy.write('>>> %-50s%-20s%s'%e)
+    if root :
+        first[1]=1
     return (pg, subtree)
-    
+
+def extend_tools(currpath, lst, err):
+    currpath,rpath = _preprocess_path(currpath)
+
+    rst = []
+    for item in lst:
+        if item[-3:]=='.mc':
+            with open(os.path.join(currpath,item)) as f:
+                cmds = f.readlines()
+                rst.append((Macros(item[:-3], cmds),  os.path.join(currpath,item[:-3]+'.gif')))
+        else:
+            try:
+                plg = __import__(rpath+'.'+item,'','',[''])
+                if hasattr(plg, 'plgs'):
+                    for k,v in plg.plgs:
+                        rst.append((k,  os.path.join(currpath,v)))
+                else:
+                    rst.append((plg.Plugin,os.path.join(currpath,item.split('_')[0]+'.gif')) )
+            except Exception as e:
+                err.append((currpath, item, sys.exc_info()[1]))
+    #! Todo: Fixme!
+    for item in rst:
+        ToolsManager.add(item[0])
+    return rst
+
+def sort_tools(catlogs, lst):
+    rst = []
+    for catlog in catlogs:
+        if catlog=='-':rst.append('-')
+        for item in lst:
+            if item==catlog or item[0].title==catlog or item[:-3]==catlog:
+                lst.remove(item)
+                rst.append(item)
+    rst.extend(lst)
+    return rst
+
+
 if __name__ == "__main__":
-    print os.getcwd()
-    os.chdir('../../')
+    print((os.getcwd()))
+    # os.chdir('../../')
+    os.chdir("/home/auss/Programs/Python/ImagePy/imagepy3/imagepy3")
     data = build_tools('tools')
+    print(data)

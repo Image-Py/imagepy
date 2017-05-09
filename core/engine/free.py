@@ -14,7 +14,7 @@ class Free:
     view = None
     para = None
     
-    def run(self, para=None):print 'this is a plugin'
+    def run(self, para=None):print('this is a plugin')
         
     def load(self):return True
         

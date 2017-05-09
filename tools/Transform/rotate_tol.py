@@ -86,7 +86,7 @@ class Plugin(Filter):
         sox, soy = f(self.para['ox'], self.para['oy'])
         dc.DrawCircle((sox, soy), 5)
         a = np.linspace(0, 2*np.pi, 20)
-        dc.DrawLines(zip(sox+np.cos(a)*40, soy+np.sin(a)*40))
+        dc.DrawLines(list(zip(sox+np.cos(a)*40, soy+np.sin(a)*40)))
         a = self.para['ang']*np.pi/180
         dc.DrawCircle((sox+np.cos(a)*40, soy+np.sin(a)*40), 3)
         

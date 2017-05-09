@@ -21,7 +21,7 @@ class Cross:
         if y!=None:self.y=y
         
     def draw(self, dc, f):
-        print self.x, self.y
+        print(self.x, self.y)
         dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
         dc.DrawLines([f(0,self.y),f(self.w,self.y)])
         dc.DrawLines([f(self.x,0),f(self.x,self.h)])

@@ -1,6 +1,6 @@
 import wx,os,sys
 from scipy.misc import imread
-import cStringIO, urllib2
+import io, urllib.request, urllib.error, urllib.parse
 import IPy
 import numpy as np
 
@@ -35,6 +35,6 @@ class Plugin(Free):
         IPy.show_img([img], fn)
 
 if __name__ == '__main__':
-    print Plugin.title
+    print(Plugin.title)
     app = wx.App(False)
     Plugin().run()

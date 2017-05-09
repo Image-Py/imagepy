@@ -15,7 +15,7 @@ class Union(Simple):
     para = {'name':''}
     
     def load(self, ips):
-        titles = RoiManager.rois.keys()
+        titles = list(RoiManager.rois.keys())
         if len(titles)==0: 
             IPy.alert('No roi in manager!')
             return False
@@ -32,7 +32,7 @@ class Diff(Simple):
     para = {'name':''}
     
     def load(self, ips):
-        titles = RoiManager.rois.keys()
+        titles = list(RoiManager.rois.keys())
         if len(titles)==0: 
             IPy.alert('No roi in manager!')
             return False

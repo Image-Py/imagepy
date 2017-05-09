@@ -1,13 +1,22 @@
 import os.path as osp
 import sys, os, wx
 
-root_dir = osp.abspath(osp.dirname(__file__))
+from . import IPy
+from . import core
+from . import menus
+from . import tools
+from . import ui
+
+__version__ = "image v0.2"
+
+import wx, os, sys
+root_dir = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(root_dir)
 
-from ui.imagepy import ImagePy
-
 def show():
-	app = wx.App(False)
-	mainFrame = ImagePy(None)
-	mainFrame.Show()
-	app.MainLoop()
+    from ui.imagepy import ImagePy
+    app = wx.App(False)
+    mainFrame = ImagePy(None)
+    mainFrame.Show()
+    app.MainLoop()
+

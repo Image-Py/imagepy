@@ -24,6 +24,6 @@ class Plugin(Simple):
         imsave(para['path'], ips.get_img())
 
 if __name__ == '__main__':
-	print Plugin.title
+	print(Plugin.title)
 	app = wx.App(False)
 	Plugin().run()

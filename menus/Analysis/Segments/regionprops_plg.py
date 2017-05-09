@@ -70,7 +70,7 @@ class Plugin(Simple):
             label(msks[i], strc, output=buf)
             ls = regionprops(buf, imgs[i])
 
-            dt = [[i]*len(ls), range(len(ls))]
+            dt = [[i]*len(ls), list(range(len(ls)))]
             if not para['slice']:dt = dt[1:]
 
             if not para['cov']: cvs = [None] * len(ls)
@@ -92,6 +92,6 @@ class Plugin(Simple):
                 dt.append([round(i.minor_axis_length, 1) for i in ls])
                 dt.append([round(i.orientation, 1) for i in ls])
 
-            data.extend(zip(*dt))
+            data.extend(list(zip(*dt)))
         ips.mark = Mark(mark)
         IPy.table(ips.title+'-region', data, titles)

@@ -25,7 +25,7 @@ class ConfigManager:
     
     @classmethod
     def get(cls, key):
-        if cls.cfg.has_key(key):
+        if key in cls.cfg:
             return cls.cfg[key]
         return None
         
@@ -37,6 +37,6 @@ ConfigManager.read()
 
 if __name__ == '__main__':
     ConfigManager.set('b',[1,2,3])
-    print ConfigManager.cfg
+    print(ConfigManager.cfg)
     ConfigManager.write()
     

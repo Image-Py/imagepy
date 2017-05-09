@@ -25,14 +25,14 @@ class Histogram(Simple):
             if maxv==0:continue
             ct = np.histogram(imgs[i], maxv, [1,maxv+1])[0]
             titles = ['slice','value','count']
-            dt = [[i]*len(ct), range(maxv+1), ct]
+            dt = [[i]*len(ct), list(range(maxv+1)), ct]
             if not para['slice']:
                 titles, dt = titles[1:], dt[1:]
             if self.para['fre']:
                 fre = ct/float(ct.sum())
                 titles.append('frequence')
                 dt.append(fre.round(4))
-            dt = zip(*dt)
+            dt = list(zip(*dt))
             data.extend(dt)
 
         IPy.table(ips.title+'-histogram', data, titles)

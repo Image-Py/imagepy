@@ -8,7 +8,7 @@ Created on Sat Feb  4 13:31:36 2017
 import wx
 from shapely.geometry import Polygon, Point
 from core.engine import Tool
-from setting import Setting
+from .setting import Setting
 import IPy
     
 class Area:
@@ -133,4 +133,4 @@ class Plugin(Tool):
         self.curobj = None
         
     def on_switch(self):
-        print 'hahaha'
+        print('hahaha')

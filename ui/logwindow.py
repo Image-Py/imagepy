@@ -6,7 +6,7 @@ from core.manager import TextLogManager
 class TextLog(wx.Frame):
     @classmethod
     def write(cls, cont, title='ImagePy'):
-        if not TextLogManager.windows.has_key(title):
+        if title not in TextLogManager.windows:
             win = cls(title)
             win.Show()
         TextLogManager.windows[title].append(cont)

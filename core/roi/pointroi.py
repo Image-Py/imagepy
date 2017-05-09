@@ -6,7 +6,7 @@ Created on Tue Nov  8 22:35:55 2016
 """
 import wx
 from core.draw import paint
-from roi import ROI, affine
+from .roi import ROI, affine
 
 class PointRoi(ROI):
     dtype = 'point'

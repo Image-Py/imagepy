@@ -4,74 +4,70 @@ Created on Wed Oct 19 17:35:09 2016
 
 @author: yxl
 """
-from core.roi import lineroi
+from core.roi import polygonroi
 import wx
 from core.engine import Tool
 
-class Linebuf:
+class Polygonbuf:
     def __init__(self):
-        self.buf = []
+        self.buf = [[],[]]
         
     def addpoint(self, p):
-        self.buf.append(p)
+        self.buf[0].append(p)
         
     def draw(self, dc, f, **key):
-        dc.SetPen(wx.Pen((0,255,255), width=1, style=wx.SOLID))
-        if len(self.buf)>1:
-            dc.DrawLines([f(*i) for i in self.buf])
-        for i in self.buf:dc.DrawCircle(f(*i),2)
+        dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))
+        if len(self.buf[0])>1:
+            dc.DrawLines([f(*i) for i in self.buf[0]])
+        for i in self.buf[0]: dc.DrawCircle(f(*i),2)
     
     def pop(self):
         a = self.buf
-        self.buf = []
+        self.buf = [[],[]]
         return a
 
 class Plugin(Tool):
-    title = 'Line'
+    title = 'Polygon'
     def __init__(self):
         self.curobj = None
         self.doing = False
-        self.helper = Linebuf()
-        self.odx,self.ody = 0, 0
+        self.oper = ''
+        self.helper = Polygonbuf()
             
-    def mouse_down(self, ips, x, y, btn, **key):
-        lim = 5.0/key['canvas'].get_scale()  
+    def mouse_down(self, ips, x, y, btn, **key): 
+        lim = 5.0/key['canvas'].get_scale() 
         ips.mark = self.helper
         if btn==1:
-            # 如果有没有在绘制中，且已经有roi，则试图选取
             if not self.doing:
-                print ips.roi
-                print self.curobj
                 if ips.roi!= None:
                     self.curobj = ips.roi.pick(x, y, lim)
-                if self.curobj!=None:return
-                    
+                if not self.curobj in (None,True):return
+                self.oper = '+'
                 if ips.roi == None:
-                    print 1
-                    ips.roi = lineroi.LineRoi()
+                    ips.roi = polygonroi.PolygonRoi()
                     self.doing = True
-                elif ips.roi.dtype=='line' and key['shift']:
-                    print 2
-                    self.doing = True
+                elif hasattr(ips.roi, 'topolygon'):
+                    ips.roi = ips.roi.topolygon()
+                    if key['shift']: self.oper,self.doing = '+',True
+                    elif key['ctrl']: self.oper,self.doing = '-',True
+                    elif self.curobj: return
+                    else: ips.roi=None
                 else: ips.roi = None
             if self.doing:
                 self.helper.addpoint((x,y))
-                self.curobj = (self.helper.buf, -1)
-                self.odx, self.ody = x,y
-            
+                self.curobj = (self.helper.buf[0], -1)
+                self.odx, self.ody = x, y
+                
         elif btn==3:
             if self.doing:
                 self.helper.addpoint((x,y))
                 self.doing = False
-                ips.roi.addline(self.helper.pop())
+                ips.roi.commit(self.helper.pop(), self.oper)
         ips.update = True
-    
-    def mouse_up(self, ips, x, y, btn, **key):
-        self.curobj = None
     
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
-        lim = 5.0/key['canvas'].get_scale()          
+        lim = 5.0/key['canvas'].get_scale()        
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if ips.roi.snap(x, y, lim)!=None:
@@ -81,5 +77,5 @@ class Plugin(Tool):
             ips.update = True
         self.odx, self.ody = x, y
         
-    def mouse_wheel(self, ips, x, y, d, **key):
-        pass
+    def on_switch(self):
+        print('hahaha')

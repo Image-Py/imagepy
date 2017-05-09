@@ -28,7 +28,7 @@ class VirtualListCtrl(wx.ListCtrl):
     def set_data(self, data):
         self.data = data
         self.SetItemCount(len(data))
-        print len(data)
+        print(len(data))
         
     def refresh(self):
         self.SetItemCount(len(self.data))
@@ -39,7 +39,7 @@ class PlgListFrame( wx.Frame ):
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
         bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
-        self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, u"Search:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, "Search:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText1.Wrap( -1 )
         bSizer2.Add( self.m_staticText1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
         self.txt_search = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -62,7 +62,7 @@ class PlgListFrame( wx.Frame ):
     
     #def list_plg(self, lst, items
     def load(self):
-        lst = PluginsManager.plgs.values()
+        lst = list(PluginsManager.plgs.values())
         self.plgs = [(i.title, i.__module__) for i in lst]
         self.plgs.sort()
         self.buf = self.plgs

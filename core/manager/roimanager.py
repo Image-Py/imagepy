@@ -13,7 +13,7 @@ class RoiManager:
         
     @classmethod
     def get(cls, name):
-        if not cls.rois.has_key(name):
+        if name not in cls.rois:
             return None
         return cls.rois[name]
         

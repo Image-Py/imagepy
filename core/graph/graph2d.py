@@ -30,14 +30,14 @@ class Graph:
         self.net[e] = [i for i in self.net[e] if i[0]!=s]
 
 def draw(graph, img):
-    for i in graph.arcs.values():
+    for i in list(graph.arcs.values()):
         img[i[2][:,0],i[2][:,1]] = 128
-    for i in graph.nodes.values():
+    for i in list(graph.nodes.values()):
         img[i] = 255
 
 def cut(graph):
     lst = []
-    for i in graph.net.keys():
+    for i in list(graph.net.keys()):
         if len(graph.net[i])==1:
             lst.append(i)
     for i in lst:

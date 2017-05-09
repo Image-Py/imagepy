@@ -13,7 +13,7 @@ from wx.py.editor import EditorFrame
 
 class TreeFrame ( wx.Frame ):
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Tools Tree", pos = wx.DefaultPosition, size = wx.Size( 452,300 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = "Tools Tree", pos = wx.DefaultPosition, size = wx.Size( 452,300 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.HORIZONTAL )
         
@@ -24,11 +24,11 @@ class TreeFrame ( wx.Frame ):
         bSizer3 = wx.BoxSizer( wx.VERTICAL )
         bSizer4 = wx.BoxSizer( wx.HORIZONTAL )
         
-        self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, u"Tool Infomation:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, "Tool Infomation:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText2.Wrap( -1 )
         bSizer4.Add( self.m_staticText2, 0, wx.ALL, 5 )
         
-        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"[SourceCode]", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, "[SourceCode]", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText3.Wrap( -1 )
         self.m_staticText3.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
         
@@ -53,9 +53,9 @@ class TreeFrame ( wx.Frame ):
         self.load()
         
     def addnode(self, parent, data):
-        print 'aaa', data
+        print('aaa', data)
         for i in data:
-            print i
+            print(i)
             if i=='-':continue
             if isinstance(i, tuple):
                 item = self.tre_plugins.AppendItem(parent, i[0].title)
@@ -85,7 +85,7 @@ class TreeFrame ( wx.Frame ):
     
     def on_select( self, event ):
         plg = self.tre_plugins.GetItemPyData(event.GetItem())
-        print type(plg)
+        print(type(plg))
         if plg!=None:
             self.plg = plg
             if plg.__doc__!=None:

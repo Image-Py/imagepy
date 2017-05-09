@@ -45,7 +45,7 @@ class Plugin(Free):
             IPy.set_progress(int(round((i+1.0)/len(names)*100)))
             img = imread(names[i])
             if img.shape!=shape or img.dtype!=dtype:
-                print 'error:', names[i]
+                print('error:', names[i])
                 continue
             imgs.append(img)
         IPy.set_progress(0)
@@ -65,6 +65,6 @@ class Plugin(Free):
         
 
 if __name__ == '__main__':
-	print Plugin.title
+	print(Plugin.title)
 	app = wx.App(False)
 	Plugin().run()

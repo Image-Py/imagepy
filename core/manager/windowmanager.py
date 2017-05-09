@@ -52,33 +52,33 @@ class TextLogManager:
     
     @classmethod
     def name(cls, name):
-        print cls.windows.keys(), name
+        print(list(cls.windows.keys()), name)
         if name==None:name='Log'
-        if not cls.windows.has_key(name):
+        if name not in cls.windows:
             return name
         for i in range(1, 100) : 
-            if not cls.windows.has_key(name+'-%s'%i):
+            if name+'-%s'%i not in cls.windows:
                 return name+'-%s'%i
                 
     @classmethod
     def add(cls, title, win):
         cls.windows[title] = win
-        print cls.windows.keys()
+        print(list(cls.windows.keys()))
         
     @classmethod
     def remove(cls, name):
-        if cls.windows.has_key(name): 
+        if name in cls.windows: 
             cls.windows.pop(name)
             
     @classmethod
     def get(cls, title):
-        if cls.windows.has_key(title):
+        if title in cls.windows:
             return cls.windows[title]
         return None
           
     @classmethod
     def get_titles(cls):
-        return cls.windows.keys()
+        return list(cls.windows.keys())
                 
     @classmethod
     def close(cls, name):
@@ -93,10 +93,10 @@ class TableLogManager:
     @classmethod
     def name(cls, name):
         if name==None:name='Table'
-        if not cls.windows.has_key(name):
+        if name not in cls.windows:
             return name
         for i in range(1, 100) : 
-            if not cls.windows.has_key(not name+'-%s'%i):
+            if (not name+'-%s'%i) not in cls.windows:
                 return name+'-%s'%i
                 
     @classmethod
@@ -105,18 +105,18 @@ class TableLogManager:
         
     @classmethod
     def remove(cls, name):
-        if cls.windows.has_key(name): 
+        if name in cls.windows: 
             cls.windows.pop(name)
             
     @classmethod
     def get(cls, title):
-        if cls.windows.has_key(title):
+        if title in cls.windows:
             return cls.windows[title]
         return None
           
     @classmethod
     def get_titles(cls):
-        return cls.windows.keys()
+        return list(cls.windows.keys())
                 
     @classmethod
     def close(cls, name):
@@ -129,7 +129,7 @@ class PlotManager:
     windows = {}
     @classmethod
     def get(cls, title):
-        if cls.windows.has_key(title):
+        if title in cls.windows:
             return cls.windows[title]
         return None
 
@@ -139,7 +139,7 @@ class PlotManager:
 
     @classmethod
     def remove(cls, name):
-        if cls.windows.has_key(name): 
+        if name in cls.windows: 
             cls.windows.pop(name)
 
     @classmethod

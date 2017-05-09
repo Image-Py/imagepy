@@ -9,7 +9,7 @@ import IPy
 
 def get_ips():
     ips = IPy.get_ips()
-    if ips is None:print 'no image opened!'
+    if ips is None:print('no image opened!')
     return ips
 
 def update():
@@ -18,11 +18,11 @@ def update():
 
 class Macros(dict):
     def __init__(self):
-        for i in PluginsManager.plgs.keys():
+        for i in list(PluginsManager.plgs.keys()):
             if not isinstance(i, str) or i == 'Command Line':
-                print PluginsManager.plgs[i]
+                print(PluginsManager.plgs[i])
                 continue
-            name = filter(str.isalnum, i)
+            name = list(filter(str.isalnum, i))
             exec('self.run_%s = lambda para=None, plg=PluginsManager.plgs[i]:plg().start(para)'%name)
             #exec('self._%s = PluginsManager.plgs[i]().start'%name)
 

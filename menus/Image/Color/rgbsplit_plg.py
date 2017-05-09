@@ -21,7 +21,7 @@ class Plugin(Simple):
     #process
     def run(self, ips, imgs, para = None):
         r,g,b = [],[],[]
-        for i,n in zip(imgs,range(ips.get_nslices())):
+        for i,n in zip(imgs,list(range(ips.get_nslices()))):
             IPy.curapp.set_progress(round((n+1)*100.0/len(imgs)))
             for c,ci in zip((r,g,b),(0,1,2)):
                 if self.para['copy']:c.append(i[:,:,ci].copy())

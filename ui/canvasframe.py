@@ -5,7 +5,7 @@ Created on Fri Oct 14 01:24:41 2016
 @author: yxl
 """
 import wx, IPy
-from canvas import Canvas
+from .canvas import Canvas
 from core.manager import WindowsManager, ShotcutManager, PluginsManager
 
 class CanvasFrame(wx.Frame): 
@@ -15,7 +15,7 @@ class CanvasFrame(wx.Frame):
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
         sizer = wx.BoxSizer( wx.VERTICAL )
-        self.txt_info = wx.StaticText( self, wx.ID_ANY, u'500*500 pixels 173k', wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.txt_info = wx.StaticText( self, wx.ID_ANY, '500*500 pixels 173k', wx.DefaultPosition, wx.DefaultSize, 0 )
         self.txt_info.Wrap( -1 )
         sizer.Add( self.txt_info, 0, wx.ALL, 0 )
         
@@ -81,7 +81,7 @@ class CanvasFrame(wx.Frame):
             self.page.Show()
             self.Fit()
         self.page.SetScrollbar(0, 0, ips.get_nslices()-1, 0, refresh=True)
-        print 'o'
+        print('o')
         #self.page.Show()
         
     def set_ips(self, ips):

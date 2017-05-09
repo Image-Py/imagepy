@@ -48,7 +48,7 @@ def codeSplit(txt):
 
 def buildShortcut(parent):
     shortcuts = []
-    for plg in PluginsManager.plgs.values():
+    for plg in list(PluginsManager.plgs.values()):
         cut = ShotcutManager.get(plg.title)
         if cut!=None:
             acc, code = codeSplit(cut)

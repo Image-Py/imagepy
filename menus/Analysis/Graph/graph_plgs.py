@@ -53,7 +53,7 @@ class Builder(Filter):
         data = []
         for i in rst:
             data.append([len(i[0]), len(i[1])])
-        print data
+        print(data)
         IPy.table('Graph Builder', data, ['nodes','arcs'])
 
 plgs = [Marker, Builder]

@@ -44,9 +44,9 @@ class Plugin(Filter):
         ips.update = 'pix'
         
     def show(self):
-        print 'threshold show'
+        print('threshold show')
         self.dialog = ThresholdDialog(IPy.get_window(), self.title)
-        hist = np.histogram(self.ips.get_img(),range(257))[0]
+        hist = np.histogram(self.ips.get_img(),list(range(257)))[0]
         self.dialog.init_view(self.view, self.para, (hist*(100.0/hist.max())).astype(np.uint8))
         self.dialog.set_handle(lambda x:self.preview(self.para))
         self.dialog.on_ok = lambda : self.ok(self.ips)

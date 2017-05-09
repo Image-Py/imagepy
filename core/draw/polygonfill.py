@@ -62,5 +62,5 @@ if __name__ == '__main__':
     from time import time
     a = time()
     rc= fill(pg, img)
-    print time() - a
+    print(time() - a)
     plt.imshow(img, interpolation='nearest',cmap='gray')

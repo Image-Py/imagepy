@@ -45,7 +45,7 @@ def process_stack(plg, ips, src, imgs, para):
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
     if transint: buf =  imgs[0].astype(np.int32)
     if transfloat: buf = imgs[0].astype(np.float32)
-    for i,n in zip(imgs,range(len(imgs))):
+    for i,n in zip(imgs,list(range(len(imgs)))):
         IPy.set_progress(round((n+1)*100.0/len(imgs)))
         if 'auto_snap' in plg.note : src[:] = i
         if transint or transfloat: buf[:] = i
@@ -57,7 +57,7 @@ def process_stack(plg, ips, src, imgs, para):
             i[msk] = src[msk]
     IPy.set_progress(0)
     ips.update = 'pix'
-    print time()-start
+    print(time()-start)
     return imgs
     
 class Filter:
@@ -119,7 +119,7 @@ class Filter:
             para = self.para
             if not 'not_slice' in self.note and ips.get_nslices()>1:
                 if para == None:para = {}
-            if para!=None and para.has_key('stack'):del para['stack']
+            if para!=None and 'stack' in para:del para['stack']
         win = TextLogManager.get('Recorder')
         if ips.get_nslices()==1 or 'not_slice' in self.note:
             process_one(self, ips, ips.snap, ips.get_img(), para)
@@ -132,7 +132,7 @@ class Filter:
             '''
             if win!=None: win.append('%s>%s'%(self.title, para))
         elif ips.get_nslices()>1:
-            has, rst = para.has_key('stack'), None
+            has, rst = 'stack' in para, None
             if not has:
                 rst = IPy.yes_no('run every slice in current stacks?')
             if 'auto_snap' in self.note and self.modal:ips.swap()

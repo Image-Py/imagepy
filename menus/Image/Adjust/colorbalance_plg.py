@@ -12,7 +12,7 @@ import numpy as np
 
 class Balance_Dialog(ParaDialog):
     def init_view(self, para, view, img):
-        hists = [np.histogram(img[:,:,i],range(257))[0] for i in (0,1,2)]
+        hists = [np.histogram(img[:,:,i],list(range(257)))[0] for i in (0,1,2)]
         hists = [(i*(100.0/i.max())).astype(np.uint8) for i in hists]
         self.redcvs = HistCanvas(self)
         self.redcvs.set_hist(hists[0])

@@ -18,7 +18,7 @@ class ShotcutManager:
     
     @classmethod
     def get(cls, key):
-        if cls.shotcuts.has_key(key):
+        if key in cls.shotcuts:
             return cls.shotcuts[key]
         return None
         
@@ -28,7 +28,7 @@ class ShotcutManager:
 
     @classmethod
     def rm(cls, key):
-        if cls.shotcuts.has_key(key):
+        if key in cls.shotcuts:
             cls.shotcuts.pop(key)
     
 ShotcutManager.read()
@@ -36,6 +36,6 @@ ShotcutManager.read()
 if __name__ == '__main__':
     #ShotcutManager.set('c',[1,2,3])
     ShotcutManager.rm('c')
-    print ShotcutManager.shotcuts
+    print(ShotcutManager.shotcuts)
     ShotcutManager.write()
     

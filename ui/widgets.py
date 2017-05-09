@@ -53,7 +53,7 @@ class HistCanvas(wx.Panel):
             dc.DrawLine(i,80,i,80-self.hist[i])
         dc.SetPen(wx.Pen((0,0,0), width=1, style=wx.SOLID))
         dc.DrawLine(self.x1, 80, self.x2, 0)
-        print 'draw'
+        print('draw')
         
 class NumCtrl(wx.TextCtrl):
     def __init__(self, parent, rang, accr):
@@ -96,7 +96,7 @@ class ColorCtrl(wx.TextCtrl):
         self.f = f
         
     def ontext(self, event):
-        print 'a'
+        print('a')
         
     def oncolor(self, event):
         rst = None

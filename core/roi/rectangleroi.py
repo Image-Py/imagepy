@@ -6,9 +6,9 @@ Created on Fri Nov 11 21:29:59 2016
 """
 
 import wx
-from polygonroi import PolygonRoi
+from .polygonroi import PolygonRoi
 from core.draw import paint
-from roi import ROI
+from .roi import ROI
 
 class RectangleRoi(ROI):
     dtype = 'rect'

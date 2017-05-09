@@ -29,7 +29,7 @@ class Plugin(Simple):
         if lab.dtype != np.uint8 and lab.dtype != np.uint16:
             IPy.alert('Label image must be in type 8-bit or 16-bit')
             return
-        index = range(1, lab.max()+1)
+        index = list(range(1, lab.max()+1))
         titles = ['Max','Min','Mean','Variance','Standard','Sum']
         key = {'Max':'max','Min':'min','Mean':'mean','Variance':'var','Standard':'std','Sum':'sum'}
         titles = ['value'] + [i for i in titles if para[key[i]]]
@@ -43,6 +43,6 @@ class Plugin(Simple):
         if para['var']:data.append(ndimage.variance(img, lab, index).round(4)) 
         if para['std']:data.append(ndimage.standard_deviation(img, lab, index).round(4))         
         if para['sum']:data.append(ndimage.sum(img, lab, index).round(4))         
-        data = zip(*data)
+        data = list(zip(*data))
         IPy.table(ips.title+'-segment', data, titles)
         

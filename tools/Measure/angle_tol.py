@@ -8,7 +8,7 @@ import wx
 from core.engine import Tool
 import numpy as np
 from numpy.linalg import norm
-from setting import Setting
+from .setting import Setting
 import IPy
 
 class Angle:
