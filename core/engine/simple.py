@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Dec  3 03:32:05 2016
-
 @author: yxl
 """
-import threading
-from ui.panelconfig import ParaDialog
-from core.manager import TextLogManager
-import IPy
 import wx
+import threading
+
+import IPy
+from ui.panelconfig import ParaDialog
+from core.managers import TextLogManager
 
 class Simple:
     title = 'SimpleFilter'
@@ -74,7 +74,7 @@ class Simple:
         if para!=None or self.show() == wx.ID_OK:
             if para == None:para = self.para
             win = TextLogManager.get('Recorder')
-            if win!=None: win.append('%s>%s'%(self.title, para))
+            if win!=None: win.append('{}>{}'.format(self.title, para))
             self.run(self.ips, self.ips.imgs, para)
             self.ips.update = 'pix'
             '''

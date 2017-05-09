@@ -1,19 +1,38 @@
 # -*- coding: utf-8 -*
 import scipy.ndimage as nimg
-from core.engine import Filter, Simple
+from core.engines import Filter, Simple
 import numpy as np
 
 class Gaussian(Filter):
+    """Gaussian: derived from core.engines.Filter """
     title = 'Gaussian'
     note = ['all', 'auto_msk', 'auto_snap','preview']
-
-    #parameter
     para = {'sigma':2}
     view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
-
-    #process
+    
     def run(self, ips, snap, img, para = None):
         nimg.gaussian_filter(snap, para['sigma'], output=img)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         
 class Gaussian_laplace(Filter):
     title = 'Gaussian Laplace'
@@ -90,7 +109,7 @@ class USM(Filter):
 
     #process
     def run(self, ips, snap, img, para = None):
-        print('haha')
+        print('USM runing...')
         nimg.gaussian_filter(snap, para['sigma'], output=img)
         img -= snap
         np.multiply(img, -para['weight'], out=img, casting='unsafe')

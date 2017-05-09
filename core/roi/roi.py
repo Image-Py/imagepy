@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Dec 21 15:05:16 2016
-
 @author: yxl
 """
 from .convert import roi2shape, shape2roi

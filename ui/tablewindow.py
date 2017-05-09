@@ -7,13 +7,14 @@ Created on Mon Dec 26 00:28:59 2016
 
 import wx
 import wx.grid
-from core.manager import TableLogManager
+from core.managers import TableLogManager
 import IPy
 
 class GenericTable(wx.grid.GridTableBase):
+    """GenericTable: derived from wx.grid.GridTableBase"""
     def __init__(self, data, colLabels=None, rowLabels=None):
         wx.grid.GridTableBase.__init__(self)
-        self.data = data
+        self.data = data # data is stored as a list of list 
         self.rowLabels = rowLabels
         self.colLabels = colLabels
         
@@ -24,25 +25,23 @@ class GenericTable(wx.grid.GridTableBase):
         return len(self.data[0])
         
     def GetColLabelValue(self, col):
-        if self.colLabels:
-            return self.colLabels[col]
-        else: return chr(65+col)
-        
+        return self.colLabels[col] if self.colLabels else chr(65+col)
+    
     def GetRowLabelValue(self, row):
-        if self.rowLabels:
-            return str(self.rowLabels[row])
-        else: return str(row + 1)
+        return  str(self.rowLabels[row]) if self.rowLabels else str(row+1)
             
     def IsEmptyCell(self, row, col):
-            return False
+        return row < len(self.data) and col < len(self.data[0])
             
     def GetValue(self, row, col):
         return str(self.data[row][col])
         
     def SetValue(self, row, col, value):
+        # self.data[row][col] = value
         pass      
         
 class TableLog(wx.Frame): 
+    """TableLog: derived from wx.core.Frame"""
     @classmethod
     def table(cls, title, data, cols=None, rows=None):
         cls(IPy.curapp, TableLogManager.name(title), data, cols, rows).Show()
@@ -53,27 +52,35 @@ class TableLog(wx.Frame):
         self.data, self.cols, self.rows = data, cols, rows
         tableBase = GenericTable(data, cols, rows)
         self.grid = wx.grid.Grid(self)
+        
+        ## create tablegrid and set tablegrid value 
         #self.grid.SetTable(tableBase)
         self.grid.CreateGrid(len(data), len(data[0]))
         if cols!=None:
-            for col in range(len(cols)):
-                self.grid.SetColLabelValue(col, cols[col])
+            for i in range(len(cols)):
+                self.grid.SetColLabelValue(i, cols[i])
         if rows!=None:
-            for row in range(len(rows)):
-                self.grid.SetColLabelValue(row, rows[row])
-        for row in range(len(data)):
-            for col in range(len(data[0])):
-                self.grid.SetCellValue(row, col,str(data[row][col]))
+            for i in range(len(rows)):
+                self.grid.SetColLabelValue(i, rows[i])
+        for i in range(len(data)):
+            for j in range(len(data[0])):
+                self.grid.SetCellValue(i, j,str(data[i][j]))
         self.grid.AutoSize()
         
-        menus = [('File(&F)',[
-            ('Save as tab', self.OnSaveTab),
-            ('Save as csv', self.OnSaveCsv),
-            ('-'),
-            ('Exit', self.OnClose)]),
-            ('Help(&H)', [
-            ('About', self.OnAbout)])]
+        ## create menus
+        menus = [('File(&F)',
+                  [('Save as tab', self.OnSaveTab),
+                   ('Save as csv', self.OnSaveCsv),
+                   ('-'),
+                   ('Exit', self.OnClose)
+                   ]
+                  ),                 
+                 ('Help(&H)', 
+                  [('About', self.OnAbout)]
+                  )
+                 ]
         
+        ## bind the menus with the correspond events 
         menuBar=wx.MenuBar()
         for menu in menus:
             m = wx.Menu()
@@ -88,32 +95,30 @@ class TableLog(wx.Frame):
         self.SetMenuBar(menuBar) 
         self.Fit()
         
-    def save_tab(self, path, sep):
-        f = open(path, 'w')
-        f.write(sep.join([str(i) for i in self.cols])+'\r\n')
-        for line in self.data:
-            f.write(sep.join([str(i) for i in line])+'\r\n')
-        f.close()
+    def save_tab(self, tablepath, sep):
+        with open(tablepath,"w") as f:
+            f.write(sep.join([str(col) for col in self.cols])+'\r\n')
+            for line in self.data:
+                f.write(sep.join([str(item) for item in line])+'\r\n')
+
+    def _OnSave(self,typename="Csv",sep=","):
+        dialog=wx.FileDialog(self,typename,style=wx.FD_SAVE)
+        if dialog.ShowModal()==wx.ID_OK:
+            self.file=dialog.GetPath()
+            self.save_tab(self.file, sep)
+        dialog.Destroy()
         
     def OnSaveTab(self,event):
-        dialog=wx.FileDialog(self,'Tab',style=wx.FD_SAVE)
-        if dialog.ShowModal()==wx.ID_OK:
-            self.file=dialog.GetPath()
-            self.save_tab(self.file, '\t')
-        dialog.Destroy()
-
+        self._OnSave(typename="Tab", sep="\t")
+        
     def OnSaveCsv(self,event):
-        dialog=wx.FileDialog(self,'Csv',style=wx.FD_SAVE)
-        if dialog.ShowModal()==wx.ID_OK:
-            self.file=dialog.GetPath()
-            self.save_tab(self.file, ',')
-        dialog.Destroy()
+        self._OnSave(typename="Csv", sep=",")
         
     def OnClose(self,event):
         self.Destroy()
         
     def OnAbout(self,event):
-        wx.MessageBox('Table Log Window!','ImagePy',wx.OK)
+        wx.MessageBox('Table Log Window!','About',wx.OK)
         
     def OnClosing(self, event):
         TableLogManager.close(self.title)

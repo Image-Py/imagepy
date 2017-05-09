@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Dec 17 10:49:15 2016
-
 @author: yxl
 """
-
-from core.engine import Simple
+import IPy
+import numpy as np
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.manager import WindowsManager
-import numpy as np
-import IPy
+from core.managers import WindowsManager
+from core.engines import Simple
 
 class Plugin(Simple):
     title = 'Merge Channels'
@@ -26,10 +24,10 @@ class Plugin(Simple):
         self.para['blue'] = titles[0]
         Plugin.view = [(list, titles, str, 'Red', 'red', ''),
                        (list, titles, str, 'Green', 'green', ''),
-                        (list, titles, str, 'Blue', 'blue', ''),
-                        (bool, 'Destory r,g,b image', 'destory')]
+                       (list, titles, str, 'Blue', 'blue', ''),
+                       (bool, 'Destory r,g,b image', 'destory')]
         return True
-    #process
+    
     def run(self, ips, imgs, para = None):
         idx = ['red','green','blue']
         imr,img,imb = [WindowsManager.get(para[i]).ips for i in idx]

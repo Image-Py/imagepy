@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Jan 14 23:26:14 2017
-
 @author: yxl
 """
-
 class RoiManager:
     rois = {}
     @classmethod

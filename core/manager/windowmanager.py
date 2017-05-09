@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Jan 14 23:22:53 2017
-
 @author: yxl
 """
 
@@ -35,10 +34,12 @@ class WindowsManager:
     def name(cls, name):
         if name==None:name='Undefined'
         titles = [i.canvas.ips.title for i in cls.windows]
-        if not name in titles : return name
+        if not name in titles :
+            return name
         for i in range(1, 100) : 
-            if not name+'-%s'%i in titles:
-                return name+'-%s'%i
+            title = "{}-{}".format(name,i)
+            if not title in titles:
+                return title
                 
     @classmethod
     def close(cls, name):
@@ -57,8 +58,9 @@ class TextLogManager:
         if name not in cls.windows:
             return name
         for i in range(1, 100) : 
-            if name+'-%s'%i not in cls.windows:
-                return name+'-%s'%i
+            title = "{}-{}".format(name,i)
+            if title not in cls.windows:
+                return title
                 
     @classmethod
     def add(cls, title, win):
@@ -96,8 +98,9 @@ class TableLogManager:
         if name not in cls.windows:
             return name
         for i in range(1, 100) : 
-            if (not name+'-%s'%i) not in cls.windows:
-                return name+'-%s'%i
+            title = "{}-{}".format(name,i)
+            if (not title) not in cls.windows:
+                return title
                 
     @classmethod
     def add(cls, title, win):

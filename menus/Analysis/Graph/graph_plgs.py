@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 26 22:05:43 2016
-
 @author: yxl
 """
-
 import numpy as np
-from core.engine import Filter
-from core.graph import builder
 from scipy.ndimage.filters import convolve
+
 import IPy
+from core.engines import Filter
+from core.graph import builder
 
 '''    
 def mark(img):
@@ -39,7 +38,6 @@ class Marker(Filter):
     title = 'Mark Graph'
     note = ['8-bit', 'auto_snap', 'preview']
 
-    #process
     def run(self, ips, snap, img, para = None):
         builder.mark(img)
 
@@ -47,7 +45,6 @@ class Builder(Filter):
     title = 'Build Graph'
     note = ['8-bit', 'not_slice', 'auto_snap', 'preview']
 
-    #process
     def run(self, ips, snap, img, para = None):
         rst = builder.build_graph(img/127)
         data = []

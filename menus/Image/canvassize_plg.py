@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Dec 11 23:43:44 2016
-
 @author: yxl
 """
-
-from core.engine import Simple
+from core.engines import Simple
 import numpy as np
-from core.pixcel import bliter
+from core.pixel import bliter
 import IPy
 
 class Plugin(Simple):
@@ -26,7 +24,6 @@ class Plugin(Simple):
         self.para['h'] = sp[0]
         return True
 
-    #process
     def run(self, ips, imgs, para = None):
         old = ips.size
         shp = (para['w'], para['h'])

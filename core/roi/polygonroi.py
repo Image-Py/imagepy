@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Nov 11 12:10:33 2016
-
 @author: yxl
 """
 import wx
@@ -137,8 +136,8 @@ class PolygonRoi(ROI):
             xs, ys = [x[0] for x in i[0]], [x[1] for x in i[0]]
             pen.draw_path(img, xs, ys, w)
             for j in i[1]:
-               xs, ys = [x[0] for x in j], [x[1] for x in j]
-               pen.draw_path(img, xs, ys, w, color) 
+                xs, ys = [x[0] for x in j], [x[1] for x in j]
+                pen.draw_path(img, xs, ys, w, color) 
                
     def fill(self, img, color=None):
         pen = paint.Paint()

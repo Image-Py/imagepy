@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Dec  2 23:48:33 2016
-
 @author: yxl
 """
 
-from ui.panelconfig import ParaDialog
-from core.manager import TextLogManager, WindowsManager
+import wx
 import threading
 import numpy as np
+
 import IPy
-import wx
+from ui.panelconfig import ParaDialog
+from core.managers import TextLogManager, WindowsManager
         
 def process_chanels(plg, ips, src, des, para):
     if ips.chanels>1 and not 'not_channel' in plg.note:
@@ -130,7 +130,7 @@ class Filter:
             thread.start()
             if not thd:thread.join()
             '''
-            if win!=None: win.append('%s>%s'%(self.title, para))
+            if win!=None: win.append('{}>{}'.format(self.title, para))
         elif ips.get_nslices()>1:
             has, rst = 'stack' in para, None
             if not has:
@@ -142,13 +142,13 @@ class Filter:
                 '''
                 run = lambda p=para:process_stack(self, ips, ips.snap, ips.imgs, p)
                 
-                print 'new thread'
+                print( 'new thread')
                 thread = threading.Thread(None, run, ())
                 thread.start()
                 if not thd:thread.join()
                 '''
                 
-                if win!=None: win.append('%s>%s'%(self.title, para))
+                if win!=None: win.append('{}>{}'.format(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
                 process_one(self, ips, ips.snap, ips.get_img(), para)
@@ -159,7 +159,7 @@ class Filter:
                 thread.start()
                 if thd:thread.join()
                 '''
-                if win!=None: win.append('%s>%s'%(self.title, para))
+                if win!=None: win.append('{}>{}'.format(self.title, para))
             elif rst == 'cancel': pass
         ips.update = 'pix'
         

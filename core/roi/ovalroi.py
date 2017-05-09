@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Nov 11 21:29:59 2016
-
 @author: yxl
 """
-
 import wx
-from .polygonroi import PolygonRoi
 import numpy as np
 from core.draw import paint
 from .roi import ROI
+from .polygonroi import PolygonRoi
 
 class OvalRoi(ROI):
     dtype = 'rect'

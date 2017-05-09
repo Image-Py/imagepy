@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Dec 27 12:04:18 2016
-
 @author: yxl
 """
-
 import IPy
-from core.engine import Free
+from core.engines import Free
 
 class Join(Free):
     title = 'Join Tables *'
@@ -26,5 +24,4 @@ class Frequence(Free):
     def run(self, para = None):
         IPy.alert('merge the same value and count frequence, not implemented!')
         
-    
 plgs = [Join, AddField, Frequence]

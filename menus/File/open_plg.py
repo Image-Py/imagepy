@@ -1,10 +1,10 @@
 import wx,os,sys
 from scipy.misc import imread
 import io, urllib.request, urllib.error, urllib.parse
-from core import manager
+from core import managers
 import IPy
 
-from core.engine import Free
+from core.engines import Free
 
 class OpenFile(Free):
     title = 'Open'
@@ -37,12 +37,18 @@ class OpenUrl(Free):
         try:
             fp, fn = os.path.split(para['url'])
             fn, fe = os.path.splitext(fn) 
-            cont = urllib.request.urlopen(para['url'])
-            stream = io.StringIO(cont.read())
+            response = urllib.request.urlopen(para['url'])
+            ## TODO: Fixme!
+            stream=None
+            if sys.version[0]=="2":
+                stream = io.StringIO(response.read()) # py2
+            else:
+                #stream = io.StringIO(response.read().decode('utf-8')) #py3
+                stream = io.BytesIO(response.read()) #py3
             img = imread(stream)
             IPy.show_img([img], fn)
         except Exception as e:
-            IPy.write('Open url failed!\tErrof:%s'%sys.exc_info()[1])
+            IPy.write('Open url failed!\tErrof:{}'.format(sys.exc_info()[1]))
         
 plgs = [OpenFile, OpenUrl]
     

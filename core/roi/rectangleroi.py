@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Nov 11 21:29:59 2016
-
 @author: yxl
 """
-
 import wx
-from .polygonroi import PolygonRoi
 from core.draw import paint
+from .polygonroi import PolygonRoi
 from .roi import ROI
 
 class RectangleRoi(ROI):

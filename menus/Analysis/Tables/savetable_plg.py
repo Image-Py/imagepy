@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Dec 27 11:30:24 2016
-
 @author: yxl
 """
-import IPy
 import wx
-from core.engine import Free
-from core.manager import TableLogManager
+import IPy,IPyGL
+from core.engines import Free
+from core.managers import TableLogManager
 
 class Csv(Free):
     title = 'Save Table As CSV'
-    
+    #para = {'tab': None, 'path':IPyGL.root_dir}
     para = {'tab': None, 'path':'./'}
     
-
     def load(self):
         n = len(TableLogManager.get_titles())
         if n>0:return True
@@ -28,16 +26,14 @@ class Csv(Free):
         filt = 'CSV files (*.csv)|*.csv'
         return IPy.getpath('Import sequence', filt, self.para)
         
-    #process
     def run(self, para = None):
         table = TableLogManager.get(para['tab'])
         table.save_tab(para['path'], ',')
         
 class Tab(Free):
     title = 'Save Table As Tab'
-    
+    #para = {'tab': None, 'path':IPyGL.root_dir}
     para = {'tab': None, 'path':'./'}
-    
 
     def load(self):
         n = len(TableLogManager.get_titles())
@@ -52,10 +48,8 @@ class Tab(Free):
         filt = 'TXT files (*.txt)|*.txt'
         return IPy.getpath('Import sequence', filt, self.para)
         
-    #process
     def run(self, para = None):
         table = TableLogManager.get(para['tab'])
         table.save_tab(para['path'], '\t')
         
-    
 plgs = [Csv, Tab]

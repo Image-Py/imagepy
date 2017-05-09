@@ -5,9 +5,9 @@ Created on Wed Oct 19 17:35:09 2016
 @author: yxl
 """
 
-from core.engine import Tool
+from core.engines import Tool
 import numpy as np
-from core.manager import ColorManager
+from core.managers import ColorManager
 from core.draw.fill import floodfill
 
 class Plugin(Tool):

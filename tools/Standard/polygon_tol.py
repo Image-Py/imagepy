@@ -6,7 +6,6 @@ Created on Wed Oct 19 17:35:09 2016
 """
 from core.roi import polygonroi
 import wx
-from core.engine import Tool
 
 class Polygonbuf:
     def __init__(self):
@@ -25,6 +24,8 @@ class Polygonbuf:
         a = self.buf
         self.buf = [[],[]]
         return a
+        
+from core.engines import Tool
 
 class Plugin(Tool):
     title = 'Polygon'

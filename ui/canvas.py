@@ -6,31 +6,37 @@ Created on Wed Oct 12 14:15:01 2016
 import wx
 import numpy as np
 from math import ceil
-from core.manager import ToolsManager
+from core.managers import ToolsManager
+
+#import sys
+#get_npbuffer = np.getbuffer if sys.version[0]=="2" else memoryview
+
 
 def cross(r1, r2):
     x,y = max(r1[0], r2[0]),max(r1[1], r2[1])
     w = min(r1[0]+r1[2], r2[0]+r2[2])-x
     h = min(r1[1]+r1[3], r2[1]+r2[3])-y
-    return [x, y, w, h]        
+    return [x, y, w, h]
 
-def multiply(r, kx, ky): 
+def multiply(r, kx, ky):
     r = [r[0]*kx, r[1]*ky, r[2]*kx, r[3]*ky]
     return [ceil(i) for i in r]
-     
+
 def lay(r1, r2):
     if r2[2]<=r1[2]:r2[0]=(r1[2]-r2[2])/2+r1[0]
     elif r2[0]>r1[0]:r2[0]=r1[0]
     elif r2[0]+r2[2]<r1[0]+r1[2]:
         r2[0]=r1[0]+r1[2]-r2[2]
-            
+
     if r2[3]<=r1[3]:r2[1]=(r1[3]-r2[3])/2+r1[1]
     elif r2[1]>r1[1]:r2[1]=r1[1]
     elif r2[1]+r2[3]<r1[1]+r1[3]:
         r2[1]=r1[1]+r1[3]-r2[3]
-        
+
 def trans(r1, r2):
     return [r2[0]-r1[0], r2[1]-r1[1], r2[2], r2[3]]
+
+
 
 class Canvas (wx.Panel):
     scales = [0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 8, 10]
@@ -46,7 +52,7 @@ class Canvas (wx.Panel):
         self.ips = None
         self.scrsize = wx.DisplaySize()
         self.s = 0
-        
+
     def on_mouseevent(self, me):
         tool = self.ips.tool
         if tool == None : tool = ToolsManager.curtool
@@ -54,7 +60,7 @@ class Canvas (wx.Panel):
         x,y = self.to_data_coor(me.GetX(), me.GetY())
         sta = [me.AltDown(), me.ControlDown(), me.ShiftDown()]
         if me.ButtonDown():tool.mouse_down(self.ips, x, y, me.GetButton(), alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)
-        if me.ButtonUp():tool.mouse_up(self.ips, x, y, me.GetButton(), alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)   
+        if me.ButtonUp():tool.mouse_up(self.ips, x, y, me.GetButton(), alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)
         if me.Moving():tool.mouse_move(self.ips, x, y, None, alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)
         btn = [me.LeftIsDown(), me.MiddleIsDown(), me.RightIsDown(),True].index(True)
         if me.Dragging():tool.mouse_move(self.ips, x, y, 0 if btn==3 else btn+1, alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)
@@ -63,20 +69,20 @@ class Canvas (wx.Panel):
         if hasattr(tool, 'cursor'):
             self.SetCursor(wx.Cursor(tool.cursor))
         else : self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
-        
+
     def bindEvents(self):
         for event, handler in [ \
                 (wx.EVT_SIZE, self.on_size),
                 (wx.EVT_MOUSE_EVENTS, self.on_mouseevent),      # Draw
                 (wx.EVT_IDLE, self.on_idle),
                 (wx.EVT_PAINT, self.on_paint)]: # Start drawing]:
-            self.Bind(event, handler)       
-        
+            self.Bind(event, handler)
+
     def initBuffer(self):
         box = self.GetClientSize()
         self.buffer = wx.Bitmap(box.width, box.height)
         self.box = [0,0,box[0],box[1]]
-        
+
     def self_fit(self):
         for i in [4,3,2,1,0]:
             best = i
@@ -85,14 +91,14 @@ class Canvas (wx.Panel):
                 break
         self.scaleidx = best
         self.zoom(self.scales[best], 0, 0)
-        
-        
+
+
     def set_ips(self, ips):
         self.ips = ips
         self.imgbox = [0,0,ips.size[1],ips.size[0]]
         self.bmp = wx.Image(ips.size[1], ips.size[0])
         self.self_fit()
-        
+
     def zoom(self, k, x, y):
         # print 'scale', k
         k1 = self.oldscale * 1.0
@@ -106,13 +112,13 @@ class Canvas (wx.Panel):
         self.imgbox[3]<=self.scrsize[1]*0.9:
             self.SetInitialSize((self.imgbox[2], self.imgbox[3]))
             self.resized=True
-    
+
     def move(self, dx, dy):
         if self.imgbox[2]<=self.box[2] and self.imgbox[3]<=self.box[3]:return
         self.imgbox[0] += dx
         self.imgbox[1] += dy
         self.update(True)
-        
+
     def on_size(self, event):
         self.reInitBuffer = True
 
@@ -124,17 +130,17 @@ class Canvas (wx.Panel):
             self.update(True)
             self.reInitBuffer = False
             self.ips.update = False
-            #print 'resize'
+            print('resize')
         if self.ips.scrchanged:
             self.set_ips(self.ips)
             self.ips.scrchanged = False
-            #print 'scr changed'
+            print('scr changed')
         if self.ips.update != False:
             #print 'normal update'
             self.update(self.ips.update == 'pix')
             self.ips.update = False
-            #print 'update'
-    
+            print('update')
+
     def on_paint(self, event):
         wx.BufferedPaintDC(self, self.buffer)
         cdc = wx.ClientDC(self)
@@ -146,7 +152,7 @@ class Canvas (wx.Panel):
         if self.ips.unit!=None:
             self.draw_ruler(cdc)
         #cdc.EndDrawing()
-        
+
     def draw_image(self, dc, img, rect, scale=None):
         win = cross(self.box, rect)
         win2 = trans(rect,win)
@@ -158,7 +164,7 @@ class Canvas (wx.Panel):
         bmp = img.GetSubImage(box)
         bmp = bmp.Scale(ceil(bmp.Width/sx), ceil(bmp.Height/sy))
         dc.DrawBitmap(wx.Bitmap(bmp), win[0], win[1])
-        
+
     def draw_ruler(self, dc):
         dc.SetPen(wx.Pen((255,255,255), width=2, style=wx.SOLID))
         x1 = max(self.imgbox[0], self.box[0])+5
@@ -182,9 +188,9 @@ class Canvas (wx.Panel):
         #dc.BeginDrawing()
         if pix:
             dc.Clear()
-            self.bmp.SetData(np.getbuffer(self.ips.lookup()))
+            self.bmp.SetData(memoryview(self.ips.lookup()))
             self.draw_image(dc, self.bmp, self.imgbox, self.scales[self.scaleidx])
-            
+
         #dc.EndDrawing()
         dc.UnMask()
         cdc = wx.ClientDC(self)
@@ -196,34 +202,34 @@ class Canvas (wx.Panel):
         #cdc.EndDrawing()
         if self.ips.unit!=None:
             self.draw_ruler(cdc)
-        
+
     def zoomout(self, x, y):
         if self.scaleidx == len(self.scales)-1:return
         #x,y = self.to_data_coor(x, y)
         self.scaleidx += 1
         self.zoom(self.scales[self.scaleidx],x,y)
         self.ips.update = 'pix'
-        
+
     def zoomin(self, x, y):
         if self.scaleidx == 0:return
         #x,y = self.to_data_coor(x, y)
-        self.scaleidx -= 1      
+        self.scaleidx -= 1
         self.zoom(self.scales[self.scaleidx], x,y)
         self.ips.update = 'pix'
-    
+
     def get_scale(self):
         return self.scales[self.scaleidx]
-        
+
     def to_data_coor(self, x, y):
         x = (x - self.box[0] - self.imgbox[0])
         y = (y - self.box[1] - self.imgbox[1])
         return (x/self.get_scale(), y/self.get_scale())
-        
+
     def to_panel_coor(self, x, y):
         x = x * self.get_scale() + self.imgbox[0] + self.box[0]
         y = y * self.get_scale() + self.imgbox[1] + self.box[1]
         return x,y
-        
+
 if __name__=='__main__':
     import sys
     sys.path.append('../')
@@ -240,8 +246,8 @@ if __name__=='__main__':
     canvas.set_handler(TestTool())
     frame.Fit()
     frame.Show(True)
-    app.MainLoop() 
-    
-    
+    app.MainLoop()
+
+
     #r1 = [0,0,20,10]
     #r2 = [1,2,10,10]

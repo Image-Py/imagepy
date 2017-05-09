@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Some widgets(HistCanvas/NumCtrl/ColorCtrl) defination 
 """
 Created on Sat Nov 26 15:30:47 2016
 
@@ -8,8 +9,11 @@ import wx
 import numpy as np
 
 class HistCanvas(wx.Panel):
+    """ HistCanvas: diverid from wx.core.Panel """
     def __init__(self, parent ):
-        wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(256,80), style = wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL )
+        wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
+                            pos = wx.DefaultPosition, size = wx.Size(256,80), 
+                            style = wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL )
         self.init_buf()
         self.his = None
         self.update = False
@@ -43,25 +47,31 @@ class HistCanvas(wx.Panel):
         self.update = True
         
     def draw(self):
-        if self.hist == None:return
+        if self.hist == None:
+            return
+        
+        # get client device context buffer
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
         dc.Clear()
-        dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID))
-        w, h = self.GetClientSize()
-        
+        # w, h = self.GetClientSize()
+    
+        # the main draw process 
+        print("drawing histogram")
+        dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID))        
         for i in range(256):
-            dc.DrawLine(i,80,i,80-self.hist[i])
+            dc.DrawLine(i,80,i,80-self.hist[i])            
         dc.SetPen(wx.Pen((0,0,0), width=1, style=wx.SOLID))
         dc.DrawLine(self.x1, 80, self.x2, 0)
-        print('draw')
         
 class NumCtrl(wx.TextCtrl):
-    def __init__(self, parent, rang, accr):
+    """NumCtrl: diverid from wx.core.TextCtrl """
+    def __init__(self, parent, rang, accury):
         wx.TextCtrl.__init__(self, parent, wx.TE_RIGHT)
         self.min, self.max = rang
-        self.accr = accr
+        self.accury = accury
         wx.TextCtrl.Bind(self, wx.EVT_KEY_UP, self.ontext)
         
+    #! TODO: what is this?
     def Bind(self, z, f):
         self.f = f
         
@@ -73,20 +83,22 @@ class NumCtrl(wx.TextCtrl):
             self.SetBackgroundColour((255,255,255))
         
     def SetValue(self, n):
-        wx.TextCtrl.SetValue(self, str(round(n,self.accr) if self.accr>0 else int(n)))
+        wx.TextCtrl.SetValue(self, str(round(n,self.accury) if self.accury>0 else int(n)))
         
     def GetValue(self):
-        s = wx.TextCtrl.GetValue(self)
+        sval = wx.TextCtrl.GetValue(self)
         try:
-            num = float(s) if self.accr>0 else int(s)
+            num = float(sval) if self.accury>0 else int(sval)
         except ValueError:
             return None
-        if num<self.min or num>self.max:return
-        if round(num, self.accr) != num:
+        if num<self.min or num>self.max:
+            return None
+        if abs(round(num, self.accury) - num) > 1E-5:
             return None
         return num
         
 class ColorCtrl(wx.TextCtrl):
+    """ColorCtrl: deverid fron wx.coreTextCtrl"""
     def __init__(self, parent):
         wx.TextCtrl.__init__(self, parent, wx.TE_RIGHT)
         wx.TextCtrl.Bind(self, wx.EVT_KEY_UP, self.ontext)
@@ -96,7 +108,7 @@ class ColorCtrl(wx.TextCtrl):
         self.f = f
         
     def ontext(self, event):
-        print('a')
+        print('ColorCtrl')
         
     def oncolor(self, event):
         rst = None
@@ -109,10 +121,9 @@ class ColorCtrl(wx.TextCtrl):
             self.f(event)
         dlg.Destroy()
     
-    def SetValue(self, c):
-        wx.TextCtrl.SetBackgroundColour(self, c)
-        c = self.GetBackgroundColour()
-        des = c.GetAsString(wx.C2S_HTML_SYNTAX)
+    def SetValue(self, color):
+        wx.TextCtrl.SetBackgroundColour(self, color)
+        des = self.GetBackgroundColour().GetAsString(wx.C2S_HTML_SYNTAX)
         wx.TextCtrl.SetValue(self, des)
         
     def GetValue(self):

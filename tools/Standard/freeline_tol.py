@@ -6,9 +6,10 @@ Created on Wed Oct 19 17:35:09 2016
 """
 from core.roi import lineroi
 import wx
-from core.engine import Tool
+from core.engines import Tool
 
 class Linebuf:
+    """FreeLinebuf class"""
     title = 'Free Line'
     def __init__(self):
         self.buf = []
@@ -28,6 +29,7 @@ class Linebuf:
         return a
         
 class Plugin(Tool):
+    """FreeLinebuf class plugin with events callbacks"""
     def __init__(self):
         self.curobj = None
         self.doing = False
@@ -38,7 +40,6 @@ class Plugin(Tool):
         lim = 5.0/key['canvas'].get_scale()
         ips.mark = self.helper
         if btn==1:
-            # 如果有没有在绘制中，且已经有roi，则试图选取
             if not self.doing:
                 if ips.roi!= None:
                     self.curobj = ips.roi.pick(x, y, lim)

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 19 03:05:20 2016
-
 @author: yxl
 """
+from __future__ import absolute_import
 from shapely.geometry import *
 
 def r2s_point(mp):

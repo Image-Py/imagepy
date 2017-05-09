@@ -4,10 +4,11 @@ Created on Wed Oct 19 17:35:09 2016
 
 @author: yxl
 """
-from core.engine import Tool
-from core.manager import ColorManager
+from core.engines import Tool
+from core.managers import ColorManager
 
 class Plugin(Tool):
+    """ColorPicker class plugin with events callbacks"""
     title = 'Color Picker'
     para = {'front':(255,255,255), 'back':(0,0,0)}
     view = [('color', 'front', 'front', 'color'),

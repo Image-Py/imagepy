@@ -1,15 +1,13 @@
-# -*- coding: utf-8 -*-
 """
 Created on Sun Nov 27 00:56:00 2016
-
 @author: yxl
 """
 
-from core.engine import Filter
-from ui.panelconfig import ParaDialog
-from ui.widgets import HistCanvas
 import IPy
 import numpy as np
+from core.engines import Filter
+from ui.panelconfig import ParaDialog
+from ui.widgets import HistCanvas
 
 class ThresholdDialog(ParaDialog):
     def init_view(self, items, para, hist):

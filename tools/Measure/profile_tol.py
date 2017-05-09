@@ -6,24 +6,25 @@ Created on Fri Feb  3 22:21:32 2017
 """
 
 import wx, IPy
-from core.engine import Tool
+from core.engines import Tool
 import numpy as np
 from numpy.linalg import norm
 from .setting import Setting
 from math import ceil
 
 class Profile:
+    """Define the profile class"""
     dtype = 'distance'
     def __init__(self, body=None):
         self.body = body if body!=None else []
         self.buf = []
-        
+
     def addline(self):
         line = self.buf
         if len(line)!=2 or line[0] !=line[-1]:
             self.body.append(line)
         self.buf = []
-    
+
     def snap(self, x, y, lim):
         minl, idx = 1000, None
         for i in self.body:
@@ -31,18 +32,19 @@ class Profile:
                 d = (j[0]-x)**2+(j[1]-y)**2
                 if d < minl:minl,idx = d,(i, i.index(j))
         return idx if minl**0.5<lim else None
-        
+
     def pick(self, x, y, lim):
         return self.snap(x, y, lim)
 
     def draged(self, ox, oy, nx, ny, i):
         i[0][i[1]] = (nx, ny)
-        
+
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        dc.SetFont(font)
+        linefont = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
+                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        dc.SetFont(linefont)
         if len(self.buf)>1:
             dc.DrawLines([f(*i) for i in self.buf])
         for i in self.buf:dc.DrawCircle(f(*i),2)
@@ -55,7 +57,7 @@ class Profile:
             dxy = (pts[:-1]-pts[1:])
             dis = norm(dxy, axis=1)
             for i,j in zip(dis, mid):
-                dc.DrawText('%d'%i, f(*j))
+                dc.DrawText("{0:02}".format(i), f(*j))
 
     def report(self, title):
         rst, titles = [], ['K']
@@ -70,12 +72,13 @@ class Profile:
         IPy.table(title, rst, titles)
 
 class Plugin(Tool):
+    """Define the profile class plugin with the event callback functions"""
     title = 'Profile'
     def __init__(self):
         self.curobj = None
         self.doing = False
         self.odx,self.ody = 0, 0
-            
+
     def mouse_down(self, ips, x, y, btn, **key):
         if key['ctrl'] and key['alt']:
             if isinstance(ips.mark, Profile):
@@ -83,12 +86,11 @@ class Plugin(Tool):
             return
         lim = 5.0/key['canvas'].get_scale()
         if btn==1:
-            # 如果有没有在绘制中，且已经有roi，则试图选取
             if not self.doing:
                 if isinstance(ips.mark, Profile):
                     self.curobj = ips.mark.pick(x, y, lim)
                 if self.curobj!=None:return
-                
+
                 if not isinstance(ips.mark, Profile):
                     ips.mark = Profile()
                     self.doing = True
@@ -99,7 +101,7 @@ class Plugin(Tool):
                 self.curobj = (ips.mark.buf, -1)
                 self.odx, self.ody = x,y
         ips.update = True
-    
+
     def mouse_up(self, ips, x, y, btn, **key):
         self.curobj = None
         if self.doing:
@@ -108,7 +110,7 @@ class Plugin(Tool):
         if ips.mark!=None and len(ips.mark.body)==1:
             self.profile(ips.mark.body, ips.get_img())
         ips.update = True
-    
+
     def mouse_move(self, ips, x, y, btn, **key):
         if not isinstance(ips.mark, Profile):return
         lim = 5.0/key['canvas'].get_scale()      
@@ -121,7 +123,7 @@ class Plugin(Tool):
             ips.update = True
             #PlotFrame.plot(np.random.rand(100))
         self.odx, self.ody = x, y
-        
+
     def profile(self, body, img):
         (x1, y1), (x2, y2) = body[0]
         dx, dy = x2-x1, y2-y1
@@ -150,7 +152,7 @@ class Plugin(Tool):
         pass
 
 if __name__ == '__main__':
-	app = wx.App(False)
-	frame = PlotFrame(None)
-	frame.Show()
-	app.MainLoop()
+    app = wx.App(False)
+    frame = PlotFrame(None)
+    frame.Show()
+    app.MainLoop()

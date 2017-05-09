@@ -4,33 +4,33 @@ Created on Sat Oct 15 10:03:00 2016
 
 @author: yxl
 """
+from __future__ import absolute_import
+from __future__ import print_function
 
-import wx, os, sys
-root_dir = os.path.abspath(os.path.dirname(__file__))
-sys.path.append(root_dir)
+import wx, os
+from ui.panelconfig import ParaDialog
+from ui.canvasframe import CanvasFrame
+from core import managers
+from imageplus import ImagePlus
+import IPyGL
 
-from core import manager
 curapp = None
-
-
 callafter = wx.CallAfter
 
+
 def get_window():
-    return manager.WindowsManager.get()
+    return managers.WindowsManager.get()
 
 def get_ips():
-    win = manager.WindowsManager.get()
-    if win==None:return None
-    return win.canvas.ips
+    win = managers.WindowsManager.get()
+    return None if win==None else win.canvas.ips
 
 def showips(ips):
-    from ui.canvasframe import CanvasFrame
     frame = CanvasFrame(curapp)
     frame.set_ips(ips)
     frame.Show()
 
 def show_img(imgs, title):
-    from imageplus import ImagePlus
     ips = ImagePlus(imgs, title)
     showips(ips)
     '''MT
@@ -45,14 +45,14 @@ def show_ips(ips):
     wx.Yield()
     '''
 
-def alert(info, title='image-py'):
+def alert(info, title="ImagePy Alert!"):
     dlg=wx.MessageDialog(curapp, info, title, wx.OK)
     dlg.ShowModal()
     dlg.Destroy()
 
 # MT alert = lambda info, title='image-py':callafter(alert_, *(info, title))
 
-def yes_no(info, title='image-py'):
+def yes_no(info, title="ImagePy Yes-No ?!"):
     dlg = wx.MessageDialog(curapp, info, title, wx.YES_NO | wx.CANCEL)
     rst = dlg.ShowModal()
     dlg.Destroy()
@@ -60,8 +60,10 @@ def yes_no(info, title='image-py'):
     return dic[rst]
 
 def getpath(title, filt, k, para=None):
-    dpath = manager.ConfigManager.get('defaultpath')
-    if dpath ==None: dpath = './'
+    """Get the defaultpath of the ImagePy"""
+    dpath = managers.ConfigManager.get('defaultpath')
+    if dpath ==None:
+        dpath = IPyGL.root_dir # './'
     dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
     dialog = wx.FileDialog(curapp, title, dpath, '', filt, dic[k])
     rst = dialog.ShowModal()
@@ -69,14 +71,14 @@ def getpath(title, filt, k, para=None):
     if rst == wx.ID_OK:
         path = dialog.GetPath()
         dpath = os.path.split(path)[0]
-        manager.ConfigManager.set('defaultpath', dpath)
+        managers.ConfigManager.set('defaultpath', dpath)
         if para!=None:para['path'] = path
     dialog.Destroy()
 
     return rst if para!=None else path
 
 def getdir(title, filt, para=None):
-    dialog = wx.DirDialog(curapp, title, './')
+    dialog = wx.DirDialog(curapp, title, IPyGL.root_dir )
     rst = dialog.ShowModal()
     path = None
     if rst == wx.ID_OK:
@@ -86,7 +88,6 @@ def getdir(title, filt, para=None):
     return rst if para!=None else path
 
 def get_para(title, view, para):
-    from .ui.panelconfig import ParaDialog
     pd = ParaDialog(curapp, title)
     pd.init_view(view, para)
     rst = pd.ShowModal()
@@ -116,9 +117,9 @@ def set_info(i):
     # MT callafter(curapp.set_info, i)
 
 def run_macros(cmds):
-    for i in cmds:
-        title, para = i.split('>')
-        manager.PluginsManager.get(title)().start(eval(para), False)
+    for cmd in cmds:
+        title, para = cmd.split('>')
+        managers.PluginsManager.get(title)().start(eval(para), False)
         # MT wx.Yield()
 
 if __name__ == '__main__':

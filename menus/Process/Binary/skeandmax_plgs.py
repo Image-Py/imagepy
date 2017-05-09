@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Dec 28 00:26:45 2016
-
 @author: yxl
 """
-from core.engine import Filter
+import numpy as np
 from skimage.morphology import skeletonize
 from skimage.morphology import medial_axis
-import numpy as np
+
+from core.engines import Filter
 
 class Skeleton(Filter):
     title = 'Skeleton'
     note = ['all', 'auto_msk', 'auto_snap','preview']
 
-    #process
     def run(self, ips, snap, img, para = None):
         img[:] = skeletonize(snap>0)
         img *= 255
@@ -24,7 +23,6 @@ class MedialAxis(Filter):
     para = {'dis':False}
     view = [(bool,'distance transform', 'dis')]
 
-    #process
     def run(self, ips, snap, img, para = None):
         rst = medial_axis(snap>0,return_distance=para['dis'])
         if not para['dis']:
@@ -92,7 +90,7 @@ plgs = [Skeleton, MedialAxis, MyMedialAxis]
 [I use the medial_axis function, the result image has some double lines or small holes, then I count make a topology analysis!]
 ![demo picture] (http://data.imagepy.org/skebug.png "The medial_axis result and mine result")
 
-I view the source code, and found the medial_axis function, sort by distance map, then use the skeletonize function's table to check if to remove the pixcel. But some times the sort cannot make sure the out-inside turn in extreme condition. So we need a new table for the media_axis. This is my code：
+I view the source code, and found the medial_axis function, sort by distance map, then use the skeletonize function's table to check if to remove the pixel. But some times the sort cannot make sure the out-inside turn in extreme condition. So we need a new table for the media_axis. This is my code：
 
 **Build the table**
 ```python
@@ -100,7 +98,7 @@ from scipy.ndimage import label, generate_binary_structure
 
 strc = generate_binary_structure(2, 2)
 
-# check whether this pixcel can be removed
+# check whether this pixel can be removed
 def check(n):
     a = [(n>>i) & 1 for i in range(8)]
     a.insert(4, 0) 

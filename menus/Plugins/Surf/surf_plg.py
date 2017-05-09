@@ -1,24 +1,20 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Jan  8 14:49:20 2017
-
-@author: yxl
-"""
 import cv2, wx
-from core.engine import Filter, Simple, Tool
-from core.manager import WindowsManager
+from core.engines import Filter, Simple, Tool
+from core.managers import WindowsManager
 from .matcher import Matcher
 import numpy as np
 import IPy
 
+CVSURF = cv2.xfeatures2d.SURF_create if cv2.__version__[0] =="3" else cv2.SURF
+
 class FeatMark:
     def __init__(self, feats):
         self.feats = feats
-        
+
     def draw(self, dc, f, **key):
         for i in self.feats:
             dc.DrawCircle(f(i.pt), 3)
-            
+
 class Surf(Filter):
     title = 'Surf Detect'
     note = ['all', 'not-slice']
@@ -29,15 +25,15 @@ class Surf(Filter):
             (int, (500,2000), 0, 'threshold', 'thr','1-100'),
             (bool, 'extended', 'ext'),
             (bool, 'upright', 'upright')]
-            
+
     def run(self, ips, snap, img, para):
-        detector = cv2.SURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
+        detector = CVSURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
             nOctaveLayers=para['int'], upright=para['upright'],extended=para['ext'])
         kps = detector.detect(img)
         ips.surf_keypoint = kps
         ips.mark = FeatMark(kps)
-        IPy.write('Detect completed, %s points found!'%len(kps), 'Surf')
-    
+        IPy.write("Detect completed, {} points found!".format(len(kps)), 'Surf')
+
 class Pick(Tool):
     def __init__(self, pts1, pts2, pair, msk, ips1, ips2, host, style):
         self.pts1, self.pts2 = pts1, pts2
@@ -46,7 +42,7 @@ class Pick(Tool):
         self.cur, self.host = -1, host
         self.pts = self.pts1 if host else self.pts2
         self.style = style
-           
+
     def nearest(self, x, y):
         mind, mini = 1000, -1
         for i1, i2 in self.pair:
@@ -54,23 +50,23 @@ class Pick(Tool):
             d = np.sqrt((x-self.pts[i].pt[0])**2+(y-self.pts[i].pt[1])**2)
             if d<mind: mind, mini = d, (i1, i2)
         return mini if mind<5 else None
-        
+
     def mouse_down(self, ips, x, y, btn, **key):
         cur = self.nearest(x, y)
         if cur==None:return
         self.ips1.tool.cur, self.ips2.tool.cur = cur
         self.ips1.update, self.ips2.update = True, True
-    
+
     def mouse_up(self, ips, x, y, btn, **key):
         pass
-    
+
     def mouse_move(self, ips, x, y, btn, **key):
         pass
-        
+
     def mouse_wheel(self, ips, x, y, d, **key):
         pass
-        
-    def draw(self, dc, fdraw, **key):
+
+    def draw(self, dc, f, **key):
         #dc.SetPen(wx.TRANSPARENT_PEN)
         dc.SetBrush(wx.Brush((0,0,255)))
         if self.style:
@@ -82,16 +78,16 @@ class Pick(Tool):
         if self.cur!=-1:
             dc.SetBrush(wx.Brush((255,0,0)))
             dc.DrawCircle(f(*self.pts[self.cur].pt), 3)
-    
+
 class Match(Simple):
     title = 'Surf Matcher'
     note = ['all']
-    
+
     #parameter
     para = {'img1':'','img2':'','upright':False,  'log':False,
             'oct':3, 'int':4, 'thr':1000, 'ext':False,
-            'trans':'None', 'std':1, 'style':'Blue/Yellow'}    
-    
+            'trans':'None', 'std':1, 'style':'Blue/Yellow'}
+
     def load(self, ips):
         titles = WindowsManager.get_titles()
         self.para['img1'] = titles[0]
@@ -113,7 +109,7 @@ class Match(Simple):
                       (list, ['Blue/Yellow', 'Hide'], str, 'Aspect', 'style', 'color'),
                       (bool, 'Show log', 'log')]
         return True
-        
+
     def filter_matches(self, kp1, kp2, matches, ratio = 0.75):
         mkp1, mkp2 = [], []
         for m in matches:
@@ -125,12 +121,13 @@ class Match(Simple):
         p2 = np.float32([kp.pt for kp in mkp2])
         kp_pairs = list(zip(mkp1, mkp2))
         return p1, p2, kp_pairs
-    
+
     #process
     def run(self, ips, imgs, para = None):
         ips1 = WindowsManager.get(para['img1']).ips
         ips2 = WindowsManager.get(para['img2']).ips
-        detector = cv2.SURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
+
+        detector = CVSURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
             nOctaveLayers=para['int'], upright=para['upright'],extended=para['ext'])
         kps1, feats1 = detector.detectAndCompute(ips1.get_img(), None)
         kps2, feats2 = detector.detectAndCompute(ips2.get_img(), None)
@@ -143,35 +140,39 @@ class Match(Simple):
         ips2.tool, ips2.mark = picker2, picker2
         if para['log']:self.log(kps1, kps2, msk, m, dim)
         ips1.update, ips2.update = True, True
-        
+
     def log(self, pts1, pts2, msk, v, dim):
         sb = []
-        sb.append('Image1:%s points detected!'%len(pts1))
-        sb.append('Image2:%s points detected!\r\n'%len(pts2))
-        sb.append('Matched Point:%s/%s\r\n'%(msk.sum(),len(msk)))
+        sb.append('Image1:{} points detected!'.format(len(pts1)))
+        sb.append('Image2:{} points detected!\r\n'.format(len(pts2)))
+        sb.append('Matched Point:{0}/{1}\r\n'.format(msk.sum(),len(msk)))
         if dim == 0: return
         sb.append('Transformation:')
-        sb.append('%15.4f%15.4f%15.4f'%tuple(v.A1[:3]))
-        sb.append('%15.4f%15.4f%15.4f'%tuple(v.A1[3:6]))
+        for i in range(6):
+            sb.append("{0:15.4}".format(v.A1[i]))
+
         row = [0,0,1] if dim==6 else list(v[-2:])+[1]
-        sb.append('%15.4f%15.4f%15.4f'%tuple(row))
+        for i in range(3):
+            sb.append("{0:15.4}".format(row[i]))
+
         cont = '\n'.join(sb)
         IPy.write(cont, 'Surf')
-        
+
 plgs = [Surf, Match]
 
 if __name__ == '__main__':
     from .matcher import Matcher
-    
-    detector = cv2.SURF(1000, nOctaves=3,
-            nOctaveLayers=4, upright=False,
-            extended=False)
-    img1 = cv2.imread('/home/yxl/opencv-2.4/samples/c/box.png', 0)
+
+    detector = CVSURF(1000, nOctaves=3, nOctaveLayers=4, upright=False,extended=False)
+    #img1 = cv2.imread('/home/yxl/opencv-2.4/samples/c/box.png', 0)
+    img1 = cv2.imread('/home/auss/Pictures/faces1.png',0)
     pts, des = detector.detectAndCompute(img1, None)
+
     matcher = cv2.BFMatcher(cv2.NORM_L2)
     raw_matches = matcher.knnMatch(des, trainDescriptors = des, k = 1)
     m = raw_matches[0][0]
     lt = [(i[0].distance, i[0].queryIdx, i[0].trainIdx) for i in raw_matches]
     lt = np.array(sorted(lt))
+
     matcher = Matcher(8, 3)
     idx, msk, m = matcher.filter(pts,des,pts,des)

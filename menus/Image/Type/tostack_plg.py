@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Nov 28 01:57:11 2016
-
 @author: yxl
 """
 import numpy as np
-from core.engine import Simple
+from core.engines import Simple
 class ToStack(Simple):
     title = 'Trans to Stack'
     note = ['all','no_change','req_stack']
 
-    #process
     def run(self, ips, imgs, para = None):
         imgstack = np.zeros((ips.get_nslices(),) + imgs[0].shape, dtype=ips.dtype)
         for i in range(ips.get_nslices()):
@@ -22,7 +20,6 @@ class ToList(Simple):
     title = 'Trans to List'
     note = ['all','no_change','req_stack']
 
-    #process
     def run(self, ips, imgs, para = None):
         ips.imgs = list(imgs)
         ips.is3d = False

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Jan 14 23:23:30 2017
-
 @author: yxl
 """
 class ToolsManager:

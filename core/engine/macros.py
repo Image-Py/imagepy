@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Dec 29 01:48:23 2016
-
 @author: yxl
 """
 import IPy
-from core.manager import TextLogManager
+from core.managers import TextLogManager
 import threading
 
 class Macros:
@@ -22,7 +21,7 @@ class Macros:
     def start(self, thd=False):
         win = TextLogManager.get('Recorder')
         if win!=None and self.title!=None:
-            win.append('%s>None'%(self.title))
+            win.append('{}>None'.format(self.title))
         self.run()
         '''
         if thd:

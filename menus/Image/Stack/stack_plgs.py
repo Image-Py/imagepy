@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Nov 19 11:26:12 2016
-
 @author: yxl
 """
-from core.engine import Simple
+from core.engines import Simple
 class SetSlice(Simple):
     title = 'Set Slice'
     note = ['all']

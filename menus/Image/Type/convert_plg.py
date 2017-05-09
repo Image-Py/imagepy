@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Dec 17 14:15:41 2016
-
 @author: yxl
 """
 import numpy as np
-from core.engine import Simple
+from core.engines import Simple
 import IPy
 
 class To8bit(Simple):
     title = '8-bit'
     note = ['rgb']
 
-    #process
     def run(self, ips, imgs, para = None):
         n = ips.get_nslices()
         if ips.is3d:
@@ -32,7 +30,6 @@ class ToRGB(Simple):
     title = 'RGB'
     note = ['8-bit']
 
-    #process
     def run(self, ips, imgs, para = None):
         n = ips.get_nslices()
         if ips.is3d:

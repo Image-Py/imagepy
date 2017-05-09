@@ -7,9 +7,10 @@ Created on Wed Oct 19 17:35:09 2016
 from core.roi import polygonroi
 import wx
 from .polygon_tol import Polygonbuf
-from core.engine import Tool
+from core.engines import Tool
 
 class Plugin(Tool):
+    """FreeArea class plugin with events callbacks"""
     title = 'Free Area'
     def __init__(self):
         self.curobj = None

@@ -11,15 +11,9 @@ from ui.canvasframe import CanvasFrame
 import numpy as np
 import IPy
 
-from core.engine import Free
+from core.engines import Free
 
 class Plugin(Free):
-    '''
-    Creat a new image.
-    
-    @author: yxdragon
-    @e-main: imagepy@sina.com
-    '''
     title = 'New'
     para = {'name':'Undefined','width':300, 'height':300, 'type':'8-bit','slice':1}
     view = [(str, 'name', 'name',''),
@@ -37,6 +31,6 @@ class Plugin(Free):
         IPy.show_img(imgs, para['name'])
 
 if __name__ == '__main__':
-	print(Plugin.title)
-	app = wx.App(False)
-	Plugin().run()
+    print(Plugin.title)
+    app = wx.App(False)
+    Plugin().run()

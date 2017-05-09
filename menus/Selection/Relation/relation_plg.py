@@ -5,11 +5,12 @@ Created on Thu Dec 22 20:25:52 2016
 @author: yxl
 """
 
-from core.engine import Simple
-from core.manager import RoiManager
+from core.engines import Simple
+from core.managers import RoiManager
 import IPy
 
 class Union(Simple):
+    """Union: derived from core.engines.Simple """
     title = 'Union'
     note = ['all', 'req_roi']
     para = {'name':''}
@@ -27,6 +28,7 @@ class Union(Simple):
         ips.roi = ips.roi.union(RoiManager.get(para['name']))
         
 class Diff(Simple):
+    """Diff: derived from core.engines.Simple """
     title = 'Difference'
     note = ['all', 'req_roi']
     para = {'name':''}

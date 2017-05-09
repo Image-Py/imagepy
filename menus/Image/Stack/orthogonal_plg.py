@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Jan 15 03:19:34 2017
-
 @author: yxl
 """
 
@@ -9,7 +8,7 @@ import wx
 import IPy
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.engine import Tool, Simple
+from core.engines import Tool, Simple
 
 class Cross:
     def __init__(self, w, h):
@@ -26,13 +25,12 @@ class Cross:
         dc.DrawLines([f(0,self.y),f(self.w,self.y)])
         dc.DrawLines([f(self.x,0),f(self.x,self.h)])
         
-class Orthogonal(Tool):
+class Orthogonal(Tool):        
+    title = 'Orthogonal View'
     def __init__(self):
         self.view1, self.view2 = None, None
         self.ips1, self.ips2 = None, None
         self.ips = None
-        
-    title = 'Orthogonal View'
         
     def getimgs(self, img, x, y):
         return img[:, :, int(x)].transpose((1,0,2)[:len(img.shape)-1]).copy(), \

@@ -4,19 +4,26 @@ Created on Fri Jan  6 23:45:59 2017
 @author: yxl
 """
 import IPy
+import IPyGL
 import os,sys
-from core.engine import Macros
-from core.manager import ToolsManager,PluginsManager
+from core.engines import Macros
+from core.managers import ToolsManager,PluginsManager
 
 first = [0,0]
 def _preprocess_path(currpath):
-    rootpath = IPy.root_dir
+    """
+    currpath,rpath = _preprocess_path(currpath)
+    """
+    rootpath = IPyGL.root_dir
     currpath = currpath.replace(".",os.path.sep)
     if not os.path.exists(currpath):
-        currpath = os.path.join(IPyGL.rootpath,currpath)
-    rpath = currpath[len(rootpath):] if currpath.startswith(rootpath) else currpath
-    rpath = rpath.replace('/', '.').replace('\\','.')
-    rpath = rpath[1:] if rpath[0]=="." else rpath
+        currpath = os.path.join(IPyGL.root_dir,currpath)    
+
+    rpath = currpath[len(rootpath):] if currpath.startswith(rootpath) else currpath 
+    # Replace path.sep("/","\\") with "."
+    rpath = rpath.replace('/', '.').replace('\\','.')   
+    # To successcful call __import__() function, remove the first "." 
+    rpath = rpath[1:] if rpath[0]=="." else rpath         
 
     return currpath, rpath
 
@@ -26,6 +33,7 @@ def build_plugins(currpath, err=None,level = 1):
     root = err==None
     if err==None: err = []
     subtree = []
+
     currpath,rpath = _preprocess_path(currpath)
     paths = os.listdir(currpath)
     for ipath in paths:
@@ -36,10 +44,12 @@ def build_plugins(currpath, err=None,level = 1):
                 subtree.append(sub)
         elif ipath[-6:] in ('plg.py', 'lgs.py') or ipath[-3:]==".mc":
             subtree.append(ipath)
+
     # return subtree
     if len(subtree)==0:
         return []
 
+    #print("subtree=\n{}".format(subtree)   )
     pg = __import__(rpath,'','',[''])
     pg.title = os.path.basename(currpath)
     if hasattr(pg, 'catlog'):
@@ -64,7 +74,7 @@ def extend_plugins(currpath, lst, err):
         elif item[-3:]=='.mc':
             with open(os.path.join(currpath,item)) as f:
                 cmds = f.readlines()
-                print(cmds)
+                #print(cmds)
                 rst.append(Macros(item[:-3], cmds))
         else:
             try:
@@ -100,7 +110,10 @@ def build_tools(currpath, err=None,level=1):
     root = err==None
     if err==None:err=[]
     subtree = []
+    
     currpath,rpath = _preprocess_path(currpath)
+    
+    #!Todo: Get all the "*plg.py","*lgs.py","*.mc" and the path into the subtree!
     paths = os.listdir(currpath)
     for ipath in paths:
         subp = os.path.join(currpath,ipath)
@@ -117,7 +130,7 @@ def build_tools(currpath, err=None,level=1):
     # return subtree
     if len(subtree)==0:
         return []
-    print(rpath)
+
     pg = __import__(rpath,'','',[''])
     pg.title = os.path.basename(currpath)
     if hasattr(pg, 'catlog'):
@@ -168,8 +181,8 @@ def sort_tools(catlogs, lst):
 
 
 if __name__ == "__main__":
-    print((os.getcwd()))
+    print(os.getcwd())
     # os.chdir('../../')
-    os.chdir("/home/auss/Programs/Python/ImagePy/imagepy3/imagepy3")
+    os.chdir("/home/auss/Programs/Python/ImagePy/imagepy3/")
     data = build_tools('tools')
     print(data)

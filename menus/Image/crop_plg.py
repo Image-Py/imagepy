@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Dec  7 02:32:31 2016
-
 @author: yxl
 """
 
-from core.engine import Simple
+from core.engines import Simple
 import numpy as np
 
 class Plugin(Simple):
     title = 'Crop'
     note = ['all', 'req_roi']
 
-    #process
     def run(self, ips, imgs, para = None):
         sc, sr = ips.get_rect()
         if ips.is3d:

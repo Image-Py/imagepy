@@ -8,7 +8,7 @@ from core.roi import ovalroi
 import numpy as np
 import wx
 from .polygon_tol import Polygonbuf
-from core.engine import Tool
+from core.engines import Tool
 
 class Plugin(Tool):
     title = 'Ellipse'

@@ -1,40 +1,47 @@
 # -*- coding: utf-8 -*-
 import wx     
 import IPy   
-from core.manager import TextLogManager
+from core.managers import TextLogManager
 
 class TextLog(wx.Frame):
+    """TexLog:derived from wx.core.Frame"""
     @classmethod
-    def write(cls, cont, title='ImagePy'):
+    def write(cls, cont, title='ImagePy TexLog'):
         if title not in TextLogManager.windows:
             win = cls(title)
             win.Show()
         TextLogManager.windows[title].append(cont)
     
-    def __init__(self, title='ImagePy Log'):
+    def __init__(self, title='ImagePy TexLog'):
         wx.Frame.__init__(self, IPy.curapp,title=title,size=(500,300))
         self.title = title
         TextLogManager.add(title, self)
         self.file=''
         
-        menus = [('File(&F)',[
-            ('Open', self.OnOpen),
-            ('Save', self.OnSave),
-            ('Save as', self.OnSaveAs),
-            ('-'),
-            ('Exit', self.OnClose)]),
-                ('Edite(&E)', [
-            ('Undo', self.OnUndo),
-            ('Redo', self.OnRedo),
-            ('-'),
-            ('Cut', self.OnCut),
-            ('Copy', self.OnCopy),
-            ('Paste', self.OnPaste),
-            ('-'),
-            ('All', self.OnSelectAll)]),
-                ('Help(&H)', [
-            ('About', self.OnAbout)])]
+        ### Create menus (name:event) k-v pairs 
+        menus = [
+                ## File 
+                ('File(&F)',[('Open', self.OnOpen),
+                             ('Save', self.OnSave),
+                             ('Save as', self.OnSaveAs),
+                             ('-'),
+                             ('Exit', self.OnClose)
+                             ]),
+                ## Edit 
+                ('Edit(&E)', [ ('Undo', self.OnUndo),
+                             ('Redo', self.OnRedo),
+                             ('-'),
+                             ('Cut', self.OnCut),
+                             ('Copy', self.OnCopy),
+                             ('Paste', self.OnPaste),
+                             ('-'),
+                             ('All', self.OnSelectAll)
+                             ]),               
+                ## Help 
+                ('Help(&H)', [('About', self.OnAbout)])
+        ]
         
+        ### Bind menus with the corresponding events 
         self.menuBar=wx.MenuBar()
         for menu in menus:
             m = wx.Menu()
@@ -49,14 +56,15 @@ class TextLog(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.OnClosing)
         
         sizer = wx.BoxSizer( wx.VERTICAL )
-        self.text= wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+        self.text= wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, 
+                                wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
         sizer.Add( self.text, 1, wx.ALL|wx.EXPAND, 1 )
         self.SetSizer( sizer )
         
         self.Bind(wx.EVT_RIGHT_DOWN,self.OnRClick)
 
     def OnOpen(self,event):
-        dialog=wx.FileDialog(None,'wxpython Notebook',style=wx.FD_OPEN)
+        dialog=wx.FileDialog(None,'wxpython Notebook(o)',style=wx.FD_OPEN)
         if dialog.ShowModal()==wx.ID_OK:
             self.file=dialog.GetPath()
             file=open(self.file)
@@ -66,7 +74,7 @@ class TextLog(wx.Frame):
 
     def OnSave(self,event):
         if self.file=='':
-            dialog=wx.FileDialog(None,'wxpython Notebook',style=wx.FD_SAVE)
+            dialog=wx.FileDialog(None,'wxpython Notebook(s)',style=wx.FD_SAVE)
             if dialog.ShowModal()==wx.ID_OK:
                 self.file=dialog.GetPath()
                 self.text.SaveFile(self.file)

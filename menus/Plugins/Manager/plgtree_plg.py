@@ -5,37 +5,44 @@ Created on Sat Jan  7 01:00:02 2017
 @author: yxl
 """
 
-from core.engine import Free
-import wx
-import IPy
+from core.engines import Free
+import wx,os
+import IPy,IPyGL
 from core.loader import loader
 from wx.py.editor import EditorFrame
 
 class TreeFrame ( wx.Frame ):
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = "Plugins Tree", pos = wx.DefaultPosition, size = wx.Size( 452,300 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = "Plugins Tree", 
+                            pos = wx.DefaultPosition, size = wx.Size( 452,300 ), 
+                            style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.HORIZONTAL )
         
-        self.tre_plugins = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE )
+        self.tre_plugins = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, 
+                                        wx.DefaultSize, wx.TR_DEFAULT_STYLE )
         self.tre_plugins.SetMinSize( wx.Size( 200,-1 ) )
         
         bSizer1.Add( self.tre_plugins, 0, wx.ALL|wx.EXPAND, 5 )
         bSizer3 = wx.BoxSizer( wx.VERTICAL )
         bSizer4 = wx.BoxSizer( wx.HORIZONTAL )
         
-        self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, "Plugin Infomation:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, "Plugin Infomation:",
+                                            wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText2.Wrap( -1 )
         bSizer4.Add( self.m_staticText2, 0, wx.ALL, 5 )
         
-        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, "[SourceCode]", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, "[SourceCode]", 
+                                            wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText3.Wrap( -1 )
-        self.m_staticText3.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
+        self.m_staticText3.SetForegroundColour(
+            wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
         
         bSizer4.Add( self.m_staticText3, 0, wx.ALL, 5 )
         bSizer3.Add( bSizer4, 0, wx.EXPAND, 5 )
         
-        self.txt_info = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+        self.txt_info = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, 
+                                     wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
         bSizer3.Add( self.txt_info, 1, wx.ALL|wx.EXPAND, 5 )
         
         
@@ -84,12 +91,15 @@ class TreeFrame ( wx.Frame ):
             if plg.__doc__!=None:
                 self.txt_info.SetValue(plg.__doc__)
             elif hasattr(plg, '__module__'): 
-                self.txt_info.SetValue('plugin at %s'%plg.__module__)
-            else: self.txt_info.SetValue('package at %s'%plg.__name__)
+                self.txt_info.SetValue("plugin at {}".format(plg.__module__))
+            else: self.txt_info.SetValue("package at {}".format(plg.__name__))
         
     def on_source(self, event):
-        path = self.plg.__module__.replace('.','/')+'.py'
-        EditorFrame(filename=path).Show()
+        ## TODO: should it be absolute path ?
+        filename = self.plg.__module__.replace('.','/')+'.py'
+        if filename.startswith(IPyGL.root_dir):
+            filename=os.path.join(IPyGL.root_dir,filename)
+        EditorFrame(filename=filename).Show()
     
 class PlgTree(Free):
     title = 'Plugin Tree View'

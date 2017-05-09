@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Dec 17 09:58:55 2016
-
 @author: yxl
 """
-
-from core.engine import Simple
+import IPy
+from core.engines import Simple
+from core.managers import WindowsManager
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.manager import WindowsManager
-import IPy
 
 class Plugin(Simple):
     title = 'Split Channels'

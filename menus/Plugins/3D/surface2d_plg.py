@@ -4,20 +4,18 @@ Created on Tue Jan 10 22:33:33 2017
 
 @author: yxl
 """
-from core.engine import Simple
-
-from scipy.ndimage.filters import gaussian_filter
 import IPy
+from core.engines import Simple
+from scipy.ndimage.filters import gaussian_filter
 
 class Plugin(Simple):
     title = '2D Surface'
     note = ['8-bit', '16-bit']
-    
     para = {'scale':2, 'sigma':2,'h':1}
     view = [(int, (1,5), 0, 'down scale', 'scale', 'pix'),
             (int, (0,30), 0, 'sigma', 'sigma', ''),
             (float, (0.1,10), 1, 'scale z', 'h', '')]
-    #process
+    
     def run(self, ips, imgs, para = None):
         from mayavi import mlab
         img = ips.get_img()

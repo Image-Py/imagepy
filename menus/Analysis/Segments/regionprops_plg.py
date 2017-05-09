@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Dec 27 01:06:59 2016
-
 @author: yxl
 """
 import IPy, wx
 import numpy as np
-from core.engine import Simple
-from core.manager import WindowsManager
+from core.engines import Simple
+from core.managers import WindowsManager
 from scipy.ndimage import label
 from skimage.measure import regionprops
 
@@ -18,17 +17,19 @@ class Mark:
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
         dc.SetTextForeground((255,255,0))
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
+                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        
         dc.SetFont(font)
         data = self.data[0 if len(self.data)==0 else key['cur']]
         for i in range(len(data)):
             pos = f(*(data[i][0][1], data[i][0][0]))
             dc.DrawCircle(pos[0], pos[1], 2)
-            dc.DrawText('id=%d'%i, pos[0], pos[1])
+            dc.DrawText('id={}'.format(i), pos[0], pos[1])
             if data[i][1]==None:continue
             k1, k2, a = data[i][1]
             aixs = np.array([[-np.sin(a), np.cos(a)],
-                [np.cos(a), np.sin(a)]])*[k1/2, k2/2]
+                             [np.cos(a), np.sin(a)]])*[k1/2, k2/2]
             ar = np.linspace(0, np.pi*2,25)
             xy = np.vstack((np.cos(ar), np.sin(ar)))
             arr = np.dot(aixs, xy).T+data[i][0]
@@ -38,7 +39,6 @@ class Mark:
 class Plugin(Simple):
     title = 'Region Props'
     note = ['8-bit', '16-bit']
-    
     para = {'img':None, 'center':True, 'area':True, 'l':True, 'extent':False, 'cov':False, 'slice':False}
     view = [('img', 'label', 'img', ''),
             (bool, 'center', 'center'),

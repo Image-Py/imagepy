@@ -45,4 +45,5 @@ def cut(graph):
     return lst
     
 def ring(graph):
-    while len(cut(graph))>0:pass
+    while len(cut(graph))>0:
+        pass
