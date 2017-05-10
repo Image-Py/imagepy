@@ -1,17 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jan 25 23:51:12 2017
-
-@author: yxl
-"""
-
 import wx
 import numpy as np
-from core.engine import Tool, Filter
+from core.engines import Tool, Filter
 import scipy.ndimage as nimg
 
-#class RotateTool(Tool):
 class RotateTool(Tool):
+    """RotateTool class derived from core.engines.Tool"""
     def __init__(self, plg):
         self.plg = plg
         self.para = plg.para
@@ -46,6 +39,7 @@ class RotateTool(Tool):
             ips.update = True
 
 class Plugin(Filter):
+    """RotateTool class plugin derived from core.engines.Filter"""
     modal = False
     title = 'Rotate'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
@@ -86,7 +80,7 @@ class Plugin(Filter):
         sox, soy = f(self.para['ox'], self.para['oy'])
         dc.DrawCircle((sox, soy), 5)
         a = np.linspace(0, 2*np.pi, 20)
-        dc.DrawLines(zip(sox+np.cos(a)*40, soy+np.sin(a)*40))
+        dc.DrawLines(list(zip(sox+np.cos(a)*40, soy+np.sin(a)*40)))
         a = self.para['ang']*np.pi/180
         dc.DrawCircle((sox+np.cos(a)*40, soy+np.sin(a)*40), 3)
         
@@ -98,4 +92,5 @@ class Plugin(Filter):
         offset = o-trans.dot(o)
         if self.para['img']:
             nimg.affine_transform(img, trans, output=buf, offset=offset)
-        if self.para['msk'] and self.bufroi!=None:ips.roi = self.bufroi.affine(trans, o[::-1]-trans.dot(o[::-1]))
+        if self.para['msk'] and self.bufroi!=None:
+            ips.roi = self.bufroi.affine(trans, o[::-1]-trans.dot(o[::-1]))

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from core.engine import Free
+from core.engines import Free
 import IPy
 
 class Plugin(Free):

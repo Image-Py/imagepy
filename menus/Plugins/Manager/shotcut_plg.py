@@ -5,8 +5,8 @@ Created on Sat Jan  7 16:01:14 2017
 @author: yxl
 """
 import wx
-from core.engine import Free
-from core.manager import ShotcutManager,PluginsManager
+from core.engines import Free
+from core.managers import ShotcutManager,PluginsManager
 import IPy
 
 class VirtualListCtrl(wx.ListCtrl):
@@ -34,14 +34,18 @@ class VirtualListCtrl(wx.ListCtrl):
         
 class PlgListFrame( wx.Frame ):
     def __init__( self, parent):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'Plugin List', pos = wx.DefaultPosition, size = wx.Size( 412,500 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'Plugin List',
+                            pos = wx.DefaultPosition, size = wx.Size( 412,500 ), 
+                            style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
         bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
-        self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, u"Search:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, "Search:", 
+                                            wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText1.Wrap( -1 )
         bSizer2.Add( self.m_staticText1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        self.txt_search = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.txt_search = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, 
+                                       wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer2.Add( self.txt_search, 1, wx.ALL, 5 )
         bSizer1.Add( bSizer2, 0, wx.EXPAND, 5 )
         self.lst_plgs = VirtualListCtrl( self, ['Name', 'Shotcut'])
@@ -62,7 +66,7 @@ class PlgListFrame( wx.Frame ):
     
     #def list_plg(self, lst, items
     def load(self):
-        lst = PluginsManager.plgs.values()
+        lst = list(PluginsManager.plgs.values())
         self.plgs = [[i.title, ShotcutManager.get(i.title)] for i in lst]
         for i in self.plgs:
             if i[1]==None:i[1]=''

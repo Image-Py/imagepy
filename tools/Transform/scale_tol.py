@@ -1,14 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 23 23:10:57 2016
-
-@author: yxl
-"""
-
-
 import wx
 import numpy as np
-from core.engine import Tool, Filter
+from core.engines import Tool, Filter
 import scipy.ndimage as nimg
 
 class ScaleTool(Tool):
@@ -35,7 +27,7 @@ class ScaleTool(Tool):
     def mouse_down(self, ips, x, y, btn, **key):  
         lim = 5.0/key['canvas'].get_scale()  
         self.moving = self.snap(x, y, lim)
-        print self.moving
+        print(self.moving)
         
     def mouse_up(self, ips, x, y, btn, **key):
         if self.moving : self.plg.preview(self.para)
@@ -56,7 +48,7 @@ class ScaleTool(Tool):
             self.plg.dialog.reset()
             ips.update = True
         elif self.moving != False:
-            print 'hahaha'
+            print("scale_tol.ScaleTool.mouse_move")
             if 'l' in self.moving:self.plg.lt = x
             if 'r' in self.moving:self.plg.rt = x
             if 't' in self.moving:self.plg.tp = y

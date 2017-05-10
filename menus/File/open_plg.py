@@ -1,10 +1,10 @@
 import wx,os,sys
 from scipy.misc import imread
-import cStringIO, urllib2
-from core import manager
+import io, urllib.request, urllib.error, urllib.parse
+from core import managers
 import IPy
 
-from core.engine import Free
+from core.engines import Free
 
 class OpenFile(Free):
     title = 'Open'
@@ -37,16 +37,22 @@ class OpenUrl(Free):
         try:
             fp, fn = os.path.split(para['url'])
             fn, fe = os.path.splitext(fn) 
-            cont = urllib2.urlopen(para['url'])
-            stream = cStringIO.StringIO(cont.read())
+            response = urllib.request.urlopen(para['url'])
+            ## TODO: Fixme!
+            stream=None
+            if sys.version[0]=="2":
+                stream = io.StringIO(response.read()) # py2
+            else:
+                #stream = io.StringIO(response.read().decode('utf-8')) #py3
+                stream = io.BytesIO(response.read()) #py3
             img = imread(stream)
             IPy.show_img([img], fn)
-        except Exception, e:
-            IPy.write('Open url failed!\tErrof:%s'%sys.exc_info()[1])
+        except Exception as e:
+            IPy.write('Open url failed!\tErrof:{}'.format(sys.exc_info()[1]))
         
 plgs = [OpenFile, OpenUrl]
     
 if __name__ == '__main__':
-    print Plugin.title
+    print(Plugin.title)
     app = wx.App(False)
     Plugin().run()

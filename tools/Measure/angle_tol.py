@@ -5,13 +5,14 @@ Created on Fri Feb  3 23:11:13 2017
 @author: yxl
 """
 import wx
-from core.engine import Tool
+from core.engines import Tool
 import numpy as np
 from numpy.linalg import norm
-from setting import Setting
+from .setting import Setting
 import IPy
 
 class Angle:
+    """Define the class with line drawing fucntions """
     dtype = 'angle'
     def __init__(self, body=None):
         self.body = body if body!=None else []
@@ -40,8 +41,10 @@ class Angle:
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        dc.SetFont(font)
+        linefont = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
+                           wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        
+        dc.SetFont(linefont)
         dc.DrawLines([f(*i) for i in self.buf])
         for i in self.buf:dc.DrawCircle(f(*i),2)
         for line in self.body:
@@ -54,7 +57,7 @@ class Angle:
             a/=norm(v1,axis=1)*norm(v2,axis=1)
             ang = np.arccos(a)/np.pi*180
             for i,j in zip(ang,line[1:-1]):
-                dc.DrawText('%d'%i, f(*j))
+                dc.DrawText(str(i), f(*j))
 
     def report(self, title):
         rst = []
@@ -70,10 +73,11 @@ class Angle:
         maxlen = max(lens)
         fill = [[0]*(maxlen-i) for i in lens]
         rst = [i+j for i,j in zip(rst, fill)]
-        titles = ['A%s'%(i+1) for i in range(maxlen)]
+        titles = ["A{}".format(i+1) for i in range(maxlen)]
         IPy.table(title, rst, titles)
                 
 class Plugin(Tool):
+    """Define a class with some events callback fucntions """
     title = 'Angle'
     def __init__(self):
         self.curobj = None

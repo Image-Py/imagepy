@@ -7,11 +7,12 @@ Created on Sat Feb  4 13:31:36 2017
 
 import wx
 from shapely.geometry import Polygon, Point
-from core.engine import Tool
-from setting import Setting
+from core.engines import Tool
+from .setting import Setting
 import IPy
     
 class Area:
+    """Define the area class"""
     dtype = 'area'
     def __init__(self, body=None):
         self.body = body if body!=None else []
@@ -51,7 +52,7 @@ class Area:
                 i[1][j] = (i[1][j][0]+(nx-ox), i[1][j][1]+(ny-oy))
         else:
             i[0][i[1]] = (nx, ny)
-            #print 'drag,',i,self.body[0][0][i]hasattr(ips.roi, 'topolygon')
+            #print('drag,',i,self.body[0][0][i]hasattr(ips.roi, 'topolygon'))
             if i[1]==0:i[0][-1] = (nx,ny)
             if i[1]==len(i[0])-1:
                 i[0][0] = (nx, ny)
@@ -68,7 +69,9 @@ class Area:
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
+                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        
         dc.SetFont(font)
         dc.DrawLines([f(*i) for i in self.buf])
         for i in self.buf:dc.DrawCircle(f(*i),2)
@@ -78,9 +81,10 @@ class Area:
             dc.DrawLines([f(*i) for i in pg])
             for i in pg: dc.DrawCircle(f(*i),2)
             area, xy = plg.area, plg.centroid
-            dc.DrawText('%.1f'%area, f(xy.x, xy.y))
+            dc.DrawText("{0.1}".format(area), f(xy.x, xy.y))
 
 class Plugin(Tool):
+    """Define the area class plugin with some events callback fucntions """
     title = 'Area'
     def __init__(self):
         self.curobj = None
@@ -133,4 +137,4 @@ class Plugin(Tool):
         self.curobj = None
         
     def on_switch(self):
-        print 'hahaha'
+        print('AreaTool_Plugin')

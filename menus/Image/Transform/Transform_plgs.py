@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Nov 19 01:14:50 2016
-
 @author: yxl
 """
 import numpy as np
 import scipy.ndimage as nimg
-from core.engine import Filter
+from core.engines import Filter
 
 class Rotate(Filter):
     title = 'Rotate'
     note = ['all', 'auto_msk', 'auto_snap','preview']
-    
-    #parameter
     para = {'ang':0}
     view = [(float, (0,360), 1, 'angle', 'ang', 'degree')]
         
-    #process
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         a = para['ang']/180.0*np.pi
@@ -31,12 +27,9 @@ class Rotate(Filter):
 class Scale(Filter):
     title = 'Scale'
     note = ['all', 'auto_msk', 'auto_snap','preview']
-    
-    #parameter
     para = {'zoom':1}
     view = [(float, (0.1,10), 1, 'fact', 'zoom', '')]
 
-    #process
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         k = 1/para['zoom']

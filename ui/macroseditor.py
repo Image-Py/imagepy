@@ -4,13 +4,15 @@ Created on Wed Dec 28 23:33:52 2016
 
 @author: yxl
 """
-
+from __future__ import absolute_import
+from __future__ import print_function
 from ui.logwindow import TextLog
-from core.manager import PluginsManager
-from core.engine import Macros
+from core.managers import PluginsManager
+from core.engines import Macros
 import wx, IPy
 
 class MacrosEditor(TextLog):
+    """MacrosEditor: derived from ui.logwindow.TextLog"""
     def __init__(self, title='Macros Editor'):
         TextLog.__init__(self, title)
         m = wx.Menu()
@@ -29,7 +31,6 @@ class MacrosEditor(TextLog):
         Macros(None, cmds).start()
         
 if __name__ == '__main__':
-
     app=wx.App(False)
     win = MacrosEditor()
     win.Show()

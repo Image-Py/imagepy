@@ -5,12 +5,12 @@ Created on Wed Oct 19 17:35:09 2016
 @author: yxl
 """
 from core.draw import paint
-from core.engine import Tool
+from core.engines import Tool
 import wx
 
 class Plugin(Tool):
     title = 'Pencil'
-    view = [(int, (0,30), 0,  u'width', 'width', 'pix')]
+    view = [(int, (0,30), 0,  'width', 'width', 'pix')]
     para = {'width':1}
     
     def __init__(self):

@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 26 22:05:43 2016
-
 @author: yxl
 """
-
 import numpy as np
-from core.engine import Filter
 from scipy.ndimage import label, generate_binary_structure
+
+import IPy
+from core.engines import Filter
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-import IPy
 
 class Plugin(Filter):
     title = 'Label Image'
@@ -30,7 +29,6 @@ class Plugin(Filter):
         self.ips.lut[para['thr']:] = [255,0,0]
         self.ips.update = 'pix'
         
-    #process
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         ips.lut = self.lut

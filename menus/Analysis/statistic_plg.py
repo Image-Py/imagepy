@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 26 20:34:59 2016
-
 @author: yxl
 """
 import IPy
 import numpy as np
-from core.engine import Simple
+from core.engines import Simple
 
 class Histogram(Simple):
     title = 'Histogram'
@@ -16,7 +15,6 @@ class Histogram(Simple):
     view = [(bool, 'count frequence', 'fre'),
             (bool, 'each slices', 'slice')]
         
-    #process
     def run(self, ips, imgs, para = None):
         if not para['slice']: imgs = [ips.get_img()]
         data = []
@@ -25,14 +23,14 @@ class Histogram(Simple):
             if maxv==0:continue
             ct = np.histogram(imgs[i], maxv, [1,maxv+1])[0]
             titles = ['slice','value','count']
-            dt = [[i]*len(ct), range(maxv+1), ct]
+            dt = [[i]*len(ct), list(range(maxv+1)), ct]
             if not para['slice']:
                 titles, dt = titles[1:], dt[1:]
             if self.para['fre']:
                 fre = ct/float(ct.sum())
                 titles.append('frequence')
                 dt.append(fre.round(4))
-            dt = zip(*dt)
+            dt = list(zip(*dt))
             data.extend(dt)
 
         IPy.table(ips.title+'-histogram', data, titles)
@@ -63,7 +61,6 @@ class Statistic(Simple):
         if para['std']: rst.append(img.std().round(4))
         return rst
         
-    #process
     def run(self, ips, imgs, para = None):
         titles = ['Max','Min','Mean','Variance','Standard']
         key = {'Max':'max','Min':'min','Mean':'mean','Variance':'var','Standard':'std'}

@@ -6,13 +6,14 @@ Created on Fri Feb  3 22:21:32 2017
 """
 
 import wx
-from core.engine import Tool
+from core.engines import Tool
 import numpy as np
 from numpy.linalg import norm
-from setting import Setting
+from .setting import Setting
 import IPy
 
 class Angle:
+    """Define the class with line drawing fucntions """
     dtype = 'angle'
     def __init__(self, body=None):
         self.body = body if body!=None else []
@@ -41,8 +42,9 @@ class Angle:
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        dc.SetFont(font)
+        linefont = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
+                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        dc.SetFont(linefont)
         dc.DrawLines([f(*i) for i in self.buf])
         for i in self.buf:dc.DrawCircle(f(*i),2)
         for line in self.body:
@@ -56,7 +58,7 @@ class Angle:
             l = norm(dxy, axis=1)*-np.sign(dxy[:,1])
             ang = np.round(np.arccos(dxy[:,0]/l)/np.pi*180,0)
             for i,j in zip(ang, mid):
-                dc.DrawText('%d'%i, f(*j))
+                dc.DrawText(str(i), f(*j))
 
     def report(self, title):
         rst, titles = [], ['K']
@@ -71,6 +73,7 @@ class Angle:
         IPy.table(title, rst, titles)
 
 class Plugin(Tool):
+    """Define a class with some events callback fucntions """
     title = 'Angle2'
     def __init__(self):
         self.curobj = None
@@ -84,12 +87,12 @@ class Plugin(Tool):
             return
         lim = 5.0/key['canvas'].get_scale()
         if btn==1:
-            # 如果有没有在绘制中，且已经有roi，则试图选取
+            # If not painting and exists roi, then try to select roi?
             if not self.doing:
                 if isinstance(ips.mark, Angle):
                     self.curobj = ips.mark.pick(x, y, lim)
-                if self.curobj!=None:return
-                    
+                if self.curobj!=None:
+                    return                    
                 if not isinstance(ips.mark, Angle):
                     ips.mark = Angle()
                     self.doing = True

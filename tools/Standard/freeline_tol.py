@@ -6,9 +6,11 @@ Created on Wed Oct 19 17:35:09 2016
 """
 from core.roi import lineroi
 import wx
-from core.engine import Tool
+from core.engines import Tool
 
 class Linebuf:
+    """FreeLinebuf class"""
+    title = 'Free Line'
     def __init__(self):
         self.buf = []
         
@@ -25,9 +27,9 @@ class Linebuf:
         a = self.buf
         self.buf = []
         return a
-
+        
 class Plugin(Tool):
-    title = 'Line'
+    """FreeLinebuf class plugin with events callbacks"""
     def __init__(self):
         self.curobj = None
         self.doing = False
@@ -35,49 +37,42 @@ class Plugin(Tool):
         self.odx,self.ody = 0, 0
             
     def mouse_down(self, ips, x, y, btn, **key):
-        lim = 5.0/key['canvas'].get_scale()  
+        lim = 5.0/key['canvas'].get_scale()
         ips.mark = self.helper
         if btn==1:
-            # 如果有没有在绘制中，且已经有roi，则试图选取
             if not self.doing:
-                print ips.roi
-                print self.curobj
                 if ips.roi!= None:
                     self.curobj = ips.roi.pick(x, y, lim)
                 if self.curobj!=None:return
                     
                 if ips.roi == None:
-                    print 1
                     ips.roi = lineroi.LineRoi()
                     self.doing = True
                 elif ips.roi.dtype=='line' and key['shift']:
-                    print 2
                     self.doing = True
                 else: ips.roi = None
             if self.doing:
                 self.helper.addpoint((x,y))
-                self.curobj = (self.helper.buf, -1)
                 self.odx, self.ody = x,y
-            
-        elif btn==3:
-            if self.doing:
-                self.helper.addpoint((x,y))
-                self.doing = False
-                ips.roi.addline(self.helper.pop())
-        ips.update = True
     
     def mouse_up(self, ips, x, y, btn, **key):
-        self.curobj = None
+        if self.doing:
+            self.doing = False
+            self.curobj = None
+            ips.roi.addline(self.helper.pop())
+        ips.update = True
     
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
-        lim = 5.0/key['canvas'].get_scale()          
+        lim = 5.0/key['canvas'].get_scale()       
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if ips.roi.snap(x, y, lim)!=None:
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
-            ips.roi.draged(self.odx, self.ody, x, y, self.curobj)
+            if self.doing:
+                self.helper.addpoint((x,y))
+            elif self.curobj: ips.roi.draged(self.odx, self.ody, x, y, self.curobj)
             ips.update = True
         self.odx, self.ody = x, y
         

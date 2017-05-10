@@ -6,7 +6,7 @@ Created on Wed Oct 19 17:35:09 2016
 """
 from core.roi import pointroi
 import wx
-from core.engine import Tool
+from core.engines import Tool
 
 class Plugin(Tool):
     title = 'Point'

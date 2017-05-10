@@ -4,11 +4,11 @@ Created on Wed Dec 28 23:24:43 2016
 
 @author: yxl
 """
-
-from core.engine import Free
+import wx 
+from core.engines import Free
+from core.managers import TextLogManager
 from ui.macroseditor import MacrosEditor
-from core.manager import TextLogManager
-import IPy, wx
+import IPy
 
 class Recorder(Free):
     title = 'Macros Recorder'
@@ -18,7 +18,7 @@ class Recorder(Free):
             f = lambda : MacrosEditor('Recorder').Show()
             wx.CallAfter(f)
             
-class Edite(Free):
+class Edit(Free):
     title = 'Macros Editor'
     
     def run(self, para = None):
@@ -39,4 +39,5 @@ class Run(Free):
         f.close()
         IPy.run_macros(lines)
 
-plgs = [Recorder, Edite, Run]
+## three MacroRecoder class 
+plgs = [Recorder, Edit, Run]

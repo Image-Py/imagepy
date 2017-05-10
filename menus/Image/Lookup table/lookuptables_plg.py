@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct 17 21:13:42 2016
-
 @author: yxl
 """
 import IPy
+import numpy as np
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.manager import ColorManager
-import numpy as np
-from core.engine import Free
+from core.engines import Free
+from core.managers import ColorManager
 
 class Plugin(Free):
     def __init__(self, key):
@@ -36,11 +35,11 @@ class Plugin(Free):
     def __call__(self):
         return self
           
-plgs = [Plugin(i) for i in ColorManager.luts.keys()]
+plgs = [Plugin(i) for i in list(ColorManager.luts.keys())]
 for i in range(len(plgs)):
     if plgs[i].title == 'Grays':
         plgs.insert(0, plgs.pop(i))
 
 if __name__ == '__main__':
-    print ColorManager.luts.keys()
+    print(list(ColorManager.luts.keys()))
     

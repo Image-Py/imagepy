@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
-import os
-#os.sys.path.append('../')
-import wx, IPy
+import os,wx 
+import IPy
 import numpy as np
 from math import ceil
-from core.manager import PlotManager
+from core.managers import PlotManager
 
 class LineCanvas(wx.Panel):
+    """LineCanvas: derived from wx.core.Panel"""
     def __init__(self, parent):
-        wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(256,80), style = wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL )
+        wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
+                            pos = wx.DefaultPosition, size = wx.Size(256,80), 
+                            style = wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL )
         self.init_buf()
         self.data, self.extent = [], [0,0,1,1]
         self.set_title_label('Graph', 'X-unit', 'Y-unit')
@@ -41,7 +43,8 @@ class LineCanvas(wx.Panel):
         y = (t+h-y)*1.0/(h)*(high-low)+low
         return x, y
 
-    def clear(self):del self.data[:]
+    def clear(self):
+        del self.data[:]
 
     def on_move(self, event):
         self.handle_move(*self.trans(event.x, event.y))
@@ -57,7 +60,8 @@ class LineCanvas(wx.Panel):
         self.title, self.labelx, self.labely = title, labelx, labely
 
     def paint(self):
-        if len(self.data)==0 : return
+        if len(self.data)==0 :
+            return
         ext = np.array([[x.min(), y.min(), x.max(), y.max()] for x,y,c,w in self.data])
         d = ext[:,3].max() - ext[:,1].min()
         top, bot = ext[:,3].max() + 0.1 * d, ext[:,1].min() - 0.1 * d
@@ -90,12 +94,15 @@ class LineCanvas(wx.Panel):
             dc.DrawLine(l, y, l+w, y)
             dc.DrawText(str(i), 5, y-5)
 
-        font = wx.Font(18, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        dc.SetFont(font)
+        titlefont = wx.Font(18, wx.FONTFAMILY_DEFAULT, 
+                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        dc.SetFont(titlefont)
         dw,dh = dc.GetTextExtent(self.title)
         dc.DrawText(self.title, l+w/2-dw/2, 3)
-        font = wx.Font(14, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        dc.SetFont(font)
+        
+        lablelfont = wx.Font(14, wx.FONTFAMILY_DEFAULT, 
+                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        dc.SetFont(lablelfont)
         dw,dh = dc.GetTextExtent(self.labelx)
         dc.DrawText(self.labelx, l+w-dw, t+h+15)
         dc.DrawText(self.labely, 5, 10)
@@ -113,7 +120,7 @@ class LineCanvas(wx.Panel):
         for xs, ys, c, lw in self.data:
             ys = h+t - (ys - low)*(h/(high-low))
             xs = l+(xs-left)*(1.0/(right-left)*w)
-            pts = zip(xs, ys)
+            pts = list(zip(xs, ys))
             dc.SetPen(wx.Pen(c, width=lw, style=wx.SOLID))
             dc.DrawLines(pts)
 
@@ -122,6 +129,7 @@ class LineCanvas(wx.Panel):
         
 
 class PlotFrame ( wx.Frame ):
+    """PlotFrame:derived from wx.core.Frame"""
     frms = {}
 
     @classmethod
@@ -132,7 +140,9 @@ class PlotFrame ( wx.Frame ):
         return PlotManager.get(title)
 
     def __init__( self, parent, title):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = title, pos = wx.DefaultPosition, size = wx.Size( 500,300 ) )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, 
+                            title = title, pos = wx.DefaultPosition, 
+                            size = wx.Size( 500,300 ) )
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         sizer = wx.BoxSizer( wx.VERTICAL )
         self.canvas = LineCanvas( self)
@@ -140,13 +150,16 @@ class PlotFrame ( wx.Frame ):
         #self.canvas.set_lim(0, 0)
         sizer.Add( self.canvas, 1, wx.EXPAND |wx.ALL, 5 )
         sizer2 = wx.BoxSizer( wx.HORIZONTAL )
-        self.lab_info = wx.StaticText( self, wx.ID_ANY, u"Information", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lab_info = wx.StaticText( self, wx.ID_ANY, "Information", 
+                                       wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lab_info.Wrap( -1 )
         sizer2.Add( self.lab_info, 0, wx.ALL, 5 )
         sizer2.AddStretchSpacer(1)
-        self.btn_save = wx.Button( self, wx.ID_ANY, u"Save", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.btn_save = wx.Button( self, wx.ID_ANY, "Save", 
+                                   wx.DefaultPosition, wx.DefaultSize, 0 )
         sizer2.Add( self.btn_save, 0, wx.ALL, 5 )
-        self.btn_cancel = wx.Button( self, wx.ID_ANY, u"Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.btn_cancel = wx.Button( self, wx.ID_ANY, "Cancel", 
+                                     wx.DefaultPosition, wx.DefaultSize, 0 )
         sizer2.Add( self.btn_cancel, 0, wx.ALL, 5 )
         sizer.Add( sizer2, 0, wx.ALL|wx.EXPAND, 5 )
         self.SetSizer( sizer )

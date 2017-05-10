@@ -6,8 +6,8 @@ Created on Wed Oct 19 17:35:09 2016
 """
 from core.roi import rectangleroi, polygonroi
 import wx
-from polygon_tol import Polygonbuf
-from core.engine import Tool
+from .polygon_tol import Polygonbuf
+from core.engines import Tool
 
 class Plugin(Tool):
     title = 'Rectangle'

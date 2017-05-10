@@ -1,15 +1,13 @@
-# -*- coding: utf-8 -*-
 """
 Created on Sun Nov 27 00:56:00 2016
-
 @author: yxl
 """
 
-from core.engine import Filter
-from ui.panelconfig import ParaDialog
-from ui.widgets import HistCanvas
 import IPy
 import numpy as np
+from core.engines import Filter
+from ui.panelconfig import ParaDialog
+from ui.widgets import HistCanvas
 
 class ThresholdDialog(ParaDialog):
     def init_view(self, items, para, hist):
@@ -37,7 +35,7 @@ class Plugin(Filter):
         
     def show(self):
         self.dialog = ThresholdDialog(IPy.get_window(), self.title)
-        hist = np.histogram(self.ips.get_img(),range(257))[0]
+        hist = np.histogram(self.ips.get_img(),list(range(257)))[0]
         self.dialog.init_view(self.view, self.para, (hist*(100.0/hist.max())).astype(np.uint8))
         self.dialog.set_handle(lambda x:self.preview(self.para))
         return self.dialog.ShowModal()
@@ -47,8 +45,8 @@ class Plugin(Filter):
         if para == None: para = self.para
         mid = 128-para['bright']
         length = 255/np.tan(para['contrast']/180.0*np.pi)
-        print 255/np.tan(para['contrast']/180.0*np.pi)/2
-        print mid-length/2, mid+length/2
+        print(255/np.tan(para['contrast']/180.0*np.pi)/2)
+        print(mid-length/2, mid+length/2)
         img[:] = snap
         if mid-length/2>0:
             np.subtract(img, mid-length/2, out=img, casting='unsafe')

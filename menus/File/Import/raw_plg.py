@@ -1,10 +1,10 @@
 import wx,os,sys
-from scipy.misc import imread
-import cStringIO, urllib2
-import IPy
 import numpy as np
+import io, urllib.request, urllib.error, urllib.parse
+from scipy.misc import imread
+import IPy
 
-from core.engine import Free
+from core.engines import Free
 
 class Plugin(Free):
     title = 'Open Raw'
@@ -35,6 +35,6 @@ class Plugin(Free):
         IPy.show_img([img], fn)
 
 if __name__ == '__main__':
-    print Plugin.title
+    print(Plugin.title)
     app = wx.App(False)
     Plugin().run()

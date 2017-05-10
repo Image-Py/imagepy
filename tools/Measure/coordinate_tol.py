@@ -6,11 +6,12 @@ Created on Thu Feb  2 23:04:46 2017
 """
 
 import wx
-from core.engine import Tool
-from setting import Setting
+from core.engines import Tool
+from .setting import Setting
 import IPy
 
 class Coordinate:
+    """Define the coordinate class"""
     dtype = 'coordinate'
     def __init__(self, body=None):
         self.body = body if body!=None else []
@@ -35,12 +36,14 @@ class Coordinate:
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
+                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        
         dc.SetFont(font)
         for i in self.body:
             x,y = f(*i)
             dc.DrawCircle(x, y, 2)
-            dc.DrawText('(%d,%d)'%(i[0], i[1]), x, y)
+            dc.DrawText("({},{})".foramt(i[0], i[1]), x, y)
 
     def report(self, title):
         rst = self.body
@@ -48,6 +51,7 @@ class Coordinate:
         IPy.table(title, rst, titles)
 
 class Plugin(Tool):
+    """Define the coordinate class plugin with the event callback functions"""
     title = 'Coordinate'
     def __init__(self):
         self.curobj = None

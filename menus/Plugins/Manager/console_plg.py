@@ -1,29 +1,39 @@
 # -*- coding: utf-8 -*-
 import wx
-from core.engine import Free
-from core.manager import PluginsManager
 from wx.py.shell import ShellFrame
-import numpy as np
 import scipy.ndimage as ndimg
+import numpy as np
 import IPy
+
+from core.engines import Free
+from core.managers import PluginsManager
+from core.managers import PluginsManager
+
+## There is something wrong!
+## To be fixed!
 
 def get_ips():
     ips = IPy.get_ips()
-    if ips is None:print 'no image opened!'
+    if ips is None:
+        print('no image opened!')
     return ips
 
 def update():
     ips = IPy.get_ips()
-    if not ips is None : ips.update='pix'
+    if not ips is None : 
+        ips.update='pix'
 
 class Macros(dict):
     def __init__(self):
-        for i in PluginsManager.plgs.keys():
+        for i in list(PluginsManager.plgs.keys()):
             if not isinstance(i, str) or i == 'Command Line':
-                print PluginsManager.plgs[i]
+                #print(PluginsManager.plgs[i])
                 continue
-            name = filter(str.isalnum, i)
-            exec('self.run_%s = lambda para=None, plg=PluginsManager.plgs[i]:plg().start(para)'%name)
+            name = list(filter(str.isalnum, i))
+            ### TODO:Fixme! 
+            #exec('self.run_%s = lambda para=None, 
+            #      plg=PluginsManager.plgs[i]:plg().start(para)'%name)
+            exec('self.run%s = lambda para=None, plg=PluginsManager.plgs[i]:plg().start(para)'%name)
             #exec('self._%s = PluginsManager.plgs[i]().start'%name)
 
 cmds = {'IPy':IPy, 'ndimg':ndimg, 'update':update, 'curips':get_ips}

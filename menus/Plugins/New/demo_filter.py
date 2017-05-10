@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import scipy.ndimage as nimg
-from core.engine import Filter
+from core.engines import Filter
 
 # this is a Filter Sample, implements the Gaussian Blur
 class Plugin(Filter):

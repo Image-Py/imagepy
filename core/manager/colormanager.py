@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Jan 14 23:24:32 2017
-
 @author: yxl
 """
-import numpy as np, os, wx
+from __future__ import absolute_import
+import numpy as np
+import os, wx
+import sys
 from glob import glob
-import IPy
 
-files = glob(os.path.join(IPy.root_dir, 'data/luts/*.lut'))
-keys = [os.path.split(i)[1][:-4] for i in files]
-values = [np.fromfile(i, dtype=np.uint8).reshape((3,256)).T.copy() for i in files]
-    
+import IPy
+import IPyGL
+
+# read from the lut binarycode
+# glob: return a list ot paths matching a pathname pattern.
+filenames = glob(os.path.join(IPyGL.root_dir,'data/luts/*.lut'))
+keys = [os.path.split(filename)[-1][:-4] for filename in filenames]
+values = [np.fromfile(filename, dtype=np.uint8).reshape((3,256)).T.copy() for filename in filenames]
+
 class ColorManager:
     luts = dict(zip(keys, values))
     frontcolor = (255,255,0)
@@ -27,29 +33,29 @@ class ColorManager:
             rst = dlg.GetColourData().GetColour()
         dlg.Destroy()
         return rst
-    
+
     @classmethod
     def set_front(cls, color):
         if not hasattr(color, '__len__'):
             color = (color, color, color)
         cls.frontcolor=tuple(color)
-    
+
     @classmethod
     def set_back(cls, color):
         if not hasattr(color, '__len__'):
             color = (color, color, color)
         cls.backcolor=tuple(color)
-        
+
     @classmethod
     def get_front(cls, one=False):
         if not one:return cls.frontcolor
         return np.dot((cls.wr,cls.wg,cls.wb), cls.frontcolor)
-        
+
     @classmethod
     def get_back(cls, one):
         if not one:return cls.backcolor
         return np.dot((cls.wr,cls.wg,cls.wb), cls.backcolor)
-        
+
     @classmethod
     def get_lut(cls, name='grays'):
         if name=='grays':

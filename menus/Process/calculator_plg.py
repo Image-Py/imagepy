@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Dec  1 01:22:19 2016
-
 @author: yxl
 """
-from core.manager import WindowsManager
+from core.managers import WindowsManager
 import IPy
 
-from core.engine import Simple
-from core.pixcel import bliter
+from core.engines import Simple
+from core.pixel import bliter
 
 class Plugin(Simple):
+    """Calculator Plugin derived from core.engines.Simple """
     title = 'Image Calculator'
     note = ['all']
-    
-    #parameter
     para = {'img1':'','op':'add','img2':''}
     
     def load(self, ips):
@@ -22,11 +20,11 @@ class Plugin(Simple):
         self.para['img1'] = titles[0]
         self.para['img2'] = titles[0]
         Plugin.view = [(list, titles, str, 'image1', 'img1', ''),
-            (list, ['max', 'min', 'diff', 'add', 'substract'], str, 'operator', 'op',''),
-            (list, titles, str, 'image2', 'img2', '')]
+                       (list, ['max', 'min', 'diff', 'add', 'substract'
+                               ], str, 'operator', 'op',''),
+                       (list, titles, str, 'image2', 'img2', '')]
         return True
     
-    #process
     def run(self, ips, imgs, para = None):
         ips1 = WindowsManager.get(para['img1']).ips
         ips2 = WindowsManager.get(para['img2']).ips

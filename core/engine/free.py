@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Dec  3 03:57:53 2016
-
 @author: yxl
 """
+import threading, wx
+
+import IPy
 from ui.panelconfig import ParaDialog
-from core.manager import TextLogManager
-import threading
-import IPy, wx
+from core.managers import TextLogManager
 
 class Free:
     title = 'Free'
     view = None
     para = None
     
-    def run(self, para=None):print 'this is a plugin'
+    def run(self, para=None):
+        print('this is a plugin')
         
     def load(self):return True
         
@@ -30,12 +31,12 @@ class Free:
             if para==None:para = self.para
             win = TextLogManager.get('Recorder')
             if win!=None: 
-                wx.CallAfter(win.append, '%s>%s'%(self.title, para))
+                wx.CallAfter(win.append, '{}>{}'.format(self.title, para))
             self.run(para)
             '''
             run = lambda p=para:self.run(p)
             
-            print thd, '--------------------new thread'
+            print( thd, '--------------------new thread')
             thread = threading.Thread(None, run, ())
             thread.start()
             if not thd: thread.join()

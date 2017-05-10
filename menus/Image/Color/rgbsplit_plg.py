@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Dec 17 09:58:55 2016
-
 @author: yxl
 """
-
-from core.engine import Simple
+import IPy
+from core.engines import Simple
+from core.managers import WindowsManager
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.manager import WindowsManager
-import IPy
 
 class Plugin(Simple):
     title = 'Split Channels'
@@ -21,7 +19,7 @@ class Plugin(Simple):
     #process
     def run(self, ips, imgs, para = None):
         r,g,b = [],[],[]
-        for i,n in zip(imgs,range(ips.get_nslices())):
+        for i,n in zip(imgs,list(range(ips.get_nslices()))):
             IPy.curapp.set_progress(round((n+1)*100.0/len(imgs)))
             for c,ci in zip((r,g,b),(0,1,2)):
                 if self.para['copy']:c.append(i[:,:,ci].copy())

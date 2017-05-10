@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Dec  3 03:55:51 2016
-
 @author: yxl
 """
 import IPy
-from core.manager import ToolsManager
+from core.managers import ToolsManager
 
 class Tool:
     title = 'Tool'
@@ -19,7 +18,6 @@ class Tool:
     def config(self):pass
     def load(self):pass
     def switch(self):pass
-
     
     def start(self):ToolsManager.set(self)
         

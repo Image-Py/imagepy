@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from core.draw import paint
-from core.engine import Tool
+from core.engines import Tool
 import wx
 
 # this is a simple tool implements a pencial
@@ -9,7 +9,7 @@ class Plugin(Tool):
     title = 'pencil'
     
     # config parameter
-    cfgv = [(int, (0,30), 0,  u'width', 'width', 'pix')]
+    cfgv = [(int, (0,30), 0,  'width', 'width', 'pix')]
     cfgp = {'width':1}
     
     def __init__(self):

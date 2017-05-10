@@ -4,11 +4,11 @@ Created on Fri Nov 11 12:10:17 2016
 
 @author: yxl
 """
-
+from __future__ import absolute_import
 import wx
 from core.draw import paint
 from core.roi.operator import affine
-from roi import ROI
+from .roi import ROI
 
 class LineRoi(ROI):
     dtype = 'line'
@@ -60,7 +60,6 @@ class LineRoi(ROI):
             if len(line)>1:
                 dc.DrawLines([f(*i) for i in line])
                 for i in line:dc.DrawCircle(f(*i),2)
-        #for i in self.buf:
         
     def affine(self, m, o):
         plg = LineRoi()

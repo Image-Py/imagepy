@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from core.engine import Simple
+from core.engines import Simple
 from imageplus import ImagePlus
 from ui.canvasframe import CanvasFrame
-from core.manager import ConfigManager
+from core.managers import ConfigManager
 from ui.panelconfig import ParaDialog
 import numpy as np
 import IPy
@@ -52,7 +52,6 @@ class Plugin(Simple):
         else: self.para['k'], self.para['unit'] = ips.unit
         return True
 
-    #process
     def run(self, ips, imgs, para = None):
         if para['kill'] : ips.unit=None
         else : 

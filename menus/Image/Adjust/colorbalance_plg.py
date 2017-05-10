@@ -4,15 +4,15 @@ Created on Fri Nov 18 22:56:50 2016
 
 @author: yxl
 """
-from core.engine import Filter
-from ui.panelconfig import ParaDialog
-from ui.widgets import HistCanvas
 import IPy
 import numpy as np
+from core.engines import Filter
+from ui.panelconfig import ParaDialog
+from ui.widgets import HistCanvas
 
 class Balance_Dialog(ParaDialog):
     def init_view(self, para, view, img):
-        hists = [np.histogram(img[:,:,i],range(257))[0] for i in (0,1,2)]
+        hists = [np.histogram(img[:,:,i],list(range(257)))[0] for i in (0,1,2)]
         hists = [(i*(100.0/i.max())).astype(np.uint8) for i in hists]
         self.redcvs = HistCanvas(self)
         self.redcvs.set_hist(hists[0])

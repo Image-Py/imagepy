@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 26 22:05:43 2016
-
 @author: yxl
 """
 import numpy as np
@@ -48,11 +47,12 @@ def mark(img):
     for p in pts:
         if img[tuple(p)]==0:continue
         idx = (lo.T+p).T
+        #！TODO: index out pof the range
         v = img[idx[0], idx[1]]>0
         fac = np.array([1,2,4,8,16,32,64,128])
         c = lut[np.dot(v, fac)]
         if c==1: img[tuple(p)] = 2
-    img[:] = np.array([0,255,128,255], dtype=np.uint8)[img] 
+    img[:] = np.array([0,255,128,255], dtype=np.uint8)[img]
 
 def trace(img, p, p1):
     rst = [p, p1]
@@ -72,7 +72,7 @@ def trace(img, p, p1):
         if bp==None:return None
         rst.append(bp)
     return rst
-    
+
 def build_one(img, p):
     arcs, nodes, buf, num = [], [], [p], 0
     mark = {}
@@ -90,13 +90,13 @@ def build_one(img, p):
         nodes.append(p)
         mark[p] = num
         img[p], num = 10, num+1
-        
+
     for i in range(len(arcs)):
         se = mark[arcs[i][0]], mark[arcs[i][-1]]
         line = np.array(arcs[i])
         s = np.linalg.norm(line[1:] - line[:-1], axis=1).sum()
         arcs[i] = (se[0], se[1], s, line)
-    return nodes, arcs  
+    return nodes, arcs
 
 def build_graph(img):
     pts = np.array(np.where(img==2)).T

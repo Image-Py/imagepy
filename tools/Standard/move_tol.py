@@ -5,7 +5,7 @@ Created on Wed Nov 16 12:12:43 2016
 @author: yxl
 """
 import wx
-from core.engine import Tool
+from core.engines import Tool
 
 class Plugin(Tool):
     title = 'Move'
