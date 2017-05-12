@@ -3,12 +3,12 @@
 Created on Sat Dec 17 10:49:15 2016
 @author: yxl
 """
-import IPy
+from imagepy import IPy
 import numpy as np
-from imageplus import ImagePlus
-from ui.canvasframe import CanvasFrame
-from core.managers import WindowsManager
-from core.engines import Simple
+from imagepy import ImagePlus
+from imagepy.ui.canvasframe import CanvasFrame
+from imagepy.core.manager import WindowsManager
+from imagepy.core.engine import Simple
 
 class Plugin(Simple):
     title = 'Merge Channels'

@@ -3,9 +3,9 @@
 Created on Sat Nov 19 14:05:12 2016
 @author: yxl
 """
-import IPy
+from imagepy import IPy
 import webbrowser
-from core.engines import Free
+from imagepy.core.engine import Free
 
 ## TODO:Fixme!
 class About(Free):

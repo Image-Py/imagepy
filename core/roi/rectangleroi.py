@@ -4,7 +4,7 @@ Created on Fri Nov 11 21:29:59 2016
 @author: yxl
 """
 import wx
-from core.draw import paint
+from ..draw import paint
 from .polygonroi import PolygonRoi
 from .roi import ROI
 

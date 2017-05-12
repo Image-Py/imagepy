@@ -3,14 +3,14 @@ Created on Wed Oct 12 14:15:01 2016
 
 @author: yxl
 """
-import wx
+import wx, sys
 import numpy as np
 from math import ceil
-from core.managers import ToolsManager
+from ..core.manager import ToolsManager
 
 #import sys
 #get_npbuffer = np.getbuffer if sys.version[0]=="2" else memoryview
-
+if sys.version_info[0]==2:memoryview=np.getbuffer
 
 def cross(r1, r2):
     x,y = max(r1[0], r2[0]),max(r1[1], r2[1])

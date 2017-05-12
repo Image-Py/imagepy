@@ -3,8 +3,8 @@
 Created on Tue Dec 27 12:04:18 2016
 @author: yxl
 """
-import IPy
-from core.engines import Free
+from imagepy import IPy
+from imagepy.core.engine import Free
 
 class Join(Free):
     title = 'Join Tables *'

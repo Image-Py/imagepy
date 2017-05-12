@@ -5,14 +5,14 @@ Created on Mon Dec  5 04:34:09 2016
 @author: yxl
 """
 from scipy.misc import imsave
-from core.engines import Simple
+from imagepy.core.engine import Simple
 import wx
-import IPy,IPyGL
+from imagepy import IPy, root_dir
 
 class Plugin(Simple):
     title = 'Save Sequence'
     note = ['all']
-    para = {'path':IPyGL.root_dir,'name':'','format':'png'}
+    para = {'path':root_dir,'name':'','format':'png'}
     #para = {'path':'./','name':'','format':'png'}
     
     view = [(str, 'Name', 'name', ''),

@@ -4,8 +4,8 @@ Created on Tue Jan 10 22:33:33 2017
 
 @author: yxl
 """
-import IPy
-from core.engines import Simple
+from imagepy import IPy
+from imagepy.core.engine import Simple
 from scipy.ndimage.filters import gaussian_filter
 
 class Plugin(Simple):

@@ -5,9 +5,9 @@ Created on Sat Jan  7 16:01:14 2017
 @author: yxl
 """
 import wx
-import IPy
-from core.engines import Free
-from core.managers import PluginsManager
+from imagepy import IPy
+from imagepy.core.engine import Free
+from imagepy.core.manager import PluginsManager
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):

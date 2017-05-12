@@ -5,9 +5,9 @@ Created on Sat Dec  3 03:57:53 2016
 """
 import threading, wx
 
-import IPy
-from ui.panelconfig import ParaDialog
-from core.managers import TextLogManager
+from ... import IPy
+from ...ui.panelconfig import ParaDialog
+from ...core.manager import TextLogManager
 
 class Free:
     title = 'Free'

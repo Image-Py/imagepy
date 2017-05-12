@@ -7,10 +7,10 @@ Created on Fri Nov 18 22:51:57 2016
 
 # -*- coding: utf-8 -*
 import scipy.ndimage as ndimg
-from core.engines import Filter
+from imagepy.core.engine import Filter
 
 class Closing(Filter):
-    """Closing: derived from core.engines.Filter """
+    """Closing: derived from imagepy.core.engine.Filter """
     title = 'Binary Closeing'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
@@ -19,7 +19,7 @@ class Closing(Filter):
         img *= 255
         
 class Opening(Filter):
-    """Opening: derived from core.engines.Filter """
+    """Opening: derived from imagepy.core.engine.Filter """
     title = 'Binary Opening'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
@@ -28,7 +28,7 @@ class Opening(Filter):
         img *= 255
         
 class Dilation(Filter):
-    """Dilation: derived from core.engines.Filter """
+    """Dilation: derived from imagepy.core.engine.Filter """
     title = 'Binary Dilation'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
@@ -37,7 +37,7 @@ class Dilation(Filter):
         img *= 255
         
 class Erosion(Filter):
-    """Erosion: derived from core.engines.Filter """
+    """Erosion: derived from imagepy.core.engine.Filter """
     title = 'Binary Erosion'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
@@ -46,7 +46,7 @@ class Erosion(Filter):
         img *= 255
         
 class Outline(Filter):
-    """Outline: derived from core.engines.Filter """
+    """Outline: derived from imagepy.core.engine.Filter """
     title = 'Binary Outline'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
@@ -56,7 +56,7 @@ class Outline(Filter):
         img -= snap
         
 class FillHoles(Filter):
-    """FillHoles: derived from core.engines.Filter """
+    """FillHoles: derived from imagepy.core.engine.Filter """
     title = 'Fill Holes'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
@@ -65,7 +65,7 @@ class FillHoles(Filter):
         img *= 255
         
 class EDT(Filter):
-    """EDT: derived from core.engines.Filter """
+    """EDT: derived from imagepy.core.engine.Filter """
     title = 'Distance Transform'
     note = ['all', 'auto_msk', 'auto_snap','preview']
 

@@ -4,11 +4,11 @@ Created on Wed Oct 19 17:35:09 2016
 
 @author: yxl
 """
-from core.roi import ovalroi
+from imagepy.core.roi import ovalroi
 import numpy as np
 import wx
 from .polygon_tol import Polygonbuf
-from core.engines import Tool
+from imagepy.core.engine import Tool
 
 class Plugin(Tool):
     title = 'Ellipse'

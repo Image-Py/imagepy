@@ -6,12 +6,12 @@ Created on Mon Dec  5 02:38:04 2016
 """
 
 import wx,os
-from imageplus import ImagePlus
-from ui.canvasframe import CanvasFrame
+from imagepy import ImagePlus
+from imagepy.ui.canvasframe import CanvasFrame
 import numpy as np
-import IPy
+from imagepy import IPy
 
-from core.engines import Free
+from imagepy.core.engine import Free
 
 class Plugin(Free):
     title = 'New'

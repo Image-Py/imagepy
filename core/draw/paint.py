@@ -5,8 +5,8 @@ Created on Wed Oct 19 15:03:15 2016
 """
 from __future__ import absolute_import
 import numpy as np
-from core.draw import polygonfill
-from core.managers import ColorManager
+from ..draw import polygonfill
+from ..manager import ColorManager
 
 def match_color(img, color):
     if hasattr(color, '__iter__') and len(img.shape)==2:

@@ -6,10 +6,11 @@ Created on Wed Dec 28 23:33:52 2016
 """
 from __future__ import absolute_import
 from __future__ import print_function
-from ui.logwindow import TextLog
-from core.managers import PluginsManager
-from core.engines import Macros
-import wx, IPy
+from .logwindow import TextLog
+from ..core.manager import PluginsManager
+from ..core.engine import Macros
+from .. import IPy
+import wx
 
 class MacrosEditor(TextLog):
     """MacrosEditor: derived from ui.logwindow.TextLog"""

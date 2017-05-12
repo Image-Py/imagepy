@@ -5,10 +5,10 @@ Created on Mon Jan 16 21:13:16 2017
 @author: yxl
 """
 
-from core.engines import Free
+from imagepy.core.engine import Free
 import wx,os
-import IPy,IPyGL
-from core.loader import loader
+from imagepy import IPy, root_dir
+from imagepy.core.loader import loader
 from wx.py.editor import EditorFrame
 
 class TreeFrame ( wx.Frame ):

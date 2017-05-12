@@ -3,7 +3,7 @@ import os,wx
 import IPy
 import numpy as np
 from math import ceil
-from core.managers import PlotManager
+from core.manager import PlotManager
 
 class LineCanvas(wx.Panel):
     """LineCanvas: derived from wx.core.Panel"""

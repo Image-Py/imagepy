@@ -7,7 +7,7 @@ import numpy as np
 from skimage.morphology import skeletonize
 from skimage.morphology import medial_axis
 
-from core.engines import Filter
+from imagepy.core.engine import Filter
 
 class Skeleton(Filter):
     title = 'Skeleton'

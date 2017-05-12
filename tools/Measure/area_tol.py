@@ -7,9 +7,9 @@ Created on Sat Feb  4 13:31:36 2017
 
 import wx
 from shapely.geometry import Polygon, Point
-from core.engines import Tool
+from imagepy.core.engine import Tool
 from .setting import Setting
-import IPy
+from imagepy import IPy
     
 class Area:
     """Define the area class"""

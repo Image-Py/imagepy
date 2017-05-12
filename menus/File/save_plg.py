@@ -4,15 +4,15 @@ Created on Mon Dec  5 03:19:13 2016
 @author: yxl
 """
 from scipy.misc import imsave
-from core.engines import Simple
+from imagepy.core.engine import Simple
 import wx
-import IPy,IPyGL
+from imagepy import IPy, root_dir
 
 class Plugin(Simple):
     title = 'Save'
     note = ['all']
     # para = {'path':'./'}
-    para={'path':IPyGL.root_dir}
+    para={'path':root_dir}
 
     def show(self):
         filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif'

@@ -5,12 +5,12 @@ Created on Wed Oct 19 17:35:09 2016
 @author: yxl
 """
 import wx
-from core.engines import Tool
+from imagepy.core.engine import Tool
 import numpy as np
-from core.managers import ColorManager
-from core.draw.fill import floodfill
+from imagepy.core.manager import ColorManager
+from imagepy.core.draw.fill import floodfill
 from skimage.measure import find_contours
-from core.roi.convert import shape2roi, roi2shape
+from imagepy.core.roi.convert import shape2roi, roi2shape
 from shapely.geometry import Polygon, Point
 from shapely.ops import cascaded_union
 import matplotlib.pyplot as plt

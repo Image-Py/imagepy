@@ -1,3 +1,4 @@
+'''
 from __future__ import absolute_import
 from . import canvasframe
 from . import panelconfig
@@ -10,3 +11,4 @@ from . import imagepy
 from . import macroseditor
 from . import pluginloader
 from . import toolsloader
+'''

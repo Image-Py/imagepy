@@ -8,9 +8,9 @@ import wx
 import threading
 import numpy as np
 
-import IPy
-from ui.panelconfig import ParaDialog
-from core.managers import TextLogManager, WindowsManager
+from ... import IPy
+from ...ui.panelconfig import ParaDialog
+from ...core.manager import TextLogManager, WindowsManager
         
 def process_chanels(plg, ips, src, des, para):
     if ips.chanels>1 and not 'not_channel' in plg.note:

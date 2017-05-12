@@ -4,9 +4,9 @@ Created on Wed Oct 19 17:35:09 2016
 
 @author: yxl
 """
-from core.roi import pointroi
+from imagepy.core.roi import pointroi
 import wx
-from core.engines import Tool
+from imagepy.core.engine import Tool
 
 class Plugin(Tool):
     title = 'Point'

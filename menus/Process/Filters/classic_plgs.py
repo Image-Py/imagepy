@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*
 import scipy.ndimage as nimg
-from core.engines import Filter, Simple
+from imagepy.core.engine import Filter, Simple
 import numpy as np
 
 class Gaussian(Filter):
-    """Gaussian: derived from core.engines.Filter """
+    """Gaussian: derived from imagepy.core.engine.Filter """
     title = 'Gaussian'
     note = ['all', 'auto_msk', 'auto_snap','preview']
     para = {'sigma':2}

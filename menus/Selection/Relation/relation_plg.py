@@ -5,12 +5,12 @@ Created on Thu Dec 22 20:25:52 2016
 @author: yxl
 """
 
-from core.engines import Simple
-from core.managers import RoiManager
-import IPy
+from imagepy.core.engine import Simple
+from imagepy.core.manager import RoiManager
+from imagepy import IPy
 
 class Union(Simple):
-    """Union: derived from core.engines.Simple """
+    """Union: derived from imagepy.core.engine.Simple """
     title = 'Union'
     note = ['all', 'req_roi']
     para = {'name':''}
@@ -28,7 +28,7 @@ class Union(Simple):
         ips.roi = ips.roi.union(RoiManager.get(para['name']))
         
 class Diff(Simple):
-    """Diff: derived from core.engines.Simple """
+    """Diff: derived from imagepy.core.engine.Simple """
     title = 'Difference'
     note = ['all', 'req_roi']
     para = {'name':''}

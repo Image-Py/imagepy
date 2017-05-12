@@ -3,11 +3,11 @@
 Created on Mon Dec  5 02:38:04 2016
 @author: yxl
 """
-from core import managers
-from core.engines import Macros
-import IPy
+from imagepy.core import manager
+from imagepy.core.engine import Macros
+from imagepy import IPy
 
-recent = managers.ConfigManager.get('recent')
+recent = manager.ConfigManager.get('recent')
 if recent==None : recent = []
 
 def f(path):
@@ -28,7 +28,7 @@ def add(path):
 		recent = recent[:5]
 		plgs = plgs[:5]
 
-	managers.ConfigManager.set('recent', recent)
+	manager.ConfigManager.set('recent', recent)
 	IPy.curapp.reload_plugins()
 
 plgs = [f(i) for i in recent]

@@ -6,11 +6,11 @@ Created on Fri Feb  3 22:21:32 2017
 """
 
 import wx
-from core.engines import Tool
+from imagepy.core.engine import Tool
 import numpy as np
 from numpy.linalg import norm
 from .setting import Setting
-import IPy
+from imagepy import IPy
 
 class Distance:
     """Define the distance class"""

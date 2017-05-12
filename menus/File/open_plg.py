@@ -1,10 +1,13 @@
 import wx,os,sys
 from scipy.misc import imread
-import io, urllib.request, urllib.error, urllib.parse
-from core import managers
-import IPy
+import io
+if sys.version_info[0]==2:
+    from urllib2 import urlopen
+else: from urllib.request import urlopen
+from imagepy.core import manager
+from imagepy import IPy
 
-from core.engines import Free
+from imagepy.core.engine import Free
 
 class OpenFile(Free):
     title = 'Open'
@@ -17,7 +20,7 @@ class OpenFile(Free):
     #process
     def run(self, para = None):
         path = para['path']
-        recent = __import__("menus.File.Open Recent.recent_plgs",'','',[''])
+        recent = __import__("imagepy.menus.File.Open Recent.recent_plgs",'','',[''])
         recent.add(path)
 
         fp, fn = os.path.split(path)

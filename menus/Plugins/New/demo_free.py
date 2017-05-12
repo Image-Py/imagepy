@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from core.engines import Free
-import IPy
+from imagepy.core.engine import Free
+from imagepy import IPy
 
 class Plugin(Free):
     # the title on the menu

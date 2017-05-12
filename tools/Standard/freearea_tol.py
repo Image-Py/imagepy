@@ -4,10 +4,10 @@ Created on Wed Oct 19 17:35:09 2016
 
 @author: yxl
 """
-from core.roi import polygonroi
+from imagepy.core.roi import polygonroi
 import wx
 from .polygon_tol import Polygonbuf
-from core.engines import Tool
+from imagepy.core.engine import Tool
 
 class Plugin(Tool):
     """FreeArea class plugin with events callbacks"""

@@ -4,13 +4,13 @@ Created on Sun Dec 18 22:31:12 2016
 
 @author: yxl
 """
-from core.managers import RoiManager
-from core.engines import Simple
-from core.roi.rectangleroi import RectangleRoi
-import IPy
+from imagepy.core.manager import RoiManager
+from imagepy.core.engine import Simple
+from imagepy.core.roi.rectangleroi import RectangleRoi
+from imagepy import IPy
 
 class SelectAll(Simple):
-    """SelectAll: derived from core.engines.Simple """
+    """SelectAll: derived from imagepy.core.engine.Simple """
     title = 'Select All'
     note = ['all']
 
@@ -18,7 +18,7 @@ class SelectAll(Simple):
         ips.roi = RectangleRoi(0,0,ips.size[1],ips.size[0])
 
 class SelectNone(Simple):
-    """SelectNone: derived from core.engines.Simple """
+    """SelectNone: derived from imagepy.core.engine.Simple """
     title = 'Select None'
     note = ['all']
 
@@ -26,7 +26,7 @@ class SelectNone(Simple):
         ips.roi = None
         
 class Add2Manager(Simple):
-    """Add2Manager: derived from core.engines.Simple """
+    """Add2Manager: derived from imagepy.core.engine.Simple """
     title = 'Add To Manager'
     note = ['all', 'req_roi']
     para = {'name':''}
@@ -36,7 +36,7 @@ class Add2Manager(Simple):
         RoiManager.add(para['name'], ips.roi)
         
 class LoadRoi(Simple):
-    """LoadRoi: derived from core.engines.Simple """
+    """LoadRoi: derived from imagepy.core.engine.Simple """
     title = 'Load Roi'
     note = ['all']
     para = {'name':''}
@@ -54,7 +54,7 @@ class LoadRoi(Simple):
         ips.roi = RoiManager.get(para['name'])
         
 class Inflate(Simple):
-    """Inflate: derived from core.engines.Simple """
+    """Inflate: derived from imagepy.core.engine.Simple """
     title = 'Inflate'
     note = ['all', 'req_roi']
     para = {'r':5}
@@ -64,7 +64,7 @@ class Inflate(Simple):
         ips.roi = ips.roi.buffer(para['r'])
         
 class Shrink(Simple):
-    """Shrink: derived from core.engines.Simple """
+    """Shrink: derived from imagepy.core.engine.Simple """
     title = 'Shrink'
     note = ['all', 'req_roi']
     para = {'r':5}
@@ -74,7 +74,7 @@ class Shrink(Simple):
         ips.roi = ips.roi.buffer(-para['r'])
         
 class Convex(Simple):
-    """Convex: derived from core.engines.Simple """
+    """Convex: derived from imagepy.core.engine.Simple """
     title = 'Convex Hull'
     note = ['all', 'req_roi']
     
@@ -82,7 +82,7 @@ class Convex(Simple):
         ips.roi = ips.roi.convex()
         
 class Box(Simple):
-    """Box: derived from core.engines.Simple """
+    """Box: derived from imagepy.core.engine.Simple """
     title = 'Bound Box'
     note = ['all', 'req_roi']
     
@@ -90,7 +90,7 @@ class Box(Simple):
         ips.roi = ips.roi.bounds()
         
 class Clip(Simple):
-    """Clip: derived from core.engines.Simple """
+    """Clip: derived from imagepy.core.engine.Simple """
     title = 'Clip Roi'
     note = ['all', 'req_roi']
     
@@ -99,7 +99,7 @@ class Clip(Simple):
         ips.roi = ips.roi.clip(rect)
         
 class Invert(Simple):
-    """Invert: derived from core.engines.Simple """
+    """Invert: derived from imagepy.core.engine.Simple """
     title = 'Invert Roi'
     note = ['all', 'req_roi']
     

@@ -6,8 +6,8 @@ Created on Fri Nov 11 12:10:17 2016
 """
 from __future__ import absolute_import
 import wx
-from core.draw import paint
-from core.roi.operator import affine
+from ..draw import paint
+from .operator import affine
 from .roi import ROI
 
 class LineRoi(ROI):

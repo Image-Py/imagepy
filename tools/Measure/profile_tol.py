@@ -5,8 +5,9 @@ Created on Fri Feb  3 22:21:32 2017
 @author: yxl
 """
 
-import wx, IPy
-from core.engines import Tool
+import wx
+from imagepy import IPy
+from imagepy.core.engine import Tool
 import numpy as np
 from numpy.linalg import norm
 from .setting import Setting

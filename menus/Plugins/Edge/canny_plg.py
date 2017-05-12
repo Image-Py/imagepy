@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 from skimage import feature
-from core.engines import Filter
+from imagepy.core.engine import Filter
 
 class Plugin(Filter):
     title = 'Canny'

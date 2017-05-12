@@ -4,10 +4,10 @@ Created on Sat Nov 26 01:26:25 2016
 @author: yxl
 """
 import numpy as np
-from core.pixel import bliter
-from core.engines import Simple, Tool, Filter
-from core.roi.rectangleroi import RectangleRoi
-from core.managers import ClipBoardManager, ColorManager
+from imagepy.core.pixel import bliter
+from imagepy.core.engine import Simple, Tool, Filter
+from imagepy.core.roi.rectangleroi import RectangleRoi
+from imagepy.core.manager import ClipBoardManager, ColorManager
 
 class PasteMove(Tool):
     def __init__(self):

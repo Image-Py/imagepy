@@ -1,7 +1,7 @@
 import wx
 import numpy as np
-from core.engines import Tool
-from tools.Measure.setting import Setting
+from imagepy.core.engine import Tool
+from imagepy.tools.Measure.setting import Setting
 
 class Plugin(Tool):
     title = 'Measure Setting'

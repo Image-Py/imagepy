@@ -5,7 +5,7 @@ from scipy.ndimage import label
 from skimage.morphology import watershed
 from skimage.feature import peak_local_max
 
-from core.engines import Filter
+from imagepy.core.engine import Filter
 
 '''
 class Plugin(Filter):

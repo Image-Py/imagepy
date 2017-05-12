@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from core.draw import paint
-from core.engines import Tool
+from imagepy.core.draw import paint
+from imagepy.core.engine import Tool
 import wx
 
 # this is a simple tool implements a pencial

@@ -3,10 +3,10 @@
 Created on Tue Dec 27 01:06:59 2016
 @author: yxl
 """
-import IPy, wx
+from imagepy import IPy, wx
 import numpy as np
-from core.engines import Simple
-from core.managers import WindowsManager
+from imagepy.core.engine import Simple
+from imagepy.core.manager import WindowsManager
 from scipy.ndimage import label
 from skimage.measure import regionprops
 

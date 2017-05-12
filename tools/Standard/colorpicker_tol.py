@@ -4,8 +4,8 @@ Created on Wed Oct 19 17:35:09 2016
 
 @author: yxl
 """
-from core.engines import Tool
-from core.managers import ColorManager
+from imagepy.core.engine import Tool
+from imagepy.core.manager import ColorManager
 
 class Plugin(Tool):
     """ColorPicker class plugin with events callbacks"""

@@ -4,19 +4,19 @@ Created on Sat Jan 14 23:23:30 2017
 
 @author: yxl
 """
-from __future__ import absolute_import
 import wx, os, sys
 import time, threading
-import IPy
-import IPyGL
+from .. import IPy
 # TODO: @2017.05.01
 #from ui import pluginloader, toolsloader
 from . import pluginloader, toolsloader
-from core.managers import ConfigManager, PluginsManager
+from ..core.manager import ConfigManager, PluginsManager
+from .. import root_dir
 
 class FileDrop(wx.FileDropTarget):
     def OnDropFiles(self, x, y, path):
-        IPy.run_macros(["Open>{'path':{}}".format(repr(i)) for i in path])
+        print(["Open>{'path':'%s'}"%repr(i) for i in path])
+        IPy.run_macros(["Open>{'path':'%s'}"%i for i in path])
 
 class ImagePy(wx.Frame):
     def __init__( self, parent ):
@@ -28,8 +28,8 @@ class ImagePy(wx.Frame):
         # Todo:Fixed absolute/relative path!
         # print("menuspath:{}".format( os.path.join(IPyGL.root_dir,"menus")))
         # print("toolspath:{}".format(os.path.join(IPyGL.root_dir,"tools"))
-        menuspath = os.path.join(IPyGL.root_dir,"menus")
-        toolspath = os.path.join(IPyGL.root_dir,"tools")
+        menuspath = os.path.join(root_dir,"menus")
+        toolspath = os.path.join(root_dir,"tools")
         self.menubar = pluginloader.buildMenuBarByPath(self,menuspath)
         self.SetMenuBar( self.menubar )
         self.shortcut = pluginloader.buildShortcut(self)
@@ -71,7 +71,7 @@ class ImagePy(wx.Frame):
 
     def reload_plugins(self):
         for i in range(self.menubar.GetMenuCount()): self.menubar.Remove(0)
-        menuspath = os.path.join(IPyGL.root_dir,"menus")
+        menuspath = os.path.join(root_dir,"menus")
         pluginloader.buildMenuBarByPath(self, menuspath, self.menubar)
 
     def hold(self):

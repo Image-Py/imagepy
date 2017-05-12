@@ -4,7 +4,7 @@ Created on Wed Oct 19 17:35:09 2016
 
 @author: yxl
 """
-from core.roi import polygonroi
+from imagepy.core.roi import polygonroi
 import wx
 
 class Polygonbuf:
@@ -25,7 +25,7 @@ class Polygonbuf:
         self.buf = [[],[]]
         return a
         
-from core.engines import Tool
+from imagepy.core.engine import Tool
 
 class Plugin(Tool):
     title = 'Polygon'

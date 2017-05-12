@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*
 import numpy as np
-from core.engines import Filter
+from imagepy.core.engine import Filter
 
 class Add_plg(Filter):
-    """Add_plg: derived from core.engines.Filter """
+    """Add_plg: derived from imagepy.core.engine.Filter """
     title = 'Add'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
     para = {'num':0}
@@ -15,7 +15,7 @@ class Add_plg(Filter):
         np.add(img, para['num'], out=img, casting='unsafe')
         
 class Multiply_plg(Filter):
-    """Multiply_plg: derived from core.engines.Filter """
+    """Multiply_plg: derived from imagepy.core.engine.Filter """
     title = 'Multiply'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
     para = {'num':0}
@@ -27,7 +27,7 @@ class Multiply_plg(Filter):
         np.multiply(img, para['num'], out=img, casting='unsafe')
         
 class Max_plg(Filter):
-    """Max_plg: derived from core.engines.Filter """
+    """Max_plg: derived from imagepy.core.engine.Filter """
     title = 'Max'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'num':0}
@@ -39,7 +39,7 @@ class Max_plg(Filter):
         img[img<para['num']] = para['num']
         
 class Min_plg(Filter):
-    """Min_plg: derived from core.engines.Filter """
+    """Min_plg: derived from imagepy.core.engine.Filter """
     title = 'Min'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'num':0}
@@ -51,7 +51,7 @@ class Min_plg(Filter):
         img[img>para['num']] = para['num']
         
 class Sqrt_plg(Filter):
-    """Sqrt_plg: derived from core.engines.Filter """
+    """Sqrt_plg: derived from imagepy.core.engine.Filter """
     title = 'Squre Root'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     
@@ -59,7 +59,7 @@ class Sqrt_plg(Filter):
         np.sqrt(snap, out=img)
         
 class Garmma_plg(Filter):
-    """Garmma_plg: derived from core.engines.Filter """
+    """Garmma_plg: derived from imagepy.core.engine.Filter """
     title = 'Garmma'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2float']
     para = {'num':0}

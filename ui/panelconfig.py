@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ConfigPanel used for parameters setting
 import wx, platform
-from core.managers import WindowsManager, TableLogManager
+from ..core.manager import WindowsManager, TableLogManager
 from .widgets import NumCtrl, ColorCtrl
 
 

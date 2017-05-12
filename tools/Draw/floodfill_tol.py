@@ -5,10 +5,10 @@ Created on Wed Oct 19 17:35:09 2016
 @author: yxl
 """
 
-from core.engines import Tool
+from imagepy.core.engine import Tool
 import numpy as np
-from core.managers import ColorManager
-from core.draw.fill import floodfill
+from imagepy.core.manager import ColorManager
+from imagepy.core.draw.fill import floodfill
 
 class Plugin(Tool):
     title = 'Flood Fill'

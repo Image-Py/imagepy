@@ -4,8 +4,8 @@ Created on Sat Dec 17 14:15:41 2016
 @author: yxl
 """
 import numpy as np
-from core.engines import Simple
-import IPy
+from imagepy.core.engine import Simple
+from imagepy import IPy
 
 class To8bit(Simple):
     title = '8-bit'

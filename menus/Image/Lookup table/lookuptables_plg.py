@@ -3,12 +3,12 @@
 Created on Mon Oct 17 21:13:42 2016
 @author: yxl
 """
-import IPy
+from imagepy import IPy
 import numpy as np
-from imageplus import ImagePlus
-from ui.canvasframe import CanvasFrame
-from core.engines import Free
-from core.managers import ColorManager
+from imagepy import ImagePlus
+from imagepy.ui.canvasframe import CanvasFrame
+from imagepy.core.engine import Free
+from imagepy.core.manager import ColorManager
 
 class Plugin(Free):
     def __init__(self, key):

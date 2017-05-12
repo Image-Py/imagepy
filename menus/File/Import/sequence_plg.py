@@ -7,16 +7,16 @@ Created on Sat Oct 15 14:42:55 2016
 import wx,os
 from glob import glob
 
-import IPy,IPyGL
+from imagepy import IPy, root_dir
 from scipy.misc import imread
-from imageplus import ImagePlus
-from ui.canvasframe import CanvasFrame
-from core.engines import Free
+from imagepy.imageplus import ImagePlus
+from imagepy.ui.canvasframe import CanvasFrame
+from imagepy.core.engine import Free
 
 class Plugin(Free):
     title = 'Import Sequence'
     #para = {'path':'./', 'start':0, 'end':0, 'step':1, 'title':'sequence'}
-    para = {'path':IPyGL.root_dir, 'start':0, 'end':0, 'step':1, 'title':'sequence'}
+    para = {'path':root_dir, 'start':0, 'end':0, 'step':1, 'title':'sequence'}
 
     def show(self):
         filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG \

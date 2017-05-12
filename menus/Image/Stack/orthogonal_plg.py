@@ -5,10 +5,10 @@ Created on Sun Jan 15 03:19:34 2017
 """
 
 import wx
-import IPy
-from imageplus import ImagePlus
-from ui.canvasframe import CanvasFrame
-from core.engines import Tool, Simple
+from imagepy import IPy
+from imagepy import ImagePlus
+from imagepy.ui.canvasframe import CanvasFrame
+from imagepy.core.engine import Tool, Simple
 
 class Cross:
     def __init__(self, w, h):

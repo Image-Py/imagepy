@@ -8,24 +8,25 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import wx, os
-from ui.panelconfig import ParaDialog
-from ui.canvasframe import CanvasFrame
-from core import managers
-from imageplus import ImagePlus
-import IPyGL
+
+from .core import manager
+from .imageplus import ImagePlus
+from . import root_dir
+
 
 curapp = None
 callafter = wx.CallAfter
 
 
 def get_window():
-    return managers.WindowsManager.get()
+    return manager.WindowsManager.get()
 
 def get_ips():
-    win = managers.WindowsManager.get()
+    win = manager.WindowsManager.get()
     return None if win==None else win.canvas.ips
 
 def showips(ips):
+    from .ui.canvasframe import CanvasFrame
     frame = CanvasFrame(curapp)
     frame.set_ips(ips)
     frame.Show()
@@ -33,17 +34,10 @@ def showips(ips):
 def show_img(imgs, title):
     ips = ImagePlus(imgs, title)
     showips(ips)
-    '''MT
-    callafter(showips, ips)
-    wx.Yield()
-    '''
+
 
 def show_ips(ips):
     showips(ips)
-    ''' MT
-    callafter(showips, ips)
-    wx.Yield()
-    '''
 
 def alert(info, title="ImagePy Alert!"):
     dlg=wx.MessageDialog(curapp, info, title, wx.OK)
@@ -61,9 +55,9 @@ def yes_no(info, title="ImagePy Yes-No ?!"):
 
 def getpath(title, filt, k, para=None):
     """Get the defaultpath of the ImagePy"""
-    dpath = managers.ConfigManager.get('defaultpath')
+    dpath = manager.ConfigManager.get('defaultpath')
     if dpath ==None:
-        dpath = IPyGL.root_dir # './'
+        dpath = root_dir # './'
     dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
     dialog = wx.FileDialog(curapp, title, dpath, '', filt, dic[k])
     rst = dialog.ShowModal()
@@ -71,7 +65,7 @@ def getpath(title, filt, k, para=None):
     if rst == wx.ID_OK:
         path = dialog.GetPath()
         dpath = os.path.split(path)[0]
-        managers.ConfigManager.set('defaultpath', dpath)
+        manager.ConfigManager.set('defaultpath', dpath)
         if para!=None:para['path'] = path
     dialog.Destroy()
 
@@ -88,6 +82,7 @@ def getdir(title, filt, para=None):
     return rst if para!=None else path
 
 def get_para(title, view, para):
+    from .ui.panelconfig import ParaDialog
     pd = ParaDialog(curapp, title)
     pd.init_view(view, para)
     rst = pd.ShowModal()
@@ -100,7 +95,7 @@ def table(title, data, cols=None, rows=None):
     # MT callafter(TableLog.table, *(title, data, cols, rows))
 
 def write(cont, title='ImagePy'):
-    from ui.logwindow import TextLog
+    from .ui.logwindow import TextLog
     TextLog.write(cont, title)
     # MT callafter(TextLog.write, *(cont, title))
 
@@ -119,7 +114,7 @@ def set_info(i):
 def run_macros(cmds):
     for cmd in cmds:
         title, para = cmd.split('>')
-        managers.PluginsManager.get(title)().start(eval(para), False)
+        manager.PluginsManager.get(title)().start(eval(para), False)
         # MT wx.Yield()
 
 if __name__ == '__main__':

@@ -4,11 +4,11 @@ Created on Mon Dec 26 19:41:16 2016
 
 @author: yxl
 """
-from core.engines import Free
-from core.managers import WindowsManager, TextLogManager, TableLogManager
+from imagepy.core.engine import Free
+from imagepy.core.manager import WindowsManager, TextLogManager, TableLogManager
 
 class ImageKiller(Free):
-    """ImageKiller: derived from core.engines.Free"""
+    """ImageKiller: derived from imagepy.core.engine.Free"""
     title = 'Kill Image'
 
     def load(self):
@@ -26,7 +26,7 @@ class ImageKiller(Free):
         else: WindowsManager.close(para['name'])
         
 class TextKiller(Free):
-    """TextKiller: derived from core.engines.Free"""
+    """TextKiller: derived from imagepy.core.engine.Free"""
     title = 'Kill TextLog'
 
     def load(self):
@@ -43,7 +43,7 @@ class TextKiller(Free):
         else: TextLogManager.close(para['name'])
         
 class TableKiller(Free):
-    """TableKiller: derived from core.engines.Free"""
+    """TableKiller: derived from imagepy.core.engine.Free"""
     title = 'Kill TableLog'
 
     def load(self):

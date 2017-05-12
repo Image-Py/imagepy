@@ -5,10 +5,10 @@ Created on Wed Dec 28 23:24:43 2016
 @author: yxl
 """
 import wx 
-from core.engines import Free
-from core.managers import TextLogManager
-from ui.macroseditor import MacrosEditor
-import IPy
+from imagepy.core.engine import Free
+from imagepy.core.manager import TextLogManager
+from imagepy.ui.macroseditor import MacrosEditor
+from imagepy import IPy
 
 class Recorder(Free):
     title = 'Macros Recorder'

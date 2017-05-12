@@ -3,11 +3,11 @@
 Created on Sat Dec 17 09:58:55 2016
 @author: yxl
 """
-import IPy
-from core.engines import Simple
-from core.managers import WindowsManager
-from imageplus import ImagePlus
-from ui.canvasframe import CanvasFrame
+from imagepy import IPy
+from imagepy.core.engine import Simple
+from imagepy.core.manager import WindowsManager
+from imagepy import ImagePlus
+from imagepy.ui.canvasframe import CanvasFrame
 
 class Plugin(Simple):
     title = 'Split Channels'

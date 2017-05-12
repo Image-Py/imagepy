@@ -3,11 +3,11 @@ import wx
 from wx.py.shell import ShellFrame
 import scipy.ndimage as ndimg
 import numpy as np
-import IPy
+from imagepy import IPy
 
-from core.engines import Free
-from core.managers import PluginsManager
-from core.managers import PluginsManager
+from imagepy.core.engine import Free
+from imagepy.core.manager import PluginsManager
+from imagepy.core.manager import PluginsManager
 
 ## There is something wrong!
 ## To be fixed!

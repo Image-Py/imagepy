@@ -2,13 +2,11 @@
 # load and build the toolbar 
 import wx  
 import os
-import IPy
-import IPyGL 
+from .. import IPy
+from .. import root_dir 
+from ..core.engine import Tool, Macros
+from ..core.loader import loader
 
-from core.engines import Tool, Macros
-from core.loader import loader
-
-rootpath = IPyGL.root_dir 
 
 def make_bitmap(bmp):
     img = bmp.ConvertToImage()
@@ -22,7 +20,7 @@ def build_tools(parent, toolspath):
     ## then generate toolsbar
     datas = loader.build_tools(toolspath)
     toolsbar = buildToolsBar(parent, datas)
-    gifpath = os.path.join(rootpath,"tools/drop.gif")
+    gifpath = os.path.join(root_dir, "tools/drop.gif")
     #btn = wx.BitmapButton(parent, wx.ID_ANY, wx.Bitmap(gifpath), wx.DefaultPosition, (30,30), wx.BU_AUTODRAW)
     #btn.Bind(wx.EVT_LEFT_DOWN, lambda x:menu_drop(parent, toolsbar, datas, btn, x))   
     return toolsbar#, btn   
@@ -36,7 +34,7 @@ def buildToolsBar(parent, datas):
     toolsbar.SetSizer( box )
     add_tools(toolsbar, datas[1][0][1], None)
     
-    gifpath = os.path.join(rootpath,"tools/drop.gif")
+    gifpath = os.path.join(root_dir, "tools/drop.gif")
     btn = wx.BitmapButton(toolsbar, wx.ID_ANY, make_bitmap(wx.Bitmap(gifpath)),
                           wx.DefaultPosition, (32, 32), wx.BU_AUTODRAW|wx.RAISED_BORDER)
 

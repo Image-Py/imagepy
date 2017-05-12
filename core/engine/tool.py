@@ -3,8 +3,8 @@
 Created on Sat Dec  3 03:55:51 2016
 @author: yxl
 """
-import IPy
-from core.managers import ToolsManager
+from ... import IPy
+from ...core.manager import ToolsManager
 
 class Tool:
     title = 'Tool'

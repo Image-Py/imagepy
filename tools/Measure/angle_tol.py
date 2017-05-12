@@ -5,11 +5,11 @@ Created on Fri Feb  3 23:11:13 2017
 @author: yxl
 """
 import wx
-from core.engines import Tool
+from imagepy.core.engine import Tool
 import numpy as np
 from numpy.linalg import norm
 from .setting import Setting
-import IPy
+from imagepy import IPy
 
 class Angle:
     """Define the class with line drawing fucntions """

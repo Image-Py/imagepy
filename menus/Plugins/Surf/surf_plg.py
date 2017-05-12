@@ -1,9 +1,9 @@
 import cv2, wx
-from core.engines import Filter, Simple, Tool
-from core.managers import WindowsManager
+from imagepy.core.engine import Filter, Simple, Tool
+from imagepy.core.manager import WindowsManager
 from .matcher import Matcher
 import numpy as np
-import IPy
+from imagepy import IPy
 
 CVSURF = cv2.xfeatures2d.SURF_create if cv2.__version__[0] =="3" else cv2.SURF
 

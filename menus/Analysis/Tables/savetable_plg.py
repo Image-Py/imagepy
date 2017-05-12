@@ -4,9 +4,9 @@ Created on Tue Dec 27 11:30:24 2016
 @author: yxl
 """
 import wx
-import IPy,IPyGL
-from core.engines import Free
-from core.managers import TableLogManager
+from imagepy import IPy
+from imagepy.core.engine import Free
+from imagepy.core.manager import TableLogManager
 
 class Csv(Free):
     title = 'Save Table As CSV'

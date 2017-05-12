@@ -4,10 +4,11 @@ Created on Fri Oct 14 01:24:41 2016
 
 @author: yxl
 """
-import wx, IPy
+import wx
 from .canvas import Canvas
-from core.managers import WindowsManager
-from core.managers import ShotcutManager,PluginsManager
+from ..core.manager import WindowsManager
+from ..core.manager import ShotcutManager,PluginsManager
+from .. import IPy
 
 class CanvasFrame(wx.Frame):
     """CanvasFrame: derived from the wx.core.Frame"""

@@ -1,9 +1,9 @@
 import os
-import IPyGL
+from ... import root_dir
 
 class ShotcutManager:
     shotcuts = {}
-    filename = os.path.join(IPyGL.root_dir,'data/shotcut.cfg')
+    filename = os.path.join(root_dir,'data/shotcut.cfg')
     @classmethod
     def read(cls):
         if os.path.exists(cls.filename):

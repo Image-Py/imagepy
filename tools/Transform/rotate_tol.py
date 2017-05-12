@@ -1,10 +1,10 @@
 import wx
 import numpy as np
-from core.engines import Tool, Filter
+from imagepy.core.engine import Tool, Filter
 import scipy.ndimage as nimg
 
 class RotateTool(Tool):
-    """RotateTool class derived from core.engines.Tool"""
+    """RotateTool class derived from imagepy.core.engine.Tool"""
     def __init__(self, plg):
         self.plg = plg
         self.para = plg.para
@@ -39,7 +39,7 @@ class RotateTool(Tool):
             ips.update = True
 
 class Plugin(Filter):
-    """RotateTool class plugin derived from core.engines.Filter"""
+    """RotateTool class plugin derived from imagepy.core.engine.Filter"""
     modal = False
     title = 'Rotate'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']

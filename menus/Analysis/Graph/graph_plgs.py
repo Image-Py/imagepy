@@ -6,9 +6,9 @@ Created on Mon Dec 26 22:05:43 2016
 import numpy as np
 from scipy.ndimage.filters import convolve
 
-import IPy
-from core.engines import Filter
-from core.graph import builder
+from imagepy import IPy
+from imagepy.core.engine import Filter
+from imagepy.core.graph import builder
 
 '''    
 def mark(img):

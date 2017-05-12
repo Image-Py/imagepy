@@ -3,10 +3,10 @@
 Created on Sun Dec 11 23:43:44 2016
 @author: yxl
 """
-from core.engines import Simple
+from imagepy.core.engine import Simple
 import numpy as np
-from core.pixel import bliter
-import IPy
+from imagepy.core.pixel import bliter
+from imagepy import IPy
 
 class Plugin(Simple):
     title = 'Canvas Size'

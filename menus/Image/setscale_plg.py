@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from core.engines import Simple
-from imageplus import ImagePlus
-from ui.canvasframe import CanvasFrame
-from core.managers import ConfigManager
-from ui.panelconfig import ParaDialog
+from imagepy.core.engine import Simple
+from imagepy import ImagePlus
+from imagepy.ui.canvasframe import CanvasFrame
+from imagepy.core.manager import ConfigManager
+from imagepy.ui.panelconfig import ParaDialog
 import numpy as np
-import IPy
+from imagepy import IPy
 
 def add(recent, v):
     if v in recent:

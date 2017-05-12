@@ -3,18 +3,19 @@
 Created on Sat Jan 14 23:24:32 2017
 @author: yxl
 """
-from __future__ import absolute_import
+#from __future__ import absolute_import
+from ... import root_dir
+
 import numpy as np
 import os, wx
 import sys
 from glob import glob
 
-import IPy
-import IPyGL
+
 
 # read from the lut binarycode
 # glob: return a list ot paths matching a pathname pattern.
-filenames = glob(os.path.join(IPyGL.root_dir,'data/luts/*.lut'))
+filenames = glob(os.path.join(root_dir,'data/luts/*.lut'))
 keys = [os.path.split(filename)[-1][:-4] for filename in filenames]
 values = [np.fromfile(filename, dtype=np.uint8).reshape((3,256)).T.copy() for filename in filenames]
 
@@ -25,9 +26,9 @@ class ColorManager:
     wr, wg, wb = 1.0/3, 1.0/3, 1.0/3
     
     @classmethod
-    def get_color(cls):
+    def get_color(cls, app=None):
         rst = None
-        dlg = wx.ColourDialog(IPy.curapp)
+        dlg = wx.ColourDialog(app)
         dlg.GetColourData().SetChooseFull(True)
         if dlg.ShowModal() == wx.ID_OK:
             rst = dlg.GetColourData().GetColour()

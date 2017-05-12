@@ -1,6 +1,6 @@
 import wx
 import numpy as np
-from core.engines import Tool, Filter
+from imagepy.core.engine import Tool, Filter
 import scipy.ndimage as nimg
 
 class ScaleTool(Tool):

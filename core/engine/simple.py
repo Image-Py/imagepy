@@ -6,9 +6,9 @@ Created on Sat Dec  3 03:32:05 2016
 import wx
 import threading
 
-import IPy
-from ui.panelconfig import ParaDialog
-from core.managers import TextLogManager
+from ... import IPy
+from ...ui.panelconfig import ParaDialog
+from ..manager import TextLogManager
 
 class Simple:
     title = 'SimpleFilter'

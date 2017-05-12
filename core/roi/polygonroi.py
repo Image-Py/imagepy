@@ -7,8 +7,8 @@ import wx
 from shapely.geometry import Polygon, Point, LineString
 from shapely.ops import cascaded_union
 from shapely.ops import polygonize
-from core.draw import paint
-from core.roi.operator import affine
+from ..draw import paint
+from .operator import affine
 from .roi import ROI
 
 def parse_poly(geom):

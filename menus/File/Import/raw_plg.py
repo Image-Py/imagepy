@@ -1,10 +1,10 @@
 import wx,os,sys
 import numpy as np
-import io, urllib.request, urllib.error, urllib.parse
+import io# urllib2 urllib.request, urllib.error, urllib.parse
 from scipy.misc import imread
-import IPy
+from imagepy import IPy
 
-from core.engines import Free
+from imagepy.core.engine import Free
 
 class Plugin(Free):
     title = 'Open Raw'

@@ -6,10 +6,10 @@ Created on Mon Dec 26 22:05:43 2016
 import numpy as np
 from scipy.ndimage import label, generate_binary_structure
 
-import IPy
-from core.engines import Filter
-from imageplus import ImagePlus
-from ui.canvasframe import CanvasFrame
+from imagepy import IPy
+from imagepy.core.engine import Filter
+from imagepy.imageplus import ImagePlus
+from imagepy.ui.canvasframe import CanvasFrame
 
 class Plugin(Filter):
     title = 'Label Image'

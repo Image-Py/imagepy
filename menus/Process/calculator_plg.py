@@ -3,14 +3,14 @@
 Created on Thu Dec  1 01:22:19 2016
 @author: yxl
 """
-from core.managers import WindowsManager
-import IPy
+from imagepy.core.manager import WindowsManager
+from imagepy import IPy
 
-from core.engines import Simple
-from core.pixel import bliter
+from imagepy.core.engine import Simple
+from imagepy.core.pixel import bliter
 
 class Plugin(Simple):
-    """Calculator Plugin derived from core.engines.Simple """
+    """Calculator Plugin derived from imagepy.core.engine.Simple """
     title = 'Image Calculator'
     note = ['all']
     para = {'img1':'','op':'add','img2':''}

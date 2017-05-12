@@ -3,9 +3,9 @@
 Created on Mon Dec 26 20:34:59 2016
 @author: yxl
 """
-import IPy
+from imagepy import IPy
 import numpy as np
-from core.engines import Simple
+from imagepy.core.engine import Simple
 
 class Histogram(Simple):
     title = 'Histogram'

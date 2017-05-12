@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 import scipy.ndimage as nimg
-from core.engines import Filter, Simple
-from core.graph import builder, graph2d
+from imagepy.core.engine import Filter, Simple
+from imagepy.core.graph import builder, graph2d
 import numpy as np
 
 class Marker(Filter):

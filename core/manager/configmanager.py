@@ -4,24 +4,25 @@ Created on Sat Jan 14 23:23:30 2017
 @author: yxl
 """
 import pickle, os
-import IPyGL
+from ... import root_dir
 class ConfigManager:
     cfg = {}
-    filename = os.path.join(IPyGL.root_dir, "preference.cfg")
+    filename = os.path.join(root_dir, "preference.cfg")
     #filename = os.path.join("/home/auss/Programs/Python/ImagePy/ImagePy3", "preference.cfg")
 
     @classmethod
     def read(cls):
         """Read from the congigure file: preference.cfg """
         if os.path.exists(cls.filename):
-            with open(cls.filename,"rb") as pkg_file:
-                cls.cfg = pickle.load(pkg_file)
+            pkl_file = open(cls.filename,'r')
+            cls.cfg = eval(pkl_file.read().replace("\n","").encode('utf8'))
+            pkl_file.close()
 
     @classmethod
     def write(cls):
-        """Write to the congigure file """
-        with open(cls.filename,"wb") as pkg_file:
-            cls = pickle.dump(cls.cfg, pkg_file, 0)
+        pkl_file = open(cls.filename, 'w')
+        pkl_file.write(str(cls.cfg))
+        pkl_file.close()
 
     @classmethod
     def get(cls, key):
