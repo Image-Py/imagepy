@@ -106,7 +106,7 @@ The examples above only list some of the functionality of the ImagePy. However, 
 ``` python
 # -*- coding: utf-8 -*
 import scipy.ndimage as nimg
-from core.engine import Filter
+from imagepy.core.engine import Filter
 
 class Gaussian(Filter):
     title = 'Gaussian'
@@ -144,8 +144,8 @@ Extend a Tool:
 Another scenario is to interact on the canvas through the mouse, like the selection operations mentioned above. Here is an example of a brush:  
 
 ``` python
-from core.draw import paint
-from core.engine import Tool
+from imagepy.core.draw import paint
+from imagepy.core.engine import Tool
 import wx
 
 class Plugin(Tool):

@@ -1,9 +1,13 @@
 import wx,os,sys
 from scipy.misc import imread
-import io
+
 if sys.version_info[0]==2:
     from urllib2 import urlopen
-else: from urllib.request import urlopen
+    from cStringIO import StringIO
+else: 
+    from urllib.request import urlopen
+    from io import BytesIO as StringIO
+
 from imagepy.core import manager
 from imagepy import IPy
 
@@ -40,18 +44,13 @@ class OpenUrl(Free):
         try:
             fp, fn = os.path.split(para['url'])
             fn, fe = os.path.splitext(fn) 
-            response = urllib.request.urlopen(para['url'])
+            response = urlopen(para['url'])
             ## TODO: Fixme!
-            stream=None
-            if sys.version[0]=="2":
-                stream = io.StringIO(response.read()) # py2
-            else:
-                #stream = io.StringIO(response.read().decode('utf-8')) #py3
-                stream = io.BytesIO(response.read()) #py3
+            stream = StringIO(response.read())
             img = imread(stream)
             IPy.show_img([img], fn)
         except Exception as e:
-            IPy.write('Open url failed!\tErrof:{}'.format(sys.exc_info()[1]))
+            IPy.write('Open url failed!\tErrof:%s'%sys.exc_info()[1])
         
 plgs = [OpenFile, OpenUrl]
     
