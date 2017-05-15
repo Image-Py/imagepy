@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import os,wx 
-import IPy
+from .. import IPy
 import numpy as np
 from math import ceil
-from core.manager import PlotManager
+from ..core.manager import PlotManager
 
 class LineCanvas(wx.Panel):
     """LineCanvas: derived from wx.core.Panel"""

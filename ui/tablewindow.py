@@ -7,8 +7,8 @@ Created on Mon Dec 26 00:28:59 2016
 
 import wx
 import wx.grid
-from core.manager import TableLogManager
-import IPy
+from ..core.manager import TableLogManager
+from .. import IPy
 
 class GenericTable(wx.grid.GridTableBase):
     """GenericTable: derived from wx.grid.GridTableBase"""

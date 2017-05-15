@@ -28,7 +28,7 @@ class Plugin(Simple):
     #process
     def run(self, ips, imgs, para = None):
         lab = WindowsManager.get(para['lab']).ips.get_img()
-        if lab.dtype != np.uint8 and lab.dtype != np.uint16:
+        if lab.dtype != np.uint8 and lab.dtype != np.int16:
             IPy.alert('Label image must be in type 8-bit or 16-bit')
             return
         index = list(range(1, lab.max()+1))

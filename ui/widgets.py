@@ -47,7 +47,7 @@ class HistCanvas(wx.Panel):
         self.update = True
         
     def draw(self):
-        if self.hist == None:
+        if self.hist is None:
             return
         
         # get client device context buffer

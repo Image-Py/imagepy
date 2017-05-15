@@ -6,7 +6,7 @@ from .core.manager import WindowsManager, ColorManager
 def get_img_type(imgs):
     if imgs[0].ndim==3:return 'rgb'
     if imgs[0].dtype == np.uint8:return '8-bit'
-    if imgs[0].dtype == np.uint16:return '16-bit'
+    if imgs[0].dtype == np.int16:return '16-bit'
     if imgs[0].dtype == np.float32:return 'float'
 
 class ImagePlus:
@@ -42,8 +42,9 @@ class ImagePlus:
         self.chanels = 1 if self.imgs[0].ndim==2 else self.imgs[0].shape[2]
         self.dtype = self.imgs[0].dtype
         self.range = (0, 255)
-        if self.dtype == np.uint16:
-            self.range = (0,imgs[0].max())
+        if self.dtype == np.int16:
+            self.range = (imgs[0].min(), imgs[0].max())
+            print(self.range)
 
     def get_imgtype(self):return self.imgtype
 
@@ -101,11 +102,14 @@ class ImagePlus:
             else : self.imgs[self.cur][:] = self.snap
 
     def lookup(self):
+        print(self.chanels, self.dtype)
         if self.chanels==1 and self.dtype==np.uint8:
             return self.lut[self.get_img()]
-        if self.chanels==1 and self.dtype==np.uint16:
-            k = 255.0/self.range[1]
-            bf = np.multiply(self.get_img(), k, dtype=np.uint8, casting='unsafe')
+        elif self.chanels==1:
+            k = 255.0/(max(1, self.range[1]-self.range[0]))
+            bf = np.clip(self.get_img(), self.range[0], self.range[1])
+            bf = ((bf - self.range[0]) * k).astype(np.uint8)
+            print(bf.min(), bf.max())
             return self.lut[bf]
         if self.chanels==3 and self.dtype==np.uint8:
             return self.get_img()

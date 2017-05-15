@@ -35,7 +35,7 @@ class Plugin(Filter):
         msk = img>para['thr']
         con = 1 if para['con']=='4-Connect' else 2
         strc = generate_binary_structure(2, con)
-        msk = label(msk, strc, output = np.uint16)
+        msk = label(msk, strc, output = np.int16)
         
         IPy.show_img([msk[0]], ips.title+'-label') 
         

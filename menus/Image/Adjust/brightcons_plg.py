@@ -33,15 +33,37 @@ class Plugin(Filter):
     view = [('slide', (-100,100), 'Brightness', 'bright', ''),
             ('slide', (1,89), 'Contrast', 'contrast', '')]
         
+    def load(self, ips):
+        if ips.imgtype == '8-bit':
+            self.para = {'bright':0, 'contrast':45}
+            self.view = [('slide', (-100,100), 'Brightness', 'bright', ''),
+                ('slide', (1,89), 'Contrast', 'contrast', '')]
+            if 'not_slice' in self.note:
+                self.note.remove('not_slice')
+        else :
+            self.arange = minv, maxv = ips.get_img().min(), ips.get_img().max()
+            self.para = {'bright':np.mean(ips.range) - np.mean(self.arange), 
+                'contrast':round(np.arctan((maxv-minv)/(ips.range[1]-ips.range[0]))/np.pi*180)}
+            self.view = [('slide', (-(maxv-minv)/2, (maxv-minv)/2), 'Brightness', 'bright', ''),
+                ('slide', (1,89), 'Contrast', 'contrast', '')]
+            if not 'not_slice' in self.note:
+                self.note.append('not_slice')
+        return True
+
     def show(self):
         self.dialog = ThresholdDialog(IPy.get_window(), self.title)
-        hist = np.histogram(self.ips.get_img(),list(range(257)))[0]
+        hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
         self.dialog.init_view(self.view, self.para, (hist*(100.0/hist.max())).astype(np.uint8))
         self.dialog.set_handle(lambda x:self.preview(self.para))
         return self.dialog.ShowModal()
 
     #process
     def run(self, ips, snap, img, para = None):
+        if ips.imgtype != '8-bit':
+            mid = (self.arange[0] + self.arange[1])/2 - para['bright']
+            length = (self.arange[1] - self.arange[0])/np.tan(para['contrast']/180.0*np.pi)
+            ips.range = (mid-length/2, mid+length/2)
+            return
         if para == None: para = self.para
         mid = 128-para['bright']
         length = 255/np.tan(para['contrast']/180.0*np.pi)

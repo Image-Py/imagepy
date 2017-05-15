@@ -90,7 +90,7 @@ def get_para(title, view, para):
     return rst
 
 def table(title, data, cols=None, rows=None):
-    from ui.tablewindow import TableLog
+    from .ui.tablewindow import TableLog
     TableLog.table(title, data, cols, rows)
     # MT callafter(TableLog.table, *(title, data, cols, rows))
 
@@ -100,7 +100,7 @@ def write(cont, title='ImagePy'):
     # MT callafter(TextLog.write, *(cont, title))
 
 def plot(title, gtitle='Graph', labelx='X-Unit', labely='Y-Unit'):
-    from ui.plotwindow import PlotFrame
+    from .ui.plotwindow import PlotFrame
     return PlotFrame.get_frame(title, gtitle, labelx, labely)
 
 def set_progress(i):
