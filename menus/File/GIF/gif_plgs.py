@@ -1,6 +1,7 @@
 from imagepy.core.util import fileio
 from scipy.misc import imread, imsave
 
+
 fileio.add_opener(['gif'], imread)
 
 class OpenFile(fileio.Opener):
