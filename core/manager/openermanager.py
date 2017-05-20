@@ -6,7 +6,7 @@ class OpenerManager:
         
     @classmethod
     def get(cls, ext):
-    	if not cls.opener.has_key(ext):
+    	if not ext in cls.opener:
     		return None
     	return cls.opener[ext]
 

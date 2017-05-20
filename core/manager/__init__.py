@@ -5,4 +5,4 @@ from .roimanager import *
 from .clipbdmanager import *
 from .configmanager import *
 from .shotcutmanager import *
-from openermanager import *
+from .openermanager import *

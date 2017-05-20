@@ -67,7 +67,7 @@ class Plugin(Filter):
             255.0/max(1, self.arange[1]-self.arange[0])))
         thr2 = int((para['thr2']-self.arange[0])*(
             255.0/max(1, self.arange[1]-self.arange[0])))
-        print thr1, thr2
+        # print(thr1, thr2)
         self.ips.lut[:thr1] = [0,255,0]
         self.ips.lut[thr2:] = [255,0,0]
         self.ips.update = 'pix'
