@@ -20,6 +20,9 @@ class OpenAnimate(fileio.Opener):
 	#process
 	def run(self, para = None):
 		imgs = readGif(para['path'])
+		for i in range(len(imgs)):
+			if imgs[i].ndim==3 and imgs[i].shape[2]>3:
+				imgs[i] = imgs[i][:,:,:3].copy()
 		fp, fn = os.path.split(para['path'])
 		fn, fe = os.path.splitext(fn) 
 		IPy.show_img(imgs, fn)
