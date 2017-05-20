@@ -33,7 +33,7 @@ class ToRGB(Simple):
     def run(self, ips, imgs, para = None):
         n = ips.get_nslices()
         if ips.is3d:
-            rgb = np.zeros(ips.size()+(n,), dtype=np.uint8)
+            rgb = np.zeros(ips.size+(n,), dtype=np.uint8)
             for i in range(n):
                 IPy.curapp.set_progress(round((i+1)*100.0/len(imgs)))
                 rgb[i] = ips.lut[imgs[i]]

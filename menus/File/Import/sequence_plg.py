@@ -6,14 +6,14 @@ Created on Sat Oct 15 14:42:55 2016
 
 from imagepy.core.util import fileio
 from scipy.misc import imread
+from imagepy.core.manager import OpenerManager
 
 class Plugin(fileio.Sequence):
     title = 'Import Sequence'
-    filt = ['bmp', 'png', 'jpg', 'gif', 'tif']
-
-    def read(self, path):
-        return imread(path)
-
+    
+    def load(self):
+        self.filt = sorted(OpenerManager.all())
+        return True
 
 if __name__ == '__main__':
     print(Plugin.title)

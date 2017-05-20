@@ -12,13 +12,16 @@ from imagepy.core import manager
 from imagepy import IPy
 from imagepy.core.engine import Free
 from imagepy.core.util import fileio
+from imagepy.core.manager import OpenerManager
 
 class OpenFile(fileio.Opener):
     title = 'Open'
-    filt = ['bmp', 'png', 'jpg', 'gif', 'tif']
 
-    def read(self, path):
-        return imread(path)
+    def load(self):
+        self.filt = sorted(OpenerManager.all())
+        return True
+
+
 
 class OpenUrl(Free):
     title = 'Open Url'
