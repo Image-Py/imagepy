@@ -4,13 +4,13 @@ Created on Tue Dec 27 11:30:24 2016
 @author: yxl
 """
 import wx
-from imagepy import IPy
+from imagepy import IPy, root_dir
 from imagepy.core.engine import Free
 from imagepy.core.manager import TableLogManager
 
 class Csv(Free):
     title = 'Save Table As CSV'
-    #para = {'tab': None, 'path':IPyGL.root_dir}
+    #para = {'tab': None, 'path':root_dir}
     para = {'tab': None, 'path':'./'}
     
     def load(self):
@@ -32,7 +32,7 @@ class Csv(Free):
         
 class Tab(Free):
     title = 'Save Table As Tab'
-    #para = {'tab': None, 'path':IPyGL.root_dir}
+    #para = {'tab': None, 'path':root_dir}
     para = {'tab': None, 'path':'./'}
 
     def load(self):

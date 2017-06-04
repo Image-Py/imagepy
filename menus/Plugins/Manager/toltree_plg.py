@@ -104,8 +104,8 @@ class TreeFrame ( wx.Frame ):
     def on_source(self, event):
         ## TODO: should it be absolute path ?
         filename = self.plg.__module__.replace('.','/')+'.py'
-        if filename.startswith(IPyGL.root_dir):
-            filename=os.path.join(IPyGL.root_dir,filename)
+        if filename.startswith(root_dir):
+            filename=os.path.join(root_dir,filename)
         EditorFrame(filename=filename).Show()        
 
     

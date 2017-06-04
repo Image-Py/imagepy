@@ -26,8 +26,8 @@ class ImagePy(wx.Frame):
         self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
         IPy.curapp = self
         # Todo:Fixed absolute/relative path!
-        # print("menuspath:{}".format( os.path.join(IPyGL.root_dir,"menus")))
-        # print("toolspath:{}".format(os.path.join(IPyGL.root_dir,"tools"))
+        # print("menuspath:{}".format( os.path.join(root_dir,"menus")))
+        # print("toolspath:{}".format(os.path.join(root_dir,"tools"))
         menuspath = os.path.join(root_dir,"menus")
         toolspath = os.path.join(root_dir,"tools")
         self.menubar = pluginloader.buildMenuBarByPath(self,menuspath)
