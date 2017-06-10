@@ -1,0 +1,5 @@
+numpy==1.12.0+mkl
+Pillow==4.0.0
+scipy==0.19.0
+Shapely==1.5.17
+wxPython-Phoenix==3.0.3.dev2832+e3fbb9f
