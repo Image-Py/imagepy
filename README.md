@@ -12,7 +12,7 @@ Here are a few examples to illustrate what ImagePy can do.
 
 First example: Mathematical operations, filter operations.
 --------------------------------------------------------------
-![](http://idoc.imagepy.org/imgs/astpixcel.png "pixcels")  
+![](http://idoc.imagepy.org/imgs/astpixcel2.png "pixcels")  
 
 **Selection Introduction**:
 Selection refers to processing the image only in the the specific identification areas on the image. ImagePy supports single point, multi-point, single line, multi-line, rectangular, circular, arbitrary polygon and free curve selection.  It can superimpose something using Shift key, hollow out something using Ctrl key. In addition, all the selection objects can carry out expansion, shrink, convex hull and other geometric operations.
