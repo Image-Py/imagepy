@@ -33,7 +33,7 @@ def process_one(plg, ips, src, img, para, update=False):
     if not img is rst and not rst is None:
         np.clip(rst, ips.range[0], ips.range[1], out=img)
     if 'auto_msk' in plg.note and not ips.get_msk() is None:
-        msk = True-ips.get_msk()
+        msk = True ^ ips.get_msk()
         img[msk] = src[msk]
     if update:ips.update = 'pix'
     return img
@@ -53,7 +53,7 @@ def process_stack(plg, ips, src, imgs, para):
         if not i is rst and rst != None:
             np.clip(rst, ips.range[0], ips.range[1], out=i)
         if 'auto_msk' in plg.note and not ips.get_msk() is None:
-            msk = True - ips.get_msk()
+            msk = True ^ ips.get_msk()
             i[msk] = src[msk]
     IPy.set_progress(0)
     ips.update = 'pix'

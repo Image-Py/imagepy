@@ -25,7 +25,7 @@ def blit_min(img1, img2):
     
 def blit_diff(img1, img2):
     msk = img2>img1
-    umsk = True - msk
+    umsk = True ^ msk
     img1[msk] = img2[msk] - img1[msk]
     img1[umsk] = img1[umsk] - img2[umsk]
     
