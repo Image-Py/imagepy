@@ -14,6 +14,7 @@ class TextLog(wx.Frame):
     
     def __init__(self, title='ImagePy TexLog'):
         wx.Frame.__init__(self, IPy.curapp,title=title,size=(500,300))
+        self.SetIcon(wx.Icon('data/logo2.ico', wx.BITMAP_TYPE_ICO)) 
         self.title = title
         TextLogManager.add(title, self)
         self.file=''

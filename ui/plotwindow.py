@@ -11,6 +11,7 @@ class LineCanvas(wx.Panel):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size(256,80), 
                             style = wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL )
+        self.SetIcon(wx.Icon('data/logo2.ico', wx.BITMAP_TYPE_ICO)) 
         self.init_buf()
         self.data, self.extent = [], [0,0,1,1]
         self.set_title_label('Graph', 'X-unit', 'Y-unit')
