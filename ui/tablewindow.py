@@ -48,7 +48,7 @@ class TableLog(wx.Frame):
         
     def __init__(self, parent, title, data, cols=None, rows=None):
         wx.Frame.__init__(self, parent, -1, title)
-        self.SetIcon(wx.Icon('data/logo2.ico', wx.BITMAP_TYPE_ICO)) 
+        self.SetIcon(wx.Icon('data/logo.ico', wx.BITMAP_TYPE_ICO)) 
         TableLogManager.add(title, self)
         self.data, self.cols, self.rows = data, cols, rows
         tableBase = GenericTable(data, cols, rows)
