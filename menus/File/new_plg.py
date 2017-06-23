@@ -25,9 +25,9 @@ class Plugin(Free):
     #process
     def run(self, para = None):
         w, h = para['width'], para['height']
-        chanels = (1,3)[para['type']=='RGB']
+        channels = (1,3)[para['type']=='RGB']
         slices = para['slice']
-        shape = (h,w,chanels) if chanels!=1 else (h,w)
+        shape = (h,w,channels) if channels!=1 else (h,w)
         imgs = [np.zeros(shape, dtype=np.uint8) for i in range(slices)]
         IPy.show_img(imgs, para['name'])
 

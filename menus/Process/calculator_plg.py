@@ -38,7 +38,7 @@ class Plugin(Simple):
             IPy.alert('Two stack must have equal slices!')
             return
         elif cn1>1 and cn2>1 and cn1!=cn2:
-            IPy.alert('Two stack must have equal chanels!')
+            IPy.alert('Two stack must have equal channels!')
             return
             
         w, h = ips1.size, ips2.size

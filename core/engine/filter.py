@@ -12,9 +12,9 @@ from ... import IPy
 from ...ui.panelconfig import ParaDialog
 from ...core.manager import TextLogManager, WindowsManager, TaskManager
         
-def process_chanels(plg, ips, src, des, para):
-    if ips.chanels>1 and not 'not_channel' in plg.note:
-        for i in range(ips.chanels):
+def process_channels(plg, ips, src, des, para):
+    if ips.channels>1 and not 'not_channel' in plg.note:
+        for i in range(ips.channels):
             rst = plg.run(ips, src if src is None else src[:,:,i], des[:,:,i], para)
             if not rst is des and not rst is None:
                 des[:,:,i] = rst
@@ -30,7 +30,7 @@ def process_one(plg, ips, src, img, para, callafter=None):
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
     if transint: buf =  img.astype(np.int32)
     if transfloat: buf = img.astype(np.float32)
-    rst = process_chanels(plg, ips, src, buf if transint or transfloat else img, para)
+    rst = process_channels(plg, ips, src, buf if transint or transfloat else img, para)
     if not img is rst and not rst is None:
         np.clip(rst, ips.range[0], ips.range[1], out=img)
     if 'auto_msk' in plg.note and not ips.get_msk() is None:
@@ -53,7 +53,7 @@ def process_stack(plg, ips, src, imgs, para):
         plg.progress(n, len(imgs))
         if 'auto_snap' in plg.note : src[:] = i
         if transint or transfloat: buf[:] = i
-        rst = process_chanels(plg, ips, src, buf if transint or transfloat else i, para)
+        rst = process_channels(plg, ips, src, buf if transint or transfloat else i, para)
         if not i is rst and rst != None:
             np.clip(rst, ips.range[0], ips.range[1], out=i)
         if 'auto_msk' in plg.note and not ips.get_msk() is None:

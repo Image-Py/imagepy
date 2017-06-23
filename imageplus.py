@@ -39,7 +39,7 @@ class ImagePlus:
         self.height, self.width = self.size = self.imgs[0].shape[:2]
         print(self.height, self.width)
         self.imgtype = get_img_type(self.imgs)
-        self.chanels = 1 if self.imgs[0].ndim==2 else self.imgs[0].shape[2]
+        self.channels = 1 if self.imgs[0].ndim==2 else self.imgs[0].shape[2]
         self.dtype = self.imgs[0].dtype
         self.range = (0, 255)
         if self.dtype == np.int16:
@@ -50,7 +50,7 @@ class ImagePlus:
 
     def get_nslices(self):return len(self.imgs)
 
-    def get_nchannels(self):return self.chanels
+    def get_nchannels(self):return self.channels
 
     def set_cur(self, n):
         if n>=0 and n<len(self.imgs):self.cur=n
@@ -102,16 +102,16 @@ class ImagePlus:
             else : self.imgs[self.cur][:] = self.snap
 
     def lookup(self):
-        print(self.chanels, self.dtype)
-        if self.chanels==1 and self.dtype==np.uint8:
+        print(self.channels, self.dtype)
+        if self.channels==1 and self.dtype==np.uint8:
             return self.lut[self.get_img()]
-        elif self.chanels==1:
+        elif self.channels==1:
             k = 255.0/(max(1, self.range[1]-self.range[0]))
             bf = np.clip(self.get_img(), self.range[0], self.range[1])
             bf = ((bf - self.range[0]) * k).astype(np.uint8)
             print(bf.min(), bf.max())
             return self.lut[bf]
-        if self.chanels==3 and self.dtype==np.uint8:
+        if self.channels==3 and self.dtype==np.uint8:
             return self.get_img()
 
     def swap(self):

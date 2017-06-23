@@ -90,7 +90,7 @@ class ImagePy(wx.Frame):
                 if self.pro_bar.GetValue()>100:
                     dire = -1
                 v = self.pro_bar.GetValue()+dire*5
-                wx.CallAfter(self.set_progress, v)
+                wx.CallAfter(self.set_progress, max(v,0))
             else:
                 v = max([(i[0]+1)*100.0/i[1] for i in arr])
                 wx.CallAfter(self.set_progress, v)
