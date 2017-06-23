@@ -24,6 +24,8 @@ class ImagePy(wx.Frame):
                             size = wx.Size(560,-1), pos = wx.DefaultPosition, 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
+        icon = wx.Icon('data/logo.ico', wx.BITMAP_TYPE_ICO)
+        self.SetIcon(icon) 
         IPy.curapp = self
         # Todo:Fixed absolute/relative path!
         # print("menuspath:{}".format( os.path.join(root_dir,"menus")))

@@ -10,7 +10,7 @@ from __future__ import print_function
 import wx, os
 from wx.lib.pubsub import pub
 
-from .core import manager, engine
+from .core import manager
 from .imageplus import ImagePlus
 from . import root_dir
 
