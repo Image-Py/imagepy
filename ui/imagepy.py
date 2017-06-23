@@ -10,7 +10,7 @@ from .. import IPy
 # TODO: @2017.05.01
 #from ui import pluginloader, toolsloader
 from . import pluginloader, toolsloader
-from ..core.manager import ConfigManager, PluginsManager
+from ..core.manager import ConfigManager, PluginsManager, TaskManager
 from .. import root_dir
 
 class FileDrop(wx.FileDropTarget):
@@ -34,7 +34,6 @@ class ImagePy(wx.Frame):
         self.SetMenuBar( self.menubar )
         self.shortcut = pluginloader.buildShortcut(self)
         self.SetAcceleratorTable(self.shortcut)
-        self.busy = 'first'
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.toolbar = toolsloader.build_tools(self, toolspath)
 
@@ -75,25 +74,33 @@ class ImagePy(wx.Frame):
         pluginloader.buildMenuBarByPath(self, menuspath, self.menubar)
 
     def hold(self):
-        i = 0
+        dire = 1
         while True:
             if time == None: break
             time.sleep(0.05)
-
-            if self.busy==False: continue
-            i += 5
-            wx.CallAfter(self.set_progress, i)
-            if i>=100:i=0
-            if i==0 and self.busy=='first':
-                self.busy = False
-                wx.CallAfter(self.set_progress, 0)
+            tasks = TaskManager.get()
+            if(len(tasks)==0):
+                if self.pro_bar.IsShown():
+                    wx.CallAfter(self.set_progress, -1)
+                continue
+            arr = [i.prgs for i in tasks]
+            if (None, 1) in arr:
+                if self.pro_bar.GetValue()<=0:
+                    dire = 1
+                if self.pro_bar.GetValue()>100:
+                    dire = -1
+                v = self.pro_bar.GetValue()+dire*5
+                wx.CallAfter(self.set_progress, v)
+            else:
+                v = max([(i[0]+1)*100.0/i[1] for i in arr])
+                wx.CallAfter(self.set_progress, v)
 
     def set_info(self, value):
         self.txt_info.SetLabel(value)
 
     def set_progress(self, value):
         self.pro_bar.SetValue(value)
-        if value==0 and self.busy!=True:
+        if value==-1:
             self.pro_bar.Hide()
         elif not self.pro_bar.IsShown():
             self.pro_bar.Show()

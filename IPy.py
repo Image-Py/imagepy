@@ -8,15 +8,14 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import wx, os
+from wx.lib.pubsub import pub
 
-from .core import manager
+from .core import manager, engine
 from .imageplus import ImagePlus
 from . import root_dir
 
 
 curapp = None
-callafter = wx.CallAfter
-
 
 def get_window():
     return manager.WindowsManager.get()
@@ -31,13 +30,27 @@ def showips(ips):
     frame.set_ips(ips)
     frame.Show()
 
-def show_img(imgs, title):
+pub.subscribe(showips, 'showips')
+def show_ips(ips):
+    wx.CallAfter(pub.sendMessage, "showips", ips=ips) 
+
+def showimg(imgs, title):
+    print('show img')
     ips = ImagePlus(imgs, title)
     showips(ips)
 
+pub.subscribe(showimg, 'showimg')
+def show_img(imgs, title):
+    wx.CallAfter(pub.sendMessage, "showimg", imgs=imgs, title=title) 
+    #wx.Yield()
+    print('mes show img')
 
-def show_ips(ips):
-    showips(ips)
+def stepmacros(macros):
+    macros.next()
+
+pub.subscribe(stepmacros, 'stepmacros')
+def step_macros(macros):
+    wx.CallAfter(pub.sendMessage, "stepmacros", macros=macros)
 
 def alert(info, title="ImagePy Alert!"):
     dlg=wx.MessageDialog(curapp, info, title, wx.OK)
@@ -89,10 +102,14 @@ def get_para(title, view, para):
     pd.Destroy()
     return rst
 
-def table(title, data, cols=None, rows=None):
+def showtable(title, data, cols=None, rows=None):
     from .ui.tablewindow import TableLog
     TableLog.table(title, data, cols, rows)
     # MT callafter(TableLog.table, *(title, data, cols, rows))
+    
+pub.subscribe(showtable, 'showtable')
+def table(title, data, cols=None, rows=None):
+    wx.CallAfter(pub.sendMessage, "showtable", title=title, data=data, cols=cols, rows=rows) 
 
 def write(cont, title='ImagePy'):
     from .ui.logwindow import TextLog
@@ -103,8 +120,8 @@ def plot(title, gtitle='Graph', labelx='X-Unit', labely='Y-Unit'):
     from .ui.plotwindow import PlotFrame
     return PlotFrame.get_frame(title, gtitle, labelx, labely)
 
-def set_progress(i):
-    curapp.set_progress(i)
+#def set_progress(i):
+#    curapp.set_progress(i)
     # MT callafter(curapp.set_progress, i)
 
 def set_info(i):
@@ -115,7 +132,7 @@ def run_macros(cmds):
     for cmd in cmds:
         title, para = cmd.split('>')
         manager.PluginsManager.get(title)().start(eval(para), False)
-        # MT wx.Yield()
+        # wx.Yield()
 
 if __name__ == '__main__':
     app = wx.App(False)

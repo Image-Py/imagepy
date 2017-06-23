@@ -62,7 +62,6 @@ class Sequence(Free):
                      (int, (0, nfs-1), 0, 'Step', 'step', '')]
         return IPy.get_para('Import sequence', self.view, self.para)
 
-
     def getfiles(self, name):
         p,f = os.path.split(name)
         s = p+'/*.'+name.split('.')[-1]
@@ -71,13 +70,12 @@ class Sequence(Free):
     def readimgs(self, names, read, shape, dtype):
         imgs = []
         for i in range(len(names)):
-            IPy.set_progress(int(round((i+1.0)/len(names)*100)))
+            self.progress(i, len(names))
             img = read(names[i])
             if img.shape!=shape or img.dtype!=dtype:
                 print('error:', names[i])
                 continue
             imgs.append(img)
-        IPy.set_progress(0)
         return imgs
 
     #process

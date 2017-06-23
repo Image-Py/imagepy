@@ -19,7 +19,9 @@ class CanvasFrame(wx.Frame):
                             pos = wx.DefaultPosition,
                             size = wx.Size( -1,-1 ),
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-
+        WindowsManager.add(self)
+        print('frame added')
+        
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
@@ -53,7 +55,7 @@ class CanvasFrame(wx.Frame):
         # panel.Bind(wx.EVT_CHAR, self.OnKeyDown)
         self.opage = 0
         self.Fit()
-        WindowsManager.add(self)
+
         self.SetAcceleratorTable(IPy.curapp.shortcut)
 
     def on_idle(self, event):

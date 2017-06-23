@@ -16,14 +16,13 @@ class To8bit(Simple):
         if ips.is3d:
             img8 = np.zeros(ips.size+(n,), dtype=np.uint8)
             for i in range(n):
-                IPy.curapp.set_progress(round((i+1)*100.0/len(imgs)))
+                self.progress(i, len(imgs))
                 img8[i] = imgs[i].mean(axis=2)
         else:
             img8 = []
             for i in range(n):
-                IPy.set_progress(round((i+1)*100.0/len(imgs)))
+                self.progress(i, len(imgs))
                 img8.append(imgs[i].mean(axis=2).astype(np.uint8))
-        IPy.set_progress(0)
         ips.set_imgs(img8)
         
 class ToRGB(Simple):

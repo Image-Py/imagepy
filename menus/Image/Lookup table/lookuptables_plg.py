@@ -16,7 +16,6 @@ class Plugin(Free):
     
     #process
     def run(self, para = None):
-        
         plus = IPy.get_ips()
         if plus==None:
             img = np.ones((30,1), dtype=np.uint8) * np.arange(256, dtype=np.uint8)

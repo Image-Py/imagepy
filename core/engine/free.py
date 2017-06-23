@@ -7,16 +7,26 @@ import threading, wx
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ...core.manager import TextLogManager
+from ...core.manager import TextLogManager, TaskManager
 
 class Free:
     title = 'Free'
     view = None
     para = None
-    
+
+    prgs = (None, 1)
+    def progress(self, i, n):
+        self.prgs = (i, n)
+
     def run(self, para=None):
         print('this is a plugin')
         
+    def runasyn(self, para, callback=None):
+        TaskManager.add(self)
+        self.run(para)
+        TaskManager.remove(self)
+        if callback!=None:callback()
+
     def load(self):return True
         
     def show(self):
@@ -25,14 +35,20 @@ class Free:
         self.dialog.init_view(self.view, self.para, False, True)
         return self.dialog.ShowModal()
         
-    def start(self, para=None, thd=True):
+    def start(self, para=None, callback=None):
+        print('xxxxxxxxxxxxxxxxxx')
         if not self.load():return
         if para!=None or self.show() == wx.ID_OK:
             if para==None:para = self.para
             win = TextLogManager.get('Recorder')
             if win!=None: 
-                wx.CallAfter(win.append, '{}>{}'.format(self.title, para))
-            self.run(para)
+                win.append('{}>{}'.format(self.title, para))
+
+            t = threading.Thread(target = self.runasyn, args = (para, callback))
+            t.start()
+            #if not thd:t.join()
+
+            #self.run(para)
             '''
             run = lambda p=para:self.run(p)
             

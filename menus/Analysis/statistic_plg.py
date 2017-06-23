@@ -70,8 +70,7 @@ class Statistic(Simple):
             data = []
             for n in range(ips.get_nslices()):
                 data.append(self.count(imgs[n], para))
-                IPy.set_progress(round((n+1)*100.0/len(imgs)))
-            IPy.set_progress(0)
+                self.progress(n, len(imgs))
         else: data = [self.count(ips.get_img(), para)]
         IPy.table(ips.title+'-statistic', data, titles)
         

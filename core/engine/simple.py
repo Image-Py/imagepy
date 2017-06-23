@@ -8,7 +8,7 @@ import threading
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ..manager import TextLogManager
+from ..manager import TextLogManager, TaskManager
 
 class Simple:
     title = 'SimpleFilter'
@@ -16,12 +16,17 @@ class Simple:
     para = None
     'all, 8_bit, 16_bit, rgb, float, req_roi, stack, stack2d, stack3d'
     view = None
-    
+    prgs = (None, 1)
+
     def __init__(self, ips=None):
+        print('simple start')
         if ips==None:ips = IPy.get_ips()
         self.dialog = None
         self.ips = ips
     
+    def progress(self, i, n):
+        self.prgs = (i, n)
+
     def load(self, ips):
         return True
         
@@ -33,6 +38,13 @@ class Simple:
     
     def run(self, ips, imgs, para = None):pass
         
+    def runasyn(self,  ips, imgs, para = None, callback = None):
+        TaskManager.add(self)
+        self.run(ips, imgs, para)
+        ips.update = 'pix'
+        TaskManager.remove(self)
+        if callback!=None:callback()
+
     def check(self, ips):
         note = self.note
         if ips == None:
@@ -67,7 +79,7 @@ class Simple:
             
         return True
         
-    def start(self, para=None, thd=True):
+    def start(self, para=None, callback=None):
         #print self.title, para
         if not self.check(self.ips):return
         if not self.load(self.ips):return
@@ -75,8 +87,12 @@ class Simple:
             if para == None:para = self.para
             win = TextLogManager.get('Recorder')
             if win!=None: win.append('{}>{}'.format(self.title, para))
-            self.run(self.ips, self.ips.imgs, para)
-            self.ips.update = 'pix'
+            #self.run(self.ips, self.ips.imgs, para)
+            t =threading.Thread(target = self.runasyn, 
+                args = (self.ips, self.ips.imgs, para, callback))
+            t.start()
+            #if not thd:t.join()
+            #self.ips.update = 'pix'
             '''
             def run(ips, imgs, p):
                 self.run(ips, imgs, p)

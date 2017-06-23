@@ -21,6 +21,7 @@ class Plugin(Free):
             (int, (1,2048), 0,  'height', 'height', 'pix'),
             (list, ['8-bit','RGB'], str, 'Type', 'type',''),
             (int, (1,2048), 0,  'slice', 'slice', '')]
+
     #process
     def run(self, para = None):
         w, h = para['width'], para['height']

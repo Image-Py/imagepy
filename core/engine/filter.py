@@ -10,7 +10,7 @@ import numpy as np
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ...core.manager import TextLogManager, WindowsManager
+from ...core.manager import TextLogManager, WindowsManager, TaskManager
         
 def process_chanels(plg, ips, src, des, para):
     if ips.chanels>1 and not 'not_channel' in plg.note:
@@ -23,8 +23,9 @@ def process_chanels(plg, ips, src, des, para):
         if not rst is des and not rst is None:
             des[:] = rst
     return des
-    
-def process_one(plg, ips, src, img, para, update=False):
+
+def process_one(plg, ips, src, img, para, callafter=None):
+    TaskManager.add(plg)
     transint = '2int' in plg.note and ips.dtype == np.uint8
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
     if transint: buf =  img.astype(np.int32)
@@ -35,18 +36,21 @@ def process_one(plg, ips, src, img, para, update=False):
     if 'auto_msk' in plg.note and not ips.get_msk() is None:
         msk = True ^ ips.get_msk()
         img[msk] = src[msk]
-    if update:ips.update = 'pix'
-    return img
+    ips.update = 'pix'
+    TaskManager.remove(plg)
+    if not callafter is None:callafter()
     
 def process_stack(plg, ips, src, imgs, para):
-    from time import time
+    TaskManager.add(plg)
+    from time import time, sleep
     start = time()
     transint = '2int' in plg.note and ips.dtype == np.uint8
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
     if transint: buf =  imgs[0].astype(np.int32)
     if transfloat: buf = imgs[0].astype(np.float32)
     for i,n in zip(imgs,list(range(len(imgs)))):
-        IPy.set_progress(round((n+1)*100.0/len(imgs)))
+        sleep(0.5)
+        plg.progress(n, len(imgs))
         if 'auto_snap' in plg.note : src[:] = i
         if transint or transfloat: buf[:] = i
         rst = process_chanels(plg, ips, src, buf if transint or transfloat else i, para)
@@ -55,10 +59,8 @@ def process_stack(plg, ips, src, imgs, para):
         if 'auto_msk' in plg.note and not ips.get_msk() is None:
             msk = True ^ ips.get_msk()
             i[msk] = src[msk]
-    IPy.set_progress(0)
     ips.update = 'pix'
-    print(time()-start)
-    return imgs
+    TaskManager.remove(plg)
     
 class Filter:
     title = 'Filter'
@@ -66,13 +68,17 @@ class Filter:
     note = []
     'all, 8_bit, 16_bit, rgb, float, not_channel, not_slice, req_roi, auto_snap, auto_msk, preview, 2int, 2float'
     para = None
-    view = None#[(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
-    
+    view = None
+    prgs = (None, 1)
+
     def __init__(self, ips=None):
         if ips==None:ips = IPy.get_ips()
         self.dialog = None
         self.ips = ips
         
+    def progress(self, i, n):
+        self.prgs = (i, n)
+
     def show(self):
         self.dialog = ParaDialog(WindowsManager.get(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
@@ -109,12 +115,11 @@ class Filter:
         return True
         
     def preview(self, para):
-        process_one(self, self.ips, self.ips.snap, self.ips.get_img(), para)
-        self.ips.update = 'pix'
+        process_one(self, self.ips, self.ips.snap, self.ips.get_img(), para, True)
         
     def load(self, ips):return True
           
-    def ok(self, ips, para=None, thd=True):
+    def ok(self, ips, para=None, callafter=None):
         if para == None:
             para = self.para
             if not 'not_slice' in self.note and ips.get_nslices()>1:
@@ -122,7 +127,10 @@ class Filter:
             if para!=None and 'stack' in para:del para['stack']
         win = TextLogManager.get('Recorder')
         if ips.get_nslices()==1 or 'not_slice' in self.note:
-            process_one(self, ips, ips.snap, ips.get_img(), para)
+            # process_one(self, ips, ips.snap, ips.get_img(), para)
+            threading.Thread(target = process_one, args = 
+                (self, ips, ips.snap, ips.get_img(), para, callafter)).start()
+
             '''
             run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p, True)
 
@@ -138,7 +146,9 @@ class Filter:
             if 'auto_snap' in self.note and self.modal:ips.swap()
             if has and para['stack'] or rst == 'yes':
                 para['stack'] = True
-                process_stack(self, ips, ips.snap, ips.imgs, para)
+                #process_stack(self, ips, ips.snap, ips.imgs, para)
+                threading.Thread(target = process_stack, args = 
+                    (self, ips, ips.snap, ips.imgs, para)).start()
                 '''
                 run = lambda p=para:process_stack(self, ips, ips.snap, ips.imgs, p)
                 
@@ -151,7 +161,9 @@ class Filter:
                 if win!=None: win.append('{}>{}'.format(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
-                process_one(self, ips, ips.snap, ips.get_img(), para)
+                #process_one(self, ips, ips.snap, ips.get_img(), para)
+                threading.Thread(target = process_one, args = 
+                    (self, ips, ips.snap, ips.get_img(), para, callafter)).start()
                 ''' multithread
                 run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p, True)
                 
@@ -161,24 +173,24 @@ class Filter:
                 '''
                 if win!=None: win.append('{}>{}'.format(self.title, para))
             elif rst == 'cancel': pass
-        ips.update = 'pix'
+        #ips.update = 'pix'
         
     def cancel(self, ips):
         if 'auto_snap' in self.note:
             ips.swap()
             ips.update = 'pix'
             
-    def start(self, para=None, thd=True):
+    def start(self, para=None, callafter=None):
         ips = self.ips
         if not self.check(ips):return
         if not self.load(ips):return
         if 'auto_snap' in self.note:ips.snapshot()
         
         if para!=None or self.view==None:
-            self.ok(ips, para, thd)
+            self.ok(ips, para, callafter)
         elif self.modal:
             if self.show() == wx.ID_OK:
-                self.ok(ips, None, thd)
+                self.ok(ips, None, callafter)
             else:self.cancel(ips)
             self.dialog.Destroy()
         else: self.show()
