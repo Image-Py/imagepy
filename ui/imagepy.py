@@ -87,10 +87,10 @@ class ImagePy(wx.Frame):
             if (None, 1) in arr:
                 if self.pro_bar.GetValue()<=0:
                     dire = 1
-                if self.pro_bar.GetValue()>100:
+                if self.pro_bar.GetValue()>=100:
                     dire = -1
                 v = self.pro_bar.GetValue()+dire*5
-                wx.CallAfter(self.set_progress, max(v,0))
+                wx.CallAfter(self.set_progress, v)
             else:
                 v = max([(i[0]+1)*100.0/i[1] for i in arr])
                 wx.CallAfter(self.set_progress, v)
@@ -99,7 +99,8 @@ class ImagePy(wx.Frame):
         self.txt_info.SetLabel(value)
 
     def set_progress(self, value):
-        self.pro_bar.SetValue(value)
+        v = max(min(value, 100), 0)
+        self.pro_bar.SetValue(v)
         if value==-1:
             self.pro_bar.Hide()
         elif not self.pro_bar.IsShown():
