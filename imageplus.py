@@ -59,9 +59,7 @@ class ImagePlus:
         return self.imgs[0].nbytes * len(self.imgs)
 
     @property
-    def img(self, cur=None):
-        if cur!=None:return self.imgs[cur]
-        return self.imgs[self.cur]
+    def img(self):return self.imgs[self.cur]
 
     def get_msk(self, mode='in'):
         if self.roi==None:return None

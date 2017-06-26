@@ -77,25 +77,27 @@ class ImagePy(wx.Frame):
     def hold(self):
         dire = 1
         while True:
-            if time == None: break
-            time.sleep(0.05)
-            tasks = TaskManager.get()
-            if(len(tasks)==0):
-                if self.pro_bar.IsShown():
-                    wx.CallAfter(self.set_progress, -1)
-                continue
-            arr = [i.prgs for i in tasks]
-            if (None, 1) in arr:
-                if self.pro_bar.GetValue()<=0:
-                    dire = 1
-                if self.pro_bar.GetValue()>=100:
-                    dire = -1
-                v = self.pro_bar.GetValue()+dire*5
-                wx.CallAfter(self.set_progress, v)
-            else:
-                v = max([(i[0]+1)*100.0/i[1] for i in arr])
-                wx.CallAfter(self.set_progress, v)
-
+            try:
+                if time == None: break
+                time.sleep(0.05)
+                tasks = TaskManager.get()
+                if(len(tasks)==0):
+                    if self.pro_bar.IsShown():
+                        wx.CallAfter(self.set_progress, -1)
+                    continue
+                arr = [i.prgs for i in tasks]
+                if (None, 1) in arr:
+                    if self.pro_bar.GetValue()<=0:
+                        dire = 1
+                    if self.pro_bar.GetValue()>=100:
+                        dire = -1
+                    v = self.pro_bar.GetValue()+dire*5
+                    wx.CallAfter(self.set_progress, v)
+                else:
+                    v = max([(i[0]+1)*100.0/i[1] for i in arr])
+                    wx.CallAfter(self.set_progress, v)
+            except wx.PyDeadObjectError: 
+                pass
     def set_info(self, value):
         self.txt_info.SetLabel(value)
 

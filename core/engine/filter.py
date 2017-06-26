@@ -115,7 +115,7 @@ class Filter:
         return True
         
     def preview(self, para):
-        process_one(self, self.ips, self.ips.snap, self.ips.img, para, True)
+        process_one(self, self.ips, self.ips.snap, self.ips.img, para, None)
         
     def load(self, ips):return True
           
