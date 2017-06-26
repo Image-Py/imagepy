@@ -63,7 +63,7 @@ class Plugin(Filter):
             ('slide', (0,255), 'High', 't2_blue', '')]
     def show(self):
         self.dialog = Balance_Dialog(IPy.get_window(), self.title)
-        self.dialog.init_view(self.para, self.view, self.ips.get_img())
+        self.dialog.init_view(self.para, self.view, self.ips.img)
         self.dialog.set_handle(lambda x:self.preview(self.para))
         return self.dialog.ShowModal()
 

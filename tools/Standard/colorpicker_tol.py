@@ -19,9 +19,9 @@ class Plugin(Tool):
         ColorManager.set_back(self.para['back'])
         
     def mouse_down(self, ips, x, y, btn, **key):
-        if btn == 1:ColorManager.set_front(ips.get_img()[int(y), int(x)])
-        if btn == 3:ColorManager.set_back(ips.get_img()[int(y), int(x)])
-        print(ips.get_img()[int(y), int(x)])
+        if btn == 1:ColorManager.set_front(ips.img[int(y), int(x)])
+        if btn == 3:ColorManager.set_back(ips.img[int(y), int(x)])
+        print(ips.img[int(y), int(x)])
         print(ColorManager.get_front())
     
     def mouse_up(self, ips, x, y, btn, **key):

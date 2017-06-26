@@ -18,12 +18,12 @@ class Plugin(Tool):
         
     def mouse_down(self, ips, x, y, btn, **key):
         ips.snapshot()
-        msk = floodfill(ips.get_img(), x, y, self.para['tor'], self.para['con']=='8-connect')
+        msk = floodfill(ips.img, x, y, self.para['tor'], self.para['con']=='8-connect')
         #plt.imshow(msk)
         #plt.show()
         color = ColorManager.get_front()
         if ips.get_nchannels()==1:color = np.mean(color)
-        ips.get_img()[msk] = color
+        ips.img[msk] = color
         ips.update = 'pix'
     
     def mouse_up(self, ips, x, y, btn, **key):

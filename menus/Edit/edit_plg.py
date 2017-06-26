@@ -27,7 +27,7 @@ class PasteMove(Tool):
         if self.moving == True:
             self.moving = False
             ci = ClipBoardManager.img
-            img = ips.get_img()
+            img = ips.img
             #ips.roi.draged(ci.shape[1]/2,ci.shape[0]/2, ips.size[1]/2, ips.size[0]/2, True)
             #ips.roi = IPy.clipboard[1].affine(np.eye(2), ((np.array(ips.size)-ci.shape[:2])[::-1]/2))          
             x,y = (np.array(ips.size)-ci.shape[:2])/2+(self.cy,self.cx)
@@ -53,7 +53,7 @@ class Paste(Simple):
         ips.snapshot()
         ips.roi = ClipBoardManager.roi
         ci = ClipBoardManager.img
-        img = ips.get_img()
+        img = ips.img
         #ips.roi.draged(ci.shape[1]/2,ci.shape[0]/2, ips.size[1]/2, ips.size[0]/2, True)
         ips.roi = ClipBoardManager.roi.affine(np.eye(2), 
                                               ((np.array(ips.size)-ci.shape[:2])[::-1]/2))

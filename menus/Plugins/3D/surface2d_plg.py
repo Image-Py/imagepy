@@ -18,7 +18,7 @@ class Plugin(Simple):
     
     def run(self, ips, imgs, para = None):
         from mayavi import mlab
-        img = ips.get_img()
+        img = ips.img
         scale, sigma = para['scale'], para['sigma']
         imgblur = gaussian_filter(img[::scale,::scale], sigma)
         mlab.surf(imgblur, warp_scale=para['h'])

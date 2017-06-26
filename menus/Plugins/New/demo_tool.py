@@ -21,7 +21,7 @@ class Plugin(Tool):
     # do it when mouse_down
     def mouse_down(self, ips, x, y, btn, **key):
         if btn==3:
-            self.paint.color = ips.get_img()[y,x]
+            self.paint.color = ips.img[y,x]
             return
         self.sta = 1
         self.paint.set_curpt(x,y)
@@ -34,7 +34,7 @@ class Plugin(Tool):
     # do it when mouse_move
     def mouse_move(self, ips, x, y, btn, **key):
         if self.sta==1:
-            self.paint.lineto(ips.get_img(),x,y, self.cfgp['width'])
+            self.paint.lineto(ips.img,x,y, self.cfgp['width'])
             ips.update = True
         
     # do it when mouse wheel

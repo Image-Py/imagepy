@@ -62,14 +62,14 @@ class Plugin(Filter):
         return True
 
     def preview(self, para):
-        lst = peak_local_max(self.ips.get_img(), para['dis'], para['thr'], num_peaks=1000)
+        lst = peak_local_max(self.ips.img, para['dis'], para['thr'], num_peaks=1000)
         self.ips.mark = Mark(lst)
         self.ips.update = True
 
     ## TODO: Fixme!
     def run(self, ips, snap, img, para = None):
         ips.lut = self.lut
-        peak = peak_local_max(self.ips.get_img(), para['dis'], para['thr'], 
+        peak = peak_local_max(self.ips.img, para['dis'], para['thr'], 
                               indices=False, num_peaks=1000)
         label(peak, np.ones((3,3)), output = self.buf)
         img[:] = watershed(-img, self.buf, mask = img, watershed_line=True)

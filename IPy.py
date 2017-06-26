@@ -85,7 +85,10 @@ def getpath(title, filt, k, para=None):
     return rst if para!=None else path
 
 def getdir(title, filt, para=None):
-    dialog = wx.DirDialog(curapp, title, root_dir )
+    dpath = manager.ConfigManager.get('defaultpath')
+    if dpath ==None:
+        dpath = root_dir
+    dialog = wx.DirDialog(curapp, title, dpath )
     rst = dialog.ShowModal()
     path = None
     if rst == wx.ID_OK:

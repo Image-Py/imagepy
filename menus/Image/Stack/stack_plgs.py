@@ -51,6 +51,6 @@ class Add(Simple):
 
     #process
     def run(self, ips, imgs, para = None):
-        ips.imgs.insert(ips.cur, ips.get_img()*0)
+        ips.imgs.insert(ips.cur, ips.img*0)
             
 plgs = [SetSlice, Next, Pre, Add, Delete]

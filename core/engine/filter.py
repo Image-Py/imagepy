@@ -115,7 +115,7 @@ class Filter:
         return True
         
     def preview(self, para):
-        process_one(self, self.ips, self.ips.snap, self.ips.get_img(), para, True)
+        process_one(self, self.ips, self.ips.snap, self.ips.img, para, True)
         
     def load(self, ips):return True
           
@@ -127,12 +127,12 @@ class Filter:
             if para!=None and 'stack' in para:del para['stack']
         win = TextLogManager.get('Recorder')
         if ips.get_nslices()==1 or 'not_slice' in self.note:
-            # process_one(self, ips, ips.snap, ips.get_img(), para)
+            # process_one(self, ips, ips.snap, ips.img, para)
             threading.Thread(target = process_one, args = 
-                (self, ips, ips.snap, ips.get_img(), para, callafter)).start()
+                (self, ips, ips.snap, ips.img, para, callafter)).start()
 
             '''
-            run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p, True)
+            run = lambda p=para:process_one(self, ips, ips.snap, ips.img, p, True)
 
             thread = threading.Thread(None, run, ())
             thread.start()
@@ -161,11 +161,11 @@ class Filter:
                 if win!=None: win.append('{}>{}'.format(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
-                #process_one(self, ips, ips.snap, ips.get_img(), para)
+                #process_one(self, ips, ips.snap, ips.img, para)
                 threading.Thread(target = process_one, args = 
-                    (self, ips, ips.snap, ips.get_img(), para, callafter)).start()
+                    (self, ips, ips.snap, ips.img, para, callafter)).start()
                 ''' multithread
-                run = lambda p=para:process_one(self, ips, ips.snap, ips.get_img(), p, True)
+                run = lambda p=para:process_one(self, ips, ips.snap, ips.img, p, True)
                 
                 thread = threading.Thread(None, run, ())
                 thread.start()

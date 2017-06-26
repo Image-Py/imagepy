@@ -58,7 +58,8 @@ class ImagePlus:
     def get_nbytes(self):
         return self.imgs[0].nbytes * len(self.imgs)
 
-    def get_img(self, cur=None):
+    @property
+    def img(self, cur=None):
         if cur!=None:return self.imgs[cur]
         return self.imgs[self.cur]
 
@@ -87,12 +88,12 @@ class ImagePlus:
         if s1==None:
             s1, s2 = self.get_rect()
             print(s1, s2)
-        return self.get_img()[s1, s2]
+        return self.img[s1, s2]
 
     def snapshot(self):
         if self.snap is None:
-            self.snap = self.get_img().copy()
-        else: self.snap[...] = self.get_img()
+            self.snap = self.img.copy()
+        else: self.snap[...] = self.img
 
     def reset(self, msk=False):
         if not self.snap is None:
@@ -104,15 +105,15 @@ class ImagePlus:
     def lookup(self):
         print(self.channels, self.dtype)
         if self.channels==1 and self.dtype==np.uint8:
-            return self.lut[self.get_img()]
+            return self.lut[self.img]
         elif self.channels==1:
             k = 255.0/(max(1, self.range[1]-self.range[0]))
-            bf = np.clip(self.get_img(), self.range[0], self.range[1])
+            bf = np.clip(self.img, self.range[0], self.range[1])
             bf = ((bf - self.range[0]) * k).astype(np.uint8)
             print(bf.min(), bf.max())
             return self.lut[bf]
         if self.channels==3 and self.dtype==np.uint8:
-            return self.get_img()
+            return self.img
 
     def swap(self):
         if self.snap is None:return

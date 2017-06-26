@@ -44,7 +44,7 @@ class Plugin(Tool):
                 self.curobj = ips.roi.pick(x, y, lim)
             if not self.curobj in (None,True):return
             if ips.roi == None:
-                msk = floodfill(ips.get_img(), x, y, 
+                msk = floodfill(ips.img, x, y, 
                     self.para['tor'], self.para['con']=='8-connect')
                 conts = find_contours(msk, 0, 'high')
                 ips.roi = shape2roi(polygonize(conts, btn==3))
@@ -56,7 +56,7 @@ class Plugin(Tool):
                 elif self.curobj: return
                 else: ips.roi=None
 
-                msk = floodfill(ips.get_img(), x, y, 
+                msk = floodfill(ips.img, x, y, 
                     self.para['tor'], self.para['con']=='8-connect')
                 conts = find_contours(msk, 0, 'high')
                 cur = polygonize(conts, btn==3)

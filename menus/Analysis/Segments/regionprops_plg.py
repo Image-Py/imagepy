@@ -51,8 +51,8 @@ class Plugin(Simple):
     #process
     def run(self, ips, imgs, para = None):
         if not para['slice']:
-            msks = [ips.get_img()]
-            imgs = [WindowsManager.get(para['img']).ips.get_img()]
+            msks = [ips.img]
+            imgs = [WindowsManager.get(para['img']).ips.img]
         else: 
             msks = imgs
             imgs = WindowsManager.get(para['img']).ips.imgs

@@ -109,7 +109,7 @@ class Plugin(Tool):
             ips.mark.addline()
         self.doing = False
         if ips.mark!=None and len(ips.mark.body)==1:
-            self.profile(ips.mark.body, ips.get_img())
+            self.profile(ips.mark.body, ips.img)
         ips.update = True
 
     def mouse_move(self, ips, x, y, btn, **key):

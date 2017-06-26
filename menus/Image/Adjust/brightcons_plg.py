@@ -41,7 +41,7 @@ class Plugin(Filter):
             if 'not_slice' in self.note:
                 self.note.remove('not_slice')
         else :
-            self.arange = minv, maxv = ips.get_img().min(), ips.get_img().max()
+            self.arange = minv, maxv = ips.img.min(), ips.img.max()
             self.para = {'bright':np.mean(ips.range) - np.mean(self.arange), 
                 'contrast':round(np.arctan((maxv-minv)/(ips.range[1]-ips.range[0]))/np.pi*180)}
             self.view = [('slide', (-(maxv-minv)/2, (maxv-minv)/2), 'Brightness', 'bright', ''),

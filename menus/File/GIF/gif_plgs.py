@@ -2,17 +2,15 @@ from imagepy.core.util import fileio
 from scipy.misc import imread, imsave
 
 
-fileio.add_opener(['gif'], imread)
+fileio.add_reader(['gif'], imread)
+fileio.add_writer(['gif'], imsave)
 
-class OpenFile(fileio.Opener):
+class OpenFile(fileio.Reader):
 	title = 'GIF Open'
 	filt = ['GIF']
 
-class SaveFile(fileio.Saver):
+class SaveFile(fileio.Writer):
 	title = 'GIF Save'
 	filt = ['GIF']
-
-	def write(self, path, img):
-		imsave(path, img)
 
 plgs = [OpenFile, SaveFile]

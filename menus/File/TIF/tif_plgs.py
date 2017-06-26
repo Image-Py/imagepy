@@ -1,17 +1,15 @@
 from imagepy.core.util import fileio
 from scipy.misc import imread, imsave
 
-fileio.add_opener(['tif'], imread)
+fileio.add_reader(['tif'], imread)
+fileio.add_writer(['tif'], imsave)
 
-class OpenFile(fileio.Opener):
+class OpenFile(fileio.Reader):
 	title = 'TIF Open'
 	filt = ['TIF']
 
-class SaveFile(fileio.Saver):
+class SaveFile(fileio.Writer):
 	title = 'TIF Save'
 	filt = ['TIF']
-
-	def write(self, path, img):
-		imsave(path, img)
 
 plgs = [OpenFile, SaveFile]

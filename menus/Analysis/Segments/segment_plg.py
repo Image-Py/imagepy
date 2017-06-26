@@ -27,7 +27,7 @@ class Plugin(Simple):
             
     #process
     def run(self, ips, imgs, para = None):
-        lab = WindowsManager.get(para['lab']).ips.get_img()
+        lab = WindowsManager.get(para['lab']).ips.img
         if lab.dtype != np.uint8 and lab.dtype != np.int16:
             IPy.alert('Label image must be in type 8-bit or 16-bit')
             return
@@ -38,7 +38,7 @@ class Plugin(Simple):
         titles = ['value'] + [i for i in titles if para[key[i]]]
         
         data = [index]
-        img = ips.get_img()
+        img = ips.img
         if img is lab: img = img>0
         if para['max']:data.append(ndimage.maximum(img, lab, index))
         if para['min']:data.append(ndimage.minimum(img, lab, index))        

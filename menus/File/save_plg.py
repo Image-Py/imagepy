@@ -3,26 +3,13 @@
 Created on Mon Dec  5 03:19:13 2016
 @author: yxl
 """
-from scipy.misc import imsave
-from imagepy.core.engine import Simple
-import wx
+from imagepy.core.util import fileio
 from imagepy import IPy, root_dir
+from imagepy.core.manager import WriterManager
 
-class Plugin(Simple):
+class Plugin(fileio.Writer):
     title = 'Save'
-    note = ['all']
-    # para = {'path':'./'}
-    para={'path':root_dir}
 
-    def show(self):
-        filt = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPG files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif'
-        return IPy.getpath('Save..', filt, 'save', self.para)
-
-    #process
-    def run(self, ips, img, para = None):
-        imsave(para['path'], ips.get_img())
-
-if __name__ == '__main__':
-    print(Plugin.title)
-    app = wx.App(False)
-    Plugin().run()
+    def load(self, ips):
+        self.filt = sorted(WriterManager.all())
+        return True

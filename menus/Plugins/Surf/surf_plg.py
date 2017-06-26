@@ -129,8 +129,8 @@ class Match(Simple):
 
         detector = CVSURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
             nOctaveLayers=para['int'], upright=para['upright'],extended=para['ext'])
-        kps1, feats1 = detector.detectAndCompute(ips1.get_img(), None)
-        kps2, feats2 = detector.detectAndCompute(ips2.get_img(), None)
+        kps1, feats1 = detector.detectAndCompute(ips1.img, None)
+        kps2, feats2 = detector.detectAndCompute(ips2.img, None)
         dim, std = {'None':0, 'Affine':6, 'Homo':8}[para['trans']], para['std']/100.0
         style = para['style']=='Blue/Yellow'
         idx, msk, m = Matcher(dim, std).filter(kps1,feats1,kps2,feats2)

@@ -1,17 +1,15 @@
 from imagepy.core.util import fileio
 from scipy.misc import imread, imsave
 
-fileio.add_opener(['jpg'], imread)
+fileio.add_reader(['jpg'], imread)
+fileio.add_writer(['jpg'], imsave)
 
-class OpenFile(fileio.Opener):
+class OpenFile(fileio.Reader):
 	title = 'JPG Open'
 	filt = ['JPG']
 
-class SaveFile(fileio.Saver):
+class SaveFile(fileio.Writer):
 	title = 'JPG Save'
 	filt = ['JPG']
-
-	def write(self, path, img):
-		imsave(path, img)
 
 plgs = [OpenFile, SaveFile]

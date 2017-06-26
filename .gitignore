@@ -6,6 +6,7 @@ __pycache__/
 preference.cfg
 testdata/
 menus/Extend/
+menus/ITK/
 tools/Extend/
 
 # C extensions

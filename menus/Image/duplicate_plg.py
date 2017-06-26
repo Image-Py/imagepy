@@ -27,7 +27,7 @@ class Plugin(Simple):
         name = self.para['name']
         if ips.get_nslices()==1 or self.para['stack']==False:
             if ips.roi == None:
-                img = ips.get_img().copy()
+                img = ips.img.copy()
                 ipsd = ImagePlus([img], name)
             else:
                 img = ips.get_subimg().copy()

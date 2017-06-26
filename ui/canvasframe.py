@@ -19,6 +19,8 @@ class CanvasFrame(wx.Frame):
                             pos = wx.DefaultPosition,
                             size = wx.Size( -1,-1 ),
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
+        self.SetIcon(wx.Icon('data/logo.ico', wx.BITMAP_TYPE_ICO)) 
         WindowsManager.add(self)
         print('frame added')
         

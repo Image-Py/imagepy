@@ -16,7 +16,7 @@ class Histogram(Simple):
             (bool, 'each slices', 'slice')]
         
     def run(self, ips, imgs, para = None):
-        if not para['slice']: imgs = [ips.get_img()]
+        if not para['slice']: imgs = [ips.img]
         data = []
         for i in range(len(imgs)):
             maxv = imgs[i].max()
@@ -71,7 +71,7 @@ class Statistic(Simple):
             for n in range(ips.get_nslices()):
                 data.append(self.count(imgs[n], para))
                 self.progress(n, len(imgs))
-        else: data = [self.count(ips.get_img(), para)]
+        else: data = [self.count(ips.img, para)]
         IPy.table(ips.title+'-statistic', data, titles)
         
 plgs = [Histogram, Statistic]

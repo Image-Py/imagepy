@@ -42,7 +42,7 @@ class Plugin(Filter):
             if 'not_slice' in self.note:
                 self.note.remove('not_slice')
         else :
-            self.arange = minv, maxv = ips.get_img().min(), ips.get_img().max()
+            self.arange = minv, maxv = ips.img.min(), ips.img.max()
             self.para = {'thr1':ips.range[0], 'thr2':ips.range[1]}
             self.view = [('slide', (minv, maxv), 'Low', 'thr1', ''),
                 ('slide', (minv, maxv), 'High', 'thr2', '')]
