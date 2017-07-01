@@ -3,37 +3,43 @@
 Created on Thu Dec 29 01:48:23 2016
 @author: yxl
 """
+import wx
 from ... import IPy
 from ...core.manager import TextLogManager, PluginsManager 
-import threading
+from wx.lib.pubsub import pub
+from imagepy import IPy
+
+def stepmacros(plg, callafter=None): 
+    plg._next(callafter)
+pub.subscribe(stepmacros, 'stepmacros')
 
 class Macros:
     def __init__(self, title, cmds):
         self.title = title
         self.cmds = cmds
-        self.cur = 0
         
-    def next(self):
-        if self.cur==len(self.cmds): return
+    def _next(self, callafter=None):
+        if self.cur==len(self.cmds):
+            if self.callafter!=None:
+                self.callafter()
+            return
         if self.cmds[self.cur][0] == '#':
-            return self.next()
+            return self._next(callafter)
         title, para = self.cmds[self.cur].split('>')
         self.cur += 1
         plg = PluginsManager.get(title)()
-        print(type(plg))
-        callback = lambda p=self:IPy.step_macros(p)
-        plg.start(eval(para), callback)
+        plg.start(eval(para), self.next)
 
-    def run(self):
-        self.next()
+    def next(self):
+        wx.CallAfter(pub.sendMessage, 'stepmacros', plg=self)
+
+    def run(self):self.next()
         #IPy.run_macros(self.cmds)
         
-
     def __call__(self):
         return self
         
-    def start(self, thd=False):
-        win = TextLogManager.get('Recorder')
-        if win!=None and self.title!=None:
-            win.append('{}>None'.format(self.title))
+    def start(self, para=None, callafter=None):
+        self.callafter = callafter
+        self.cur = 0
         self.run()

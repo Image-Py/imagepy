@@ -4,10 +4,11 @@ Created on Sat Jan  7 16:01:14 2017
 
 @author: yxl
 """
-import wx
-from imagepy import IPy
+import wx, os
+from imagepy import IPy, root_dir
 from imagepy.core.engine import Free
 from imagepy.core.manager import PluginsManager
+from wx.lib.pubsub import pub
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):
@@ -34,10 +35,13 @@ class VirtualListCtrl(wx.ListCtrl):
         self.SetItemCount(len(self.data))
         
 class PlgListFrame( wx.Frame ):
-    def __init__( self, parent):
+    def __init__( self, parent,):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'Plugin List', 
                             pos = wx.DefaultPosition, size = wx.Size( 612,500 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        logopath = os.path.join(root_dir, 'data/logo.ico')
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
         bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
@@ -77,12 +81,16 @@ class PlgListFrame( wx.Frame ):
         wd = self.txt_search.GetValue()
         self.buf = [i for i in self.plgs if wd.lower() in i[0].lower()]
         self.lst_plgs.set_data(self.buf)
+        self.lst_plgs.Refresh()
         
     def on_run(self, event):
         PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
-        
+       
+def showplglist(): PlgListFrame(IPy.curapp).Show()
+pub.subscribe(showplglist, 'showplglist') 
+
 class Plugin(Free):
     title = 'Plugin List View'
         
     def run(self, para=None):
-        PlgListFrame(IPy.curapp).Show()
+        wx.CallAfter(pub.sendMessage, "showplglist")

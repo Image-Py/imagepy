@@ -4,10 +4,11 @@ Created on Sat Jan  7 16:01:14 2017
 
 @author: yxl
 """
-import wx
+import wx, os
 from imagepy.core.engine import Free
 from imagepy.core.manager import ShotcutManager,PluginsManager
-from imagepy import IPy
+from imagepy import IPy, root_dir
+from wx.lib.pubsub import pub
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):
@@ -37,6 +38,9 @@ class PlgListFrame( wx.Frame ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'Plugin List',
                             pos = wx.DefaultPosition, size = wx.Size( 412,500 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        logopath = os.path.join(root_dir, 'data/logo.ico')
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
         bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
@@ -117,8 +121,11 @@ class PlgListFrame( wx.Frame ):
         ShotcutManager.write()
         self.Destroy()
 
+def showshotcut(): PlgListFrame(IPy.curapp).Show()
+pub.subscribe(showshotcut, 'showshotcut')
+
 class Plugin(Free):
     title = 'Shotcut Editor'
-        
+    
     def run(self, para=None):
-        PlgListFrame(IPy.curapp).Show()
+        wx.CallAfter(pub.sendMessage, 'showshotcut') 

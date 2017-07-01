@@ -70,7 +70,7 @@ class ImagePlus:
             if isinstance(mode, int):
                 self.roi.sketch(self.msk, w=mode, color=True)
             else: self.roi.fill(self.msk, color=True)
-            if mode=='out':self.msk-=True
+            if mode=='out':self.msk^=True
             self.roi.update = False
             self.mskmode=mode
         return self.msk

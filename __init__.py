@@ -3,6 +3,7 @@ import os.path as osp
 import sys, os, wx
 
 root_dir = osp.abspath(osp.dirname(__file__))
+print(root_dir)
 #sys.path.append(root_dir)
 
 from .imageplus import ImagePlus

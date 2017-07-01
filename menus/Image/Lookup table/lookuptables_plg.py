@@ -16,23 +16,22 @@ class Plugin(Free):
     
     def load(self):
         plus = IPy.get_ips()
-        if plus.channels != 1:
+        if plus==None:
+            img = np.ones((30,1), dtype=np.uint8) * np.arange(256, dtype=np.uint8)
+            ips = ImagePlus([img], self.title)
+            ips.lut = ColorManager.get_lut(self.title)
+            IPy.show_ips(ips)
+            return False
+        elif plus.channels != 1:
             IPy.alert('RGB image do not surport Lookup table!')
             return False
         return True
+
     #process
     def run(self, para = None):
         plus = IPy.get_ips()
-        if plus==None:
-            img = np.ones((30,1), dtype=np.uint8) * np.arange(256, dtype=np.uint8)
-            ips = ImagePlus([img])
-            frame = CanvasFrame(IPy.curapp)
-            frame.set_ips(ips)
-            ips.lut = ColorManager.get_lut(self.title)
-            frame.Show()
-        else:
-            plus.lut = ColorManager.get_lut(self.title)
-            plus.update = 'pix'
+        plus.lut = ColorManager.get_lut(self.title)
+        plus.update = 'pix'
     
     def __call__(self):
         return self

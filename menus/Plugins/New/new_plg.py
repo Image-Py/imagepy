@@ -4,37 +4,41 @@ Created on Wed Dec 28 00:26:45 2016
 
 @author: yxl
 """
-import os 
+import os, wx
 from imagepy.core.engine import Free
 from wx.py.editor import EditorFrame
+from wx.lib.pubsub import pub
 from imagepy import root_dir
+
+def showeditor(filename=None): EditorFrame(filename=filename).Show()
+pub.subscribe(showeditor, 'showeditor')
 
 class NewFilter(Free):
     title = 'New Filter'
 
     def run(self, para = None):
         filename = os.path.join(root_dir,'./menus/Plugins/New/demo_filter.py')
-        EditorFrame(filename=filename).Show()
+        wx.CallAfter(pub.sendMessage, 'showeditor', filename=filename)
         
 class NewSimple(Free):
     title = 'New Simple'
 
     def run(self, para = None):
         filename = os.path.join(root_dir,'./menus/Plugins/New/demo_simple.py')
-        EditorFrame(filename=filename).Show()
+        wx.CallAfter(pub.sendMessage, 'showeditor', filename=filename)
         
 class NewFree(Free):
     title = 'New Free'
 
     def run(self, para = None):
         filename = os.path.join(root_dir,'./menus/Plugins/New/demo_free.py')
-        EditorFrame(filename=filename).Show()
+        wx.CallAfter(pub.sendMessage, 'showeditor', filename=filename)
         
 class NewTool(Free):
     title = 'New Tool'
 
     def run(self, para = None):
         filename = os.path.join(root_dir,'./menus/Plugins/New/demo_tool.py')
-        EditorFrame(filename=filename).Show()
+        wx.CallAfter(pub.sendMessage, 'showeditor', filename=filename)
         
 plgs = [NewFilter, NewSimple, NewFree, NewTool]

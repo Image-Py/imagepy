@@ -23,20 +23,22 @@ class ImagePy(wx.Frame):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', 
                             size = wx.Size(560,-1), pos = wx.DefaultPosition, 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        logopath = os.path.join(root_dir, 'data/logo.ico')
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
-        self.SetIcon(wx.Icon('data/logo.ico', wx.BITMAP_TYPE_ICO)) 
         IPy.curapp = self
         # Todo:Fixed absolute/relative path!
         # print("menuspath:{}".format( os.path.join(root_dir,"menus")))
         # print("toolspath:{}".format(os.path.join(root_dir,"tools"))
-        menuspath = os.path.join(root_dir,"menus")
-        toolspath = os.path.join(root_dir,"tools")
-        self.menubar = pluginloader.buildMenuBarByPath(self,menuspath)
+        # menuspath = os.path.join(root_dir, "menus")
+        # toolspath = os.path.join(root_dir,"tools")
+        self.menubar = pluginloader.buildMenuBarByPath(self, 'menus')
         self.SetMenuBar( self.menubar )
         self.shortcut = pluginloader.buildShortcut(self)
         self.SetAcceleratorTable(self.shortcut)
         sizer = wx.BoxSizer(wx.VERTICAL)
-        self.toolbar = toolsloader.build_tools(self, toolspath)
+        self.toolbar = toolsloader.build_tools(self, 'tools')
 
         #self.toolbar.Realize()
         #sizertool.Add(self.toolbar, 1, 0, 5 )
@@ -45,6 +47,7 @@ class ImagePy(wx.Frame):
         #sizer.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
         self.line_color = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
         #self.line_color.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
+        sizer.AddStretchSpacer(prop=1)
         sizer.Add(self.line_color, 0, wx.EXPAND |wx.ALL, 0 )
         stapanel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         sizersta = wx.BoxSizer( wx.HORIZONTAL )
@@ -71,8 +74,8 @@ class ImagePy(wx.Frame):
 
     def reload_plugins(self):
         for i in range(self.menubar.GetMenuCount()): self.menubar.Remove(0)
-        menuspath = os.path.join(root_dir,"menus")
-        pluginloader.buildMenuBarByPath(self, menuspath, self.menubar)
+        # menuspath = os.path.join(root_dir,"menus")
+        pluginloader.buildMenuBarByPath(self, "menus", self.menubar)
 
     def hold(self):
         dire = 1
@@ -96,7 +99,7 @@ class ImagePy(wx.Frame):
                 else:
                     v = max([(i[0]+1)*100.0/i[1] for i in arr])
                     wx.CallAfter(self.set_progress, v)
-            except wx.PyDeadObjectError: 
+            except: 
                 pass
     def set_info(self, value):
         self.txt_info.SetLabel(value)

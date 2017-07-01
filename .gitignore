@@ -7,6 +7,7 @@ preference.cfg
 testdata/
 menus/Extend/
 menus/ITK/
+menus/Skimage/
 tools/Extend/
 
 # C extensions

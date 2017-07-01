@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os,wx 
-from .. import IPy
+from .. import IPy, root_dir
 import numpy as np
 from math import ceil
 from ..core.manager import PlotManager
@@ -11,7 +11,6 @@ class LineCanvas(wx.Panel):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size(256,80), 
                             style = wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL )
-        self.SetIcon(wx.Icon('data/logo.ico', wx.BITMAP_TYPE_ICO)) 
         self.init_buf()
         self.data, self.extent = [], [0,0,1,1]
         self.set_title_label('Graph', 'X-unit', 'Y-unit')
@@ -144,6 +143,9 @@ class PlotFrame ( wx.Frame ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, 
                             title = title, pos = wx.DefaultPosition, 
                             size = wx.Size( 500,300 ) )
+        logopath = os.path.join(root_dir, 'data/logo.ico')
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         sizer = wx.BoxSizer( wx.VERTICAL )
         self.canvas = LineCanvas( self)

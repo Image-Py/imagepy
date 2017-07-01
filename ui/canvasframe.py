@@ -4,11 +4,11 @@ Created on Fri Oct 14 01:24:41 2016
 
 @author: yxl
 """
-import wx
+import wx, os
 from .canvas import Canvas
 from ..core.manager import WindowsManager
 from ..core.manager import ShotcutManager,PluginsManager
-from .. import IPy
+from .. import IPy, root_dir
 
 class CanvasFrame(wx.Frame):
     """CanvasFrame: derived from the wx.core.Frame"""
@@ -19,8 +19,10 @@ class CanvasFrame(wx.Frame):
                             pos = wx.DefaultPosition,
                             size = wx.Size( -1,-1 ),
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        logopath = os.path.join(root_dir, 'data/logo.ico')
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
-        self.SetIcon(wx.Icon('data/logo.ico', wx.BITMAP_TYPE_ICO)) 
         WindowsManager.add(self)
         print('frame added')
         

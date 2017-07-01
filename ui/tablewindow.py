@@ -5,10 +5,10 @@ Created on Mon Dec 26 00:28:59 2016
 @author: yxl
 """
 
-import wx
+import wx, os
 import wx.grid
 from ..core.manager import TableLogManager
-from .. import IPy
+from .. import IPy, root_dir
 
 class GenericTable(wx.grid.GridTableBase):
     """GenericTable: derived from wx.grid.GridTableBase"""
@@ -48,7 +48,9 @@ class TableLog(wx.Frame):
         
     def __init__(self, parent, title, data, cols=None, rows=None):
         wx.Frame.__init__(self, parent, -1, title)
-        self.SetIcon(wx.Icon('data/logo.ico', wx.BITMAP_TYPE_ICO)) 
+        logopath = os.path.join(root_dir, 'data/logo.ico')
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         TableLogManager.add(title, self)
         self.data, self.cols, self.rows = data, cols, rows
         tableBase = GenericTable(data, cols, rows)

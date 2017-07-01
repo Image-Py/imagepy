@@ -32,7 +32,7 @@ def showips(ips):
 
 pub.subscribe(showips, 'showips')
 def show_ips(ips):
-    wx.CallAfter(pub.sendMessage, "showips", ips=ips) 
+    wx.CallAfter(pub.sendMessage, 'showips', ips=ips) 
 
 def showimg(imgs, title):
     print('show img')
@@ -41,17 +41,17 @@ def showimg(imgs, title):
 
 pub.subscribe(showimg, 'showimg')
 def show_img(imgs, title):
-    wx.CallAfter(pub.sendMessage, "showimg", imgs=imgs, title=title) 
+    wx.CallAfter(pub.sendMessage, 'showimg', imgs=imgs, title=title) 
     #wx.Yield()
     print('mes show img')
-
+'''
 def stepmacros(macros):
     macros.next()
 
 pub.subscribe(stepmacros, 'stepmacros')
 def step_macros(macros):
     wx.CallAfter(pub.sendMessage, "stepmacros", macros=macros)
-
+'''
 def alert(info, title="ImagePy Alert!"):
     dlg=wx.MessageDialog(curapp, info, title, wx.OK)
     dlg.ShowModal()
@@ -131,16 +131,6 @@ def set_info(i):
     curapp.set_info(i)
     # MT callafter(curapp.set_info, i)
 
-def run_macros(cmds):
-    for cmd in cmds:
-        title, para = cmd.split('>')
-        manager.PluginsManager.get(title)().start(eval(para), False)
-        # wx.Yield()
-
-if __name__ == '__main__':
-    app = wx.App(False)
-    dlg = wx.ColourDialog(None)
-    dlg.GetColourData().SetChooseFull(True)
-    if dlg.ShowModal() == wx.ID_OK:
-        print(dlg.GetColourData().GetColour())
-    dlg.Destroy()
+def run(cmd):
+    title, para = cmd.split('>')
+    manager.PluginsManager.get(title)().start(eval(para), False)

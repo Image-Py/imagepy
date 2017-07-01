@@ -10,12 +10,16 @@ import wx,os
 from imagepy import IPy, root_dir
 from imagepy.core.loader import loader
 from wx.py.editor import EditorFrame
+from wx.lib.pubsub import pub
 
 class TreeFrame ( wx.Frame ):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = "Tools Tree", 
                             pos = wx.DefaultPosition, size = wx.Size( 452,300 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        logopath = os.path.join(root_dir, 'data/logo.ico')
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.HORIZONTAL )
         
@@ -66,32 +70,32 @@ class TreeFrame ( wx.Frame ):
             if i=='-':continue
             if isinstance(i, tuple):
                 item = self.tre_plugins.AppendItem(parent, i[0].title)
-                self.tre_plugins.SetItemPyData(item, i[0])
+                self.tre_plugins.SetItemData(item, i[0])
                 self.addnode(item, i[1])
             else:
                 item = self.tre_plugins.AppendItem(parent, i[0].title)
-                self.tre_plugins.SetItemPyData(item, i[0])
+                self.tre_plugins.SetItemData(item, i[0])
                 
     def load(self):
         data = loader.build_tools('tools')
         root = self.tre_plugins.AddRoot('Tools')
         for i in data[1]:
             item = self.tre_plugins.AppendItem(root, i[0].title)
-            self.tre_plugins.SetItemPyData(item, i[0])
+            self.tre_plugins.SetItemData(item, i[0])
             for j in i[1]:
                 it = self.tre_plugins.AppendItem(item, j[0].title)
-                self.tre_plugins.SetItemPyData(it, j[0])
+                self.tre_plugins.SetItemData(it, j[0])
     
     def __del__( self ):
         pass
     
     # Virtual event handlers, overide them in your derived class
     def on_run( self, event ):
-        plg = self.tre_plugins.GetItemPyData(event.GetItem())
+        plg = self.tre_plugins.GetItemData(event.GetItem())
         if hasattr(plg, 'start'):plg().start()
     
     def on_select( self, event ):
-        plg = self.tre_plugins.GetItemPyData(event.GetItem())
+        plg = self.tre_plugins.GetItemData(event.GetItem())
         print(type(plg))
         if plg!=None:
             self.plg = plg
@@ -104,15 +108,17 @@ class TreeFrame ( wx.Frame ):
     def on_source(self, event):
         ## TODO: should it be absolute path ?
         filename = self.plg.__module__.replace('.','/')+'.py'
-        if filename.startswith(root_dir):
-            filename=os.path.join(root_dir,filename)
+        root = os.path.split(root_dir)[0]
+        filename=os.path.join(root,filename)
         EditorFrame(filename=filename).Show()        
 
-    
+def showtoltree(): TreeFrame(IPy.curapp).Show()
+pub.subscribe(showtoltree, 'showtoltree')
+
 class PlgTree(Free):
     title = 'Tool Tree View'
         
     def run(self, para=None):
-        TreeFrame(IPy.curapp).Show()
+        wx.CallAfter(pub.sendMessage, "showtoltree") 
         
 plgs = [PlgTree]

@@ -1,7 +1,7 @@
 import os
-from ..manager import ReaderManager, WriterManager, ViewerManager
+from ..manager import ReaderManager, WriterManager, ViewerManager, ConfigManager
 from ... import IPy, root_dir
-from ..engine import Free, Simple
+from ..engine import Free, Simple, Macros
 
 def show(data, title):
     IPy.show_img(data, title)
@@ -15,6 +15,30 @@ def add_writer(exts, save):
     for i in exts:
         WriterManager.add(i, save)
 
+recent = ConfigManager.get('recent')
+if recent==None : recent = []
+
+def f(path):
+    return Macros(path, ["Open>{'path':%s}"%repr(path)])
+
+rlist = [f(i) for i in recent]
+
+def add_recent(path):
+    global recent, rlist
+    if path in recent:
+        idx = recent.index(path)
+        recent.insert(0, recent.pop(idx))
+        rlist.insert(0, rlist.pop(idx))
+    else: 
+        recent.insert(0, path)
+        rlist.insert(0, f(path))
+    if len(recent)>=5:
+        recent = recent.pop(-1)
+        rlist = rlist.pop(-1)
+
+    ConfigManager.set('recent', recent)
+    IPy.curapp.reload_plugins()
+
 class Reader(Free):
     para = {'path':''}
 
@@ -24,6 +48,8 @@ class Reader(Free):
 
     #process
     def run(self, para = None):
+        add_recent(para['path'])
+
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
         read = ReaderManager.get(fe[1:])

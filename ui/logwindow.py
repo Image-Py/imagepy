@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import wx     
-from .. import IPy   
+import wx, os
+from .. import IPy, root_dir
 from ..core.manager import TextLogManager
 
 class TextLog(wx.Frame):
@@ -14,7 +14,9 @@ class TextLog(wx.Frame):
     
     def __init__(self, title='ImagePy TexLog'):
         wx.Frame.__init__(self, IPy.curapp,title=title,size=(500,300))
-        self.SetIcon(wx.Icon('data/logo.ico', wx.BITMAP_TYPE_ICO)) 
+        logopath = os.path.join(root_dir, 'data/logo.ico')
+        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
         self.title = title
         TextLogManager.add(title, self)
         self.file=''

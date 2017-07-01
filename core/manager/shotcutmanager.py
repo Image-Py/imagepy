@@ -13,7 +13,7 @@ class ShotcutManager:
          
     @classmethod
     def write(cls):
-        pkl_file = open(cls.filename, 'wb')
+        pkl_file = open(cls.filename, 'w')
         pkl_file.write(str(cls.shotcuts))
         pkl_file.close()
     

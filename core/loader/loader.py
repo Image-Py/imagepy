@@ -7,7 +7,7 @@ Created on Fri Jan  6 23:45:59 2017
 import os, sys
 from ..engine import Macros
 from ..manager import ToolsManager,PluginsManager
-from ... import IPy
+from ... import IPy, root_dir
 
 first = [0,0]
 def extend_plugins(path, lst, err):
@@ -17,15 +17,16 @@ def extend_plugins(path, lst, err):
             rst.append(i)
             
         elif i[-3:]=='.mc':
-            f = open(path+'/'+i)
+            f = open(os.path.join(root_dir,path)+'/'+i)
             cmds = f.readlines()
             f.close()
             rst.append(Macros(i[:-3], cmds))
+            PluginsManager.add(rst[-1])
         else:
             try:
                 rpath = path.replace('/', '.').replace('\\','.')
-                rpath = rpath[rpath.index('imagepy.'):]
-                plg = __import__(rpath+'.'+i[:-3],'','',[''])
+                #rpath = rpath[rpath.index('imagepy.'):]
+                plg = __import__('imagepy.'+ rpath+'.'+i[:-3],'','',[''])
                 if hasattr(plg, 'plgs'):
                     rst.extend([j for j in plg.plgs])
                     for p in plg.plgs:
@@ -53,10 +54,10 @@ def build_plugins(path, err=None):
     root = err==None
     if err==None:err = []
     subtree = []
-    cont = os.listdir(path)
+    cont = os.listdir(os.path.join(root_dir, path))
     for i in cont:
         subp = os.path.join(path,i)
-        if os.path.isdir(subp):
+        if os.path.isdir(os.path.join(root_dir, subp)):
             sub = build_plugins(subp, err)
             if len(sub)!=0:subtree.append(sub)
         elif i[-6:] in ('plg.py', 'lgs.py'):
@@ -66,8 +67,10 @@ def build_plugins(path, err=None):
     if len(subtree)==0:return []
     
     rpath = path.replace('/', '.').replace('\\','.')
-    rpath = rpath[rpath.index('imagepy.'):]
-    pg = __import__(rpath,'','',[''])
+
+    #rpath = rpath[rpath.index('imagepy.'):]
+
+    pg = __import__('imagepy.'+rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
         subtree = sort_plugins(pg.catlog, subtree)
@@ -83,18 +86,21 @@ def extend_tools(path, lst, err):
     rst = []
     for i in lst:
         if i[-3:]=='.mc':
-            f = open(path+'/'+i)
+            f = open(os.path.join(root_dir, path)+'/'+i)
             cmds = f.readlines()
             f.close()
-            rst.append((Macros(i[:-3], cmds),  path+'/'+i[:-3]+'.gif'))
+            rst.append((Macros(i[:-3], cmds),  
+                os.path.join(root_dir, path)+'/'+i[:-3]+'.gif'))
         else:
             try:
                 rpath = path.replace('/', '.').replace('\\','.')
-                rpath = rpath[rpath.index('imagepy.'):]
-                plg = __import__(rpath+'.'+i,'','',[''])
+                #rpath = rpath[rpath.index('imagepy.'):]
+                
+                plg = __import__('imagepy.'+rpath+'.'+i,'','',[''])
                 if hasattr(plg, 'plgs'): 
                     for i,j in plg.plgs: rst.append((i, path+'/'+j))
-                else: rst.append((plg.Plugin, path+'/'+i.split('_')[0]+'.gif'))
+                else: rst.append((plg.Plugin, 
+                    os.path.join(root_dir, path)+'/'+i.split('_')[0]+'.gif'))
             except Exception as e:
                 err.append((path, i, sys.exc_info()[1]))
     for i in rst:ToolsManager.add(i[0])
@@ -115,10 +121,11 @@ def build_tools(path, err=None):
     root = err==None
     if err==None:err=[]
     subtree = []
-    cont = os.listdir(path)
+    cont = os.listdir(os.path.join(root_dir, path))
+
     for i in cont:
         subp = os.path.join(path,i)
-        if root and os.path.isdir(subp):
+        if root and os.path.isdir(os.path.join(root_dir, subp)):
             sub = build_tools(subp, err)
             if len(sub)!=0:subtree.append(sub)
         elif not root:
@@ -128,8 +135,8 @@ def build_tools(path, err=None):
                 subtree.append(i)
     if len(subtree)==0:return []
     rpath = path.replace('/', '.').replace('\\','.')
-    rpath = rpath[rpath.index('imagepy.'):]
-    pg = __import__(rpath,'','',[''])
+    #rpath = rpath[rpath.index('imagepy.'):]
+    pg = __import__('imagepy.' + rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
         subtree = sort_tools(pg.catlog, subtree)
@@ -140,7 +147,6 @@ def build_tools(path, err=None):
     if root : first[1]=1
     return (pg, subtree)
     
-print ('====')
 if __name__ == "__main__":
     print (os.getcwd())
     os.chdir('../../')
