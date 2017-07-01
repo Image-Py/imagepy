@@ -17,6 +17,7 @@ class FileDrop(wx.FileDropTarget):
     def OnDropFiles(self, x, y, path):
         print(["Open>{'path':'%s'}"%i for i in path])
         Macros('noname', ["Open>{'path':'%s'}"%i.replace('\\', '/') for i in path]).start()
+        return 0
 
 class ImagePy(wx.Frame):
     def __init__( self, parent ):
