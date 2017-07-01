@@ -6,17 +6,17 @@ Created on Sat Jan 14 23:23:30 2017
 """
 import wx, os, sys
 import time, threading
-from .. import IPy
+from .. import IPy, root_dir
 # TODO: @2017.05.01
 #from ui import pluginloader, toolsloader
 from . import pluginloader, toolsloader
 from ..core.manager import ConfigManager, PluginsManager, TaskManager
-from .. import root_dir
+from ..core.engine import Macros
 
 class FileDrop(wx.FileDropTarget):
     def OnDropFiles(self, x, y, path):
-        print(["Open>{'path':'%s'}"%repr(i) for i in path])
-        IPy.run_macros(["Open>{'path':'%s'}"%i for i in path])
+        print(["Open>{'path':'%s'}"%i for i in path])
+        Macros('noname', ["Open>{'path':'%s'}"%i.replace('\\', '/') for i in path]).start()
 
 class ImagePy(wx.Frame):
     def __init__( self, parent ):

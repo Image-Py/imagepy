@@ -33,7 +33,7 @@ def add_recent(path):
         recent.insert(0, path)
         rlist.insert(0, f(path))
     if len(recent)>=5:
-        recent = recent.pop(-1)
+        recent.pop(-1)
         rlist = rlist.pop(-1)
 
     ConfigManager.set('recent', recent)
