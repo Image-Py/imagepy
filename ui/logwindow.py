@@ -16,7 +16,7 @@ class TextLog(wx.Frame):
         wx.Frame.__init__(self, IPy.curapp,title=title,size=(500,300))
         logopath = os.path.join(root_dir, 'data/logo.ico')
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
-        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.title = title
         TextLogManager.add(title, self)
         self.file=''

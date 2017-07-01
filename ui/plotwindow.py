@@ -144,7 +144,7 @@ class PlotFrame ( wx.Frame ):
                             title = title, pos = wx.DefaultPosition, 
                             size = wx.Size( 500,300 ) )
         logopath = os.path.join(root_dir, 'data/logo.ico')
-        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         sizer = wx.BoxSizer( wx.VERTICAL )

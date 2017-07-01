@@ -40,7 +40,7 @@ class PlgListFrame( wx.Frame ):
                             pos = wx.DefaultPosition, size = wx.Size( 612,500 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         logopath = os.path.join(root_dir, 'data/logo.ico')
-        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.VERTICAL )

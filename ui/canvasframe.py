@@ -20,7 +20,7 @@ class CanvasFrame(wx.Frame):
                             size = wx.Size( -1,-1 ),
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         logopath = os.path.join(root_dir, 'data/logo.ico')
-        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
         WindowsManager.add(self)

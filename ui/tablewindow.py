@@ -49,7 +49,7 @@ class TableLog(wx.Frame):
     def __init__(self, parent, title, data, cols=None, rows=None):
         wx.Frame.__init__(self, parent, -1, title)
         logopath = os.path.join(root_dir, 'data/logo.ico')
-        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         TableLogManager.add(title, self)
         self.data, self.cols, self.rows = data, cols, rows
