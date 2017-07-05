@@ -34,7 +34,7 @@ def add_recent(path):
         rlist.insert(0, f(path))
     if len(recent)>=5:
         recent.pop(-1)
-        rlist = rlist.pop(-1)
+        rlist.pop(-1)
 
     ConfigManager.set('recent', recent)
     IPy.curapp.reload_plugins()

@@ -8,7 +8,9 @@ testdata/
 menus/Extend/
 menus/ITK/
 menus/Skimage/
+menus/Opencv/
 tools/Extend/
+tools/Cvtools/
 
 # C extensions
 *.so

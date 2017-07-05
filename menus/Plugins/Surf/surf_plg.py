@@ -148,13 +148,11 @@ class Match(Simple):
         sb.append('Matched Point:{0}/{1}\r\n'.format(msk.sum(),len(msk)))
         if dim == 0: return
         sb.append('Transformation:')
-        for i in range(6):
-            sb.append("{0:15.4}".format(v.A1[i]))
-
+        sb.append('%15.4f%15.4f%15.4f'%tuple(v.A1[:3]))
+        sb.append('%15.4f%15.4f%15.4f'%tuple(v.A1[3:6]))
         row = [0,0,1] if dim==6 else list(v[-2:])+[1]
-        for i in range(3):
-            sb.append("{0:15.4}".format(row[i]))
-
+        sb.append('%15.4f%15.4f%15.4f'%tuple(row))
+        
         cont = '\n'.join(sb)
         IPy.write(cont, 'Surf')
 

@@ -26,12 +26,6 @@ class ThresholdDialog(ParaDialog):
 class Plugin(Filter):
     title = 'Bright And Constract'
     note = ['all', 'auto_msk', 'auto_snap', 'not_channel', 'preview']
-    
-    #parameter
-    para = {'bright':0, 'contrast':45}
-    
-    view = [('slide', (-100,100), 'Brightness', 'bright', ''),
-            ('slide', (1,89), 'Contrast', 'contrast', '')]
         
     def load(self, ips):
         if ips.imgtype == '8-bit':

@@ -114,10 +114,14 @@ pub.subscribe(showtable, 'showtable')
 def table(title, data, cols=None, rows=None):
     wx.CallAfter(pub.sendMessage, "showtable", title=title, data=data, cols=cols, rows=rows) 
 
-def write(cont, title='ImagePy'):
+def showlog(title, cont):
     from .ui.logwindow import TextLog
     TextLog.write(cont, title)
-    # MT callafter(TextLog.write, *(cont, title))
+pub.subscribe(showlog, 'showlog')
+
+def write(cont, title='ImagePy'):
+    from .ui.logwindow import TextLog
+    wx.CallAfter(pub.sendMessage, 'showlog', title=title, cont=cont)
 
 def plot(title, gtitle='Graph', labelx='X-Unit', labely='Y-Unit'):
     from .ui.plotwindow import PlotFrame
