@@ -6,6 +6,7 @@ Created on Tue Nov  8 22:35:55 2016
 import wx
 from ..draw import paint
 from .roi import ROI, affine
+from ..manager import RoiManager
 
 class PointRoi(ROI):
     dtype = 'point'
@@ -55,7 +56,7 @@ class PointRoi(ROI):
         return plg
         
     def draw(self, dc, f):
-        dc.SetPen(wx.Pen((255,255,255), width=1, style=wx.SOLID))
+        dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
         for i in self.body:
             dc.DrawCircle(f(*i), 2)
                 

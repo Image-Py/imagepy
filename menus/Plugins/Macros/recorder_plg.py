@@ -8,25 +8,22 @@ import wx
 from imagepy.core.engine import Free, Macros
 from imagepy.core.manager import TextLogManager
 from imagepy.ui.macroseditor import MacrosEditor
-from wx.lib.pubsub import pub
 from imagepy import IPy
-
-def macroseditor(title): MacrosEditor(title).Show()
-pub.subscribe(macroseditor, 'macroseditor')
 
 class Recorder(Free):
     title = 'Macros Recorder'
+    asyn = False
     
     def run(self, para = None):
         if TextLogManager.get('Recorder')==None:
-            wx.CallAfter(pub.sendMessage, 'macroseditor', title = 'Recorder')
+            MacrosEditor('Recorder').Show()
             
 class Edit(Free):
     title = 'Macros Editor'
+    asyn = False
     
     def run(self, para = None):
-        wx.CallAfter(pub.sendMessage, 'macroseditor', 
-            title = TextLogManager.name('Macros Editor'))
+        MacrosEditor(TextLogManager.name('Macros Editor')).Show()
         
 class Run(Free):
     title = 'Run Macros'

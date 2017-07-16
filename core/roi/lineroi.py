@@ -9,6 +9,7 @@ import wx
 from ..draw import paint
 from .operator import affine
 from .roi import ROI
+from ..manager import RoiManager
 
 class LineRoi(ROI):
     dtype = 'line'
@@ -55,7 +56,7 @@ class LineRoi(ROI):
         self.update, self.infoupdate = True, True
         
     def draw(self, dc, f):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
+        dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
         for line in self.body:
             if len(line)>1:
                 dc.DrawLines([f(*i) for i in line])

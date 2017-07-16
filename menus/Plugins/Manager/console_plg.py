@@ -8,19 +8,6 @@ from imagepy import IPy
 from imagepy.core.engine import Free
 from imagepy.core.manager import PluginsManager
 
-from wx.lib.pubsub import pub
-
-def showconsole(cmds): 
-    print('here')
-    frame = ShellFrame(IPy.curapp, locals=cmds)
-    frame.shell.run('# numpy(np) and scipy.ndimage(ndimg) has been imported!\n')
-    frame.shell.run('# plgs.run_name() to call a ImagePy plugin.\n')
-    frame.shell.run('# IPy is avalible here, and curips() to get the current ImagePlus, update() to redraw.\n')
-    print('here')
-    frame.Show(True)
-
-pub.subscribe(showconsole, 'showconsole')
-
 ## There is something wrong!
 ## To be fixed!
 
@@ -54,10 +41,15 @@ cmds = {'IPy':IPy, 'ndimg':ndimg, 'update':update, 'curips':get_ips}
 
 class Plugin(Free):
     title = 'Command Line'
+    asyn = False
 
     def load(self):
         cmds['plgs'] = Macros()
         return True
 
     def run(self, para=None):
-        wx.CallAfter(pub.sendMessage, 'showconsole', cmds = cmds)
+        frame = ShellFrame(IPy.curapp, locals=cmds)
+        frame.shell.run('# numpy(np) and scipy.ndimage(ndimg) has been imported!\n')
+        frame.shell.run('# plgs.run_name() to call a ImagePy plugin.\n')
+        frame.shell.run('# IPy is avalible here, and curips() to get the current ImagePlus, update() to redraw.\n')
+        frame.Show(True)

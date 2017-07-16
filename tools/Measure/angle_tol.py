@@ -57,7 +57,7 @@ class Angle:
             a/=norm(v1,axis=1)*norm(v2,axis=1)
             ang = np.arccos(a)/np.pi*180
             for i,j in zip(ang,line[1:-1]):
-                dc.DrawText(str(i), f(*j))
+                dc.DrawText('%.0f'%i, f(*j))
 
     def report(self, title):
         rst = []

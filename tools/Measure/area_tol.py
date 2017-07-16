@@ -14,9 +14,9 @@ from imagepy import IPy
 class Area:
     """Define the area class"""
     dtype = 'area'
-    def __init__(self, body=None):
+    def __init__(self, body=None, unit=None):
         self.body = body if body!=None else []
-        self.buf = []
+        self.buf, self.unit = [], unit
         
     def addpoint(self, p):
         self.buf.append(p)
@@ -63,7 +63,9 @@ class Area:
         for pg in self.body:
             plg = Polygon(pg)
             area, xy = plg.area, plg.centroid
-            rst.append([round(i,1) for i in [area, xy.x, xy.y]])
+            unit = 1 if self.unit==None else self.unit[0]
+            axy = [area*unit**2, xy.x*unit, xy.y*unit]
+            rst.append([round(i,1) for i in axy])
         IPy.table(title, rst, titles)
             
     def draw(self, dc, f, **key):
@@ -81,7 +83,9 @@ class Area:
             dc.DrawLines([f(*i) for i in pg])
             for i in pg: dc.DrawCircle(f(*i),2)
             area, xy = plg.area, plg.centroid
-            dc.DrawText("{0.1}".format(area), f(xy.x, xy.y))
+            if self.unit!=None: 
+                area *= self.unit[0]**2
+            dc.DrawText('%.1f'%area, f(xy.x, xy.y))
 
 class Plugin(Tool):
     """Define the area class plugin with some events callback fucntions """
@@ -103,7 +107,7 @@ class Plugin(Tool):
                     self.curobj = ips.mark.pick(x, y, lim)
                 if not self.curobj in (None,True):return
                 if not isinstance(ips.mark, Area):
-                    ips.mark = Area()
+                    ips.mark = Area(unit=ips.unit)
                     self.doing = True
                 elif isinstance(ips.mark, Area):
                     if key['shift']: self.oper,self.doing = '+',True

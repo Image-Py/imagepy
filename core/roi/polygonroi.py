@@ -10,6 +10,7 @@ from shapely.ops import polygonize
 from ..draw import paint
 from .operator import affine
 from .roi import ROI
+from ..manager import RoiManager
 
 def parse_poly(geom):
     out = list(geom.exterior.coords)
@@ -122,7 +123,7 @@ class PolygonRoi(ROI):
         return plg
         
     def draw(self, dc, f):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
+        dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
         for pg in self.body:
             dc.DrawLines([f(*i) for i in pg[0]])
             if self.issimple():

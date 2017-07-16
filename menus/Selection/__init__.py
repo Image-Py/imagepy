@@ -1,1 +1,1 @@
-catlog = ['select_plg', 'Relation']
+catlog = ['select_plg', 'Relation', '-', 'setting_plg']

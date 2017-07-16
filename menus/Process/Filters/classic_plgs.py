@@ -63,7 +63,7 @@ class Median(Filter):
         
 class Prewitt(Filter):
     title = 'Prewitt'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    note = ['all','2int', 'auto_msk', 'auto_snap','preview']
 
     #process
     def run(self, ips, img, buf, para = None):
@@ -71,7 +71,7 @@ class Prewitt(Filter):
         
 class Sobel(Filter):
     title = 'Sobel'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
 
     #process
     def run(self, ips, snap, img, para = None):

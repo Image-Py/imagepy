@@ -56,9 +56,9 @@ class Angle:
             dxy = (pts[:-1]-pts[1:])
             dxy[:,1][dxy[:,1]==0] = 1
             l = norm(dxy, axis=1)*-np.sign(dxy[:,1])
-            ang = np.round(np.arccos(dxy[:,0]/l)/np.pi*180,0)
+            ang = np.arccos(dxy[:,0]/l)/np.pi*180
             for i,j in zip(ang, mid):
-                dc.DrawText(str(i), f(*j))
+                dc.DrawText('%.0f'%i, f(*j))
 
     def report(self, title):
         rst, titles = [], ['K']

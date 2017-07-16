@@ -8,7 +8,6 @@ import wx, os
 from imagepy.core.engine import Free
 from imagepy.core.manager import ShotcutManager,PluginsManager
 from imagepy import IPy, root_dir
-from wx.lib.pubsub import pub
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):
@@ -121,11 +120,9 @@ class PlgListFrame( wx.Frame ):
         ShotcutManager.write()
         self.Destroy()
 
-def showshotcut(): PlgListFrame(IPy.curapp).Show()
-pub.subscribe(showshotcut, 'showshotcut')
-
 class Plugin(Free):
     title = 'Shotcut Editor'
+    asyn = False
     
     def run(self, para=None):
-        wx.CallAfter(pub.sendMessage, 'showshotcut') 
+        PlgListFrame(IPy.curapp).Show()

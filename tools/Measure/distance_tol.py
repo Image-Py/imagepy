@@ -15,9 +15,9 @@ from imagepy import IPy
 class Distance:
     """Define the distance class"""
     dtype = 'distance'
-    def __init__(self, body=None):
+    def __init__(self, body=None, unit=None):
         self.body = body if body!=None else []
-        self.buf = []
+        self.buf, self.unit = [], unit
         
     def addline(self):
         line = self.buf
@@ -53,15 +53,17 @@ class Distance:
             mid = (pts[:-1]+pts[1:])/2
 
             dis = norm((pts[:-1]-pts[1:]), axis=1)
+            unit = 1 if self.unit is None else self.unit[0]
             for i,j in zip(dis, mid):
-                dc.DrawText("{0:02}".format(i), f(*j))
+                dc.DrawText('%.2f'%(i*unit), f(*j))
 
     def report(self, title):
         rst = []
         for line in self.body:
             pts = np.array(line)
-            dis = norm((pts[:-1]-pts[1:]), axis=1).round(1)
-            rst.append(list(dis))
+            dis = norm((pts[:-1]-pts[1:]), axis=1)
+            dis *= 1 if self.unit is None else self.unit[0]
+            rst.append(list(dis.round(2)))
         lens = [len(i) for i in rst]
         maxlen = max(lens)
         fill = [[0]*(maxlen-i) for i in lens]
@@ -91,7 +93,7 @@ class Plugin(Tool):
                 if self.curobj!=None:return
                     
                 if not isinstance(ips.mark, Distance):
-                    ips.mark = Distance()
+                    ips.mark = Distance(unit=ips.unit)
                     self.doing = True
                 elif key['shift']:
                     self.doing = True

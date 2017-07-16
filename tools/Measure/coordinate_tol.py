@@ -13,8 +13,9 @@ from imagepy import IPy
 class Coordinate:
     """Define the coordinate class"""
     dtype = 'coordinate'
-    def __init__(self, body=None):
+    def __init__(self, body=None, unit=None):
         self.body = body if body!=None else []
+        self.unit = unit
         
     def add(self, p):
         self.body.append(p)
@@ -42,11 +43,13 @@ class Coordinate:
         dc.SetFont(font)
         for i in self.body:
             x,y = f(*i)
+            unit = 1 if self.unit is None else self.unit[0]
             dc.DrawCircle(x, y, 2)
-            dc.DrawText("({},{})".foramt(i[0], i[1]), x, y)
+            dc.DrawText('(%.1f,%.1f)'%(i[0]*unit, i[1]*unit), x, y)
 
     def report(self, title):
-        rst = self.body
+        unit = 1 if self.unit is None else self.unit[0]
+        rst = [(x*unit, y*unit) for x,y in self.body]
         titles = ['OX', 'OY']
         IPy.table(title, rst, titles)
 
@@ -68,8 +71,9 @@ class Plugin(Tool):
                 self.curobj = ips.mark.pick(x, y, lim)
             if self.curobj!=None:return
             if not isinstance(ips.mark, Coordinate):
-                ips.mark = Coordinate()
-            elif not key['shift']:del ips.mark.body[:]
+                ips.mark = Coordinate(unit=ips.unit)
+            elif not key['shift']:
+                ips.mark = Coordinate(unit=ips.unit)
             ips.mark.add((x,y))
             self.curobj = ips.mark.pick(x,y, lim)
             ips.update = True

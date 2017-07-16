@@ -128,6 +128,7 @@ class Filter:
         win = TextLogManager.get('Recorder')
         if ips.get_nslices()==1 or 'not_slice' in self.note:
             # process_one(self, ips, ips.snap, ips.img, para)
+            print(111)
             threading.Thread(target = process_one, args = 
                 (self, ips, ips.snap, ips.img, para, callafter)).start()
 
@@ -147,6 +148,7 @@ class Filter:
             if has and para['stack'] or rst == 'yes':
                 para['stack'] = True
                 #process_stack(self, ips, ips.snap, ips.imgs, para)
+                print(222)
                 threading.Thread(target = process_stack, args = 
                     (self, ips, ips.snap, ips.imgs, para)).start()
                 '''
@@ -162,6 +164,7 @@ class Filter:
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
                 #process_one(self, ips, ips.snap, ips.img, para)
+                print(333)
                 threading.Thread(target = process_one, args = 
                     (self, ips, ips.snap, ips.img, para, callafter)).start()
                 ''' multithread

@@ -7,6 +7,7 @@ import wx
 from ..draw import paint
 from .polygonroi import PolygonRoi
 from .roi import ROI
+from ..manager import RoiManager
 
 class RectangleRoi(ROI):
     dtype = 'rect'
@@ -69,7 +70,7 @@ class RectangleRoi(ROI):
         return self.topolygon().affine(m,o)
         
     def draw(self, dc, f):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
+        dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
         if(len(self.body)>1):
             dc.DrawLines([f(*i) for i in self.body])
         for i in self.body:dc.DrawCircle(f(*i),2)

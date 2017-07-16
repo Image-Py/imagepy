@@ -8,7 +8,6 @@ import wx, os
 from imagepy import IPy, root_dir
 from imagepy.core.engine import Free
 from imagepy.core.manager import PluginsManager
-from wx.lib.pubsub import pub
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):
@@ -85,12 +84,10 @@ class PlgListFrame( wx.Frame ):
         
     def on_run(self, event):
         PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
-       
-def showplglist(): PlgListFrame(IPy.curapp).Show()
-pub.subscribe(showplglist, 'showplglist') 
 
 class Plugin(Free):
     title = 'Plugin List View'
+    asyn = False
         
     def run(self, para=None):
-        wx.CallAfter(pub.sendMessage, "showplglist")
+        PlgListFrame(IPy.curapp).Show()

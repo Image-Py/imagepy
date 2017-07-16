@@ -8,6 +8,7 @@ import numpy as np
 from ..draw import paint
 from .roi import ROI
 from .polygonroi import PolygonRoi
+from ..manager import RoiManager
 
 class OvalRoi(ROI):
     dtype = 'rect'
@@ -70,7 +71,7 @@ class OvalRoi(ROI):
         return self.topolygon().affine(m,o)
         
     def draw(self, dc, f):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
+        dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
         if len(self.body)>1:
             dc.DrawLines([f(*i) for i in self.body])
         for i in [self.lt, (self.lt+self.rt)/2, self.rt]:

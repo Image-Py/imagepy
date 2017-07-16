@@ -27,7 +27,7 @@ class ImagePy(wx.Frame):
         logopath = os.path.join(root_dir, 'data/logo.ico')
         #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
-        self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
+        self.SetSizeHints( wx.Size( 540,-1 ), wx.DefaultSize )
         IPy.curapp = self
         # Todo:Fixed absolute/relative path!
         # print("menuspath:{}".format( os.path.join(root_dir,"menus")))

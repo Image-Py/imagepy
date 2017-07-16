@@ -10,7 +10,6 @@ import wx,os
 from imagepy import IPy, root_dir
 from imagepy.core.loader import loader
 from wx.py.editor import EditorFrame
-from wx.lib.pubsub import pub
 
 class TreeFrame ( wx.Frame ):
     def __init__( self, parent ):
@@ -106,16 +105,12 @@ class TreeFrame ( wx.Frame ):
         filename=os.path.join(root,filename)
         #print(filename)
         EditorFrame(filename=filename).Show()
-    
-
-
-def showplgtree(): TreeFrame(IPy.curapp).Show()
-pub.subscribe(showplgtree, 'showplgtree')
 
 class PlgTree(Free):
     title = 'Plugin Tree View'
+    asyn = False
         
     def run(self, para=None):
-        wx.CallAfter(pub.sendMessage, "showplgtree") 
+        TreeFrame(IPy.curapp).Show()
         
 plgs = [PlgTree]

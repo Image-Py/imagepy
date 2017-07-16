@@ -13,8 +13,9 @@ class Free:
     title = 'Free'
     view = None
     para = None
-
     prgs = (None, 1)
+    asyn = True
+
     def progress(self, i, n):
         self.prgs = (i, n)
 
@@ -43,9 +44,13 @@ class Free:
             win = TextLogManager.get('Recorder')
             if win!=None: 
                 win.append('{}>{}'.format(self.title, para))
-
-            t = threading.Thread(target = self.runasyn, args = (para, callback))
-            t.start()
+            if self.asyn:
+                t = threading.Thread(target = self.runasyn, args = (para, callback))
+                t.start()
+            else:
+                self.run(para)
+                if not callback is None:
+                    callback()
             #if not thd:t.join()
 
             #self.run(para)
