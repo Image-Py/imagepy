@@ -2,7 +2,7 @@
 import numpy as np
 from imagepy.core.engine import Filter
 
-class Add_plg(Filter):
+class Add(Filter):
     """Add_plg: derived from imagepy.core.engine.Filter """
     title = 'Add'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
@@ -14,7 +14,7 @@ class Add_plg(Filter):
         img[:] = snap
         np.add(img, para['num'], out=img, casting='unsafe')
         
-class Multiply_plg(Filter):
+class Multiply(Filter):
     """Multiply_plg: derived from imagepy.core.engine.Filter """
     title = 'Multiply'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
@@ -26,7 +26,7 @@ class Multiply_plg(Filter):
         img[:] = snap
         np.multiply(img, para['num'], out=img, casting='unsafe')
         
-class Max_plg(Filter):
+class Max(Filter):
     """Max_plg: derived from imagepy.core.engine.Filter """
     title = 'Max'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
@@ -38,7 +38,7 @@ class Max_plg(Filter):
         img[:] = snap
         img[img<para['num']] = para['num']
         
-class Min_plg(Filter):
+class Min(Filter):
     """Min_plg: derived from imagepy.core.engine.Filter """
     title = 'Min'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
@@ -50,7 +50,7 @@ class Min_plg(Filter):
         img[:] = snap
         img[img>para['num']] = para['num']
         
-class Sqrt_plg(Filter):
+class Sqrt(Filter):
     """Sqrt_plg: derived from imagepy.core.engine.Filter """
     title = 'Squre Root'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
@@ -58,7 +58,7 @@ class Sqrt_plg(Filter):
     def run(self, ips, snap, img, para = None):
         np.sqrt(snap, out=img)
         
-class Garmma_plg(Filter):
+class Garmma(Filter):
     """Garmma_plg: derived from imagepy.core.engine.Filter """
     title = 'Garmma'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2float']
@@ -70,6 +70,4 @@ class Garmma_plg(Filter):
         img[:] = snap
         img[:] = (img/(x2-x1))**para['num']*(x2-x1)
     
-plgs = [Add_plg, Multiply_plg, 
-        '-', Max_plg, Min_plg, 
-        '-', Sqrt_plg, Garmma_plg]
+plgs = [Add, Multiply, '-', Max, Min, '-', Sqrt, Garmma]

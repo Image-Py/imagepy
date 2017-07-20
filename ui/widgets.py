@@ -12,12 +12,12 @@ class HistCanvas(wx.Panel):
     """ HistCanvas: diverid from wx.core.Panel """
     def __init__(self, parent ):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
-                            pos = wx.DefaultPosition, size = wx.Size(256,80), 
-                            style = wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL )
+                            pos = wx.DefaultPosition, size = wx.Size(256,81), 
+                            style = wx.TAB_TRAVERSAL )
         self.init_buf()
         self.his = None
         self.update = False
-        self.x1, self.x2 = 0, 0
+        self.x1, self.x2 = 0, 255
         self.Bind(wx.EVT_SIZE, self.on_size)  
         self.Bind(wx.EVT_IDLE, self.on_idle)
         self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -39,7 +39,7 @@ class HistCanvas(wx.Panel):
         wx.BufferedPaintDC(self, self.buffer)
         
     def set_hist(self, hist):
-        self.hist = hist
+        self.hist = (hist*80/hist.max()).astype(np.uint8)
         self.update = True
         
     def set_lim(self, x1, x2):
@@ -62,6 +62,7 @@ class HistCanvas(wx.Panel):
             dc.DrawLine(i,80,i,80-self.hist[i])            
         dc.SetPen(wx.Pen((0,0,0), width=1, style=wx.SOLID))
         dc.DrawLine(self.x1, 80, self.x2, 0)
+        dc.DrawLines([(0,0),(255,0),(255,80),(0,80),(0,0)])
         
 class NumCtrl(wx.TextCtrl):
     """NumCtrl: diverid from wx.core.TextCtrl """

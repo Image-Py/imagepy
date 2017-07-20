@@ -63,19 +63,22 @@ class Median(Filter):
         
 class Prewitt(Filter):
     title = 'Prewitt'
-    note = ['all','2int', 'auto_msk', 'auto_snap','preview']
+    note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
+    para = {'axis':'horizontal'}
+    view = [(list, ['horizontal', 'vertical'], str, 'direction', 'axis', 'aixs')]
 
     #process
-    def run(self, ips, img, buf, para = None):
-        nimg.prewitt(img, output=buf)
+    def run(self, ips, snap, img, para = None):
+        nimg.prewitt(snap, axis={'horizontal':0,'vertical':1}[para['axis']], output=img)
         
 class Sobel(Filter):
     title = 'Sobel'
     note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
-
+    para = {'axis':'horizontal'}
+    view = [(list, ['horizontal', 'vertical'], str, 'direction', 'axis', 'aixs')]
     #process
     def run(self, ips, snap, img, para = None):
-        nimg.sobel(snap, output=img)
+        nimg.sobel(snap, axis={'horizontal':0,'vertical':1}[para['axis']], output=img)
         
 class USM(Filter):
     title = 'Unsharp Mask'

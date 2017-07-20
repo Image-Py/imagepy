@@ -28,7 +28,7 @@ class Plugin(Filter):
     note = ['all', 'auto_msk', 'auto_snap', 'not_channel', 'preview']
         
     def load(self, ips):
-        if ips.imgtype == '8-bit':
+        if ips.imgtype in ('8-bit', 'rgb'):
             self.para = {'bright':0, 'contrast':45}
             self.view = [('slide', (-100,100), 'Brightness', 'bright', ''),
                 ('slide', (1,89), 'Contrast', 'contrast', '')]
@@ -47,13 +47,13 @@ class Plugin(Filter):
     def show(self):
         self.dialog = ThresholdDialog(IPy.get_window(), self.title)
         hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
-        self.dialog.init_view(self.view, self.para, (hist*(100.0/hist.max())).astype(np.uint8))
+        self.dialog.init_view(self.view, self.para, hist)
         self.dialog.set_handle(lambda x:self.preview(self.para))
         return self.dialog.ShowModal()
 
     #process
     def run(self, ips, snap, img, para = None):
-        if ips.imgtype != '8-bit':
+        if not ips.imgtype in ('8-bit', 'rgb'):
             mid = (self.arange[0] + self.arange[1])/2 - para['bright']
             length = (self.arange[1] - self.arange[0])/np.tan(para['contrast']/180.0*np.pi)
             ips.range = (mid-length/2, mid+length/2)

@@ -28,6 +28,7 @@ class Plugin(Simple):
     def run(self, ips, imgs, para = None):
         ips1 = WindowsManager.get(para['img1']).ips
         ips2 = WindowsManager.get(para['img2']).ips
+        ips1.snapshot()
 
         sl1, sl2 = ips1.get_nslices(), ips2.get_nslices()
         cn1, cn2 = ips1.get_nchannels(), ips2.get_nchannels()

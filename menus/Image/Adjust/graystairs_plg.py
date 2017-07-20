@@ -35,7 +35,7 @@ class Plugin(Filter):
     
 
     def load(self, ips):
-        if ips.imgtype == '8-bit':
+        if ips.imgtype in ('8-bit', 'rgb'):
             self.para = {'thr1':0, 'thr2':255}
             self.view = [('slide', (0,255), 'Low', 'thr1', ''),
                 ('slide', (0,255), 'High', 'thr2', '')]
@@ -53,14 +53,13 @@ class Plugin(Filter):
     def show(self):
         self.dialog = ThresholdDialog(IPy.get_window(), self.title)
         hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
-        hist = (hist*(100.0/hist.max())).astype(np.uint8)
         self.dialog.init_view(self.view, self.para, hist, self.arange)
         self.dialog.set_handle(lambda x:self.preview(self.para))
         return self.dialog.ShowModal()
 
     #process
     def run(self, ips, snap, img, para = None):
-        if not ips.imgtype == '8-bit':
+        if not ips.imgtype in ('8-bit', 'rgb'):
             ips.range = (para['thr1'], para['thr2'])
             return
         img[:] = snap

@@ -35,7 +35,7 @@ class Plugin(Simple):
                 new = []
                 for i in range(len(imgs)):
                     IPy.curapp.set_progress(round((i+1)*100.0/len(imgs)))
-                    arr = np.zeros(np.multiply(imgs[i].shape, (kx, ky, 1)), 
+                    arr = np.zeros(np.multiply(imgs[i].shape, (kx, ky, 1)).round().astype(np.uint32), 
                                    dtype=imgs[i].dtype)
                     for n in range(ips.get_nchannels()):
                         ndimg.zoom(imgs[i][:,:,n], (kx, ky), output=arr[:,:,n])

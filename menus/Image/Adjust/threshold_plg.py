@@ -54,7 +54,6 @@ class Plugin(Filter):
         print('threshold show')
         self.dialog = ThresholdDialog(IPy.get_window(), self.title)
         hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
-        hist = (hist*(100.0/hist.max())).astype(np.uint8)
         self.dialog.init_view(self.view, self.para, hist, self.ips.range)
         self.dialog.set_handle(lambda x:self.preview(self.para))
         self.dialog.on_ok = lambda : self.ok(self.ips)
