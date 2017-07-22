@@ -10,7 +10,27 @@ from imagepy.ui.canvasframe import CanvasFrame
 from imagepy.core.manager import WindowsManager
 from imagepy.core.engine import Simple
 
-class Plugin(Simple):
+class Split(Simple):
+    title = 'Split Channels'
+    note = ['rgb']
+    
+    para = {'copy':False, 'destory':True}
+    view = {(bool, 'Copy data from view', 'copy'),
+            (bool, 'Destory current image', 'destory')}
+    #process
+    def run(self, ips, imgs, para = None):
+        r,g,b = [],[],[]
+        for i,n in zip(imgs,list(range(ips.get_nslices()))):
+            self.progress(i, n)
+            for c,ci in zip((r,g,b),(0,1,2)):
+                if self.para['copy']:c.append(i[:,:,ci].copy())
+                else: c.append(i[:,:,ci])
+        for im, tl in zip([r,g,b],['red','green','blue']):
+            IPy.show_img(im, ips.title+'-'+tl)
+        if self.para['destory']:
+            WindowsManager.close(ips.title)
+
+class Merge(Simple):
     title = 'Merge Channels'
     note = ['all']
     
@@ -22,7 +42,7 @@ class Plugin(Simple):
         self.para['red'] = titles[0]
         self.para['green'] = titles[0]
         self.para['blue'] = titles[0]
-        Plugin.view = [(list, titles, str, 'Red', 'red', ''),
+        Merge.view = [(list, titles, str, 'Red', 'red', ''),
                        (list, titles, str, 'Green', 'green', ''),
                        (list, titles, str, 'Blue', 'blue', ''),
                        (bool, 'Destory r,g,b image', 'destory')]
@@ -44,15 +64,13 @@ class Plugin(Simple):
         w,h = imr.size
         rgbs = list(zip(imr.imgs,img.imgs,imb.imgs))
         for i in range(sr):
-            IPy.curapp.set_progress(round((i+1)*100.0/sr))
+            self.progress(i,sr)
             img = np.zeros((w,h,3), dtype=np.uint8)
             for j in (0,1,2):img[:,:,j] = rgbs[i][j]
             rgb.append(img)
-        IPy.curapp.set_progress(0)
-        ip = ImagePlus(rgb, 'rgb-merge')
-        frame = CanvasFrame(IPy.curapp)
-        frame.set_ips(ip)
-        frame.Show()
+        IPy.show_img(rgb, 'rgb-merge')
         if self.para['destory']:
             for title in [para[i] for i in idx]:
                 WindowsManager.close(title)
+
+plgs = [Split, Merge]
