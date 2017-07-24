@@ -3,14 +3,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.DS_Store
-preference.cfg
-testdata/
-menus/Extend/
-menus/ITK/
-menus/Skimage/
-menus/Opencv/
-tools/Extend/
-tools/Cvtools/
+imagepy/preference.cfg
+imagepy/testdata/
+imagepy/menus/Extend/
+imagepy/menus/ITK/
+imagepy/menus/Skimage/
+imagepy/menus/Opencv/
+imagepy/tools/Extend/
+imagepy/tools/Cvtools/
 
 # C extensions
 *.so

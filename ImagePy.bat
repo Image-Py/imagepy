@@ -1,1 +1,1 @@
-pythonw main.py
+python -m imagepy
