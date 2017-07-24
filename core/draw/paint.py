@@ -31,6 +31,7 @@ class Paint:
 
     def draw_point(self, img, x, y, r=1, color=None):
         shape = img.shape
+        x, y = np.round((x,y)).astype(np.int)
         if x<0 or y<0 or x>=shape[1] or y>=shape[0]: return
         if color == None:color = ColorManager.get_front()
         color = match_color(img, color)
@@ -38,7 +39,6 @@ class Paint:
         n = int(r)
         xs,ys = np.mgrid[-n:n+1,-n:n+1]
         msk = np.sqrt(xs**2+ys**2)<r
-        x, y = np.round((x,y)).astype(np.int)
         self.draw_pixs(img, xs[msk]+x, ys[msk]+y, color)
 
     def draw_line(self, img, x1, y1, x2, y2, w=None, color=None):
