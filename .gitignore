@@ -11,6 +11,7 @@ imagepy/menus/Skimage/
 imagepy/menus/Opencv/
 imagepy/tools/Extend/
 imagepy/tools/Cvtools/
+imagepy/tools/IBook/
 
 # C extensions
 *.so

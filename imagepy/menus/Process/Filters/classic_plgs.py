@@ -3,6 +3,18 @@ import scipy.ndimage as nimg
 from imagepy.core.engine import Filter, Simple
 import numpy as np
 
+class Uniform(Filter):
+    title = 'Uniform'
+    note = ['all', 'auto_msk', 'auto_snap','preview']
+    
+    #parameter
+    para = {'size':2}
+    view = [(float, (0,30), 1,  'size', 'size', 'pix')]
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        nimg.uniform_filter(snap, para['size'], output=img)
+
 class Gaussian(Filter):
     """Gaussian: derived from imagepy.core.engine.Filter """
     title = 'Gaussian'
@@ -15,7 +27,7 @@ class Gaussian(Filter):
         
 class Gaussian_laplace(Filter):
     title = 'Gaussian Laplace'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
     
     #parameter
     para = {'sigma':2}
@@ -25,6 +37,14 @@ class Gaussian_laplace(Filter):
     def run(self, ips, snap, img, para = None):
         nimg.gaussian_laplace(snap, para['sigma'], output=img)
         
+class Laplace(Filter):
+    title = 'Laplace'
+    note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        nimg.laplace(snap, output=img)
+
 class Maximum(Filter):
     title = 'Maximum'
     note = ['all', 'auto_msk', 'auto_snap','preview']
@@ -60,6 +80,19 @@ class Median(Filter):
     #process
     def run(self, ips, snap, img, para = None):
         nimg.median_filter(snap, para['size'], output=img)
+
+class Percent(Filter):
+    title = 'Percent'
+    note = ['all', 'auto_msk', 'auto_snap','preview']
+    
+    #parameter
+    para = {'size':2, 'per':50}
+    view = [(int, (0,30), 0, 'size', 'size', 'pix'),
+            (int, (0,100), 0, 'percent', 'per', '')]
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        nimg.percentile_filter(snap, para['per'], para['size'], output=img)
         
 class Prewitt(Filter):
     title = 'Prewitt'
@@ -110,4 +143,5 @@ class Gaussian3D(Simple):
     def run(self, ips, img, para = None):
         nimg.gaussian_filter(img, para['sigma'], output=img)
         
-plgs = [Gaussian, Gaussian_laplace,'-', Maximum, Minimum, Median, '-', Prewitt, Sobel, '-', USM, '-', Gaussian3D]
+plgs = [Uniform, Gaussian, '-', Maximum, Minimum, Median, Percent, '-', 
+    Prewitt, Sobel, Gaussian_laplace, Laplace, '-', USM, '-', Gaussian3D]
