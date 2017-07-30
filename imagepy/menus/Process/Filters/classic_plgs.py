@@ -25,25 +25,49 @@ class Gaussian(Filter):
     def run(self, ips, snap, img, para = None):
         nimg.gaussian_filter(snap, para['sigma'], output=img)
         
-class Gaussian_laplace(Filter):
+class GaussianLaplace(Filter):
     title = 'Gaussian Laplace'
-    note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
+    note = ['all', '2int',  'auto_msk', 'auto_snap','preview']
     
     #parameter
-    para = {'sigma':2}
-    view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
+    para = {'sigma':2, 'uniform':False}
+    view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix'),
+            (bool, 'uniform', 'uniform')]
 
     #process
     def run(self, ips, snap, img, para = None):
         nimg.gaussian_laplace(snap, para['sigma'], output=img)
-        
+        img *= -1
+        if para['uniform']: np.add(img, np.mean(ips.range), out=img, casting='unsafe')
+
+class DOG(Filter):
+    title = 'DOG'
+    note = ['all', 'auto_msk', 'auto_snap', '2int', 'preview']
+
+    #parameter
+    para = {'sigma1':0, 'sigma2':2, 'uniform':False}
+    view = [(float, (0,30), 1,  'sigma1', 'sigma1', 'pix'),
+            (float, (0,30), 1,  'sigma2', 'sigma2', ''),
+            (bool, 'uniform', 'uniform')]
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        nimg.gaussian_filter(snap, para['sigma1'], output=img)
+        buf = nimg.gaussian_filter(snap, para['sigma2'], output=img.dtype)
+        img -= buf
+        if para['uniform']: np.add(img, np.mean(ips.range), out=img, casting='unsafe')
+
 class Laplace(Filter):
     title = 'Laplace'
     note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
 
+    para = {'uniform':False}
+    view = [(bool, 'uniform', 'uniform')]
     #process
     def run(self, ips, snap, img, para = None):
         nimg.laplace(snap, output=img)
+        img *= -1
+        if para['uniform']: np.add(img, np.mean(ips.range), out=img, casting='unsafe')
 
 class Maximum(Filter):
     title = 'Maximum'
@@ -97,22 +121,46 @@ class Percent(Filter):
 class Prewitt(Filter):
     title = 'Prewitt'
     note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
-    para = {'axis':'horizontal'}
-    view = [(list, ['horizontal', 'vertical'], str, 'direction', 'axis', 'aixs')]
+    para = {'axis':'both'}
+    view = [(list, ['both', 'horizontal', 'vertical'], str, 'direction', 'axis', 'aixs')]
 
     #process
     def run(self, ips, snap, img, para = None):
-        nimg.prewitt(snap, axis={'horizontal':0,'vertical':1}[para['axis']], output=img)
+        if para['axis']=='both':
+            img[:] =  np.abs(nimg.prewitt(snap, axis=0, output=img.dtype))
+            img += np.abs( nimg.prewitt(snap, axis=1, output=img.dtype))
+        else:
+            nimg.prewitt(snap, axis={'horizontal':0,'vertical':1}[para['axis']], output=img)
+            img[:] = np.abs(img)
+        img //= 3
         
 class Sobel(Filter):
     title = 'Sobel'
     note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
-    para = {'axis':'horizontal'}
-    view = [(list, ['horizontal', 'vertical'], str, 'direction', 'axis', 'aixs')]
+    para = {'axis':'both'}
+    view = [(list, ['both', 'horizontal', 'vertical'], str, 'direction', 'axis', 'aixs')]
     #process
     def run(self, ips, snap, img, para = None):
-        nimg.sobel(snap, axis={'horizontal':0,'vertical':1}[para['axis']], output=img)
+        if para['axis']=='both':
+            img[:] =  np.abs(nimg.sobel(snap, axis=0, output=img.dtype))
+            img += np.abs( nimg.sobel(snap, axis=1, output=img.dtype))
+        else:
+            nimg.sobel(snap, axis={'horizontal':0,'vertical':1}[para['axis']], output=img)
+            img[:] = np.abs(img)
+        img //= 4
         
+class LaplaceSharp(Filter):
+    title = 'Laplace Sharp'
+    note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
+
+    para = {'weight':0.2}
+    view = [(float, (0,5), 1,  'weight', 'weight', 'factor')]
+    #process
+    def run(self, ips, snap, img, para = None):
+        nimg.laplace(snap, output=img)
+        np.multiply(img, -para['weight'], out=img, casting='unsafe')
+        img += snap
+
 class USM(Filter):
     title = 'Unsharp Mask'
     note = ['all', 'auto_msk', 'auto_snap', '2int', 'preview']
@@ -130,7 +178,6 @@ class USM(Filter):
         np.multiply(img, -para['weight'], out=img, casting='unsafe')
         img += snap
         
-        
 class Gaussian3D(Simple):
     title = 'Gaussian3D'
     note = ['all', 'stack3d']
@@ -142,6 +189,6 @@ class Gaussian3D(Simple):
     #process
     def run(self, ips, img, para = None):
         nimg.gaussian_filter(img, para['sigma'], output=img)
-        
+
 plgs = [Uniform, Gaussian, '-', Maximum, Minimum, Median, Percent, '-', 
-    Prewitt, Sobel, Gaussian_laplace, Laplace, '-', USM, '-', Gaussian3D]
+    Prewitt, Sobel, Laplace, GaussianLaplace, DOG, '-', LaplaceSharp, USM, '-', Gaussian3D]
