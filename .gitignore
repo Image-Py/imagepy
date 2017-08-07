@@ -12,6 +12,7 @@ imagepy/menus/Opencv/
 imagepy/menus/IBook/
 imagepy/tools/Extend/
 imagepy/tools/Cvtools/
+imagepy/tools/IBook/
 
 # C extensions
 *.so
