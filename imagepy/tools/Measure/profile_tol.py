@@ -16,9 +16,9 @@ from math import ceil
 class Profile:
     """Define the profile class"""
     dtype = 'distance'
-    def __init__(self, body=None):
+    def __init__(self, body=None, unit=None):
         self.body = body if body!=None else []
-        self.buf = []
+        self.buf, self.unit = [], unit
 
     def addline(self):
         line = self.buf
@@ -57,8 +57,9 @@ class Profile:
 
             dxy = (pts[:-1]-pts[1:])
             dis = norm(dxy, axis=1)
+            unit = 1 if self.unit is None else self.unit[0]
             for i,j in zip(dis, mid):
-                dc.DrawText("{0:02}".format(i), f(*j))
+                dc.DrawText('%.2f'%(i*unit), f(*j))
 
     def report(self, title):
         rst, titles = [], ['K']
@@ -93,7 +94,7 @@ class Plugin(Tool):
                 if self.curobj!=None:return
 
                 if not isinstance(ips.mark, Profile):
-                    ips.mark = Profile()
+                    ips.mark = Profile(unit=ips.unit)
                     self.doing = True
                 else: ips.mark = None
             if self.doing:
