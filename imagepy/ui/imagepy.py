@@ -22,7 +22,7 @@ class FileDrop(wx.FileDropTarget):
 class ImagePy(wx.Frame):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', 
-                            size = wx.Size(560,-1), pos = wx.DefaultPosition, 
+                            size = wx.Size(-1,-1), pos = wx.DefaultPosition, 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         logopath = os.path.join(root_dir, 'data/logo.ico')
         #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
