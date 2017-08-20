@@ -69,8 +69,8 @@ def filter(img, buf, idx, tor, mode):
                 if buf1[cp]==0 or cp==bur[0]: continue
                 if buf1[cp] == 4: continue
                 if mode and img[cp] < img[bur[0]]-tor: continue
-                if not mode and img[cp] > img[idx[i]]+tor: continue
-                if img[cp] < img[bur[0]]-tor: continue
+                if not mode and img[cp] > img[bur[0]]+tor: continue
+                #if img[cp] < img[bur[0]]-tor: continue
                 bur[s] = cp
                 s += 1
                 if s==1024*128:

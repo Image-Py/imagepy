@@ -1,1 +1,1 @@
-catlog = ['Math', 'Binary', 'Filters', '-', 'calculator_plg']
+catlog = ['Math', 'Binary', 'Filters', '-', 'Threshold', 'Hydrology', 'Features', '-', 'calculator_plg']

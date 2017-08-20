@@ -22,7 +22,7 @@ class Plugin(Simple):
         scale, sigma = para['scale'], para['sigma']
         imgblur = gaussian_filter(img[::scale,::scale], sigma)
         mlab.surf(imgblur, warp_scale=para['h'])
-        IPy.callafter(mlab.show)
+        mlab.show()
 
 if __name__ == '__main__':
     pass

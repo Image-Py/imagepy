@@ -1,10 +1,5 @@
-from scipy.misc import imread
-import matplotlib.pyplot as plt
 import numpy as np
 from numba import jit
-from skimage.data import camera
-import scipy.ndimage as ndimg
-from time import time
 
 from scipy.ndimage import label, generate_binary_structure
 
@@ -12,17 +7,18 @@ strc = np.ones((3,3), dtype=np.bool)
 
 def count(n):
     a = [(n>>i) & 1 for i in range(8)]
-    if sum(a)<=1:return True
+    if sum(a)<=1:return False
     if a[1] & a[3] & a[5] & a[7]:return False
     a = np.array([[a[0],a[1],a[2]],
                   [a[7],  0 ,a[3]],
                   [a[6],a[5],a[4]]])
     n = label(a, strc)[1]
     return n<2
-
+'''
 lut = np.array([count(n) for n in range(256)])
 lut = np.dot(lut.reshape((-1,8)), [1,2,4,8,16,32,64,128]).astype(np.uint8)
-
+print(lut)
+'''
 @jit
 def core(n):
     a = np.zeros(8, dtype=np.uint8)
@@ -39,15 +35,18 @@ def core(n):
     for i in range(8):
         if a[i]==0 or a[i]==2:a[i]=0
         if a[i]==1 or a[i]==3:a[i]=1
-    return np.dot(a, [1,2,4,8,16,32,64,128])
+    s = 0
+    for i in range(8):
+        s |= a[i]<<i
+    return s
 
 index = np.array([core(i) for i in range(65536)], dtype=np.uint8)
 
 
-'''
+
 lut = np.array([223, 221, 1, 221, 1, 221, 1, 221, 1, 0, 0, 0, 1, 221, 1, 221, 207, 204,
                 0, 204, 207,  51, 207, 1, 207, 204, 0, 204, 207, 51, 207, 51], dtype=np.uint8)
-'''
+
 
 def nbs8(h, w):
     return np.array([-w-1,-w,-w+1,+1,+w+1,+w,+w-1,-1], dtype=np.int32)
@@ -56,8 +55,8 @@ def nbs4(h, w):
     return np.array([-1,-w,1,w], dtype=np.int32)
 
 @jit
-def fill(img, msk, p, level, up, pts, s, nbs, buf):
-    n = 0; cur = 0; buf[0] = p; msk[p] = 2; bs = 1;
+def fill(img, msk, p, level, up, pts, s, c, nbs, buf):
+    n = 0; cur = 0; buf[0] = p; msk[p]=2; bs = 1;
     while cur<bs:
         p = buf[cur]
         for dp in nbs:
@@ -72,11 +71,13 @@ def fill(img, msk, p, level, up, pts, s, nbs, buf):
                     bs -= cur
                     cur = 0
             else:
-                pts[s+n] = cp
+                if s == len(pts):
+                    s, c = clear(msk, pts, s, c)
+                pts[s] = cp
                 msk[cp] = 1
-                n += 1
+                s += 1
         cur+=1
-    return n
+    return s, c
 
 @jit
 def check(msk, p, nbs, lut):
@@ -111,30 +112,32 @@ def step(img, msk, pts, s, level, up, nbs, nbs8):
             if msk[cp]==0:
                 if up and img[cp]>=level or not up and img[cp]<=level:
                     msk[cp] = 1
+                    if s == len(pts):
+                        s, cur = clear(msk, pts, s, cur)
                     pts[s] = cp
                     s+=1
                     
-                elif msk[cp]==0:
-                    n = fill(img, msk, p, level, up, pts, s, nbs, buf)
-                    s += n; filled = True
+                else:
+                    n1,n2 = fill(img, msk, p, level, up, pts, s, cur, nbs, buf)
+                    s = n1; cur = n2-1; filled = True
         
         if filled:
             cur +=1; continue;
         elif msk[p]==1:
-            if msk[p]!=1:print('aaaaa')
             check(msk, p, nbs8, lut)
 
         cur+=1
     return cur
 
 @jit
-def clear(msk, pts, s):
-    cur = 0
+def clear(msk, pts, s, cur):
+    ns = 0; nc=0
     for c in range(s):
         if msk[pts[c]]==1:
-            pts[cur] = pts[c]
-            cur += 1
-    return cur
+            pts[ns] = pts[c]
+            ns += 1
+            if c<cur:nc += 1
+    return ns, nc
         
 @jit
 def collect(img, mark, nbs, pts):
@@ -180,25 +183,35 @@ def ridge(img, mark, up=True):
     s, bins = collect(img, mark, nb4, pts)
     
     #print(bins)
+    aaa=0
     for level in range(len(bins))[::1 if up else -1]:
+        
         if bins[level]==0:continue
-        s = clear(mark, pts, s)
+        aaa+=1
+        s, c = clear(mark, pts, s, 0)
         s = step(img, mark, pts, s, level, up, nb4, nb8)
         '''
-        plt.imshow(omark, cmap='gray')
-        plt.show()
+        if level>250:
+            plt.imshow(omark, cmap='gray')
+            plt.show()
         '''
     for i in range(len(mark)):
         if mark[i] == 3:mark[i] = 255
         else: mark[i] = 0
 
 if __name__ == '__main__':
-    dem = imread('line2.png')
-    dis = ndimg.distance_transform_edt(~dem).astype(np.uint8)
-    dis = ~dis
-    mark = (dis<230).astype(np.uint8)
-    watershed(dis, mark)
+    from scipy.misc import imread
+    import scipy.ndimage as ndimg
+    import matplotlib.pyplot as plt
+    
+    dem = imread('dem1.jpg')
+    dem = ndimg.gaussian_filter(dem, 1)
+    dem = 255-dem
+    mark = (dem<100).astype(np.uint8)
+    plt.imshow(mark)
+    plt.show()
+    ridge(dem, mark, True)
     dem//=2
     dem[mark==3] = 255
-    plt.imshow(dem, cmap='gray')
+    plt.imshow(mark, cmap='gray')
     plt.show()
