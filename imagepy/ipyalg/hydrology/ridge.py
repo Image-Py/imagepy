@@ -7,7 +7,7 @@ strc = np.ones((3,3), dtype=np.bool)
 
 def count(n):
     a = [(n>>i) & 1 for i in range(8)]
-    if sum(a)<=1:return False
+    if sum(a)<=1:return True
     if a[1] & a[3] & a[5] & a[7]:return False
     a = np.array([[a[0],a[1],a[2]],
                   [a[7],  0 ,a[3]],
