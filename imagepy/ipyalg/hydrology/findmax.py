@@ -26,7 +26,6 @@ def idx2rc(idx, acc):
 @jit # fill a node (may be two or more points)
 
 def fill(img, msk, p, nbs, buf):
-    msk[p] = 2
     buf[0] = p
     back = img[p]
     cur = 0; s = 1;
@@ -43,12 +42,8 @@ def fill(img, msk, p, nbs, buf):
                     buf[:s-cur] = buf[cur:]
                     s-=cur; cur=0;
         cur += 1
-    msk[p] = 3
-
-
 
 @jit # my mark
-
 def mark(img, msk, buf, mode): # mark the array use (0, 1, 2)
     nbs = neighbors(img.shape)
     idx = np.zeros(1024*128, dtype=np.int64)
@@ -67,10 +62,10 @@ def mark(img, msk, buf, mode): # mark the array use (0, 1, 2)
                 sta = 100
                 break
         if sta==100:continue
-        if sta==len(nbs):
+        msk[p] = 3
+        if sta>0:
             fill(img, msk, p, nbs, buf)
-        else:
-            msk[p] = 3
+            
         idx[s] = p
         s += 1
         if s==len(idx):break

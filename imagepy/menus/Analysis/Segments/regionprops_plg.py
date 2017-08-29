@@ -65,7 +65,7 @@ class Plugin(Simple):
         if para['cov']:titles.extend(['Major','Minor','Ori'])
         buf = imgs[0].astype(np.uint16)
         data, mark = [], []
-        strc = np.array([[0,1,0],[1,1,1],[0,1,0]], dtype=np.uint8)
+        strc = np.array([[1,1,1],[1,1,1],[1,1,1]], dtype=np.uint8)
         for i in range(len(imgs)):
             label(msks[i], strc, output=buf)
             ls = regionprops(buf, imgs[i])

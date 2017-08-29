@@ -6,7 +6,7 @@ Created on Wed Dec 28 00:26:45 2016
 import numpy as np
 from skimage.morphology import skeletonize
 from skimage.morphology import medial_axis
-
+from imagepy.ipyalg.graph import skel2d
 from imagepy.core.engine import Filter
 
 class Skeleton(Filter):
@@ -16,7 +16,7 @@ class Skeleton(Filter):
     def run(self, ips, snap, img, para = None):
         img[:] = skeletonize(snap>0)
         img *= 255
-
+'''
 class MedialAxis(Filter):
     title = 'Medial Axis'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
@@ -31,8 +31,25 @@ class MedialAxis(Filter):
         else:
             img[:] = rst[0]
             np.multiply(img, rst[1], out=img, casting='unsafe')
+'''
+
+class MedialAxis(Filter):
+    title = 'My Medial Axis'
+    note = ['all', 'auto_msk', 'auto_snap', 'preview']
+    para = {'dis':False}
+    view = [(bool,'distance transform', 'dis')]
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        dis = skel2d.mid_axis(snap)
+        if not para['dis']:
+            img[:] = dis>0
+            img *= 255
+        else: img[:] = dis
+
 
 plgs = [Skeleton, MedialAxis]
+
 '''
 import numpy as np
 import scipy.ndimage as nimg

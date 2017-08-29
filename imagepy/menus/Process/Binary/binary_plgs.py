@@ -7,42 +7,60 @@ Created on Fri Nov 18 22:51:57 2016
 
 # -*- coding: utf-8 -*
 import scipy.ndimage as ndimg
+import numpy as np
 from imagepy.core.engine import Filter
+from skimage.morphology import convex_hull_object
 
 class Closing(Filter):
     """Closing: derived from imagepy.core.engine.Filter """
     title = 'Binary Closeing'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
+    para = {'w':3, 'h':3}
+    view = [(int, (1,15), 0, 'width', 'w', 'pix'),
+            (int, (1,15), 0, 'height', 'h', 'pix')]
 
     def run(self, ips, snap, img, para = None):
-        ndimg.binary_closing(snap, output=img)
+        strc = np.ones((para['h'], para['w']), dtype=np.uint8)
+        ndimg.binary_closing(snap, strc, output=img)
         img *= 255
         
 class Opening(Filter):
     """Opening: derived from imagepy.core.engine.Filter """
     title = 'Binary Opening'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
+    para = {'w':3, 'h':3}
+    view = [(int, (1,15), 0, 'width', 'w', 'pix'),
+            (int, (1,15), 0, 'height', 'h', 'pix')]
 
     def run(self, ips, snap, img, para = None):
-        ndimg.binary_opening(snap, output=img)
+        strc = np.ones((para['h'], para['w']), dtype=np.uint8)
+        ndimg.binary_opening(snap, strc, output=img)
         img *= 255
         
 class Dilation(Filter):
     """Dilation: derived from imagepy.core.engine.Filter """
     title = 'Binary Dilation'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
+    para = {'w':3, 'h':3}
+    view = [(int, (1,15), 0, 'width', 'w', 'pix'),
+            (int, (1,15), 0, 'height', 'h', 'pix')]
 
     def run(self, ips, snap, img, para = None):
-        ndimg.binary_dilation(snap, output=img)
+        strc = np.ones((para['h'], para['w']), dtype=np.uint8)
+        ndimg.binary_dilation(snap, strc, output=img)
         img *= 255
         
 class Erosion(Filter):
     """Erosion: derived from imagepy.core.engine.Filter """
     title = 'Binary Erosion'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
+    para = {'w':3, 'h':3}
+    view = [(int, (1,15), 0, 'width', 'w', 'pix'),
+            (int, (1,15), 0, 'height', 'h', 'pix')]
 
     def run(self, ips, snap, img, para = None):
-        ndimg.binary_erosion(snap, output=img)
+        strc = np.ones((para['h'], para['w']), dtype=np.uint8)
+        ndimg.binary_erosion(snap, strc, output=img)
         img *= 255
         
 class Outline(Filter):
@@ -71,5 +89,13 @@ class EDT(Filter):
 
     def run(self, ips, snap, img, para = None):
         return ndimg.distance_transform_edt(snap)
+
+class Convex(Filter):
+    title = 'Convex Hull'
+    note = ['8-bit', 'auto_msk', 'auto_snap']
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        img[convex_hull_object(snap)] = 255
         
-plgs = [Dilation, Erosion, '-', Closing, Opening, '-', Outline, FillHoles, EDT]
+plgs = [Dilation, Erosion, '-', Closing, Opening, '-', Outline, FillHoles, Convex, EDT]

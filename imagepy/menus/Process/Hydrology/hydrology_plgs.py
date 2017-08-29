@@ -40,7 +40,7 @@ class FindMax(Filter):
     note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'preview']
     
     para = {'tol':2, 'mode':False, 'wsd':False}
-    view = [(int, (0,50), 0,  'tolerance', 'tol', 'value')]
+    view = [(int, (0,100), 0,  'tolerance', 'tol', 'value')]
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'])
@@ -52,7 +52,7 @@ class FindMin(Filter):
     note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'preview']
     
     para = {'tol':2, 'mode':False, 'wsd':False}
-    view = [(int, (0,50), 0,  'tolerance', 'tol', 'value')]
+    view = [(int, (0,100), 0,  'tolerance', 'tol', 'value')]
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'], False)

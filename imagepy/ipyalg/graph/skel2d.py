@@ -10,7 +10,8 @@ def check(n):
     a = [(n>>i) & 1 for i in range(8)]
     a.insert(4, 0) # make the 3x3 unit
     # if up, down, left, right all are 1, you cannot make a hole
-    #if a[1] & a[3] & a[5] & a[7]:return False
+    if a[1] & a[3] & a[5] & a[7]:return False
+    #if sum(a)==1: return False
     a = np.array(a).reshape((3,3))
     # segments
     n = label(a, strc)[1]
@@ -45,13 +46,13 @@ def medial_axis(data, idx, branch = True):
             |(data[i3]>0)<<2|(data[i4]>0)<<3\
             |(data[i6]>0)<<4|(data[i7]>0)<<5\
             |(data[i8]>0)<<6|(data[i9]>0)<<7
-        if (lup[c//8]>> c%8) &1:data[id]=0
+        if (lut[c//8]>> c%8) &1:data[id]=0
     return 0;
 
 def mid_axis(img):
     dis = ndimg.distance_transform_edt(img)
     idx = np.argsort(dis.flat).astype(np.int32)
-    skel2dp(dis, idx, lut)
+    medial_axis(dis, idx, lut)
     return dis
 
 if __name__ == '__main__':
