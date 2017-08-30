@@ -37,38 +37,50 @@ class Mark:
 
 # center, area, l, extent, cov
 class Plugin(Simple):
-    title = 'Region Props'
+    title = 'Geometry Analysis'
     note = ['8-bit', '16-bit']
-    para = {'img':None, 'center':True, 'area':True, 'l':True, 'extent':False, 'cov':False, 'slice':False}
-    view = [('img', 'label', 'img', ''),
+    para = {'con':'4-connect', 'center':True, 'area':True, 'l':True, 'extent':False, 'cov':False, 'slice':False,
+            'ed':False, 'holes':False, 'ca':False, 'fa':False, 'solid':False}
+    view = [(list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix'),
+            (bool, 'slice', 'slice'),
+            ('lab','=========  indecate  ========='),
             (bool, 'center', 'center'),
             (bool, 'area', 'area'),
             (bool, 'l', 'l'),
             (bool, 'extent', 'extent'),
-            (bool, 'cov', 'cov'),
-            (bool, 'slice', 'slice')]
+            (bool, 'equivalent diameter', 'ed'),
+            (bool, 'convex area', 'ca'),
+            (bool, 'holes', 'holes'),
+            (bool, 'filled area', 'fa'),
+            (bool, 'solidity', 'solid'),
+            (bool, 'cov', 'cov')]
 
     #process
     def run(self, ips, imgs, para = None):
-        if not para['slice']:
-            msks = [ips.img]
-            imgs = [WindowsManager.get(para['img']).ips.img]
-        else: 
-            msks = imgs
-            imgs = WindowsManager.get(para['img']).ips.imgs
+        if not para['slice']:msks = [ips.img]
+        else: msks = imgs
+        k = ips.unit[0]
 
         titles = ['Slice', 'ID'][0 if para['slice'] else 1:]
         if para['center']:titles.extend(['Center-X','Center-Y'])
         if para['area']:titles.append('Area')
         if para['l']:titles.append('Perimeter')
         if para['extent']:titles.extend(['Min-Y','Min-X','Max-Y','Max-X'])
+        if para['ed']:titles.extend(['Diameter'])
+        if para['ca']:titles.extend(['ConvexArea'])
+        if para['holes']:titles.extend(['Holes'])
+        if para['fa']:titles.extend(['FilledArea'])
+        if para['solid']:titles.extend(['Solidity'])
         if para['cov']:titles.extend(['Major','Minor','Ori'])
         buf = imgs[0].astype(np.uint16)
         data, mark = [], []
-        strc = np.array([[1,1,1],[1,1,1],[1,1,1]], dtype=np.uint8)
+        if para['con'] == '4-connect':
+            strc = np.array([[0,1,0],[1,1,1],[0,1,0]], dtype=np.uint8)
+        elif para['con'] == '8-connect':
+            strc = np.array([[1,1,1],[1,1,1],[1,1,1]], dtype=np.uint8)
         for i in range(len(imgs)):
             label(msks[i], strc, output=buf)
-            ls = regionprops(buf, imgs[i])
+            ls = regionprops(buf)
 
             dt = [[i]*len(ls), list(range(len(ls)))]
             if not para['slice']:dt = dt[1:]
@@ -78,19 +90,29 @@ class Plugin(Simple):
             centroids = [i.centroid for i in ls]
             mark.append([(center, cov) for center,cov in zip(centroids, cvs)])
             if para['center']:
-                dt.append([round(i.centroid[0],1) for i in ls])
-                dt.append([round(i.centroid[1],1) for i in ls])
+                dt.append([round(i.centroid[0]*k,1) for i in ls])
+                dt.append([round(i.centroid[1]*k,1) for i in ls])
             if para['area']:
-                dt.append([i.area for i in ls])
+                dt.append([i.area*k**2 for i in ls])
             if para['l']:
-                dt.append([round(i.perimeter,1) for i in ls])
+                dt.append([round(i.perimeter*k,1) for i in ls])
             if para['extent']:
                 for j in (0,1,2,3):
-                    dt.append([i.bbox[j] for i in ls])
+                    dt.append([i.bbox[j]*k for i in ls])
+            if para['ed']:
+                dt.append([round(i.equivalent_diameter*k, 1) for i in ls])
+            if para['ca']:
+                dt.append([i.convex_area*k**2 for i in ls])
+            if para['holes']:
+                dt.append([1-i.euler_number for i in ls])
+            if para['fa']:
+                dt.append([i.filled_area*k**2 for i in ls])
+            if para['solid']:
+                dt.append([round(i.solidity, 2) for i in ls])
             if para['cov']:
-                dt.append([round(i.major_axis_length, 1) for i in ls])
-                dt.append([round(i.minor_axis_length, 1) for i in ls])
-                dt.append([round(i.orientation, 1) for i in ls])
+                dt.append([round(i.major_axis_length*k, 1) for i in ls])
+                dt.append([round(i.minor_axis_length*k, 1) for i in ls])
+                dt.append([round(i.orientation*k, 1) for i in ls])
 
             data.extend(list(zip(*dt)))
         ips.mark = Mark(mark)

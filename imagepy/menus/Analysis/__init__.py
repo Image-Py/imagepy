@@ -1,1 +1,1 @@
-catlog = ['label_plg', '-', 'statistic_plg', '-', 'Segments', 'Tables']
+catlog = ['label_plg', '-', 'statistic_plg', '-', 'Region Analysis', 'Skeleton Network', 'Tables']

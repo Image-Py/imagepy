@@ -43,7 +43,7 @@ class Profile:
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
-        linefont = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
+        linefont = wx.Font(10, wx.FONTFAMILY_DEFAULT, 
                        wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         dc.SetFont(linefont)
         if len(self.buf)>1:

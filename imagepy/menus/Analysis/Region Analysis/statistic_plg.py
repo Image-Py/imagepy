@@ -12,7 +12,7 @@ from imagepy.core.manager import WindowsManager
 from imagepy.core.roi.pointroi import PointRoi
 
 class Plugin(Simple):
-    title = 'Segments Statistic'
+    title = 'Fragment Statistic'
     note = ['8-bit', '16-bit']
     
     para = {'lab':None, 'max':True, 'min':True,'mean':False,

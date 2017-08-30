@@ -25,7 +25,7 @@ class ImagePlus:
         self.lut = ColorManager.get_lut('grays')
         self.tool = None
         self.data = None
-        self.unit = None
+        self.unit = (1, 'pix')
 
     def set_title(self, title):
         self.title = WindowsManager.name(title)

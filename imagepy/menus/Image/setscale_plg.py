@@ -53,7 +53,7 @@ class Plugin(Simple):
         return True
 
     def run(self, ips, imgs, para = None):
-        if para['kill'] : ips.unit=None
+        if para['kill'] : ips.unit=(1,'pix')
         else : 
             ips.unit = (para['k'], para['unit'])
             self.recent.pop(0)
