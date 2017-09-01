@@ -5,7 +5,7 @@ Created on Tue Dec 27 01:06:59 2016
 """
 from imagepy import IPy, wx
 import numpy as np
-from imagepy.core.engine import Simple
+from imagepy.core.engine import Simple, Filter
 from imagepy.core.manager import WindowsManager
 from scipy.ndimage import label
 from skimage.measure import regionprops
@@ -36,7 +36,7 @@ class Mark:
             dc.DrawLines([f(*i) for i in arr[:,::-1]])
 
 # center, area, l, extent, cov
-class Plugin(Simple):
+class RegionCounter(Simple):
     title = 'Geometry Analysis'
     note = ['8-bit', '16-bit']
     para = {'con':'4-connect', 'center':True, 'area':True, 'l':True, 'extent':False, 'cov':False, 'slice':False,
@@ -117,3 +117,71 @@ class Plugin(Simple):
             data.extend(list(zip(*dt)))
         ips.mark = Mark(mark)
         IPy.table(ips.title+'-region', data, titles)
+
+# center, area, l, extent, cov
+class RegionFilter(Filter):
+    title = 'Geometry Filter'
+    note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap','preview']
+    para = {'con':'4-connect', 'area':0, 'l':0, 'holes':0, 'solid':0, 'e':0, 'front':255, 'back':0}
+    view = [(list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix'),
+            ('lab','Filter: "+" means >=, "-" means <'),
+            (int, (0, 255), 0, 'front color', 'front', ''),
+            (int, (0, 255), 0, 'back color', 'back', ''),
+            (float, (-1e6, 1e6), 1, 'area', 'area', 'unit^2'),
+            (float, (-1e6, 1e6), 1, 'l', 'l', 'unit'),
+            (int, (-10,10), 0, 'holes', 'holes', 'num'),
+            (float, (-1, 1,), 1, 'solidity', 'solid', 'ratio'),
+            (float, (-100,100), 1, 'eccentricity', 'e', 'ratio')]
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        k, unit = ips.unit
+        if para['con'] == '4-connect':
+            strc = np.array([[0,1,0],[1,1,1],[0,1,0]], dtype=np.uint8)
+        elif para['con'] == '8-connect':
+            strc = np.array([[1,1,1],[1,1,1],[1,1,1]], dtype=np.uint8)
+
+        lab, n = label(snap, strc, output=np.uint16)
+        idx = (np.ones(n+1)*para['front']).astype(np.uint8)
+        ls = regionprops(lab)
+        
+        for i in ls:
+            if para['area'] == 0: break
+            if para['area']>0:
+                if i.area*k**2 < para['area']: idx[i.label] = para['back']
+            if para['area']<0:
+                if i.area*k**2 >= -para['area']: idx[i.label] = para['back']
+
+        for i in ls:
+            if para['l'] == 0: break
+            if para['l']>0:
+                if i.perimeter*k < para['l']: idx[i.label] = para['back']
+            if para['l']<0:
+                if i.perimeter*k >= -para['l']: idx[i.label] = para['back']
+
+        for i in ls:
+            if para['holes'] == 0: break
+            if para['holes']>0:
+                if 1-i.euler_number < para['holes']: idx[i.label] = para['back']
+            if para['holes']<0:
+                if 1-i.euler_number >= -para['holes']: idx[i.label] = para['back']
+
+        for i in ls:
+            if para['solid'] == 0: break
+            if para['solid']>0:
+                if i.solidity < para['solid']: idx[i.label] = para['back']
+            if para['solid']<0:
+                if i.solidity >= -para['solid']: idx[i.label] = para['back']
+
+        for i in ls:
+            if para['e'] == 0: break
+            if para['e']>0:
+                if i.minor_axis_length>0 and i.major_axis_length/i.minor_axis_length < para['e']: 
+                    idx[i.label] = para['back']
+            if para['e']<0:
+                if i.minor_axis_length>0 and i.major_axis_length/i.minor_axis_length >= -para['e']: 
+                    idx[i.label] = para['back']
+
+        idx[0] = 0
+        img[:] = idx[lab]
+plgs = [RegionCounter, RegionFilter]

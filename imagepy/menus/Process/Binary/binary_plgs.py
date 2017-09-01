@@ -81,14 +81,6 @@ class FillHoles(Filter):
     def run(self, ips, snap, img, para = None):
         ndimg.binary_fill_holes(snap, output=img)
         img *= 255
-        
-class EDT(Filter):
-    """EDT: derived from imagepy.core.engine.Filter """
-    title = 'Distance Transform'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
-
-    def run(self, ips, snap, img, para = None):
-        return ndimg.distance_transform_edt(snap)
 
 class Convex(Filter):
     title = 'Convex Hull'
@@ -98,4 +90,4 @@ class Convex(Filter):
     def run(self, ips, snap, img, para = None):
         img[convex_hull_object(snap)] = 255
         
-plgs = [Dilation, Erosion, '-', Closing, Opening, '-', Outline, FillHoles, Convex, EDT]
+plgs = [Dilation, Erosion, '-', Closing, Opening, '-', Outline, FillHoles, Convex]

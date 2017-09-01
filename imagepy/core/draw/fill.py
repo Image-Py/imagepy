@@ -13,7 +13,7 @@ def floodfill(img, x, y, thr, con):
 	strc = generate_binary_structure(2, con+1)
 	label(msk, strc, output = buf)
 	msk = buf == buf[int(y), int(x)]
-	msk[[0,-1],:], msk[:,[0,-1]] = 0, 0
+	#msk[[0,-1],:], msk[:,[0,-1]] = 0, 0
 
 	#imsave('test.png', msk.astype(np.uint8))
 	
