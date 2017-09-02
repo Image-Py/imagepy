@@ -45,6 +45,7 @@ class Plugin(Tool):
                 print(self.curobj)
                 if ips.roi!= None:
                     self.curobj = ips.roi.pick(x, y, lim)
+                    ips.roi.info(ips, self.curobj)
                 if self.curobj!=None:return
                     
                 if ips.roi == None:

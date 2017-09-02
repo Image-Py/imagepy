@@ -8,6 +8,7 @@ from ..draw import paint
 from .polygonroi import PolygonRoi
 from .roi import ROI
 from ..manager import RoiManager
+from imagepy import IPy
 
 class RectangleRoi(ROI):
     dtype = 'rect'
@@ -40,6 +41,12 @@ class RectangleRoi(ROI):
             self.body = [(l,b),(r,b),(r,t),(l,t),(l,b)]
             return True
         
+    def info(self, ips, cur):
+        k, u = ips.unit
+        l,r,t,b = self.lt, self.rt, self.tp, self.bm
+        IPy.set_info('Rectangle : x:%.1f y:%.1f w:%.1f h:%.1f   S:%.1f'%(
+            min(l,r)*k,min(t,b)*k,abs(r-l)*k,abs(b-t)*k,abs((r-l)*(b-t)*k**2)))
+
     def pick(self, x, y, lim):
         rst = self.snap(x,y, lim)
         if rst != None:return rst
@@ -59,7 +66,8 @@ class RectangleRoi(ROI):
         self.commit()
         
     def get_box(self):
-        return [self.lt, self.tp, self.rt, self.bm]
+        lr, tb = (self.lt, self.rt), (self.tp, self.bm)
+        return [min(lr), min(tb), max(lr), max(tb)]
         
     def topolygon(self):
         pg = PolygonRoi()

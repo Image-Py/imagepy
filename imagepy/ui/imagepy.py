@@ -120,6 +120,7 @@ class ImagePy(wx.Frame):
     def on_close(self, event):
         ConfigManager.write()
         self.Destroy()
+        sys.exit()
 
     def __del__( self ):
         pass

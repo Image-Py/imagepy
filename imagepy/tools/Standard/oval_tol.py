@@ -25,6 +25,7 @@ class Plugin(Tool):
             if not self.doing:
                 if ips.roi!= None:
                     self.curobj = ips.roi.pick(x, y, lim)
+                    ips.roi.info(ips, self.curobj)
                 if not self.curobj in (None,True):return
                 self.oper = '+'
                 if ips.roi==None or not hasattr(ips.roi, 'topolygon'):

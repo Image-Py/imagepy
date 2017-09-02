@@ -25,15 +25,19 @@ class Plugin(Tool):
             if not self.doing:
                 if ips.roi!= None:
                     self.curobj = ips.roi.pick(x, y, lim)
+                    ips.roi.info(ips, self.curobj)
                 if not self.curobj in (None,True):return
-                self.oper = '+'
+                #self.oper = '+'
                 if ips.roi == None:
                     ips.roi = polygonroi.PolygonRoi()
                     self.doing = True
                 elif hasattr(ips.roi, 'topolygon'):
-                    ips.roi = ips.roi.topolygon()
-                    if key['shift']: self.oper,self.doing = '+',True
-                    elif key['ctrl']: self.oper,self.doing = '-',True
+                    if key['shift']: 
+                        ips.roi = ips.roi.topolygon()
+                        self.oper,self.doing = '+',True
+                    elif key['ctrl']: 
+                        ips.roi = ips.roi.topolygon()
+                        self.oper,self.doing = '-',True
                     elif self.curobj: return
                     else: ips.roi=None
                 else: ips.roi = None

@@ -145,7 +145,7 @@ class ParaDialog (wx.Dialog):
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
         iswin = platform.system() == 'Windows'
-        lab  = 0 if iswin else wx.SL_LABELS
+        lab  = wx.SL_VALUE_LABEL if iswin else wx.SL_LABELS
 
         ctrl = wx.Slider( self, wx.ID_ANY, 50, rang[0], rang[1],
                           wx.DefaultPosition, wx.Size( -1,-1 ), wx.SL_HORIZONTAL|lab )

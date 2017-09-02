@@ -7,6 +7,7 @@ import wx, sys
 import numpy as np
 from math import ceil
 from ..core.manager import ToolsManager
+from imagepy import IPy
 
 #import sys
 #get_npbuffer = np.getbuffer if sys.version[0]=="2" else memoryview
@@ -56,8 +57,14 @@ class Canvas (wx.Panel):
     def on_mouseevent(self, me):
         tool = self.ips.tool
         if tool == None : tool = ToolsManager.curtool
-        if tool==None:return
         x,y = self.to_data_coor(me.GetX(), me.GetY())
+        if me.Moving() and not me.LeftIsDown() and not me.RightIsDown() and not me.MiddleIsDown():
+            xx,yy = int(round(x)), int(round(y))
+            k, unit = self.ips.unit
+            if xx>=0 and xx<self.ips.img.shape[1] and yy>=0 and yy<self.ips.img.shape[0]:
+                IPy.set_info('Location:%.1f %.1f  Value:%s'%(x*k, y*k, self.ips.img[yy,xx]))
+        if tool==None:return
+        
         sta = [me.AltDown(), me.ControlDown(), me.ShiftDown()]
         if me.ButtonDown():tool.mouse_down(self.ips, x, y, me.GetButton(), alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)
         if me.ButtonUp():tool.mouse_up(self.ips, x, y, me.GetButton(), alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self)

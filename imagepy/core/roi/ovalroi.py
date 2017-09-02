@@ -9,6 +9,7 @@ from ..draw import paint
 from .roi import ROI
 from .polygonroi import PolygonRoi
 from ..manager import RoiManager
+from imagepy import IPy
 
 class OvalRoi(ROI):
     dtype = 'rect'
@@ -59,6 +60,12 @@ class OvalRoi(ROI):
             if 'b' in i:self.bm = ny
         self.commit()
         
+    def info(self, ips, cur):
+        k, u = ips.unit
+        l,r,t,b = self.lt, self.rt, self.tp, self.bm
+        IPy.set_info('Rectangle : x:%.1f y:%.1f w:%.1f h:%.1f   S:%.1f'%(
+            min(l,r)*k,min(t,b)*k,abs(r-l)*k,abs(b-t)*k,abs((r-l)*(b-t)/4*np.pi*k**2)))
+    
     def get_box(self):
         return [self.lt, self.tp, self.rt, self.bm]
         

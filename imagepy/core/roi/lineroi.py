@@ -10,6 +10,7 @@ from ..draw import paint
 from .operator import affine
 from .roi import ROI
 from ..manager import RoiManager
+from imagepy import IPy
 
 class LineRoi(ROI):
     dtype = 'line'
@@ -55,6 +56,12 @@ class LineRoi(ROI):
         i[0][i[1]] = (nx, ny)
         self.update, self.infoupdate = True, True
         
+    def info(self, ips, cur):
+        k, u = ips.unit
+        if cur==None:return
+        x, y = cur[0][cur[1]]
+        IPy.set_info('Line : points:%.0f x:%.1f y:%.1f'%(len(cur[0]), x*k, y*k))
+    
     def draw(self, dc, f):
         dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
         for line in self.body:

@@ -19,6 +19,7 @@ class Plugin(Tool):
         if btn==1:
             if ips.roi!=None:
                 self.curobj = ips.roi.pick(x, y, lim)
+                ips.roi.info(ips, self.curobj)
             if self.curobj!=None:return
             if not isinstance(ips.roi, pointroi.PointRoi):
                 ips.roi = pointroi.PointRoi()

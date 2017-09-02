@@ -42,6 +42,7 @@ class Plugin(Tool):
         if btn==1 or btn==3:
             if ips.roi!= None:
                 self.curobj = ips.roi.pick(x, y, lim)
+                ips.roi.info(ips, self.curobj)
             if not self.curobj in (None,True):return
             if ips.roi == None:
                 msk = floodfill(ips.img, x, y, 

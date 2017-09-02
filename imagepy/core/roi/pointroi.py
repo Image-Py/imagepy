@@ -7,6 +7,7 @@ import wx
 from ..draw import paint
 from .roi import ROI, affine
 from ..manager import RoiManager
+from imagepy import IPy
 
 class PointRoi(ROI):
     dtype = 'point'
@@ -48,6 +49,12 @@ class PointRoi(ROI):
             self.infoupdate=False
         return self.box
         
+    def info(self, ips, cur):
+        k, u = ips.unit
+        if cur==None:return
+        x, y = self.body[cur]
+        IPy.set_info('points:%.0f x:%.1f y:%.1f'%(len(body), x*k, y*k))
+
     def affine(self, m, o):
         plg = PointRoi()
         plg.body = affine(self.body, m, o)

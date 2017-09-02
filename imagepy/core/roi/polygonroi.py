@@ -11,6 +11,7 @@ from ..draw import paint
 from .operator import affine
 from .roi import ROI
 from ..manager import RoiManager
+from imagepy import IPy
 
 def parse_poly(geom):
     out = list(geom.exterior.coords)
@@ -94,6 +95,10 @@ class PolygonRoi(ROI):
             if i[1]==len(i[0])-1:
                 i[0][0] = (nx, ny)
             
+    def info(self, ips, cur):
+        if cur==None:return
+        IPy.set_info('Polygon: %.0f fragments'%len(self.body))
+
     def countbox(self):
         self.box = [1000,1000,-1000,-1000]
         for i in self.body:
