@@ -7,7 +7,7 @@ from imagepy import IPy, wx
 import numpy as np
 from imagepy.core.engine import Simple, Filter
 from imagepy.core.manager import WindowsManager
-from scipy.ndimage import label
+from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
 
 class Mark:
@@ -39,7 +39,7 @@ class Mark:
 class RegionCounter(Simple):
     title = 'Geometry Analysis'
     note = ['8-bit', '16-bit']
-    para = {'con':'4-connect', 'center':True, 'area':True, 'l':True, 'extent':False, 'cov':False, 'slice':False,
+    para = {'con':'8-connect', 'center':True, 'area':True, 'l':True, 'extent':False, 'cov':False, 'slice':False,
             'ed':False, 'holes':False, 'ca':False, 'fa':False, 'solid':False}
     view = [(list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix'),
             (bool, 'slice', 'slice'),
@@ -74,10 +74,7 @@ class RegionCounter(Simple):
         if para['cov']:titles.extend(['Major','Minor','Ori'])
         buf = imgs[0].astype(np.uint16)
         data, mark = [], []
-        if para['con'] == '4-connect':
-            strc = np.array([[0,1,0],[1,1,1],[0,1,0]], dtype=np.uint8)
-        elif para['con'] == '8-connect':
-            strc = np.array([[1,1,1],[1,1,1],[1,1,1]], dtype=np.uint8)
+        strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
         for i in range(len(imgs)):
             label(msks[i], strc, output=buf)
             ls = regionprops(buf)
@@ -90,8 +87,8 @@ class RegionCounter(Simple):
             centroids = [i.centroid for i in ls]
             mark.append([(center, cov) for center,cov in zip(centroids, cvs)])
             if para['center']:
-                dt.append([round(i.centroid[0]*k,1) for i in ls])
                 dt.append([round(i.centroid[1]*k,1) for i in ls])
+                dt.append([round(i.centroid[0]*k,1) for i in ls])
             if para['area']:
                 dt.append([i.area*k**2 for i in ls])
             if para['l']:
