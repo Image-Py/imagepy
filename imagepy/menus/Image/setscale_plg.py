@@ -23,7 +23,6 @@ class ScaleDialog(ParaDialog):
             k, u = para[key].split(' - ')
             para['k'], para['unit'] = float(k), u
             self.reset()
-        return True
 
 class Plugin(Simple):
     title = 'Scale And Unit'
@@ -31,7 +30,7 @@ class Plugin(Simple):
     recent = []
     
     para = {'k':1.0, 'unit':'pix', 'kill':False, 'recent':'Recent'}
-    view = [(float, (0,1000000), 1, 'per', 'k', 'pix'),
+    view = [(float, (0,1000000), 2, 'per', 'k', 'pix'),
             (str, 'unit', 'unit',''),
             (list, [], str, 'commen', 'recent', ''),
             (bool, 'kill scale', 'kill')]

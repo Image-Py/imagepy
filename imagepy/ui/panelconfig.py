@@ -209,15 +209,18 @@ class ParaDialog (wx.Dialog):
             u.SetInitialSize((max(minu),-1))
         self.Fit()
 
-    def para_check(self, para, key):
-        return sum([i==None for i in list(para.values())])==0
+    def para_check(self, para, key):pass
 
     def para_changed(self, key):
+
         para = self.para
         for p in list(para.keys()):
             if p in self.ctrl_dic:
                 para[p] = self.ctrl_dic[p].GetValue()
-        if not self.para_check(para, key):return
+        self.para_check(para, key)
+        sta = sum([i==None for i in list(para.values())])==0
+        self.btn_OK.Enable(sta)
+        if not sta: return
         if 'preview' not in self.ctrl_dic:return
         if not self.ctrl_dic['preview'].GetValue():return
         self.handle(para)
