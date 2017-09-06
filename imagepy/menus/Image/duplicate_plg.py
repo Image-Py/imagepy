@@ -24,7 +24,8 @@ class Plugin(Simple):
         return True
     #process
     def run(self, ips, imgs, para = None):
-        name = self.para['name']
+        name = para['name']
+        print('name------------------', name)
         if ips.get_nslices()==1 or self.para['stack']==False:
             if ips.roi == None:
                 img = ips.img.copy()

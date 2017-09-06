@@ -83,11 +83,12 @@ class FillHoles(Filter):
         img *= 255
 
 class Convex(Filter):
-    title = 'Convex Hull'
+    title = 'Binary ConvexHull'
     note = ['8-bit', 'auto_msk', 'auto_snap']
 
     #process
     def run(self, ips, snap, img, para = None):
         img[convex_hull_object(snap)] = 255
         
+
 plgs = [Dilation, Erosion, '-', Closing, Opening, '-', Outline, FillHoles, Convex]

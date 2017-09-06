@@ -155,7 +155,7 @@ class Canvas (wx.Panel):
         if self.ips.roi != None:
             self.ips.roi.draw(cdc, self.to_panel_coor)
         if self.ips.mark != None:
-            self.ips.mark.draw(cdc, self.to_panel_coor, cur=self.ips.cur)
+            self.ips.mark.draw(cdc, self.to_panel_coor, cur=self.ips.cur, k = self.get_scale())
         if self.ips.unit!=(1,'pix'):
             self.draw_ruler(cdc)
         #cdc.EndDrawing()
@@ -205,7 +205,7 @@ class Canvas (wx.Panel):
         if self.ips.roi != None:
             self.ips.roi.draw(cdc, self.to_panel_coor)
         if self.ips.mark != None:
-            self.ips.mark.draw(cdc, self.to_panel_coor, cur=self.ips.cur)
+            self.ips.mark.draw(cdc, self.to_panel_coor, cur=self.ips.cur, k = self.get_scale())
         #cdc.EndDrawing()
         if self.ips.unit!=(1,'pix'):
             self.draw_ruler(cdc)

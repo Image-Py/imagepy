@@ -58,6 +58,7 @@ class TableLog(wx.Frame):
         
         ## create tablegrid and set tablegrid value 
         #self.grid.SetTable(tableBase)
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.grid.CreateGrid(len(data), len(data[0]))
         if cols!=None:
             for i in range(len(cols)):
@@ -118,14 +119,12 @@ class TableLog(wx.Frame):
         self._OnSave(typename="Csv", sep=",")
         
     def OnClose(self,event):
+        TableLogManager.close(self.GetTitle())
         self.Destroy()
         
     def OnAbout(self,event):
         wx.MessageBox('Table Log Window!','About',wx.OK)
         
-    def OnClosing(self, event):
-        TableLogManager.close(self.title)
-        event.Skip()
         
 if __name__ == '__main__':
     app = wx.PySimpleApp()

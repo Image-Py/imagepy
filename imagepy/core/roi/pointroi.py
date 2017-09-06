@@ -53,7 +53,7 @@ class PointRoi(ROI):
         k, u = ips.unit
         if cur==None:return
         x, y = self.body[cur]
-        IPy.set_info('points:%.0f x:%.1f y:%.1f'%(len(body), x*k, y*k))
+        IPy.set_info('points:%.0f x:%.1f y:%.1f'%(len(self.body), x*k, y*k))
 
     def affine(self, m, o):
         plg = PointRoi()

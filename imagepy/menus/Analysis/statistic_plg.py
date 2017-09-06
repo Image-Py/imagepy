@@ -6,6 +6,7 @@ Created on Mon Dec 26 20:34:59 2016
 from imagepy import IPy, root_dir
 import wx, numpy as np, os
 from imagepy.core.engine import Simple
+from imagepy.core.roi import PointRoi
 from imagepy.core.manager import WindowsManager
 from imagepy.ui.widgets import HistCanvas
 from wx.lib.pubsub import pub
@@ -69,11 +70,13 @@ class Histogram(Simple):
     note = ['8-bit', '16-bit', 'rgb']
 
     def run(self, ips, imgs, para = None):
-        print(ips.imgtype, ips.imgtype == '8-bit')
+        msk = ips.get_msk('in')
         if ips.imgtype == 'rgb':
-            hist = [np.histogram(ips.img[:,:,i], np.arange(257))[0] for i in (0,1,2)]
+            img = ips.img if msk is None else ips.img[msk]
+            hist = [np.histogram(img[:,i], np.arange(257))[0] for i in (0,1,2)]
         else:
-            hist = np.histogram(ips.lookup(), np.arange(257))[0]
+            img = ips.lookup() if msk is None else ips.lookup()[msk]
+            hist = np.histogram(img, np.arange(257))[0]
         show_hist(WindowsManager.get(), ips.title+'-Histogram', hist)
 
 
@@ -88,10 +91,12 @@ class Frequence(Simple):
     def run(self, ips, imgs, para = None):
         if not para['slice']: imgs = [ips.img]
         data = []
+        msk = ips.get_msk('in')
         for i in range(len(imgs)):
-            maxv = imgs[i].max()
+            img = imgs[i] if msk is None else imgs[i][msk]
+            maxv = img.max()
             if maxv==0:continue
-            ct = np.histogram(imgs[i], maxv, [1,maxv+1])[0]
+            ct = np.histogram(img, maxv, [1,maxv+1])[0]
             titles = ['slice','value','count']
             dt = [[i]*len(ct), list(range(maxv+1)), ct]
             if not para['slice']:
@@ -106,29 +111,24 @@ class Frequence(Simple):
         IPy.table(ips.title+'-histogram', data, titles)
         
 class Statistic(Simple):
-    title = 'Statistic'
+    title = 'Pixel Statistic'
     note = ['8-bit', '16-bit']
     
-    para = {'max':True, 'min':True,'mean':False,'var':False,'std':False,'stack':False}
+    para = {'max':True, 'min':True,'mean':False,'var':False,'std':False,'slice':False}
     view = [(bool, 'Max', 'max'),
             (bool, 'Min', 'min'),
             (bool, 'Mean', 'mean'),
             (bool, 'Variance', 'var'),
-            (bool, 'Standard', 'std')]
-    
-    def load(self, ips):
-        self.view = self.view[:5]
-        if ips.get_nslices()>1:
-            self.view.append((bool, 'count every stack', 'stack'))
-        return True
+            (bool, 'Standard', 'std'),
+            (bool, 'slice', 'slice')]
         
     def count(self, img, para):
         rst = []
         if para['max']: rst.append(img.max())
         if para['min']: rst.append(img.min())
-        if para['mean']: rst.append(img.mean().round(4))
-        if para['var']: rst.append(img.var().round(4))
-        if para['std']: rst.append(img.std().round(4))
+        if para['mean']: rst.append(img.mean().round(2))
+        if para['var']: rst.append(img.var().round(2))
+        if para['std']: rst.append(img.std().round(2))
         return rst
         
     def run(self, ips, imgs, para = None):
@@ -136,12 +136,68 @@ class Statistic(Simple):
         key = {'Max':'max','Min':'min','Mean':'mean','Variance':'var','Standard':'std'}
         titles = [i for i in titles if para[key[i]]]
 
-        if self.para['stack']:
-            data = []
-            for n in range(ips.get_nslices()):
-                data.append(self.count(imgs[n], para))
-                self.progress(n, len(imgs))
-        else: data = [self.count(ips.img, para)]
+        if not self.para['slice']:imgs = [ips.img]
+        data = []
+        msk = ips.get_msk('in')
+        for n in range(len(imgs)):
+            img = imgs[n] if msk is None else imgs[n][msk]
+            data.append(self.count(img, para))
+            self.progress(n, len(imgs))
         IPy.table(ips.title+'-statistic', data, titles)
         
-plgs = [Frequence, Statistic, Histogram]
+class Mark:
+    def __init__(self, data):
+        self.data = data
+
+    def draw(self, dc, f, **key):
+        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
+        dc.SetTextForeground((255,255,0))
+        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
+                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        
+        dc.SetFont(font)
+        data = self.data[0 if len(self.data)==1 else key['cur']]
+
+        for i in range(len(data)):
+            pos = f(*(data[i][0], data[i][1]))
+            dc.SetBrush(wx.Brush((255,255,255)))
+            dc.DrawCircle(pos[0], pos[1], 2)
+            dc.SetBrush(wx.Brush((0,0,0), wx.BRUSHSTYLE_TRANSPARENT))
+            dc.DrawCircle(pos[0], pos[1], data[i][2]*key['k'])
+            dc.DrawText('id={}, r={}'.format(i, data[i][2]), pos[0], pos[1])
+
+class PointsValue(Simple):
+    title = 'Points Value'
+    note = ['8-bit', '16-bit', 'req_roi']
+    
+    para = {'buf':False, 'slice':False}
+    view = [(bool, 'buffer by the value', 'buf'),
+            (bool, 'slice', 'slice')]
+        
+    def load(self, ips):
+        if not isinstance(ips.roi, PointRoi):
+            IPy.alert('a PointRoi needed!')
+            return False
+        return True
+    
+        
+    def run(self, ips, imgs, para = None):
+        titles = ['SliceID', 'X', 'Y', 'Value']
+        k, u = ips.unit
+        if not para['slice']:
+            imgs = [ips.img]
+            titles = titles[1:]
+        data, mark = [], []
+        pts = np.array(ips.roi.body).round().astype(np.int)
+        for n in range(len(imgs)):
+            xs, ys = (pts.T*k).round(2)
+            vs = imgs[n][ys, xs]
+            cont = ([n]*len(vs), xs, ys, vs.round(2))
+            if not para['slice']: cont = cont[1:]
+            data.extend(zip(*cont))
+            if para['buf']:mark.append(list(zip(xs, ys, vs.round(2))))
+            self.progress(n, len(imgs))
+        IPy.table(ips.title+'-points', data, titles)
+        if para['buf']:ips.mark = Mark(mark)
+
+plgs = [Frequence, Statistic, Histogram, PointsValue]

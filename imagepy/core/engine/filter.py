@@ -49,12 +49,12 @@ def process_stack(plg, ips, src, imgs, para):
     if transint: buf =  imgs[0].astype(np.int32)
     if transfloat: buf = imgs[0].astype(np.float32)
     for i,n in zip(imgs,list(range(len(imgs)))):
-        sleep(0.5)
+        #sleep(0.5)
         plg.progress(n, len(imgs))
         if 'auto_snap' in plg.note : src[:] = i
         if transint or transfloat: buf[:] = i
         rst = process_channels(plg, ips, src, buf if transint or transfloat else i, para)
-        if not i is rst and rst != None:
+        if not i is rst and not rst is None:
             np.clip(rst, ips.range[0], ips.range[1], out=i)
         if 'auto_msk' in plg.note and not ips.get_msk() is None:
             msk = True ^ ips.get_msk()
@@ -144,7 +144,7 @@ class Filter:
             has, rst = 'stack' in para, None
             if not has:
                 rst = IPy.yes_no('run every slice in current stacks?')
-            if 'auto_snap' in self.note and self.modal:ips.swap()
+            if 'auto_snap' in self.note and self.modal:ips.reset()
             if has and para['stack'] or rst == 'yes':
                 para['stack'] = True
                 #process_stack(self, ips, ips.snap, ips.imgs, para)

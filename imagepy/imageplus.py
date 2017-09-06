@@ -84,9 +84,9 @@ class ImagePlus:
 
     def get_subimg(self, s1=None, s2=None):
         if s1==None:
-            s1, s2 = self.get_rect()
-            print(s1, s2)
-        return self.img[s1, s2]
+            s = self.get_rect()
+            if s==None:return self.img
+        return self.img[s[0], s[1]]
 
     def snapshot(self):
         if self.snap is None:
@@ -95,7 +95,7 @@ class ImagePlus:
 
     def reset(self, msk=False):
         if not self.snap is None:
-            if msk and  not self.get_msk('out') is None:
+            if msk and not self.get_msk('out') is None:
                 msk = self.get_msk('out')
                 self.imgs[self.cur][msk] = self.snap[msk]
             else : self.imgs[self.cur][:] = self.snap

@@ -99,7 +99,7 @@ class TableLogManager:
             return name
         for i in range(1, 100) : 
             title = "{}-{}".format(name,i)
-            if (not title) not in cls.windows:
+            if title not in cls.windows:
                 return title
                 
     @classmethod
