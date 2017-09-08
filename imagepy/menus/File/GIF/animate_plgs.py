@@ -3,7 +3,7 @@ from imagepy.core.util import fileio
 from imagepy import IPy
 import os
 
-class SaveAnimate(fileio.Saver):
+class SaveAnimate(fileio.Writer):
 	title = 'GIF Animate Save'
 	filt = ['GIF']
 	note = ['8-bit', 'rgb', 'stack']
@@ -12,7 +12,7 @@ class SaveAnimate(fileio.Saver):
 	def run(self, ips, imgs, para = None):
 		writeGif(para['path'], imgs, duration=0.2, subRectangles = False)
 
-class OpenAnimate(fileio.Opener):
+class OpenAnimate(fileio.Reader):
 	title = 'GIF Animate Open'
 	filt = ['GIF']
 	note = ['8-bit', 'rgb', 'stack']

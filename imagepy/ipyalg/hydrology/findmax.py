@@ -71,7 +71,7 @@ def mark(img, msk, buf, mode): # mark the array use (0, 1, 2)
         if s==len(idx):break
     return idx[:s].copy()
 
-@jit # 3 最大值标记 2 殖民地标记 4 普通殖民地
+@jit # 3 max 2 zmd b4 ptd
 def filter(img, msk, idx, bur, tor, mode):
     nbs = neighbors(img.shape)
     acc = np.cumprod((1,)+img.shape[::-1][:-1])[::-1]
