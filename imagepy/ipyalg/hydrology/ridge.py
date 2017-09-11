@@ -203,14 +203,17 @@ if __name__ == '__main__':
     from scipy.misc import imread
     import scipy.ndimage as ndimg
     import matplotlib.pyplot as plt
+    from time import time
     
-    dem = imread('dem1.jpg')
+    dem = imread('dem.png')
     dem = ndimg.gaussian_filter(dem, 1)
-    dem = 255-dem
-    mark = (dem<100).astype(np.uint8)
+    mark = (dem==0).astype(np.uint8)
     plt.imshow(mark)
     plt.show()
-    ridge(dem, mark, True)
+    ridge(dem, mark.copy())
+    start = time()
+    ridge(dem, mark)
+    print(time()-start)
     dem//=2
     dem[mark==3] = 255
     plt.imshow(mark, cmap='gray')

@@ -21,7 +21,7 @@ class Mark:
                        wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         
         dc.SetFont(font)
-        data = self.data[0 if len(self.data)==0 else key['cur']]
+        data = self.data[0 if len(self.data)==1 else key['cur']]
         for i in range(len(data)):
             pos = f(*(data[i][0][1], data[i][0][0]))
             dc.DrawCircle(pos[0], pos[1], 2)
@@ -57,8 +57,7 @@ class RegionCounter(Simple):
 
     #process
     def run(self, ips, imgs, para = None):
-        if not para['slice']:msks = [ips.img]
-        else: msks = imgs
+        if not para['slice']:imgs = [ips.img]
         k = ips.unit[0]
 
         titles = ['Slice', 'ID'][0 if para['slice'] else 1:]
@@ -76,7 +75,7 @@ class RegionCounter(Simple):
         data, mark = [], []
         strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
         for i in range(len(imgs)):
-            label(msks[i], strc, output=buf)
+            label(imgs[i], strc, output=buf)
             ls = regionprops(buf)
 
             dt = [[i]*len(ls), list(range(len(ls)))]
