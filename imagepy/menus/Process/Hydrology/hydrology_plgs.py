@@ -2,10 +2,8 @@ import scipy.ndimage as ndimg
 import numpy as np
 from numba import jit
 from imagepy.core.engine import Filter
-from imagepy.ipyalg import find_maximum, ridge, stair, isoline
+from imagepy.ipyalg import find_maximum, ridge, stair, isoline, watershed
 from imagepy.core.roi import PointRoi
-from skimage.morphology import watershed
-from skimage.morphology import watershed, disk
 from skimage.filters import rank
 from skimage.filters import sobel
 from imagepy import IPy
@@ -159,8 +157,8 @@ class Watershed(Filter):
         mark = img<para['thr'] if para['ud'] else img>para['thr']
 
         markers, n = ndimg.label(mark, np.ones((3,3)), output=np.uint16)
-        if not para['ud']:img[:] = 255-img
-        mark = watershed(img, markers, watershed_line=True)
+        #if not para['ud']:img[:] = 255-img
+        mark = watershed(img, markers, up=para['ud'])
         mark = np.multiply((mark==0), 255, dtype=np.uint8)
         if para['type'] == 'white line':
             img[:] = mark
@@ -192,11 +190,11 @@ class UPWatershed(Filter):
     #process
     def run(self, ips, snap, img, para = None):
         edge = sobel(snap)
-        img[:] = 0
-        img[snap>para['thr2']] = 2
-        img[snap<para['thr1']] = 1
+        marker = np.zeros_like(img, dtype=np.uint16)
+        marker[snap>para['thr2']] = 2
+        marker[snap<para['thr1']] = 1
         ips.lut = self.buflut
-        return (watershed(edge, img)==2) * 255
+        return (watershed(edge, marker)==2) * 255
 
 class ROIWatershed(Filter):
     title = 'Watershed With ROI'
@@ -215,7 +213,7 @@ class ROIWatershed(Filter):
 
         markers, n = ndimg.label(ips.get_msk(), np.ones((3,3)), output=np.uint16)
         if not para['ud']:img[:] = 255-img
-        mark = watershed(img, markers, watershed_line=True)
+        mark = watershed(img, markers)
         mark = np.multiply((mark==0), 255, dtype=np.uint8)
 
         if para['type'] == 'white line':
