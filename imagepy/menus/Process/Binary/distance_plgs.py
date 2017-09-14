@@ -8,8 +8,8 @@ from skimage.morphology import skeletonize
 from skimage.morphology import medial_axis
 from imagepy.ipyalg.graph import skel2d
 from imagepy.core.engine import Filter
-from imagepy.ipyalg import find_maximum
-from skimage.morphology import watershed
+from imagepy.ipyalg import find_maximum, watershed
+#from skimage.morphology import watershed
 import scipy.ndimage as ndimg
 
 class Skeleton(Filter):
@@ -59,7 +59,7 @@ class Watershed(Filter):
 		buf = np.zeros(ips.size, dtype=np.uint16)
 		buf[pts[:,0], pts[:,1]] = 1
 		markers, n = ndimg.label(buf, np.ones((3,3)))
-		line = watershed(dist, markers, watershed_line=True)
+		line = watershed(dist, markers)
 		img[line==0] = 0
 
 class Voronoi(Filter):
@@ -74,7 +74,7 @@ class Voronoi(Filter):
 		dist = ndimg.distance_transform_edt(snap)
 		markers, n = ndimg.label(snap==0, np.ones((3,3)))
 
-		line = watershed(dist, markers, watershed_line=True)
+		line = watershed(dist, markers)
 		if para['type']=='segment with ori':
 			img[:] = np.where(line==0, 0, snap)
 		if para['type']=='segment only':

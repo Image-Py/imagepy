@@ -13,5 +13,6 @@ from .ui.imagepy import ImagePy
 def show():
 	app = wx.App(False)
 	mainFrame = ImagePy(None)
+	mainFrame.SetTitle('海冰影像分析软件')
 	mainFrame.Show()
 	app.MainLoop()
