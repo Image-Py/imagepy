@@ -70,10 +70,14 @@ def collect(img, mark, nbs, pts):
 
 @jit
 def erose(mark):
+    
     for i in range(len(mark)):
         if mark[i]>0xfff0:mark[i]=0
         
 def watershed(img, mark, conn=1, up=True):
+    maxv = img.max(); minv = img.min();
+    if img.dtype != np.uint8:
+        img = ((img-minv)*(255/(maxv-minv))).astype(np.uint8)
     ndim = img.ndim
     for n in range(ndim):
         idx = [slice(None) if i==n else [0,-1] for i in range(ndim)]
@@ -81,32 +85,48 @@ def watershed(img, mark, conn=1, up=True):
     
     nbs = neighbors(img.shape, conn)
     img = img.ravel()
-    mark = mark.ravel()
+    mark1d = mark.ravel()
 
     pts = np.zeros(img.size//3, dtype=np.int64)
-    s, bins = collect(img, mark, nbs, pts)
+    s, bins = collect(img, mark1d, nbs, pts)
 
     for level in range(len(bins))[::1 if up else -1]:
         if bins[level]==0:continue
         s, c = clear(pts, s, 0)
-        s = step(img, mark, pts, s, level, up, nbs)
-        
-    erose(mark)
+        s = step(img, mark1d, pts, s, level, up, nbs)
+
+    conner = [[v>>i&1 for i in range(ndim)] for v in range(2**ndim)]
+    con1 = np.array(conner, dtype=np.int8)-1
+    con2 = np.array(conner, dtype=np.int8)*3-2
+    mark[tuple(con1.T)] = mark[tuple(con2.T)]
+                      
+    erose(mark1d)
     return mark
     
 if __name__ == '__main__':
-    import cv2
+    import matplotlib.pyplot as plt
+    from skimage.filters import sobel
+    from skimage.data import coins
+    coins = coins()
+    dem = sobel(coins)
+    markers = np.zeros_like(coins, dtype=np.uint16)
+    markers[coins < 30] = 1
+    markers[coins > 150] = 2
+    plt.imshow(markers)
+    plt.show()
+    watershed(dem, markers)
+    plt.imshow(markers)
+    plt.show()
+    '''
     from scipy.misc import imread
     import matplotlib.pyplot as plt
     from time import time
     
     dem = imread('ice.png')
-    #rgb = imread('ice.bmp')
     mark = imread('mark.png')
-    mark, n = label(mark>0, generate_binary_structure(2,2), output=np.int32)
+    mark, n = label(mark>0, generate_binary_structure(2,2), output=np.uint16)
     start = time()
     #skrst = skwsh(dem, mark, watershed_line=True)
-    skwsh(dem, mark.copy())
     print('skimage:', time()-start)
     watershed(dem, mark.copy())
     start = time()
@@ -114,4 +134,4 @@ if __name__ == '__main__':
     print('mine:', time()-start)
 
     imsave('line.png', ((mark>0)*255).astype(np.uint8))
-
+    '''

@@ -27,7 +27,7 @@ class LineRoi(ROI):
             return True
     
     def snap(self, x, y, lim):
-        minl, idx = 1000, None
+        minl, idx = 1e8, None
         for i in self.body:
             for j in i:
                 d = (j[0]-x)**2+(j[1]-y)**2

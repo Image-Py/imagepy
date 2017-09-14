@@ -7,7 +7,9 @@ import wx, sys
 import numpy as np
 from math import ceil
 from ..core.manager import ToolsManager
+from scipy.ndimage import affine_transform
 from imagepy import IPy
+from time import time
 
 #import sys
 #get_npbuffer = np.getbuffer if sys.version[0]=="2" else memoryview
@@ -24,12 +26,12 @@ def multiply(r, kx, ky):
     return [ceil(i) for i in r]
 
 def lay(r1, r2):
-    if r2[2]<=r1[2]:r2[0]=(r1[2]-r2[2])/2+r1[0]
+    if r2[2]<=r1[2]:r2[0]=(r1[2]-r2[2])//2+r1[0]
     elif r2[0]>r1[0]:r2[0]=r1[0]
     elif r2[0]+r2[2]<r1[0]+r1[2]:
         r2[0]=r1[0]+r1[2]-r2[2]
 
-    if r2[3]<=r1[3]:r2[1]=(r1[3]-r2[3])/2+r1[1]
+    if r2[3]<=r1[3]:r2[1]=(r1[3]-r2[3])//2+r1[1]
     elif r2[1]>r1[1]:r2[1]=r1[1]
     elif r2[1]+r2[3]<r1[1]+r1[3]:
         r2[1]=r1[1]+r1[3]-r2[3]
@@ -40,7 +42,7 @@ def trans(r1, r2):
 
 
 class Canvas (wx.Panel):
-    scales = [0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 8, 10]
+    scales = [0.03125, 0.0625, 0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 8, 10]
     def __init__(self, parent ):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(300,300), style = wx.TAB_TRAVERSAL )
         self.initBuffer()
@@ -103,17 +105,16 @@ class Canvas (wx.Panel):
     def set_ips(self, ips):
         self.ips = ips
         self.imgbox = [0,0,ips.size[1],ips.size[0]]
-        self.bmp = wx.Image(ips.size[1], ips.size[0])
         self.self_fit()
 
     def zoom(self, k, x, y):
         # print 'scale', k
         k1 = self.oldscale * 1.0
         self.oldscale = k2 = k
-        self.imgbox[0] = self.imgbox[0] + (k1-k2)*x
-        self.imgbox[1] = self.imgbox[1] + (k1-k2)*y
-        self.imgbox[2] = self.ips.size[1] * k2
-        self.imgbox[3] = self.ips.size[0] * k2
+        self.imgbox[0] = int(self.imgbox[0] + (k1-k2)*x+0.5)
+        self.imgbox[1] = int(self.imgbox[1] + (k1-k2)*y+0.5)
+        self.imgbox[2] = int(self.ips.size[1] * k2+0.5)
+        self.imgbox[3] = int(self.ips.size[0] * k2+0.5)
         lay(self.box, self.imgbox)
         if self.imgbox[2]<=self.scrsize[0]*0.9 and\
         self.imgbox[3]<=self.scrsize[1]*0.9:
@@ -122,8 +123,8 @@ class Canvas (wx.Panel):
 
     def move(self, dx, dy):
         if self.imgbox[2]<=self.box[2] and self.imgbox[3]<=self.box[3]:return
-        self.imgbox[0] += dx
-        self.imgbox[1] += dy
+        self.imgbox[0] += int(dx+0.5)
+        self.imgbox[1] += int(dy+0.5)
         self.update(True)
 
     def on_size(self, event):
@@ -150,6 +151,7 @@ class Canvas (wx.Panel):
 
     def on_paint(self, event):
         wx.BufferedPaintDC(self, self.buffer)
+        '''
         cdc = wx.ClientDC(self)
         #cdc.BeginDrawing()
         if self.ips.roi != None:
@@ -159,18 +161,30 @@ class Canvas (wx.Panel):
         if self.ips.unit!=(1,'pix'):
             self.draw_ruler(cdc)
         #cdc.EndDrawing()
+        '''
 
-    def draw_image(self, dc, img, rect, scale=None):
+    def draw_image(self, dc, ndarr, rect, scale, dirty):
         win = cross(self.box, rect)
-        win2 = trans(rect,win)
+        win2 = trans(rect, win)
         sx = sy = 1.0/scale
-        if scale==None:
-            sx = img.Width*1.0/rect[2]
-            sy = img.Height*1.0/rect[3]
         box = multiply(win2, sx, sy)
-        bmp = img.GetSubImage(box)
-        bmp = bmp.Scale(ceil(bmp.Width/sx), ceil(bmp.Height/sy))
-        dc.DrawBitmap(wx.Bitmap(bmp), win[0], win[1])
+
+        M = np.array([[sx, 0], [0, sy]])
+        O = (win2[1]*sx, win2[0]*sy)
+        shape = (win2[3], win2[2])
+
+        if dirty:
+            if ndarr.ndim == 2:
+                rstarr = affine_transform(ndarr, M, offset=O, 
+                    output_shape=shape, order=0, prefilter=False)
+            if ndarr.ndim == 3:
+                rstarr = np.zeros((win2[3], win2[2], 3), dtype=ndarr.dtype)
+                for i in range(3):
+                    affine_transform(ndarr[:,:,i], M, offset=O, output_shape=shape, 
+                        output=rstarr[:,:,i], order=0, prefilter=False)
+
+            self.bmp = wx.Bitmap.FromBuffer(win2[2], win2[3], memoryview(self.ips.lookup(rstarr)))
+        dc.DrawBitmap(self.bmp, win[0], win[1])
 
     def draw_ruler(self, dc):
         dc.SetPen(wx.Pen((255,255,255), width=2, style=wx.SOLID))
@@ -193,22 +207,21 @@ class Canvas (wx.Panel):
         lay(self.box, self.imgbox)
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
         #dc.BeginDrawing()
-        if pix:
-            dc.Clear()
-            self.bmp.SetData(memoryview(self.ips.lookup()))
-            self.draw_image(dc, self.bmp, self.imgbox, self.scales[self.scaleidx])
+        dc.Clear()
+        self.draw_image(dc, self.ips.img, self.imgbox, self.scales[self.scaleidx], pix)
 
         #dc.EndDrawing()
-        dc.UnMask()
-        cdc = wx.ClientDC(self)
+        
+        #cdc = wx.ClientDC(self)
         #cdc.BeginDrawing()
         if self.ips.roi != None:
-            self.ips.roi.draw(cdc, self.to_panel_coor)
+            self.ips.roi.draw(dc, self.to_panel_coor)
         if self.ips.mark != None:
-            self.ips.mark.draw(cdc, self.to_panel_coor, cur=self.ips.cur, k = self.get_scale())
+            self.ips.mark.draw(dc, self.to_panel_coor, cur=self.ips.cur, k = self.get_scale())
         #cdc.EndDrawing()
         if self.ips.unit!=(1,'pix'):
-            self.draw_ruler(cdc)
+            self.draw_ruler(dc)
+        dc.UnMask()
 
     def zoomout(self, x, y):
         if self.scaleidx == len(self.scales)-1:return
