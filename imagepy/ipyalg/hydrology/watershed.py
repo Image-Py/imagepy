@@ -95,15 +95,18 @@ def watershed(img, mark, conn=1, up=True):
     return mark
     
 if __name__ == '__main__':
+    import cv2
     from scipy.misc import imread
     import matplotlib.pyplot as plt
     from time import time
     
     dem = imread('ice.png')
+    #rgb = imread('ice.bmp')
     mark = imread('mark.png')
-    mark, n = label(mark>0, generate_binary_structure(2,2), output=np.uint16)
+    mark, n = label(mark>0, generate_binary_structure(2,2), output=np.int32)
     start = time()
     #skrst = skwsh(dem, mark, watershed_line=True)
+    skwsh(dem, mark.copy())
     print('skimage:', time()-start)
     watershed(dem, mark.copy())
     start = time()
