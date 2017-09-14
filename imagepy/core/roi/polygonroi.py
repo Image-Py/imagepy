@@ -62,7 +62,7 @@ class PolygonRoi(ROI):
         
     def snap(self, x, y, lim):
         if not self.issimple():return None
-        cur, minl = None, 10000
+        cur, minl = None, 1e8
         for i in self.body[0][0]:
             d = (i[0]-x)**2+(i[1]-y)**2
             if d < minl:cur,minl = i,d

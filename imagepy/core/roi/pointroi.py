@@ -21,7 +21,7 @@ class PointRoi(ROI):
         self.update, self.infoupdate = True, True
     
     def snap(self, x, y, lim):
-        cur, minl = None, 1e6
+        cur, minl = None, 1e8
         for i in self.body:
             d = (i[0]-x)**2+(i[1]-y)**2
             if d < minl:cur,minl = i,d

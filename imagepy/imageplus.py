@@ -100,18 +100,17 @@ class ImagePlus:
                 self.imgs[self.cur][msk] = self.snap[msk]
             else : self.imgs[self.cur][:] = self.snap
 
-    def lookup(self):
+    def lookup(self, img):
         print(self.channels, self.dtype)
-        if self.channels==1 and self.dtype==np.uint8:
-            return self.lut[self.img]
-        elif self.channels==1:
+        if img.ndim==2 and img.dtype==np.uint8:
+            return self.lut[img]
+        elif img.ndim==2:
             k = 255.0/(max(1, self.range[1]-self.range[0]))
-            bf = np.clip(self.img, self.range[0], self.range[1])
+            bf = np.clip(img, self.range[0], self.range[1])
             bf = ((bf - self.range[0]) * k).astype(np.uint8)
-            print(bf.min(), bf.max())
             return self.lut[bf]
-        if self.channels==3 and self.dtype==np.uint8:
-            return self.img
+        if img.ndim==3 and self.dtype==np.uint8:
+            return img
 
     def swap(self):
         if self.snap is None:return
