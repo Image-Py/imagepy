@@ -169,7 +169,7 @@ class Canvas (wx.Panel):
         sx = sy = 1.0/scale
         box = multiply(win2, sx, sy)
 
-        M = np.array([[sx, 0], [0, sy]])
+        M = np.array([sx, sy])
         O = (win2[1]*sx, win2[0]*sy)
         shape = (win2[3], win2[2])
 
