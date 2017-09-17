@@ -93,13 +93,12 @@ class Canvas (wx.Panel):
         self.box = [0,0,box[0],box[1]]
 
     def self_fit(self):
-        for i in [4,3,2,1,0]:
-            best = i
-            if self.ips.size[1]*self.scales[i]<=self.scrsize[0]*0.9 and\
-            self.ips.size[0]*self.scales[i]<=self.scrsize[1]*0.9:
+        for i in self.scales[::-1]:
+            if self.ips.size[1]*i<=self.scrsize[0]*0.9 and\
+            self.ips.size[0]*i<=self.scrsize[1]*0.9:
                 break
-        self.scaleidx = best
-        self.zoom(self.scales[best], 0, 0)
+        self.scaleidx = self.scales.index(i)
+        self.zoom(self.scales[self.scaleidx], 0, 0)
 
 
     def set_ips(self, ips):
@@ -174,16 +173,21 @@ class Canvas (wx.Panel):
         shape = (win2[3], win2[2])
 
         if dirty:
+            start = time()
             if ndarr.ndim == 2:
                 rstarr = affine_transform(ndarr, M, offset=O, 
                     output_shape=shape, order=0, prefilter=False)
             if ndarr.ndim == 3:
+                
                 rstarr = np.zeros((win2[3], win2[2], 3), dtype=ndarr.dtype)
+                
                 for i in range(3):
                     affine_transform(ndarr[:,:,i], M, offset=O, output_shape=shape, 
                         output=rstarr[:,:,i], order=0, prefilter=False)
+            
 
             self.bmp = wx.Bitmap.FromBuffer(win2[2], win2[3], memoryview(self.ips.lookup(rstarr)))
+            print(time()-start)
         dc.DrawBitmap(self.bmp, win[0], win[1])
 
     def draw_ruler(self, dc):

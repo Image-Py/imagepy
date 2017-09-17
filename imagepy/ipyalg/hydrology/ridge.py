@@ -79,6 +79,7 @@ def fill(img, msk, p, level, up, pts, s, c, nbs, buf):
         cur+=1
     return s, c
 
+
 @jit
 def check(msk, p, nbs, lut):
     c = 0; s = 0;

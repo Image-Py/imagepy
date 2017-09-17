@@ -46,7 +46,7 @@ def fill(img, msk, p, nbs, buf):
 @jit # my mark
 def mark(img, msk, buf, mode): # mark the array use (0, 1, 2)
     nbs = neighbors(img.shape)
-    idx = np.zeros(1024*128, dtype=np.int64)
+    idx = np.zeros(msk.size//3, dtype=np.int64)
     img = img.ravel()
     msk = msk.ravel()
     s = 0
@@ -99,7 +99,7 @@ def filter(img, msk, idx, bur, tor, mode):
                 if not mode and img[cp] > img[idx[i]]+tor: continue
                 bur[s] = cp
                 s += 1
-                if s==1024*128:
+                if s==msk.size//3:
                     cut = cur//2
                     msk[bur[:cut]] = 2
                     bur[:s-cut] = bur[cut:]
@@ -116,7 +116,7 @@ def filter(img, msk, idx, bur, tor, mode):
 def find_maximum(img, tor, mode = True):
     msk = np.zeros_like(img, dtype=np.uint8)
     msk[tuple([slice(1,-1)]*img.ndim)] = 1
-    buf = np.zeros(1024*128, dtype=np.int64)
+    buf = np.zeros(img.size//3, dtype=np.int64)
     idx = mark(img, msk, buf, mode)
     idx = filter(img, msk, idx, buf, tor, mode)
     return idx
