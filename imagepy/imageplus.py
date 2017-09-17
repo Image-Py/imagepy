@@ -100,7 +100,8 @@ class ImagePlus:
                 self.imgs[self.cur][msk] = self.snap[msk]
             else : self.imgs[self.cur][:] = self.snap
 
-    def lookup(self, img):
+    def lookup(self, img=None):
+        if img is None: img = self.img
         print(self.channels, self.dtype)
         if img.ndim==2 and img.dtype==np.uint8:
             return self.lut[img]
