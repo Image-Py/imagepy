@@ -46,7 +46,7 @@ class RegionCounter(Simple):
             ('lab','=========  indecate  ========='),
             (bool, 'center', 'center'),
             (bool, 'area', 'area'),
-            (bool, 'l', 'l'),
+            (bool, 'perimeter', 'l'),
             (bool, 'extent', 'extent'),
             (bool, 'equivalent diameter', 'ed'),
             (bool, 'convex area', 'ca'),
@@ -124,7 +124,7 @@ class RegionFilter(Filter):
             (int, (0, 255), 0, 'front color', 'front', ''),
             (int, (0, 255), 0, 'back color', 'back', ''),
             (float, (-1e6, 1e6), 1, 'area', 'area', 'unit^2'),
-            (float, (-1e6, 1e6), 1, 'l', 'l', 'unit'),
+            (float, (-1e6, 1e6), 1, 'perimeter', 'l', 'unit'),
             (int, (-10,10), 0, 'holes', 'holes', 'num'),
             (float, (-1, 1,), 1, 'solidity', 'solid', 'ratio'),
             (float, (-100,100), 1, 'eccentricity', 'e', 'ratio')]

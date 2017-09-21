@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from scipy.ndimage import label, generate_binary_structure
-from scipy.misc import imsave
 
 def floodfill(img, x, y, thr, con):
 	color = img[int(y), int(x)]

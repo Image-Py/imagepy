@@ -195,7 +195,8 @@ class UPWatershed(Filter):
         img[snap>para['thr2']] = 2
         img[snap<para['thr1']] = 1
         ips.lut = self.buflut
-        return (watershed(edge, img)==2) * 255
+        mark= watershed(edge, img.astype(np.uint16))
+        return (mark==2) * 255
 
 class ROIWatershed(Filter):
     title = 'Watershed With ROI'

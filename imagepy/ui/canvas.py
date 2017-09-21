@@ -93,7 +93,7 @@ class Canvas (wx.Panel):
         self.box = [0,0,box[0],box[1]]
 
     def self_fit(self):
-        for i in self.scales[::-1]:
+        for i in self.scales[6::-1]:
             if self.ips.size[1]*i<=self.scrsize[0]*0.9 and\
             self.ips.size[0]*i<=self.scrsize[1]*0.9:
                 break
