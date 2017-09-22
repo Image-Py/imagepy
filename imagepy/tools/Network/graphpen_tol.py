@@ -33,25 +33,32 @@ def floodfill(img, x, y):
         cur += 1
         if cur==s:break
 
-def cut(img, lines):
+def draw(img, lines):
     if len(lines)<2:return
     lines = np.array(lines).round()
     ox,oy = lines[0]
+    xys, mark = [], []
     for i in lines[1:]:
         cx, cy = i
         dx, dy = cx-ox, cy-oy
         n = max(abs(dx), abs(dy)) + 1
-        xs = np.linspace(cx, ox, n).round().astype(np.int16)
-        ys = np.linspace(cy, oy, n).round().astype(np.int16)
+        xs = np.linspace(ox, cx, n).round().astype(np.int16)
+        ys = np.linspace(oy, cy, n).round().astype(np.int16)
         for x,y in zip(xs, ys):
-            for dxy in [(1,0),(0,1)]:
-                xx = x + dxy[0]
-                yy = y + dxy[1]
-                if xx<0 or xx>img.shape[1]: continue
-                if yy<0 or yy>img.shape[0]: continue
-                if img[yy,xx] == 0: continue
-                floodfill(img, xx, yy)
+            if x<0 or x>img.shape[1]: continue
+            if y<0 or y>img.shape[0]: continue
+            xys.append((y,x))
         ox, oy = i
+    cur = 0
+    for y,x in xys:
+        for dx, dy in [(0,1),(0,-1),(1,0),(-1,0)]:
+            if img[y+dy, x+dx]>0: 
+                mark.append(cur)
+                continue
+        cur += 1
+    if len(mark)<4:return
+    for y,x in xys[mark[0]+1:mark[-1]-1]:
+        img[y,x] = 128
 
 class Mark():
     def __init__(self, line):
@@ -77,7 +84,7 @@ class Plugin(Tool):
     def mouse_up(self, ips, x, y, btn, **key):
         ips.mark = None
         self.status = 0
-        cut(ips.img, self.cur)
+        draw(ips.img, self.cur)
         ips.update = 'pix'
     
     def mouse_move(self, ips, x, y, btn, **key):

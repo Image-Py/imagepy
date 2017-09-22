@@ -10,6 +10,7 @@ from ..core.manager import ToolsManager
 from scipy.ndimage import affine_transform
 from imagepy import IPy
 from time import time
+from numba import jit
 
 #import sys
 #get_npbuffer = np.getbuffer if sys.version[0]=="2" else memoryview
@@ -39,7 +40,15 @@ def lay(r1, r2):
 def trans(r1, r2):
     return [r2[0]-r1[0], r2[1]-r1[1], r2[2], r2[3]]
 
-
+@jit
+def my_transform(img, m, offset=(0,0), output=None, k=0.5, clip=False):
+    kr=m[0]; kc=m[1]; ofr=offset[0]; ofc=offset[1];
+    for r in range(output.shape[0]):
+        for c in range(output.shape[1]):
+            rr = int(round(r*kr+ofr))
+            cc = int(round(c*kc+ofc))
+            if output[r,c]==0 or not clip:
+                output[r,c] = output[r,c]*(1-k)+img[rr,cc]*k
 
 class Canvas (wx.Panel):
     scales = [0.03125, 0.0625, 0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 8, 10]
@@ -161,8 +170,26 @@ class Canvas (wx.Panel):
             self.draw_ruler(cdc)
         #cdc.EndDrawing()
         '''
+    def merge(self, img, back, M, O, mode, shape, win, lookup):
+        if img.ndim == 2:
+            rstarr = np.zeros(shape, dtype=np.uint8)
+            my_transform(img, M, offset=O, output=rstarr, k=1, clip=False)
+            rstarr = lookup(rstarr)
+        
+        if img.ndim == 3:
+            rstarr = np.zeros((win[3], win[2], 3), dtype=img.dtype)
+            for i in range(3):
+                my_transform(img[:,:,i], M, offset=O, 
+                    output=rstarr[:,:,i], k=1, clip=False)
+        
+        if not back is None:
+            for i in range(3):
+                my_transform(back[:,:,i] if back.ndim==3 else back, M, offset=O, 
+                    output=rstarr[:,:,i], k=mode[0], clip = mode[1]=='Clip')
+        
+        return rstarr
 
-    def draw_image(self, dc, ndarr, rect, scale, dirty):
+    def draw_image(self, dc, ndarr, back, mode, rect, scale, dirty):
         win = cross(self.box, rect)
         win2 = trans(rect, win)
         sx = sy = 1.0/scale
@@ -174,19 +201,8 @@ class Canvas (wx.Panel):
 
         if dirty:
             start = time()
-            if ndarr.ndim == 2:
-                rstarr = affine_transform(ndarr, M, offset=O, 
-                    output_shape=shape, order=0, prefilter=False)
-            if ndarr.ndim == 3:
-                
-                rstarr = np.zeros((win2[3], win2[2], 3), dtype=ndarr.dtype)
-                
-                for i in range(3):
-                    affine_transform(ndarr[:,:,i], M, offset=O, output_shape=shape, 
-                        output=rstarr[:,:,i], order=0, prefilter=False)
-            
-
-            self.bmp = wx.Bitmap.FromBuffer(win2[2], win2[3], memoryview(self.ips.lookup(rstarr)))
+            rst = self.merge(ndarr, back, M, O, mode, shape, win2, self.ips.lookup)
+            self.bmp = wx.Bitmap.FromBuffer(win2[2], win2[3], memoryview(rst))
             print(time()-start)
         dc.DrawBitmap(self.bmp, win[0], win[1])
 
@@ -212,7 +228,8 @@ class Canvas (wx.Panel):
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
         #dc.BeginDrawing()
         dc.Clear()
-        self.draw_image(dc, self.ips.img, self.imgbox, self.scales[self.scaleidx], pix)
+        self.draw_image(dc, self.ips.img, self.ips.backimg, self.ips.backmode, 
+            self.imgbox, self.scales[self.scaleidx], pix)
 
         #dc.EndDrawing()
         

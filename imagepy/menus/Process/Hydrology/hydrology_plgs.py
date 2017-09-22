@@ -159,7 +159,7 @@ class Watershed(Filter):
 
         markers, n = ndimg.label(mark, np.ones((3,3)), output=np.uint16)
         if not para['ud']:img[:] = 255-img
-        mark = watershed(img, markers, watershed_line=True)
+        mark = watershed(img, markers)
         mark = np.multiply((mark==0), 255, dtype=np.uint8)
         if para['type'] == 'white line':
             img[:] = mark
@@ -195,7 +195,7 @@ class UPWatershed(Filter):
         img[snap>para['thr2']] = 2
         img[snap<para['thr1']] = 1
         ips.lut = self.buflut
-        mark= watershed(edge, img.astype(np.uint16))
+        mark = watershed(edge, img.astype(np.uint16))
         return (mark==2) * 255
 
 class ROIWatershed(Filter):
@@ -215,8 +215,7 @@ class ROIWatershed(Filter):
 
         markers, n = ndimg.label(ips.get_msk(), np.ones((3,3)), output=np.uint16)
         if not para['ud']:img[:] = 255-img
-        watershed(img, markers)
-        mark = markers
+        mark = watershed(img, markers)
         mark = np.multiply((mark==0), 255, dtype=np.uint8)
 
         if para['type'] == 'white line':

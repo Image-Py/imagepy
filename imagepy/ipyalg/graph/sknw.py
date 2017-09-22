@@ -32,6 +32,7 @@ def idx2rc(idx, acc):
         for j in range(len(acc)):
             rst[i,j] = idx[i]//acc[j]
             idx[i] -= rst[i,j]*acc[j]
+    rst -= 1
     return rst
     
 @jit # fill a node (may be two or more points)
@@ -107,9 +108,15 @@ def build_graph(nodes, edges, multi=False):
         graph.add_edge(s,e, pts=pts, weight=l)
     return graph
 
+def buffer(ske):
+    buf = np.zeros(tuple(np.array(ske.shape)+2), dtype=np.uint16)
+    buf[tuple([slice(1,-1)]*buf.ndim)] = ske
+    return buf
+
 def build_sknw(ske, multi=False):
-    mark(ske)
-    nodes, edges = parse_struc(ske.astype(np.uint16))
+    buf = buffer(ske)
+    mark(buf)
+    nodes, edges = parse_struc(buf)
     return build_graph(nodes, edges, multi)
     
 # draw the graph

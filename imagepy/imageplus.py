@@ -23,6 +23,8 @@ class ImagePlus:
         self.msk = None
         self.mskmode = None
         self.lut = ColorManager.get_lut('grays')
+        self.backimg = None
+        self.backmode = ('Nor', 0.5)
         self.tool = None
         self.data = None
         self.unit = (1, 'pix')
