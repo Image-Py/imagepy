@@ -25,7 +25,8 @@ class Plugin(Simple):
         w, h = size.astype(np.uint16)
         if ips.is3d:
             if ips.get_nchannels()>1:
-                new = np.zeros(np.multiply(imgs.shape, (kz, kx, ky, 1)), dtype=imgs.dtype)
+                new = np.zeros(np.multiply(imgs.shape, 
+                    (kz, kx, ky, 1)).round().astype(np.uint32), dtype=imgs.dtype)
                 for i in range(ips.get_nchannels()):
                     ndimg.zoom(imgs[:,:,:,i], (kz, kx, ky), output=new[:,:,:,i])
             else :
@@ -34,18 +35,29 @@ class Plugin(Simple):
             if ips.get_nchannels()>1:
                 new = []
                 for i in range(len(imgs)):
-                    IPy.curapp.set_progress(round((i+1)*100.0/len(imgs)))
-                    arr = np.zeros(np.multiply(imgs[i].shape, (kx, ky, 1)).round().astype(np.uint32), 
-                                   dtype=imgs[i].dtype)
+                    self.progress(i, len(imgs))
+                    arr = np.zeros(np.multiply(imgs[i].shape, 
+                        (kx, ky, 1)).round().astype(np.uint32),  dtype=imgs[i].dtype)
                     for n in range(ips.get_nchannels()):
                         ndimg.zoom(imgs[i][:,:,n], (kx, ky), output=arr[:,:,n])
                     new.append(arr)
-                IPy.curapp.set_progress(0)
             else :
                 new = []
                 for i in range(len(imgs)):
-                    IPy.curapp.set_progress(round((i+1)*100.0/len(imgs)))
+                    self.progress(i, len(imgs))
                     arr = ndimg.zoom(imgs[i], (kx, ky))
                     new.append(arr)
-                IPy.curapp.set_progress(0)
+
         ips.set_imgs(new)
+        backimg = ips.backimg
+        if backimg is None:return
+        if backimg.ndim == 3:
+            nbc = np.zeros(np.multiply(backimg.shape, 
+                (kx, ky, 1)).round().astype(np.uint32), dtype=np.uint8)
+            for i in range(3):
+                ndimg.zoom(backimg[:,:,i], (kx, ky), output=nbc[:,:,i])
+            print(nbc.dtype)
+        else :
+            nbc = ndimg.zoom(backimg, (kz, kx))
+            print(nbc.dtype)
+        ips.backimg = nbc

@@ -53,6 +53,7 @@ def blit(img1, img2, c=0, r=0, mode='copy'):
     if img1.ndim==2 and img2.ndim==2:
         funcs[mode](img1[bx1], img2[bx2])
     if img1.ndim==3 and img2.ndim==3:
+        print(bx1, bx2)
         funcs[mode](img1[bx1], img2[bx2])
     if img1.ndim==2 and img2.ndim==3:
         funcs[mode](img1[bx1], img2[bx2].mean(axis=2))

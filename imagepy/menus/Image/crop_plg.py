@@ -18,4 +18,6 @@ class Plugin(Simple):
         else:
             imgs = [i[sc,sr].copy() for i in imgs]
         ips.set_imgs(imgs)
+        if not ips.backimg is None:
+            ips.backimg = ips.backimg[sc, sr]
         ips.roi = ips.roi.affine(np.eye(2), (-sr.start, -sc.start))

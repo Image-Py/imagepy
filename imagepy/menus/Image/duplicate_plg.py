@@ -30,21 +30,28 @@ class Plugin(Simple):
             if ips.roi == None:
                 img = ips.img.copy()
                 ipsd = ImagePlus([img], name)
+                ipsd.backimg = ips.backimg
             else:
                 img = ips.get_subimg().copy()
                 ipsd = ImagePlus([img], name)
                 box = ips.roi.get_box()
                 ipsd.roi = ips.roi.affine(np.eye(2), (-box[0], -box[1]))
+                if not ips.backimg is None:
+                    sr, sc = ips.get_rect()
+                    ipsd.backimg = ips.backimg[sr, sc]
         elif ips.get_nslices()>1 and self.para['stack']:
             if ips.roi == None:
                 if ips.is3d:imgs=imgs.copy()
                 else:imgs = [i.copy() for i in imgs]
+                backimg = ips.backimg
             else:
                 sc, sr = ips.get_rect()
                 if ips.is3d: imgs=imgs[:, sc, sr].copy()
                 else: imgs = [i[sc,sr].copy() for i in imgs]
+                backimg = ips.backimg[sr, cr]
             ipsd = ImagePlus(imgs, name)
             if ips.roi != None:
                 ipsd.roi = ips.roi.affine(np.eye(2), (-sr.start, -sc.start))
+            ips.backimg = backimg
         
         IPy.show_ips(ipsd)

@@ -32,8 +32,8 @@ class Plugin(Simple):
         
         if para['hor'] == 'left':c=0
         if para['ver'] == 'top':r=0
-        if para['hor'] == 'center':c=(shp[1]-old[1])/2
-        if para['ver'] == 'center':r=(shp[0]-old[0])/2
+        if para['hor'] == 'center':c=(shp[1]-old[1])//2
+        if para['ver'] == 'center':r=(shp[0]-old[0])//2
         if para['hor'] == 'right':c=shp[1]-old[1]
         if para['ver'] == 'bottom':r=shp[0]-old[0]
             
@@ -42,14 +42,18 @@ class Plugin(Simple):
             s[1], s[2] = shp[0], shp[1]
             rst = np.zeros(s, dtype=ips.dtype)
             for i in range(len(imgs)):
-                IPy.curapp.set_progress(round(i*100.0/len(imgs)))
+                self.progress(i, len(imgs))
                 bliter.blit(rst[i], imgs[i], c, r)
         else:
             rst = []
             for i in range(len(imgs)):
-                IPy.curapp.set_progress(round(i*100.0/len(imgs)))
+                self.progress(i, len(imgs))
                 rst.append(np.zeros(shp, ips.dtype))
                 bliter.blit(rst[-1], imgs[i], c, r)
-        IPy.curapp.set_progress(0)
         ips.roi = None
         ips.set_imgs(rst)
+        if ips.backimg is None: return
+        nbc = np.zeros(shp, dtype=np.uint8)
+        bliter.blit(nbc, ips.backimg, c, r)
+        ips.backimg = nbc
+

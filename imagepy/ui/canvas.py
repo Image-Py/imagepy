@@ -42,11 +42,12 @@ def trans(r1, r2):
 
 @jit
 def my_transform(img, m, offset=(0,0), output=None, k=0.5, clip=False):
+    print(m, offset)
     kr=m[0]; kc=m[1]; ofr=offset[0]; ofc=offset[1];
     for r in range(output.shape[0]):
         for c in range(output.shape[1]):
-            rr = int(round(r*kr+ofr))
-            cc = int(round(c*kc+ofc))
+            rr = int(r*kr+ofr)
+            cc = int(c*kc+ofc)
             if output[r,c]==0 or not clip:
                 output[r,c] = output[r,c]*(1-k)+img[rr,cc]*k
 
