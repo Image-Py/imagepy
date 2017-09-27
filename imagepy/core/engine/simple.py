@@ -20,9 +20,8 @@ class Simple:
 
     def __init__(self, ips=None):
         print('simple start')
-        if ips==None:ips = IPy.get_ips()
+        self.ips = IPy.get_ips() if ips==None else ips
         self.dialog = None
-        self.ips = ips
     
     def progress(self, i, n):
         self.prgs = (i, n)
@@ -50,10 +49,10 @@ class Simple:
         if ips == None:
             IPy.alert('no image opened!')
             return False
-        elif 'req_roi' in note and ips.roi == None:
+        if 'req_roi' in note and ips.roi == None:
             IPy.alert('no Roi found!')
             return False
-        elif not 'all' in note:
+        if not 'all' in note:
             if ips.get_imgtype()=='rgb' and not 'rgb' in note:
                 IPy.alert('do not surport rgb image')
                 return False
@@ -66,7 +65,7 @@ class Simple:
             elif ips.get_imgtype()=='float' and not 'float' in note:
                 IPy.alert('do not surport float image')
                 return False
-        elif sum([i in note for i in ('stack','stack2d','stack3d')])>0:
+        if sum([i in note for i in ('stack','stack2d','stack3d')])>0:
             if ips.get_nslices()==1:
                 IPy.alert('stack required!')
                 return False
@@ -91,15 +90,5 @@ class Simple:
             t =threading.Thread(target = self.runasyn, 
                 args = (self.ips, self.ips.imgs, para, callback))
             t.start()
-            #if not thd:t.join()
-            #self.ips.update = 'pix'
-            '''
-            def run(ips, imgs, p):
-                self.run(ips, imgs, p)
-                ips.update = 'pix'
-            f = lambda ips=self.ips, imgs=self.ips.imgs, p=para:run(ips, imgs, p)
-            thread = threading.Thread(None, f)
-            thread.start()
-            if not thd:thread.join()
-            '''
+
         if self.dialog!=None:self.dialog.Destroy()

@@ -118,8 +118,9 @@ class RegionCounter(Simple):
 class RegionFilter(Filter):
     title = 'Geometry Filter'
     note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap','preview']
-    para = {'con':'4-connect', 'area':0, 'l':0, 'holes':0, 'solid':0, 'e':0, 'front':255, 'back':0}
+    para = {'con':'4-connect', 'inv':False, 'area':0, 'l':0, 'holes':0, 'solid':0, 'e':0, 'front':255, 'back':100}
     view = [(list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix'),
+            (bool, 'invert', 'inv'),
             ('lab','Filter: "+" means >=, "-" means <'),
             (int, (0, 255), 0, 'front color', 'front', ''),
             (int, (0, 255), 0, 'back color', 'back', ''),
@@ -132,13 +133,10 @@ class RegionFilter(Filter):
     #process
     def run(self, ips, snap, img, para = None):
         k, unit = ips.unit
-        if para['con'] == '4-connect':
-            strc = np.array([[0,1,0],[1,1,1],[0,1,0]], dtype=np.uint8)
-        elif para['con'] == '8-connect':
-            strc = np.array([[1,1,1],[1,1,1],[1,1,1]], dtype=np.uint8)
+        strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
 
-        lab, n = label(snap, strc, output=np.uint16)
-        idx = (np.ones(n+1)*para['front']).astype(np.uint8)
+        lab, n = label(snap==0 if para['inv'] else snap, strc, output=np.uint16)
+        idx = (np.ones(n+1)*(0 if para['inv'] else para['front'])).astype(np.uint8)
         ls = regionprops(lab)
         
         for i in ls:
@@ -178,6 +176,6 @@ class RegionFilter(Filter):
                 if i.minor_axis_length>0 and i.major_axis_length/i.minor_axis_length >= -para['e']: 
                     idx[i.label] = para['back']
 
-        idx[0] = 0
+        idx[0] = para['front'] if para['inv'] else 0
         img[:] = idx[lab]
 plgs = [RegionCounter, RegionFilter]

@@ -42,7 +42,6 @@ def trans(r1, r2):
 
 @jit
 def my_transform(img, m, offset=(0,0), output=None, k=0.5, clip=False):
-    print(m, offset)
     kr=m[0]; kc=m[1]; ofr=offset[0]; ofc=offset[1];
     for r in range(output.shape[0]):
         for c in range(output.shape[1]):
@@ -206,6 +205,9 @@ class Canvas (wx.Panel):
             self.bmp = wx.Bitmap.FromBuffer(win2[2], win2[3], memoryview(rst))
             print(time()-start)
         dc.DrawBitmap(self.bmp, win[0], win[1])
+        
+    def save_buffer(self, path):
+        self.buffer.SaveFile(path, wx.BITMAP_TYPE_PNG)
 
     def draw_ruler(self, dc):
         dc.SetPen(wx.Pen((255,255,255), width=2, style=wx.SOLID))
