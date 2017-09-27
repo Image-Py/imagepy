@@ -3,6 +3,7 @@ import numpy as np
 from imagepy.core.engine import Simple, Filter
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
+from numpy.linalg import norm
 
 # center, area, l, extent, cov
 class RegionCounter(Simple):
@@ -26,7 +27,7 @@ class RegionCounter(Simple):
         titles = ['ID']
         if para['center']:titles.extend(['Center-X','Center-Y','Center-Z'])
         if para['vol']:titles.append('Volume')
-        if para['extent']:titles.extend(['Min-Y','Min-X','Max-Y','Max-X','Min-Z','Max-Z'])
+        if para['extent']:titles.extend(['Min-Z','Min-Y','Min-X','Max-Z','Max-Y','Max-X'])
         if para['ed']:titles.extend(['Diameter'])
         if para['fa']:titles.extend(['FilledArea'])
 
@@ -45,7 +46,7 @@ class RegionCounter(Simple):
         if para['vol']:
             dt.append([i.area*k**3 for i in ls])
         if para['extent']:
-            for j in (4,5,2,3,0,1):
+            for j in (0,1,2,3,4,5):
                 dt.append([i.bbox[j]*k for i in ls])
         if para['ed']:
             dt.append([round(i.equivalent_diameter*k, 1) for i in ls])
@@ -64,14 +65,14 @@ class RegionFilter(Simple):
             (int, (0, 255), 0, 'front color', 'front', ''),
             (int, (0, 255), 0, 'back color', 'back', ''),
             (float, (-1e6, 1e6), 1, 'volume', 'vol', 'unit^3'),
-            (float, (-1e6, 1e6), 1, 'dia', 'dia', 'unit')]
+            (float, (-1e6, 1e6), 1, 'diagonal', 'dia', 'unit')]
 
     #process
     def run(self, ips, imgs, para = None):
         k, unit = ips.unit
         strc = generate_binary_structure(3, 1 if para['con']=='4-connect' else 2)
 
-        lab, n = label(imgs==0 if para['inv'] else snap, strc, output=np.uint16)
+        lab, n = label(imgs==0 if para['inv'] else imgs, strc, output=np.uint16)
         idx = (np.ones(n+1)*(0 if para['inv'] else para['front'])).astype(np.uint8)
         ls = regionprops(lab)
 
@@ -80,15 +81,15 @@ class RegionFilter(Simple):
             if para['vol']>0:
                 if i.area*k**3 < para['vol']: idx[i.label] = para['back']
             if para['vol']<0:
-                if i.area*k**23 >= -para['vol']: idx[i.label] = para['back']
+                if i.area*k**3 >= -para['vol']: idx[i.label] = para['back']
 
         for i in ls:
             if para['dia'] == 0: break
-            d = norm(np.array(i.bbox[1::2]) - np.array(i.bbox[::2]))
+            d = norm(np.array(i.bbox[:3]) - np.array(i.bbox[3:]))
             if para['dia']>0:
-                if d < para['dia']: idx[i.label] = para['back']
-            if para['vol']<0:
-                if d >= -para['dia']: idx[i.label] = para['back']
+                if d*k < para['dia']: idx[i.label] = para['back']
+            if para['dia']<0:
+                if d*k >= -para['dia']: idx[i.label] = para['back']
 
         idx[0] = para['front'] if para['inv'] else 0
         imgs[:] = idx[lab]
