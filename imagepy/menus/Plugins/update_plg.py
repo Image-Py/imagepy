@@ -2,7 +2,7 @@ from imagepy import IPy
 from imagepy.core.engine import Free
 
 class Update(Free):
-	title = 'Update Software'
+	title = 'Update SSoftware'
 	def load(self):
 		try:
 			from dulwich.repo import Repo
