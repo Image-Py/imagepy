@@ -17,12 +17,39 @@ class Plugin(Simple):
             (float, (0.1,10), 1, 'scale z', 'h', '')]
     
     def run(self, ips, imgs, para = None):
+        '''
         from mayavi import mlab
         img = ips.img
         scale, sigma = para['scale'], para['sigma']
         imgblur = gaussian_filter(img[::scale,::scale], sigma)
         mlab.surf(imgblur, warp_scale=para['h'])
         mlab.show()
+        '''
+        import vtk
+
+        cone_a=vtk.vtkConeSource()
+
+        coneMapper = vtk.vtkPolyDataMapper()
+        coneMapper.SetInputConnection(cone_a.GetOutputPort())
+
+        coneActor = vtk.vtkActor()
+        coneActor.SetMapper(coneMapper)
+
+
+        ren1= vtk.vtkRenderer()
+        ren1.AddActor( coneActor )
+        ren1.SetBackground( 0.1, 0.2, 0.4 )
+
+        renWin = vtk.vtkRenderWindow()
+        renWin.AddRenderer( ren1 )
+        renWin.SetSize( 300, 300 )
+        renWin.Render()
+
+        iren=vtk.vtkRenderWindowInteractor()
+        iren.SetRenderWindow(renWin)
+
+        iren.Initialize()
+        iren.Start()
 
 if __name__ == '__main__':
     pass
