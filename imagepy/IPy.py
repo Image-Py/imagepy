@@ -42,7 +42,6 @@ def showimg(imgs, title):
 pub.subscribe(showimg, 'showimg')
 def show_img(imgs, title):
     wx.CallAfter(pub.sendMessage, 'showimg', imgs=imgs, title=title) 
-    #wx.Yield()
     print('mes show img')
 '''
 def stepmacros(macros):
