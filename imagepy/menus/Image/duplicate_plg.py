@@ -54,5 +54,4 @@ class Plugin(Simple):
                 ipsd.roi = ips.roi.affine(np.eye(2), (-sr.start, -sc.start))
             ipsd.backimg = backimg
         ipsd.backmode = ips.backmode
-        
         IPy.show_ips(ipsd)

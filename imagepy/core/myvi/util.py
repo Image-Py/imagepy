@@ -1,5 +1,6 @@
 from skimage.measure import marching_cubes_lewiner
-from skimage.filters import sobel_h, sobel_v, gaussian
+from skimage.filters import sobel_h, sobel_v
+from scipy.ndimage import gaussian_filter
 from time import time
 import numpy as np
 from math import pi
@@ -26,27 +27,33 @@ def build_grididx(r, c):
 	did = np.array([[0, 1, 1+c, 0, 1+c, c]], dtype=np.uint32)
 	return rs, cs, (idx1 + did).reshape((-1,3))
 
-def build_surf2d(img, lut=None, ds=1, smooth=0):
+def build_surf2d(img, ds=1, sigma=0, k=0.2, lut=None):
 	start = time()
 	img = img[::-ds, ::ds]
+	img = gaussian_filter(img, sigma)
 	r, c = img.shape
 	rs, cs, fs = build_grididx(r, c)
 	vs = img[rs, cs]
 
-	vts = np.array([cs, rs, vs/3], dtype=np.float32).T
+	vts = np.array([cs*ds, rs*ds, vs*k], dtype=np.float32).T
 	cs = (np.ones((3, r*c))*(vs/255)).astype(np.float32).T
+	
 	dx, dy = sobel_h(img), sobel_v(img)
 	cx, cy = np.zeros((r*c, 3)), np.zeros((r*c, 3))
 	cx[:,0], cx[:,2] = 1, dx.ravel()
 	cy[:,1], cy[:,2] = 1, dy.ravel()
 	ns = np.cross(cx, cy)
-	print('here-----------------', ds, smooth)
 	ns = (ns.T/np.linalg.norm(ns, axis=1)).astype(np.float32).T
+	
+	#ns = count_ns(vts, fs)
 	print(time()-start)
 	return vts, fs, ns, cs
 
-def build_surf3d(imgs, level, step=1):
-	return marching_cubes_lewiner(imgs, level, step_size=1)
+def build_surf3d(imgs, ds, level, step=1, c=(1,0,0)):
+	vts, fs, ns, cs =  marching_cubes_lewiner(imgs[::ds,::ds,::ds], level, step_size=step)
+	vts[:,:2] *= ds
+	cs = (np.ones((len(vts), 3))*c).astype(np.float32)
+	return vts, fs, ns, cs
 
 def build_ball(o, r, c=(1,0,0)):
 	ay, ax = np.mgrid[-pi/2:pi/2:9j, 0:pi*2:17j]

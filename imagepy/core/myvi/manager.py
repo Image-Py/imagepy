@@ -80,6 +80,7 @@ class Surface:
 		if not color is None:
 			self.buf[:,6:9] = color
 			self.vbo.write(self.buf.tobytes())
+			self.color = color if isinstance(color, tuple) else (0,0,0)
 
 	def draw(self, mvp):
 		if not self.visible: return

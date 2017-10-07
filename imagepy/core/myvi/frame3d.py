@@ -3,6 +3,7 @@ from .canvas3d import Canvas3D
 from wx.lib.pubsub import pub
 from . import util
 import numpy as np
+import os.path as osp
 
 class GLFrame(wx.Frame):
 	frm = None
@@ -12,35 +13,36 @@ class GLFrame(wx.Frame):
 		if cls.frm == None:
 			cls.frm = GLFrame(parent, title)
 			cls.frm.Show()
-			wx.Yield()
+		wx.Yield()
 		return cls.frm
 
 	def __init__( self, parent, title=''):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = title, pos = wx.DefaultPosition, size = wx.Size( 417,336 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = title, pos = wx.DefaultPosition, size = wx.Size( 800, 600 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		sizer = wx.BoxSizer( wx.VERTICAL )
 		self.canvas = Canvas3D(self)
 		self.toolbar = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize)
 		tsizer = wx.BoxSizer( wx.HORIZONTAL )
-		
-		self.btn_x = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( u"C:\\Users\\Administrator\\Downloads\\tvtk\\pyface\\images\\16x16\\x-axis.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
+
+		root = osp.abspath(osp.dirname(__file__))
+
+		self.SetIcon(wx.Icon('data/logo.ico', wx.BITMAP_TYPE_ICO))
+
+		self.btn_x = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( os.path.join(root, 'imgs/x-axis.png'), wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
 		tsizer.Add( self.btn_x, 0, wx.ALL, 1 )
-		self.btn_y = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( u"C:\\Users\\Administrator\\Downloads\\tvtk\\pyface\\images\\16x16\\y-axis.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
+		self.btn_y = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( os.path.join(root, 'imgs/y-axis.png'), wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
 		tsizer.Add( self.btn_y, 0, wx.ALL, 1 )
-		self.btn_z = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( u"C:\\Users\\Administrator\\Downloads\\tvtk\\pyface\\images\\16x16\\z-axis.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
+		self.btn_z = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( os.path.join(root, 'imgs/z-axis.png'), wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
 		tsizer.Add( self.btn_z, 0, wx.ALL, 1 )
 		tsizer.Add(wx.StaticLine( self.toolbar, wx.ID_ANY,  wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL), 0, wx.ALL|wx.EXPAND, 2 )
-		self.btn_pers = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( u"C:\\Users\\Administrator\\Downloads\\tvtk\\pyface\\images\\16x16\\isometric.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
+		self.btn_pers = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( os.path.join(root, 'imgs/isometric.png'), wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
 		tsizer.Add( self.btn_pers, 0, wx.ALL, 1 )
-		self.btn_orth = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( u"C:\\Users\\Administrator\\Downloads\\tvtk\\pyface\\images\\16x16\\parallel.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
+		self.btn_orth = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( os.path.join(root, 'imgs/parallel.png'), wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
 		tsizer.Add( self.btn_orth, 0, wx.ALL, 1 )
 		tsizer.Add(wx.StaticLine( self.toolbar, wx.ID_ANY,  wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL), 0, wx.ALL|wx.EXPAND, 2 )
-		self.btn_save = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( u"C:\\Users\\Administrator\\Downloads\\tvtk\\pyface\\images\\16x16\\save.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
-		tsizer.Add( self.btn_save, 0, wx.ALL, 1 )
-		self.btn_save = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( u"C:\\Users\\Administrator\\Downloads\\tvtk\\pyface\\images\\16x16\\configure.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
+		self.btn_save = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap(os.path.join(root, 'imgs/save.png'), wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
 		tsizer.Add( self.btn_save, 0, wx.ALL, 1 )
 		
-		tsizer.Add(wx.StaticLine( self.toolbar, wx.ID_ANY,  wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL), 0, wx.ALL|wx.EXPAND, 2 )
 		self.btn_color = wx.ColourPickerCtrl( self.toolbar, wx.ID_ANY, wx.Colour( 128, 128, 128 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
 		tsizer.Add( self.btn_color, 0, wx.ALIGN_CENTER|wx.ALL, 1 )
 		self.toolbar.SetSizer( tsizer )
@@ -107,7 +109,8 @@ class GLFrame(wx.Frame):
 		pub.subscribe(self.add_obj, 'add_obj')
 
 	def on_closing(self, event):
-		frm = None
+		print('closed', '-------------------')
+		GLFrame.frm = None
 		event.Skip()
 
 	def view_x(self, evt): 
@@ -137,14 +140,6 @@ class GLFrame(wx.Frame):
 	        self.canvas.save_bitmap(path)
 	        print(path)
 	    dialog.Destroy()
-
-	def add_surf2d(self, name, img, lut=None, ds=1, smooth=0):
-		vts, fs, ns, cs = util.build_surf2d(img, lut, ds, smooth)
-		wx.CallAfter(pub.sendMessage, 'add_obj', name=name, vts=vts, fs=fs, ns=ns, cs=cs)
-
-	def add_balls(self, name, os, rs, cs):
-		vts, fs, ns, cs = util.build_balls(os, rs, cs)
-		wx.CallAfter(pub.sendMessage, 'add_obj', name=name, vts=vts, fs=fs, ns=ns, cs=cs)
 
 	def get_obj(self, name):
 		return self.canvas.manager.get_obj(name)
@@ -176,14 +171,20 @@ class GLFrame(wx.Frame):
 		self.sli_blend.SetValue(int(self.curobj.blend*10))
 		self.cho_mode.SetSelection(['mesh', 'grid'].index(self.curobj.mode))
 
-	def add_obj(self, name, vts, fs, ns, cs):
+	def add_obj_ansy(self, name, vts, fs, ns, cs):
+		wx.CallAfter(pub.sendMessage, 'add_obj', name=name, vts=vts, fs=fs, ns=ns, cs=cs)
+
+	def add_obj(self, name, vts, fs, ns, cs, **key):
 		manager = self.canvas.manager
 		manager.add_obj(name, vts, fs, ns, cs)
+
+
 		self.cho_obj.Append(name)
 		self.cho_obj.SetSelection(self.cho_obj.GetCount()-1)
 		self.on_select(None)
 		self.canvas.manager.count_box()
 		self.canvas.manager.reset()
+		self.canvas.Refresh(False)
 
 if __name__ == '__main__':
     app = wx.App(False)

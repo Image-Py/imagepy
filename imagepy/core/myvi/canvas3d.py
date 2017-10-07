@@ -1,14 +1,10 @@
 import sys
 import ModernGL
-import struct
 import numpy as np
 import wx, math
 import wx.glcanvas as glcanvas
-from skimage.measure import marching_cubes
-from pyrr import Matrix44
 from .manager import *
 from .util import build_surf2d, build_surf3d, build_ball, build_balls
-from time import sleep
 
 #----------------------------------------------------------------------
 from wx.glcanvas import WX_GL_DEPTH_SIZE 
