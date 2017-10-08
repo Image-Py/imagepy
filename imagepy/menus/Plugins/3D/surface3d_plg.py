@@ -13,13 +13,12 @@ class Plugin(Filter):
     modal = False
     title = '3D Surface'
     note = ['8-bit', 'not_slice', 'not_channel', 'preview']
-    para = {'name':'undifine', 'ds':2, 'thr':128, 'step':1, 'color':(0,255,0), 'opa':1}
+    para = {'name':'undifine', 'ds':2, 'thr':128, 'step':1, 'color':(0,255,0)}
     view = [(str, 'Name', 'name',''),
             ('slide', (0,255), 'threshold', 'thr', ''),
             (int, (1,20), 0, 'down scale', 'ds', 'pix'),
             (int, (1,20), 0, 'march step', 'step', 'pix'),
-            ('color', 'color', 'color', 'rgb'),
-            (float, (0,1), 1, 'opacity', 'opa', '')]
+            ('color', 'color', 'color', 'rgb')]
 
     def load(self, ips):
         if not ips.is3d:

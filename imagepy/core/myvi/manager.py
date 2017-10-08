@@ -6,7 +6,6 @@ from time import time
 from scipy.misc import imread
 import numpy as np
 from math import sin, cos, tan, pi
-from pyrr import Matrix44
 import scipy.ndimage as nimg
 
 def look_at(eye, target, up, dtype=None):
