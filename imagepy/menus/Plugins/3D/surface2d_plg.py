@@ -36,13 +36,13 @@ class Plugin(Simple):
             (float, (0.1,10), 1, 'scale z', 'h', '')]
     
     def load(self, para):
-        self.frame = myvi.GLFrame.get_frame(IPy.curapp, title='3D Canvas')
+        self.frame = myvi.Frame3D.figure(IPy.curapp, title='3D Canvas')
         return True
 
     def run(self, ips, imgs, para = None):
         ds, sigma = para['scale'], para['sigma']
-        vts, fs, ns, cs = myvi.util.build_surf2d(ips.img, ds=ds, sigma=para['sigma'], k=para['h'], lut=None)
-        self.frame.add_obj_ansy(para['name'], vts, fs, ns, cs)
+        vts, fs, ns, cs = myvi.build_surf2d(ips.img, ds=ds, sigma=para['sigma'], k=para['h'])
+        self.frame.viewer.add_obj_asyn(para['name'], vts, fs, ns, cs)
         self.frame = None
         #self.frame.add_surf2d('dem', ips.img, ips.lut, scale, sigma)
 

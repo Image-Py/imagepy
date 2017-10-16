@@ -58,8 +58,14 @@ def orthogonal(xmax, ymax, near, far):
     ), dtype=np.float32)
 
 class Surface:
-	def __init__(self, ctx, prog, vts, ids, ns, cs=(0,0,1)):
-		#self.vts, self.ids, self.ns, self.cs = vts, ids, ns, cs
+	def __init__(self, vts, ids, ns, cs=(0,0,1)):
+		self.vts, self.ids, self.ns, self.cs = vts, ids, ns, cs
+		self.box = np.vstack((vts.min(axis=0), vts.max(axis=0)))
+		self.mode, self.blend, self.visible = 'mesh', 1.0, True
+		self.color = cs if isinstance(cs, tuple) else (0,0,0)
+
+	def on_ctx(self, ctx, prog):
+		vts, ids, ns, cs = self.vts, self.ids, self.ns, self.cs;
 		buf = self.buf = np.zeros((len(vts), 9), dtype=np.float32)
 		buf[:,0:3], buf[:,3:6], buf[:,6:9] = vts, ns, cs
 		self.vbo = ctx.buffer(buf.tobytes())
@@ -67,10 +73,8 @@ class Surface:
 		ctx.line_width = 1
 		content = [(self.vbo, '3f3f3f', ['v_vert', 'v_norm', 'v_color'])]
 		self.vao = ctx.vertex_array(prog, content, ibo)
-		self.box = np.vstack((vts.min(axis=0), vts.max(axis=0)))
 		self.prog = prog
-		self.mode, self.blend, self.visible = 'mesh', 1.0, True
-		self.color = cs if isinstance(cs, tuple) else (0,0,0)
+		
 
 	def set_style(self, mode=None, blend=None, color=None, visible=None):
 		if not mode is None: self.mode = mode
@@ -85,6 +89,7 @@ class Surface:
 		if not self.visible: return
 		self.prog.uniforms['Mvp'].write(mvp.astype(np.float32).tobytes())
 		self.prog.uniforms['blend'].value = self.blend
+
 		self.vao.render({'mesh':ModernGL.TRIANGLES, 'grid':ModernGL.LINES}[self.mode])
 
 class Manager:
@@ -94,6 +99,9 @@ class Manager:
 		self.pers, self.center = True, (0,0,0)
 		self.background = 0.4, 0.4, 0.4
 		self.objs = {}
+		self.ctx = None
+
+	def on_ctx(self):
 		self.ctx = ModernGL.create_context()
 		self.prog_suf = self.ctx.program([
 			self.ctx.vertex_shader('''
@@ -123,15 +131,20 @@ class Manager:
                 }
 			'''),
 		])
+		for i in self.objs.values():
+			i.on_ctx(self.ctx, self.prog_suf)
 
 	def add_obj(self, name, vts, ids, ns=None, cs=(0,0,1)):
-		self.objs[name] = Surface(self.ctx, self.prog_suf, vts, ids, ns, cs)
+		surf = Surface(vts, ids, ns, cs)
+		if not self.ctx is None:
+			surf.on_ctx(self.ctx, self.prog_suf)
+		self.objs[name] = surf
+		self.count_box()
+		return surf
 
 	def get_obj(self, key):
 		if not key in self.objs: return None
 		return self.objs[key]
-
-	def get_obj(self, name): return self.objs[name]
 
 	def draw(self):
 		self.ctx.clear(*self.background)
@@ -184,17 +197,12 @@ class Manager:
 		self.eye = self.center + v*self.l*1
 		self.count_mvp()
 
-	'''
-	def set_pers(self, m):
-		mvp = self.prog_suf.uniforms['Mvp']
-		proj = Matrix44.perspective_projection(61, wnd.ratio, 0.1, 1000.0)
-		lookat = Matrix44.look_at(
-			(0,2.732 ,0),
-			(0,1,0),
-			(0.0,0.0,1.0),
-		)
-		mvp.write((proj*lookat).astype('f4').tobytes())
-	'''
+	def show(self, title='Myvi'):
+		import wx
+		from .frame3d import Frame3D
+		app = wx.App(False)
+		Frame3D(None, title, self).Show()
+		app.MainLoop()
 
 if __name__ == '__main__':
 	img = imread('gis.png')

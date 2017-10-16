@@ -24,7 +24,7 @@ class Plugin(Filter):
         if not ips.is3d:
             IPy.alert('stack3d required!')
             return False
-        self.frame = myvi.GLFrame.get_frame(IPy.curapp, title='3D Canvas')
+        self.frame = myvi.Frame3D.figure(IPy.curapp, title='3D Canvas')
         self.buflut = ips.lut
         ips.lut = ips.lut.copy()
         return True
@@ -46,7 +46,7 @@ class Plugin(Filter):
         print('------------', para['color'])
         cs = tuple([int(i/255.0) for i in para['color']])
         vts, fs, ns, cs = myvi.build_surf3d(ips.imgs, para['ds'], para['thr'], para['step'], cs)
-        self.frame.add_obj_ansy(para['name'], vts, fs, ns, cs)
+        self.frame.viewer.add_obj_asyn(para['name'], vts, fs, ns, cs)
         self.frame = None
 
 
