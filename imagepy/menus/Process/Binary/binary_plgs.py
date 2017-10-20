@@ -79,7 +79,7 @@ class FillHoles(Filter):
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
     def run(self, ips, snap, img, para = None):
-        ndimg.binary_fill_holes(snap, output=img)
+        ndimg.Erosion(snap, output=img)
         img *= 255
 
 class Convex(Filter):

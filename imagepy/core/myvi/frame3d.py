@@ -28,7 +28,7 @@ class Frame3D(wx.Frame):
 		if not title in cls.frms:
 			cls.frms[title] = Frame3D(parent, title)
 			cls.frms[title].Show()
-		wx.Yield()
+		# wx.Yield()
 		return cls.frms[title]
 	
 	def on_closing(self, event):

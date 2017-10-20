@@ -1,6 +1,7 @@
 from time import time
 import numpy as np
 from math import pi
+from .txtmark import lib
 
 def count_ns(vts, fs):
 	dv1 = vts[fs[:,1]] - vts[fs[:,2]]
@@ -47,7 +48,7 @@ def build_surf2d(img, ds=1, sigma=0, k=0.2):
 def build_surf3d(imgs, ds, level, step=1, c=(1,0,0)):
 	from skimage.measure import marching_cubes_lewiner
 	vts, fs, ns, cs =  marching_cubes_lewiner(imgs[::ds,::ds,::ds], level, step_size=step)
-	vts[:,:2] *= ds
+	vts *= ds
 	cs = (np.ones((len(vts), 3))*c).astype(np.float32)
 	return vts, fs, ns, cs
 
@@ -91,7 +92,7 @@ def build_line(xs, ys, zs, c):
 	if rem>0: fs[-rem:] = len(xs)-1 
 	ns = np.ones((len(vts), 3), dtype=np.float32)
 	cs = (np.ones((len(vts), 3))*c).astype(np.float32)
-	return vts, fs, ns, cs
+	return vts, fs.reshape((-1,3)), ns, cs
 
 def build_lines(xs, ys, zs, cs):
 	if not isinstance(cs, list):
@@ -106,6 +107,35 @@ def build_lines(xs, ys, zs, cs):
 		nss.append(nn)
 		css.append(cc)
 	return np.vstack(vtss), np.vstack(fss), np.vstack(nss), np.vstack(css)
+
+def build_mark(cont, pos, dz, h, color):
+	vts, fss = [], []
+	s, sw = 0, 0
+	for i in cont:
+		xs, ys, w = lib[i]
+		vv, ff, nn, cc = build_lines(xs, ys, ys, (0,0,0))
+		fss.append(ff+s)
+		vts.append(vv+[sw,0,0])
+		vts[-1][:,2] = dz
+		s += len(vv)
+		sw += w+0.3
+	sw -= 0.3
+	vts = (np.vstack(vts)-[sw/2.0, 0.5, 0])
+	return vts, np.vstack(fss), pos, h, color
+
+def build_marks(conts, poss, dz, h, color):
+	if not isinstance(dz, list):
+		dz = [dz] * len(conts)
+	vtss, fss, pps = [], [], []
+	s = 0
+	for cont, pos, z in zip(conts, poss, dz):
+		vv, ff, pp, hh, cc = build_mark(cont, pos, z, h, color)
+		fss.append(ff+s)
+		s += len(vv)
+		vtss.append(vv)
+		pps.append((np.ones((len(vv),3))*pp).astype(np.float32))
+
+	return np.vstack(vtss), np.vstack(fss), np.vstack(pps), h, color
 
 cmp = {'rainbow':[(127, 0, 255), (43, 126, 246), (42, 220, 220), (128, 254, 179), (212, 220, 127), (255, 126, 65), (255, 0, 0)],
 	'jet':[(0, 0, 127), (0, 40, 255), (0, 212, 255), (124, 255, 121), (255, 229, 0), (255, 70, 0), (127, 0, 0)],

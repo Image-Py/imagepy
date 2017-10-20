@@ -120,6 +120,24 @@ class CutBranch(Filter):
             if not para['rec'] or len(rm)==0:break
         img *= 0
         sknw.draw_graph(img, g)
+
+class RemoveIsolate(Filter):
+    title = 'Remove Isolate Node'
+    note = ['all']
+
+    def load(self, ips):
+        if not isinstance(ips.data, nx.MultiGraph):
+            IPy.alert("Please build graph!");
+            return False;
+        return True;
+
+    def run(self, ips, snap, img, para = None):
+        g = ips.data
+        for n in g.nodes():
+            if len(g[n])==0: g.remove_node(n)
+        img *= 0
+        sknw.draw_graph(img, g)
+
 @jit
 def floodfill(img, x, y):
     buf = np.zeros((131072,2), dtype=np.uint16)
@@ -157,4 +175,4 @@ class CutROI(Filter):
                 floodfill(img, x, y)
         
 
-plgs = [BuildGraph, Statistic, Sumerise, '-', CutBranch, CutROI]
+plgs = [BuildGraph, Statistic, Sumerise, '-', RemoveIsolate, CutBranch, CutROI]

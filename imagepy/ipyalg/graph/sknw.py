@@ -121,14 +121,16 @@ def build_sknw(ske, multi=False):
     
 # draw the graph
 def draw_graph(img, graph, cn=255, ce=128):
+    acc = np.cumprod((1,)+img.shape[::-1][:-1])[::-1]
+    img = img.ravel()
     for idx in graph.nodes():
         pts = graph.node[idx]['pts']
-        img[pts[:,0], pts[:,1]] = cn
+        img[np.dot(pts, acc)] = cn
     for (s, e) in graph.edges():
         eds = graph[s][e]
         for i in eds:
             pts = eds[i]['pts']
-            img[pts[:,0], pts[:,1]] = ce
+            img[np.dot(pts, acc)] = ce
 
 if __name__ == '__main__':
     g = nx.MultiGraph()

@@ -189,7 +189,8 @@ class Viewer3D(wx.Panel):
         self.col_color.Bind( wx.EVT_COLOURPICKER_CHANGED, self.on_color )
 
         if manager!=None: self.cho_obj.Set(list(manager.objs.keys()))
-        pub.subscribe(self.add_obj, 'add_obj')
+        pub.subscribe(self.add_surf, 'add_surf')
+        pub.subscribe(self.add_mark, 'add_mark')
 
     def view_x(self, evt): 
         self.canvas.manager.reset(angx=0)
@@ -252,15 +253,26 @@ class Viewer3D(wx.Panel):
         self.sli_blend.SetValue(int(self.curobj.blend*10))
         self.cho_mode.SetSelection(['mesh', 'grid'].index(self.curobj.mode))
 
-    def add_obj_asyn(self, name, vts, fs, ns, cs, mode=None, blend=None, color=None, visible=None):
-        wx.CallAfter(pub.sendMessage, 'add_obj', name=name, vts=vts, fs=fs, ns=ns, cs=cs, obj=self,
+    def add_surf_asyn(self, name, vts, fs, ns, cs, mode=None, blend=None, color=None, visible=None):
+        wx.CallAfter(pub.sendMessage, 'add_surf', name=name, vts=vts, fs=fs, ns=ns, cs=cs, obj=self,
             mode=mode, blend=blend, color=color, visible=visible)
 
-    def add_obj(self, name, vts, fs, ns, cs, obj=None, mode=None, blend=None, color=None, visible=None):
+    def add_surf(self, name, vts, fs, ns, cs, obj=None, mode=None, blend=None, color=None, visible=None):
         if obj!=None and not obj is self:return
         manager = self.canvas.manager
-        surf = manager.add_obj(name, vts, fs, ns, cs)
+        surf = manager.add_surf(name, vts, fs, ns, cs)
         surf.set_style(mode=mode, blend=blend, color=color, visible=visible)
+        if len(manager.objs)==1:
+            manager.reset()
+        self.cho_obj.Append(name)
+        self.canvas.Refresh(False)
+
+    def add_mark_asyn(self, name, vts, fs, ps, h, cs):
+        wx.CallAfter(pub.sendMessage, 'add_mark', name=name, vts=vts, fs=fs, ps=ps, h=h, cs=cs)
+
+    def add_mark(self, name, vts, fs, ps, h, cs):
+        manager = self.canvas.manager
+        surf = manager.add_mark(name, vts, fs, ps, h, cs)
         if len(manager.objs)==1:
             manager.reset()
         self.cho_obj.Append(name)

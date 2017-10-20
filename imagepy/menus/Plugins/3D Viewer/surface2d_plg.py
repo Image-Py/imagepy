@@ -42,7 +42,7 @@ class Plugin(Simple):
     def run(self, ips, imgs, para = None):
         ds, sigma = para['scale'], para['sigma']
         vts, fs, ns, cs = myvi.build_surf2d(ips.img, ds=ds, sigma=para['sigma'], k=para['h'])
-        self.frame.viewer.add_obj_asyn(para['name'], vts, fs, ns, cs)
+        self.frame.viewer.add_surf_asyn(para['name'], vts, fs, ns, cs)
         self.frame = None
         #self.frame.add_surf2d('dem', ips.img, ips.lut, scale, sigma)
 

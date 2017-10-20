@@ -30,7 +30,6 @@ def perspective(xmax, ymax, near, far):
 	D = -2. * far * near / (far - near)
 	E = 2. * near / (right - left)
 	F = 2. * near / (top - bottom)
-
 	return np.array((
 		(  E, 0., 0., 0.),
 		( 0.,  F, 0., 0.),
@@ -65,16 +64,16 @@ class Surface:
 		self.color = cs if isinstance(cs, tuple) else (0,0,0)
 
 	def on_ctx(self, ctx, prog):
+		self.ctx = ctx
 		vts, ids, ns, cs = self.vts, self.ids, self.ns, self.cs;
 		buf = self.buf = np.zeros((len(vts), 9), dtype=np.float32)
 		buf[:,0:3], buf[:,3:6], buf[:,6:9] = vts, ns, cs
 		self.vbo = ctx.buffer(buf.tobytes())
 		ibo = ctx.buffer(ids.tobytes())
-		ctx.line_width = 1
+		
 		content = [(self.vbo, '3f3f3f', ['v_vert', 'v_norm', 'v_color'])]
 		self.vao = ctx.vertex_array(prog, content, ibo)
 		self.prog = prog
-		
 
 	def set_style(self, mode=None, blend=None, color=None, visible=None):
 		if not mode is None: self.mode = mode
@@ -87,10 +86,41 @@ class Surface:
 
 	def draw(self, mvp):
 		if not self.visible: return
+		self.ctx.line_width = 1
+		mvp = np.dot(*mvp)
 		self.prog.uniforms['Mvp'].write(mvp.astype(np.float32).tobytes())
 		self.prog.uniforms['blend'].value = self.blend
 
 		self.vao.render({'mesh':ModernGL.TRIANGLES, 'grid':ModernGL.LINES}[self.mode])
+
+class MarkText:
+	def __init__(self, vts, ids, os, h, color):
+		self.vts, self.ids, self.color, self.os, self.h = vts, ids, color, os, h
+		self.blend, self.box, self.visible, self.mode = 1, None, True, 'grid'
+
+	def on_ctx(self, ctx, prog):
+		self.ctx = ctx
+		vts, ids, os = self.vts, self.ids, self.os
+		buf = self.buf = np.zeros((len(vts), 6), dtype=np.float32)
+		buf[:,0:3], buf[:,3:6] = vts, os
+		self.vbo = ctx.buffer(buf.tobytes())
+		ibo = ctx.buffer(ids.tobytes())
+		content = [(self.vbo, '3f3f', ['v_vert', 'v_pos'])]
+		self.vao = ctx.vertex_array(prog, content, ibo)
+		self.prog = prog
+
+	def set_style(self, mode=None, blend=None, color=None, visible=None):
+		if not visible is None: self.visible = visible
+		if not color is None: self.color = color
+
+	def draw(self, mvp):
+		if not self.visible: return
+		self.ctx.line_width = 2
+		self.prog.uniforms['mv'].write(mvp[0].astype(np.float32).tobytes())
+		self.prog.uniforms['proj'].write(mvp[1].astype(np.float32).tobytes())
+		self.prog.uniforms['f_color'].write(np.array(self.color).astype(np.float32).tobytes())
+		self.prog.uniforms['h'].value = self.h
+		self.vao.render(ModernGL.LINES)
 
 class Manager:
 	def __init__(self):
@@ -121,7 +151,7 @@ class Manager:
             self.ctx.fragment_shader('''
                 #version 330
                 uniform vec3 light = vec3(1,1,0.8);
-                uniform float blend = 1;
+                uniform float blend = 0.1;
                 in vec3 f_norm;
                 in vec3 f_color;
                 out vec4 color;
@@ -131,16 +161,50 @@ class Manager:
                 }
 			'''),
 		])
-		for i in self.objs.values():
-			i.on_ctx(self.ctx, self.prog_suf)
 
-	def add_obj(self, name, vts, ids, ns=None, cs=(0,0,1)):
+		self.prog_txt = self.ctx.program([
+			self.ctx.vertex_shader('''
+                #version 330
+                uniform mat4 mv;
+                uniform mat4 proj;
+                uniform float h;
+                in vec3 v_vert;
+                in vec3 v_pos;
+                void main() {
+                    vec4 o = mv * vec4(v_pos, 1);
+                    gl_Position = proj *(o + vec4(v_vert.x*h, v_vert.y*h, v_vert.z, 0));
+                }
+            '''),
+            self.ctx.fragment_shader('''
+                #version 330
+                uniform vec3 f_color;
+                out vec4 color;
+                void main() {
+           			color = vec4(f_color, 1);
+                }
+			'''),
+		])
+
+		for i in self.objs.values():
+			if isinstance(i, Surface): i.on_ctx(self.ctx, self.prog_suf)
+			if isinstance(i, MarkText): i.on_ctx(self.ctx, self.prog_txt)
+
+	def add_surf(self, name, vts, ids, ns=None, cs=(0,0,1), real=True):
 		surf = Surface(vts, ids, ns, cs)
+		if not real: surf.box = None
 		if not self.ctx is None:
 			surf.on_ctx(self.ctx, self.prog_suf)
 		self.objs[name] = surf
 		self.count_box()
 		return surf
+
+	def add_mark(self, name, vts, ids, o, h, cs=(0,0,1)):
+		mark = MarkText(vts, ids, o, h, cs)
+		if not self.ctx is None:
+			mark.on_ctx(self.ctx, self.prog_txt)
+		self.objs[name] = mark
+		return mark
+
 
 	def get_obj(self, key):
 		if not key in self.objs: return None
@@ -154,8 +218,8 @@ class Manager:
 		for i in self.objs.values(): i.draw(self.mvp)
 
 	def count_box(self):
-		minb = np.array([i.box[0] for i in self.objs.values()]).min(axis=0)
-		maxb = np.array([i.box[1] for i in self.objs.values()]).max(axis=0)
+		minb = np.array([i.box[0] for i in self.objs.values() if not i.box is None]).min(axis=0)
+		maxb = np.array([i.box[1] for i in self.objs.values() if not i.box is None]).max(axis=0)
 		self.box = np.vstack((minb, maxb))
 		#print(self.box)
 		self.center = self.box.mean(axis=0)
@@ -167,7 +231,7 @@ class Manager:
 		xmax = ymax * self.ratio
 		proj = (perspective if self.pers else orthogonal)(xmax, ymax, 1.0, 100000)
 		lookat = look_at(self.eye, self.center, (0.0,0.0,1.0))
-		self.mvp = np.dot(lookat, proj)
+		self.mvp = (lookat, proj)
 		
 	def set_viewport(self, x, y, width, height):
 		self.ctx.viewport = (x, y, width, height)
@@ -194,6 +258,7 @@ class Manager:
 		if not l is None: self.l = l
 		v = np.array([cos(self.angy)*cos(self.angx), 
 			cos(self.angy)*sin(self.angx), sin(self.angy)])
+		
 		self.eye = self.center + v*self.l*1
 		self.count_mvp()
 
@@ -201,6 +266,7 @@ class Manager:
 		import wx
 		from .frame3d import Frame3D
 		app = wx.App(False)
+		self.locale = wx.Locale(wx.LANGUAGE_ENGLISH)
 		Frame3D(None, title, self).Show()
 		app.MainLoop()
 
