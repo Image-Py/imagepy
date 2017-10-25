@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*
 import wx  
 from ..core.loader import loader
-from ..core.manager import ShotcutManager, PluginsManager
+from ..core.manager import ShotcutManager, PluginsManager, LanguageManager
 
 def buildItem(parent, root, item):
     if item=='-':
         root.AppendSeparator()
         return
     sc = ShotcutManager.get(item.title)
-    title = item.title if sc==None else item.title+'\t'+sc
+    LanguageManager.add(item.title)
+
+    title = LanguageManager.get(item.title) if sc==None else LanguageManager.get(item.title)+'\t'+sc
+
     mi = wx.MenuItem(root, -1, title)
     parent.Bind(wx.EVT_MENU, lambda x, p=item:p().start(), mi)
     root.Append(mi)
@@ -20,7 +23,8 @@ def buildMenu(parent, data, curpath):
             ## TODO: fixed by auss 
             nextpath = curpath + '.' + item[0].title
             #print(nextpath)
-            menu.Append(-1,item[0].title,buildMenu(parent, item,nextpath))
+            LanguageManager.add(item[0].title)
+            menu.Append(-1, LanguageManager.get(item[0].title), buildMenu(parent, item,nextpath))
         else: 
             buildItem(parent, menu, item)
     return menu
@@ -35,7 +39,8 @@ def buildMenuBar(parent, datas, menuBar=None):
     for data in datas[1]:
         if len(data[1]) == 0:
             continue
-        menuBar.Append(buildMenu(parent, data,data[0].title),data[0].title)
+        LanguageManager.add(data[0].title)
+        menuBar.Append(buildMenu(parent, data, data[0].title), LanguageManager.get(data[0].title))
     return menuBar
 
 

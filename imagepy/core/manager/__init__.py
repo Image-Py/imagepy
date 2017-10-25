@@ -7,3 +7,4 @@ from .configmanager import *
 from .shotcutmanager import *
 from .taskmanager import *
 from .iomanager import *
+from .languagemanager import *

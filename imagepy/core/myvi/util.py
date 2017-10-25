@@ -124,7 +124,7 @@ def build_mark(cont, pos, dz, h, color):
 	return vts, np.vstack(fss), pos, h, color
 
 def build_marks(conts, poss, dz, h, color):
-	if not isinstance(dz, list):
+	if not hasattr(dz, '__len__'):
 		dz = [dz] * len(conts)
 	vtss, fss, pps = [], [], []
 	s = 0
