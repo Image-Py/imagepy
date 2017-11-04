@@ -34,7 +34,6 @@ class LanguageManager:
         
         curfile.close()
         if cur in cls.langs: cls.cur = cls.langs[cur]
-        print(cls.langs.keys())
          
     @classmethod
     def write(cls):

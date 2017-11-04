@@ -5,7 +5,7 @@ Created on Fri Jan  6 23:45:59 2017
 @author: yxl
 """
 import os, sys
-from ..engine import Macros
+from ..engine import Macros, MkDown
 from ..manager import ToolsManager,PluginsManager
 from ... import IPy, root_dir
 
@@ -16,11 +16,19 @@ def extend_plugins(path, lst, err):
         if isinstance(i, tuple) or i=='-': 
             rst.append(i)
             
-        elif i[-3:]=='.mc':
+        elif i[-3:] == '.mc':
             f = open(os.path.join(root_dir,path)+'/'+i)
             cmds = f.readlines()
             f.close()
-            rst.append(Macros(i[:-3], cmds))
+            if i[-3:]=='.mc':
+                rst.append(Macros(i[:-3], cmds))
+            PluginsManager.add(rst[-1])
+        elif i[-3:] == '.md':
+            f = open(os.path.join(root_dir,path)+'/'+i, encoding='utf-8')
+            cont = f.read()
+            f.close()
+            if i[-3:]=='.md':
+                rst.append(MkDown(i[:-3], cont))
             PluginsManager.add(rst[-1])
         else:
             try:
@@ -62,7 +70,7 @@ def build_plugins(path, err=None):
             if len(sub)!=0:subtree.append(sub)
         elif i[-6:] in ('plg.py', 'lgs.py'):
             subtree.append(i)
-        elif i[-3:] == '.mc':
+        elif i[-3:] in ('.mc', '.md'):
             subtree.append(i)
     if len(subtree)==0:return []
     
@@ -85,7 +93,7 @@ def build_plugins(path, err=None):
 def extend_tools(path, lst, err):
     rst = []
     for i in lst:
-        if i[-3:]=='.mc':
+        if i[-3:] in ('.mc', '.md'):
             f = open(os.path.join(root_dir, path)+'/'+i)
             cmds = f.readlines()
             f.close()
@@ -131,7 +139,7 @@ def build_tools(path, err=None):
         elif not root:
             if i[len(i)-7:] in ('_tol.py', 'tols.py'):
                 subtree.append(i[:-3])
-            elif i[-3:] == '.mc':
+            elif i[-3:] in ('.mc', '.md'):
                 subtree.append(i)
     if len(subtree)==0:return []
     rpath = path.replace('/', '.').replace('\\','.')

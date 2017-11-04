@@ -45,8 +45,6 @@ class CleanDictionary(Free):
 
 plgs.extend([NewLanguage, UpdateDictionary, CleanDictionary])
 
-print(plgs)
-
 if __name__ == '__main__':
 	print(list(ColorManager.luts.keys()))
     

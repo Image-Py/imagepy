@@ -42,7 +42,14 @@ def showimg(imgs, title):
 pub.subscribe(showimg, 'showimg')
 def show_img(imgs, title):
     wx.CallAfter(pub.sendMessage, 'showimg', imgs=imgs, title=title) 
-    print('mes show img')
+
+def showmd(title, cont, url=''):
+    from .ui.mkdownwindow import MkDownWindow
+    MkDownWindow(curapp, title, cont, url).Show()
+
+pub.subscribe(showmd, 'showmd')
+def show_md(title, cont, url=''):
+    wx.CallAfter(pub.sendMessage, 'showmd', title=title, cont=cont, url=url)
 '''
 def stepmacros(macros):
     macros.next()

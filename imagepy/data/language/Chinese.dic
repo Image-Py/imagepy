@@ -8,6 +8,8 @@
 8-bit:8位灰度
 About:关于
 Active Ridge:交互山脊线
+Active Watershed:--
+Adaptive Threshold:--
 Add:加法运算
 Add Field *:--
 Add Slice:添加切片
@@ -64,10 +66,13 @@ Crop:裁剪
 Cut Branch:修剪分支
 Cut By ROI:修剪roi穿过的分支
 Cyan_Hot:--
+DCM Open:--
 DEM:数字高程模型
+DICOM:--
 DOG:差分高斯金字塔
 Decoration Demo:三维奖杯示例
 Delete Slice:删除切片
+Demo:--
 Difference:差分
 Difference of Gaussian Core:差分高斯滤波核
 Dilation 3D:三维膨胀
@@ -163,6 +168,7 @@ Language:语言
 Laplace:拉普拉斯
 Laplace Sharp:拉普拉斯锐化
 Laplace of Gaussian Core:高斯拉普拉斯核
+Laplacian:--
 Lena:雷娜
 Lines Demo:三维曲线示例
 List Packages:列出已安装包
@@ -174,6 +180,7 @@ Macros Editor:宏编辑器
 Macros Recorder:宏录音机
 Magenta_Hot:--
 Manager:管理器
+MarkDown:--
 Math:数学运算
 Max:最大值运算
 Maximum:最大值滤波器
@@ -197,6 +204,7 @@ Open:打开
 Open Raw:Raw格式
 Open Recent:最近打开文件
 Open Url:通过链接打开
+Opencv:--
 Opening 3D:三维开运算
 Orange_Hot:--
 Orignal Line:--
@@ -245,6 +253,7 @@ Save With Mark:带标记保存
 Scale:缩放
 Scale And Unit:比例尺和单位
 Screen Capture:截屏
+Segmentation:--
 Select All:全选
 Select None:不选
 Selection:选择

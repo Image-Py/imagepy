@@ -187,8 +187,8 @@ class Gaussian3D(Simple):
     view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
 
     #process
-    def run(self, ips, img, para = None):
-        img[:] = nimg.gaussian_filter(img, para['sigma'])
+    def run(self, ips, imgs, para = None):
+        imgs[:] = nimg.gaussian_filter(imgs, para['sigma'])
 
 plgs = [Uniform, Gaussian, '-', Maximum, Minimum, Median, Percent, '-', 
     Prewitt, Sobel, Laplace, GaussianLaplace, DOG, '-', LaplaceSharp, USM, '-', Gaussian3D]
