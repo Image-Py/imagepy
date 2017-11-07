@@ -1,415 +1,415 @@
 16_Colors:--
-2D Surface:¶şÎ¬±íÃæ
-2DSurface Demo:¶şÎ¬±íÃæÊ¾Àı
-3D Surface:ÈıÎ¬±íÃæ
-3D Viewer:ÈıÎ¬´°¿Ú
+2D Surface:äºŒç»´è¡¨é¢
+2DSurface Demo:äºŒç»´è¡¨é¢ç¤ºä¾‹
+3D Surface:ä¸‰ç»´è¡¨é¢
+3D Viewer:ä¸‰ç»´çª—å£
 3dtooltest:--
 6_Shades:--
-8-bit:8Î»»Ò¶È
-About:¹ØÓÚ
-Active Ridge:½»»¥É½¼¹Ïß
+8-bit:8ä½ç°åº¦
+About:å…³äº
+Active Ridge:äº¤äº’å±±è„Šçº¿
 Active Watershed:--
 Adaptive Threshold:--
-Add:¼Ó·¨ÔËËã
+Add:åŠ æ³•è¿ç®—
 Add Field *:--
-Add Slice:Ìí¼ÓÇĞÆ¬
-Add To Manager:¼ÓÈëÑ¡Çø¹ÜÀíÆ÷
-Adjust:µ÷Õû
-Analysis:·ÖÎö
-Analysis 3D:ÈıÎ¬·ÖÎö
-Angkor:Îâ¸ç¿ß
-Author:×÷Õß
-BMP:BMP¸ñÊ½
-BMP Open:´ò¿ª
-BMP Save:±£´æ
+Add Slice:æ·»åŠ åˆ‡ç‰‡
+Add To Manager:åŠ å…¥é€‰åŒºç®¡ç†å™¨
+Adjust:è°ƒæ•´
+Analysis:åˆ†æ
+Analysis 3D:ä¸‰ç»´åˆ†æ
+Angkor:å´å“¥çªŸ
+Author:ä½œè€…
+BMP:BMPæ ¼å¼
+BMP Open:æ‰“å¼€
+BMP Save:ä¿å­˜
 BRGBCMYW:--
-Background Self:ÉèÖÃ×ÔÉíÎª±³¾°
-Binary:¶şÖµÍ¼Ïñ
-Binary 3D:ÈıÎ¬¶şÖµÍ¼Ïñ
-Binary Closeing:±ÕÔËËã
-Binary ConvexHull:Í¹°ü
-Binary Dilation:ÅòÕÍ
-Binary Erosion:¸¯Ê´
-Binary Opening:¿ªÔËËã
-Binary Outline:ÂÖÀªÏß
-Binary Voronoi:VoronoiÍ¼
-Binary Watershed:¶şÖµ·ÖË®Áë
-Bound Box:Íâ½Ó¾ØĞÎ
-Bright And Constract:ÁÁ¶È¶Ô±È¶È
-Build Graph:ÍØÆËÖØ½¨
-Build Graph 3D:ÈıÎ¬ÍØÆËÖØ½¨
-CIERGB To RGB:CIE×ªRGB
-Canny:Canny±ßÔµËã×Ó
-Canvas Size:»­²¼´óĞ¡
-Chapter1 Digital-Image:Êı×ÖÍ¼Ïñ
-Chapter3 Pixel-Operate:ÏñËØ²Ù×÷
-Chapter4 Digital-Filter:Êı×ÖÂË²¨
-Chapter5 Elevation-Analysis:¸ß³Ì·ÖÎö
-Chapter6 Edge-Angular:±ßÔµÓë½Çµã
-Chapter7 Binary-Image:¶şÖµÍ¼Ïñ
-Chengdu Temperature:³Ì¶ÈµÄÎÂ¶È
-Chinese:ÖĞÎÄ
-Clean Dictionary:Çå½à×Öµä
-Clear:Çå³ıÑ¡ÇøÄÚ²¿
-Clear Out:Çå³ıÑ¡ÇøÍâ²¿
-Clip Roi:Ñ¡Çø²Ã¼ô
-Closing 3D:ÈıÎ¬±ÕÔËËã
-Color:É«²Ê
-Color Balance:É«²ÊÆ½ºâ
-Color Balance Demo:É«²ÊÆ½ºâÊ¾Àı
-Color Histogram Match:²ÊÉ«Ö±·½Í¼Æ¥Åä
-Color Stairs:É«½×
-Command Line:ÃüÁîĞĞ¹¤¾ß
-Convex Hull:Í¹°ü
-Copy:¸´ÖÆ
-Crop:²Ã¼ô
-Cut Branch:ĞŞ¼ô·ÖÖ§
-Cut By ROI:ĞŞ¼ôroi´©¹ıµÄ·ÖÖ§
+Background Self:è®¾ç½®è‡ªèº«ä¸ºèƒŒæ™¯
+Binary:äºŒå€¼å›¾åƒ
+Binary 3D:ä¸‰ç»´äºŒå€¼å›¾åƒ
+Binary Closeing:é—­è¿ç®—
+Binary ConvexHull:å‡¸åŒ…
+Binary Dilation:è†¨èƒ€
+Binary Erosion:è…èš€
+Binary Opening:å¼€è¿ç®—
+Binary Outline:è½®å»“çº¿
+Binary Voronoi:Voronoiå›¾
+Binary Watershed:äºŒå€¼åˆ†æ°´å²­
+Bound Box:å¤–æ¥çŸ©å½¢
+Bright And Constract:äº®åº¦å¯¹æ¯”åº¦
+Build Graph:æ‹“æ‰‘é‡å»º
+Build Graph 3D:ä¸‰ç»´æ‹“æ‰‘é‡å»º
+CIERGB To RGB:CIEè½¬RGB
+Canny:Cannyè¾¹ç¼˜ç®—å­
+Canvas Size:ç”»å¸ƒå¤§å°
+Chapter1 Digital-Image:æ•°å­—å›¾åƒ
+Chapter3 Pixel-Operate:åƒç´ æ“ä½œ
+Chapter4 Digital-Filter:æ•°å­—æ»¤æ³¢
+Chapter5 Elevation-Analysis:é«˜ç¨‹åˆ†æ
+Chapter6 Edge-Angular:è¾¹ç¼˜ä¸è§’ç‚¹
+Chapter7 Binary-Image:äºŒå€¼å›¾åƒ
+Chengdu Temperature:ç¨‹åº¦çš„æ¸©åº¦
+Chinese:ä¸­æ–‡
+Clean Dictionary:æ¸…æ´å­—å…¸
+Clear:æ¸…é™¤é€‰åŒºå†…éƒ¨
+Clear Out:æ¸…é™¤é€‰åŒºå¤–éƒ¨
+Clip Roi:é€‰åŒºè£å‰ª
+Closing 3D:ä¸‰ç»´é—­è¿ç®—
+Color:è‰²å½©
+Color Balance:è‰²å½©å¹³è¡¡
+Color Balance Demo:è‰²å½©å¹³è¡¡ç¤ºä¾‹
+Color Histogram Match:å½©è‰²ç›´æ–¹å›¾åŒ¹é…
+Color Stairs:è‰²é˜¶
+Command Line:å‘½ä»¤è¡Œå·¥å…·
+Convex Hull:å‡¸åŒ…
+Copy:å¤åˆ¶
+Crop:è£å‰ª
+Cut Branch:ä¿®å‰ªåˆ†æ”¯
+Cut By ROI:ä¿®å‰ªroiç©¿è¿‡çš„åˆ†æ”¯
 Cyan_Hot:--
 DCM Open:--
-DEM:Êı×Ö¸ß³ÌÄ£ĞÍ
+DEM:æ•°å­—é«˜ç¨‹æ¨¡å‹
 DICOM:--
-DOG:²î·Ö¸ßË¹½ğ×ÖËş
-Decoration Demo:ÈıÎ¬½±±­Ê¾Àı
-Delete Slice:É¾³ıÇĞÆ¬
+DOG:å·®åˆ†é«˜æ–¯é‡‘å­—å¡”
+Decoration Demo:ä¸‰ç»´å¥–æ¯ç¤ºä¾‹
+Delete Slice:åˆ é™¤åˆ‡ç‰‡
 Demo:--
-Difference:²î·Ö
-Difference of Gaussian Core:²î·Ö¸ßË¹ÂË²¨ºË
-Dilation 3D:ÈıÎ¬ÅòÕÍ
-Distance Transform:¾àÀë±ä»»
-Double Threshold:Ë«ãĞÖµ
-Duplicate:ÖÆ×÷¸±±¾
-Edit:±à¼­
-English:Ó¢ÎÄ
-Erosion 3D:ÈıÎ¬¸¯Ê´
-Exit:ÍË³ö
-Export:µ¼³ö
+Difference:å·®åˆ†
+Difference of Gaussian Core:å·®åˆ†é«˜æ–¯æ»¤æ³¢æ ¸
+Dilation 3D:ä¸‰ç»´è†¨èƒ€
+Distance Transform:è·ç¦»å˜æ¢
+Double Threshold:åŒé˜ˆå€¼
+Duplicate:åˆ¶ä½œå‰¯æœ¬
+Edit:ç¼–è¾‘
+English:è‹±æ–‡
+Erosion 3D:ä¸‰ç»´è…èš€
+Exit:é€€å‡º
+Export:å¯¼å‡º
 Extend Full:--
-Features:ÌØÕ÷ÌáÈ¡
-File:ÎÄ¼ş
-Fill:Ìî³äÑ¡Çø
-Fill Holes:Ìî³ä¿Õ¶´
-Fill Holes 3D:Ìî³äÈıÎ¬¿Õ¶´
-Filters:ÂË²¨Æ÷
-Filters 3D:ÈıÎ¬ÂË²¨Æ÷
-Find IsoLine:µÈ¸ßÏß
-Find Maximum:¾Ö²¿×î´óÖµ
-Find Minimum:¾Ö²¿×îĞ¡Öµ
-Find Riedge:É½¼¹Ïß
-Find Watershed:·ÖË®Áë
-Frequence:ÆµÂÊ
+Features:ç‰¹å¾æå–
+File:æ–‡ä»¶
+Fill:å¡«å……é€‰åŒº
+Fill Holes:å¡«å……ç©ºæ´
+Fill Holes 3D:å¡«å……ä¸‰ç»´ç©ºæ´
+Filters:æ»¤æ³¢å™¨
+Filters 3D:ä¸‰ç»´æ»¤æ³¢å™¨
+Find IsoLine:ç­‰é«˜çº¿
+Find Maximum:å±€éƒ¨æœ€å¤§å€¼
+Find Minimum:å±€éƒ¨æœ€å°å€¼
+Find Riedge:å±±è„Šçº¿
+Find Watershed:åˆ†æ°´å²­
+Frequence:é¢‘ç‡
 Frequence Field *:--
-GIF:GIF¸ñÊ½
-GIF Animate Open:´ò¿ªGIF¶¯»­
-GIF Animate Save:±£´æGIF¶¯»­
-GIF Open:´ò¿ª
-GIF Save:±£´æ
-Garmma:Ù¤Âí½ÃÕı
-Garmma Curve:Ù¤ÂíÇúÏß
-Gaussian:¸ßË¹Ä£ºı
-Gaussian 3D:ÈıÎ¬¸ßË¹Ä£ºı
-Gaussian Core:¸ßË¹Ä£ºıºË
-Gaussian Laplace:¸ßË¹À­ÆÕÀ­Ë¹
+GIF:GIFæ ¼å¼
+GIF Animate Open:æ‰“å¼€GIFåŠ¨ç”»
+GIF Animate Save:ä¿å­˜GIFåŠ¨ç”»
+GIF Open:æ‰“å¼€
+GIF Save:ä¿å­˜
+Garmma:ä¼½é©¬çŸ«æ­£
+Garmma Curve:ä¼½é©¬æ›²çº¿
+Gaussian:é«˜æ–¯æ¨¡ç³Š
+Gaussian 3D:ä¸‰ç»´é«˜æ–¯æ¨¡ç³Š
+Gaussian Core:é«˜æ–¯æ¨¡ç³Šæ ¸
+Gaussian Laplace:é«˜æ–¯æ‹‰æ™®æ‹‰æ–¯
 Gaussian3D:--
-Geometry Analysis:¼¸ºÎ·ÖÎö
-Geometry Analysis 3D:ÈıÎ¬¼¸ºÎ·ÖÎö
-Geometry Filter:¼¸ºÎ¹ıÂËÆ÷
-Geometry Filter 3D:ÈıÎ¬¼¸ºÎ¹ıÂËÆ÷
-Graph Cut Branch 3D:ĞŞ¼ô·ÖÖ§
-Graph Statistic:ÍØÆËÍ³¼Æ
-Graph Statistic 3D:ÍØÆËÍ³¼Æ
-Graph Summarise:ÍØÆË»ã×Ü
-Graph Summarise 3D:ÍØÆË»ã×Ü
-Gray Stairs:»Ò¶ÈÉ«½×
+Geometry Analysis:å‡ ä½•åˆ†æ
+Geometry Analysis 3D:ä¸‰ç»´å‡ ä½•åˆ†æ
+Geometry Filter:å‡ ä½•è¿‡æ»¤å™¨
+Geometry Filter 3D:ä¸‰ç»´å‡ ä½•è¿‡æ»¤å™¨
+Graph Cut Branch 3D:ä¿®å‰ªåˆ†æ”¯
+Graph Statistic:æ‹“æ‰‘ç»Ÿè®¡
+Graph Statistic 3D:æ‹“æ‰‘ç»Ÿè®¡
+Graph Summarise:æ‹“æ‰‘æ±‡æ€»
+Graph Summarise 3D:æ‹“æ‰‘æ±‡æ€»
+Gray Stairs:ç°åº¦è‰²é˜¶
 Grays:--
 Green_Fire_Blue:--
-HSV To RGB:HSV×ªRGB
-Harris:Harris½ÇµãÃèÊö×Ó
-Help:°ïÖú
+HSV To RGB:HSVè½¬RGB
+Harris:Harrisè§’ç‚¹æè¿°å­
+Help:å¸®åŠ©
 HiLo:--
-Histogram:Ö±·½Í¼
-Histogram Match:Ö±·½Í¼Æ¥Åä
-Histogram Normalize:Ö±·½Í¼±ê×¼»¯
-Histogram Normalize And Match:Ö±·½Í¼±ê×¼»¯ÓëÆ¥Åä
-Histogram Of Gray Image:»Ò¶ÈÍ¼ÏñµÄÖ±·½Í¼
-Home Page:Ö÷Ò³
-Hydrology:Ë®ÎÄÔËËã
-IBook:½Ì³Ì
+Histogram:ç›´æ–¹å›¾
+Histogram Match:ç›´æ–¹å›¾åŒ¹é…
+Histogram Normalize:ç›´æ–¹å›¾æ ‡å‡†åŒ–
+Histogram Normalize And Match:ç›´æ–¹å›¾æ ‡å‡†åŒ–ä¸åŒ¹é…
+Histogram Of Gray Image:ç°åº¦å›¾åƒçš„ç›´æ–¹å›¾
+Home Page:ä¸»é¡µ
+Hydrology:æ°´æ–‡è¿ç®—
+IBook:æ•™ç¨‹
 ICA:--
 ICA2:--
 ICA3:--
 Ice Segment:--
-Image:Í¼Ïñ
-Image Calculator:Í¼Ïñ¼ÆËã
-Image Merge:Í¼ÏñÈÚºÏ
-Image Referenced:Ïà¹ØÍ¼Ïñ
-Import:µ¼Èë
-Import Sequence:µ¼ÈëÍ¼ÏñĞòÁĞ
-Inflate:ÅòÕÍ
-Install:°²×°
-Install Packages:°²×°pipÄ£¿é
-Intensity Analysis:ÃÜ¶È·ÖÎö
-Intensity Filter:ÃÜ¶È¹ıÂË
-Invert:Çó·´
-Invert Roi:·´Ñ¡
-JPG:JPG¸ñÊ½
-JPG Open:´ò¿ª
-JPG Save:±£´æ
+Image:å›¾åƒ
+Image Calculator:å›¾åƒè®¡ç®—
+Image Merge:å›¾åƒèåˆ
+Image Referenced:ç›¸å…³å›¾åƒ
+Import:å¯¼å…¥
+Import Sequence:å¯¼å…¥å›¾åƒåºåˆ—
+Inflate:è†¨èƒ€
+Install:å®‰è£…
+Install Packages:å®‰è£…pipæ¨¡å—
+Intensity Analysis:å¯†åº¦åˆ†æ
+Intensity Filter:å¯†åº¦è¿‡æ»¤
+Invert:æ±‚å
+Invert Roi:åé€‰
+JPG:JPGæ ¼å¼
+JPG Open:æ‰“å¼€
+JPG Save:ä¿å­˜
 Join Tables *:--
-Kill Image:¹Ø±ÕÍ¼Ïñ
-Kill TableLog:¹Ø±Õ±í¸ñ
-Kill TextLog:¹Ø±ÕÈÕÖ¾
-Kit3D:ÈıÎ¬
+Kill Image:å…³é—­å›¾åƒ
+Kill TableLog:å…³é—­è¡¨æ ¼
+Kill TextLog:å…³é—­æ—¥å¿—
+Kit3D:ä¸‰ç»´
 Kitchen Rosenfeld:--
-LUV To RGB:LUV×ªRGB
-Lab To RGB:Lab×ªRGB
-Label Image:Í¼Ïñ±ê¼Ç
-Language:ÓïÑÔ
-Laplace:À­ÆÕÀ­Ë¹
-Laplace Sharp:À­ÆÕÀ­Ë¹Èñ»¯
-Laplace of Gaussian Core:¸ßË¹À­ÆÕÀ­Ë¹ºË
+LUV To RGB:LUVè½¬RGB
+Lab To RGB:Labè½¬RGB
+Label Image:å›¾åƒæ ‡è®°
+Language:è¯­è¨€
+Laplace:æ‹‰æ™®æ‹‰æ–¯
+Laplace Sharp:æ‹‰æ™®æ‹‰æ–¯é”åŒ–
+Laplace of Gaussian Core:é«˜æ–¯æ‹‰æ™®æ‹‰æ–¯æ ¸
 Laplacian:--
-Lena:À×ÄÈ
-Lines Demo:ÈıÎ¬ÇúÏßÊ¾Àı
-List Packages:ÁĞ³öÒÑ°²×°°ü
-Load Roi:ÔØÈëÑ¡Çø
-Logo:Í¼±ê
-Lookup table:Ë÷Òı±í
-Macros:ºê
-Macros Editor:ºê±à¼­Æ÷
-Macros Recorder:ºêÂ¼Òô»ú
+Lena:é›·å¨œ
+Lines Demo:ä¸‰ç»´æ›²çº¿ç¤ºä¾‹
+List Packages:åˆ—å‡ºå·²å®‰è£…åŒ…
+Load Roi:è½½å…¥é€‰åŒº
+Logo:å›¾æ ‡
+Lookup table:ç´¢å¼•è¡¨
+Macros:å®
+Macros Editor:å®ç¼–è¾‘å™¨
+Macros Recorder:å®å½•éŸ³æœº
 Magenta_Hot:--
-Manager:¹ÜÀíÆ÷
+Manager:ç®¡ç†å™¨
 MarkDown:--
-Math:ÊıÑ§ÔËËã
-Max:×î´óÖµÔËËã
-Maximum:×î´óÖµÂË²¨Æ÷
-Measure Surface And Volume:Ìå»ı±íÃæ»ı
-Medial Axis:ÖĞÖáÏß
-Median:ÖĞÖµÂË²¨
-Merge RGB Channels:Í¨µÀÈÚºÏ
-Min:×îĞ¡ÖµÔËËã
-Minimum:×îĞ¡ÖµÂË²¨
+Math:æ•°å­¦è¿ç®—
+Max:æœ€å¤§å€¼è¿ç®—
+Maximum:æœ€å¤§å€¼æ»¤æ³¢å™¨
+Measure Surface And Volume:ä½“ç§¯è¡¨é¢ç§¯
+Medial Axis:ä¸­è½´çº¿
+Median:ä¸­å€¼æ»¤æ³¢
+Merge RGB Channels:é€šé“èåˆ
+Min:æœ€å°å€¼è¿ç®—
+Minimum:æœ€å°å€¼æ»¤æ³¢
 Moravec:--
-Multiply:³Ë·¨
-Network 3D:ÈıÎ¬ÍØÆË·ÖÎö
-New:ĞÂ½¨
-New Filter:ĞÂ½¨ÂË²¨Æ÷
-New Free:ĞÂ½¨×ÔÓÉ²å¼ş
-New Language:ĞÂ½¨Ö§³ÖÓïÑÔ
-New Simple:ĞÂ½¨ÕûÌå²å¼ş
-New Tool:ĞÂ½¨¹¤¾ß
-Next Slice:ÏÂÒ»¸öÇĞÆ¬
-Open:´ò¿ª
-Open Raw:Raw¸ñÊ½
-Open Recent:×î½ü´ò¿ªÎÄ¼ş
-Open Url:Í¨¹ıÁ´½Ó´ò¿ª
+Multiply:ä¹˜æ³•
+Network 3D:ä¸‰ç»´æ‹“æ‰‘åˆ†æ
+New:æ–°å»º
+New Filter:æ–°å»ºæ»¤æ³¢å™¨
+New Free:æ–°å»ºè‡ªç”±æ’ä»¶
+New Language:æ–°å»ºæ”¯æŒè¯­è¨€
+New Simple:æ–°å»ºæ•´ä½“æ’ä»¶
+New Tool:æ–°å»ºå·¥å…·
+Next Slice:ä¸‹ä¸€ä¸ªåˆ‡ç‰‡
+Open:æ‰“å¼€
+Open Raw:Rawæ ¼å¼
+Open Recent:æœ€è¿‘æ‰“å¼€æ–‡ä»¶
+Open Url:é€šè¿‡é“¾æ¥æ‰“å¼€
 Opencv:--
-Opening 3D:ÈıÎ¬¿ªÔËËã
+Opening 3D:ä¸‰ç»´å¼€è¿ç®—
 Orange_Hot:--
 Orignal Line:--
-Orthogonal view:Õı½»ÊÓÍ¼
-PNG:PNG¸ñÊ½
-PNG Open:´ò¿ª
-PNG Save:±£´æ
-Paste:Õ³Ìù
-Percent:°Ù·Ö±ÈÂË²¨
-Pixel Statistic:ÏñËØÍ³¼Æ
-Plugin List View:²å¼şÁĞ±í
-Plugin Tree View:²å¼şÊ÷
-Plugins:²å¼ş
-Points Value:µãËùÔÚÎ»ÖÃµÄÖµ
-Previous Slice:ÉÏÒ»ÕÅ
-Prewitt:Prewitt±ßÔµËã×Ó
-Process:´¦Àí
+Orthogonal view:æ­£äº¤è§†å›¾
+PNG:PNGæ ¼å¼
+PNG Open:æ‰“å¼€
+PNG Save:ä¿å­˜
+Paste:ç²˜è´´
+Percent:ç™¾åˆ†æ¯”æ»¤æ³¢
+Pixel Statistic:åƒç´ ç»Ÿè®¡
+Plugin List View:æ’ä»¶åˆ—è¡¨
+Plugin Tree View:æ’ä»¶æ ‘
+Plugins:æ’ä»¶
+Points Value:ç‚¹æ‰€åœ¨ä½ç½®çš„å€¼
+Previous Slice:ä¸Šä¸€å¼ 
+Prewitt:Prewittè¾¹ç¼˜ç®—å­
+Process:å¤„ç†
 Psychological Inertia:--
-RGB:RGBÉ«²Ê
-RGB To CIERGB:RGB×ªCIE
-RGB To Gray:RGB×ª»Ò¶È
-RGB To HSV:RGB×ªHSV
-RGB To LUV:RGB×ªLUV
-RGB To Lab:RGB×ªLab
-RGB To XYZ:RGB×ªXYZ
-Random Balls Demo:Ëæ»ú²ÊÇòÊ¾Àı
+RGB:RGBè‰²å½©
+RGB To CIERGB:RGBè½¬CIE
+RGB To Gray:RGBè½¬ç°åº¦
+RGB To HSV:RGBè½¬HSV
+RGB To LUV:RGBè½¬LUV
+RGB To Lab:RGBè½¬Lab
+RGB To XYZ:RGBè½¬XYZ
+Random Balls Demo:éšæœºå½©çƒç¤ºä¾‹
 Red_Hot:--
-Region Analysis:ÇøÓò·ÖÎö
-Relation:¹ØÏµ
+Region Analysis:åŒºåŸŸåˆ†æ
+Relation:å…³ç³»
 Reload Plugins:--
-Reloas:ÖØĞÂ¼ÓÔØ
-Remove Isolate 3D:È¥³ıÈıÎ¬ËéÆ¬
-Remove Isolate Node:½Úµã²Ã¼ô
-Resize:»­Ïñ´óĞ¡
-Riedge Sub:Öğ¹ı³ÌÉ½¼¹Ïß
-Roi Setting:ÉèÖÃROIÊôĞÔ
-Rotate:Ğı×ª
-Run Macros:Ö´ĞĞºê
-Samples Local:±¾µØÍ¼Æ¬
-Samples Online:ÔÚÏßÍ¼Æ¬
-Save:±£´æ
-Save Sequence:Êä³öÍ¼ÏñĞòÁĞ
-Save Table As CSV:´æ´¢ÎªCSV
-Save Table As Tab:´æ´¢Îª±í¸ñ
-Save With Mark:´ø±ê¼Ç±£´æ
-Scale:Ëõ·Å
-Scale And Unit:±ÈÀı³ßºÍµ¥Î»
-Screen Capture:½ØÆÁ
+Reloas:é‡æ–°åŠ è½½
+Remove Isolate 3D:å»é™¤ä¸‰ç»´ç¢ç‰‡
+Remove Isolate Node:èŠ‚ç‚¹è£å‰ª
+Resize:ç”»åƒå¤§å°
+Riedge Sub:é€è¿‡ç¨‹å±±è„Šçº¿
+Roi Setting:è®¾ç½®ROIå±æ€§
+Rotate:æ—‹è½¬
+Run Macros:æ‰§è¡Œå®
+Samples Local:æœ¬åœ°å›¾ç‰‡
+Samples Online:åœ¨çº¿å›¾ç‰‡
+Save:ä¿å­˜
+Save Sequence:è¾“å‡ºå›¾åƒåºåˆ—
+Save Table As CSV:å­˜å‚¨ä¸ºCSV
+Save Table As Tab:å­˜å‚¨ä¸ºè¡¨æ ¼
+Save With Mark:å¸¦æ ‡è®°ä¿å­˜
+Scale:ç¼©æ”¾
+Scale And Unit:æ¯”ä¾‹å°ºå’Œå•ä½
+Screen Capture:æˆªå±
 Segmentation:--
-Select All:È«Ñ¡
-Select None:²»Ñ¡
-Selection:Ñ¡Ôñ
-Set Background:ÉèÖÃ±³¾°
-Set Slice:ÉèÖÃµ±Ç°ÇĞÆ¬
-Shake Damping:×èÄáÕñ¶¯
-Shotcut Editor:¿ì½İ¼ü±à¼­Æ÷
-Show Base Analysis:»ù´¡·ÖÎöÊ¾Àı
-Show Binary Watershed:¶şÖµ·ÖË®ÁëÊ¾Àı
-Show Buffer By Distance:¾àÀë»º³åÇøÊ¾Àı
-Show Canny In Diff Scale:CannyÔÚ²»Í¬³ß¶ÈµÄÊ¾Àı
-Show Cell Analysis:Ï¸°û·ÖÎöÊ¾Àı
-Show Cell Connected:Ï¸°û½Ó´¥Ê¾Àı
-Show Cell With Granule:´ø¿ÅÁ£µÄÏ¸°ûÊ¾Àı
-Show Circle And Ellipse:Ô²ºÍÍÖÔ²Ê¾Àı
-Show ConvexHull:Í¹°üÊ¾Àı
-Show DOG Filter:²î·Ö¸ßË¹Ê¾Àı
-Show Dilation:ÅòÕÍÊ¾Àı
-Show Distance:¾àÀë±ä»¯Ê¾Àı
-Show Do Stairs:µÈ¸ßÏßÊ¾Àı
-Show Do Threshold:ãĞÖµÊ¾Àı
-Show Dog The Gear:³İÂÖµÄ²î·Ö¸ßË¹ÂË²¨Ê¾Àı
-Show Double Threshold:Ë«ãĞÖµÊ¾Àı
-Show Erosion:¸¯Ê´Ê¾Àı
-Show Fill Holes:Ìî³äÊ¾Àı
-Show Filter On Binary:¶şÖµÍ¼ÏñÂË²¨Ê¾Àı
-Show Find Maximum:²éÕÒ¾Ö²¿×î´óÖµÊ¾Àı¡£
-Show Find Minimum:²éÕÒ¾Ö²¿×îĞ¡ÖµÊ¾Àı
-Show Find Ridge:²éÕÒÉ½¼¹ÏßÊ¾Àı
-Show Find Watershed:·ÖË®ÁëÊ¾Àı
-Show Gaussian And Threshold:¸ßË¹¼°ãĞÖµÊ¾Àı
-Show Gaussian Filter:¸ßË¹Ê¾Àı
-Show Gaussian In Nature:×ÔÈ»½çÖĞµÄ¸ßË¹Ê¾Àı
-Show Global Statistic:È«¾ÖÍ³¼ÆÊ¾Àı
-Show Graph 3D:ÈıÎ¬ÍØÆËÊ¾Àı
-Show Harris In Diff Scale:²»Í¬³ß´çÏÂHarrisÊ¾Àı
-Show Holes Count:¿×¼ÆÊıÊ¾Àı
-Show How Canny Works:Canny¹¤×÷Ô­ÀíÊ¾Àı
-Show How Scale Affect:³ß´çµÄÓ°ÏìÊ¾Àı
-Show How To Get Mask:»ñµÃÑÚÄ£Ê¾Àı
-Show Intensity Analysis:ÃÜ¶È·ÖÎöÊ¾Àı
-Show Label Mask:±ê¼ÇÍ¼ÏñÊ¾Àı
-Show Laplace Filter:À­ÆÕÀ­Ë¹ÂË²¨Ê¾Àı
-Show Laplace Sharp Filter:À­ÆÕÀ­Ë¹Èñ»¯Ê¾Àı
-Show Laplace of Gaussian:À­ÆÕÀ­Ë¹¸ßË¹Ê¾Àı
-Show Make Parabola:»æÖÆÅ×ÎïÏßÊ¾Àı
-Show Mask:ÑÍÃ»Ê¾Àı
-Show Max And Min Filter:×î´óÖµ×îĞ¡ÖµÊ¾Àı
-Show Max Circle:×î´óÄÚÇĞÔ²Ê¾Àı
-Show Medial Axis:ÖĞÖáÊ¾Àı
-Show Median Filter:ÖĞÖµÂË²¨Ê¾Àı
-Show Open And Close:¿ª±ÕÔËËãÊ¾Àı
-Show Outline:ÂÖÀªÏßÊ¾Àı
-Show Percent Filter:°Ù·Ö±ÈÊ¾Àı
-Show QRCode Art:¶şÎ¬ÂëÊ¾Àı
-Show Region Analysis:ÇøÓò·ÖÎöÊ¾Àı
-Show Region Filter:ÇøÓò¹ıÂËÊ¾Àı
-Show Region Solidity:·áÂú¶ÈÊ¾Àı
-Show Repair Lines:ÏßÌõĞŞ¸´Ê¾Àı
-Show Ridge Sub:É½¼¹ÏßÊ¾Àı
-Show Skeleton:¹Ç¼ÜÊ¾Àı
-Show Skeleton And MidAix:¹Ç¼ÜÓëÖĞÖáÏßÊ¾Àı
-Show Smooth The Gear:³İÂÖÆ½»¬Ê¾Àı
-Show Smooth The Rec:¾ØĞÎÆ½»¬Ê¾Àı
-Show Sobel Filter:Sobel±ßÔµÊ¾Àı
-Show The Lighter One:ÕÒµ½×îÁÁµÄÊ¾Àı
-Show The Pure One:ÕÒµ½×î´¿¾»µÄÊ¾Àı
-Show Uniform Filter:¾ùÖµÂË²¨Ê¾Àı
-Show Unsharp Mask Filter:USMÈñ»¯Ê¾Àı
-Show Voronoi:VoronoiÍ¼Ê¾Àı
-Show Watershed Inv:·ÖË®ÁëÂäË®Ê¾Àı
-Show Watershed Inv Sub:Öğ¹ı³Ì·ÖË®ÁëÂäË®Ê¾Àı
-Show Watershed Sub:Öğ¹ı³Ì·ÖË®ÁëÊ¾Àı
-Show how to Laplace Sharp:À­ÆÕÀ­Ë¹Èñ»¯Ô­Àí
-Show how to Unsharp Mask:USMÈñ»¯Ê¾Ô­Àí
-Shrink:ÊÕËõÑ¡Çø
-Skeleton:¹Ç¼Ü
-Skeleton 3D:ÈıÎ¬¹Ç¼Ü
-Skeleton Network:¹Ç¼ÜÍØÆË¹ØÏµ
-Sketch:Ãè±ß
-Sobel:SobelÌİ¶ÈËã×Ó
-Split RGB Channels:RGB²ğ·ÖÍ¨µÀ
-Squre Root:Æ½·½¸ùÔËËã
-Stack:Í¼ÏñÕ»
-Surf:SurfÌØÕ÷ÌáÈ¡
-Surf Demo:SurfÆ¥ÅäÊ¾Àı
-Surf Detect:¼ì²âSurfÌØÕ÷µã
-Surf Matcher:ÌØÕ÷µãÆ¥Åä
-TIF:TIF¸ñÊ½
-TIF 3D Open:´ò¿ªĞòÁĞ
-TIF 3D Save:´æ´¢ĞòÁĞ
-TIF Open:´ò¿ª
-TIF Save:±£´æ
-Tables:±í¸ñ
-Temperature Difference:ÎÂ¶È±ä»¯Ê¾Àı
-Threshold:ãĞÖµ
+Select All:å…¨é€‰
+Select None:ä¸é€‰
+Selection:é€‰æ‹©
+Set Background:è®¾ç½®èƒŒæ™¯
+Set Slice:è®¾ç½®å½“å‰åˆ‡ç‰‡
+Shake Damping:é˜»å°¼æŒ¯åŠ¨
+Shotcut Editor:å¿«æ·é”®ç¼–è¾‘å™¨
+Show Base Analysis:åŸºç¡€åˆ†æç¤ºä¾‹
+Show Binary Watershed:äºŒå€¼åˆ†æ°´å²­ç¤ºä¾‹
+Show Buffer By Distance:è·ç¦»ç¼“å†²åŒºç¤ºä¾‹
+Show Canny In Diff Scale:Cannyåœ¨ä¸åŒå°ºåº¦çš„ç¤ºä¾‹
+Show Cell Analysis:ç»†èƒåˆ†æç¤ºä¾‹
+Show Cell Connected:ç»†èƒæ¥è§¦ç¤ºä¾‹
+Show Cell With Granule:å¸¦é¢—ç²’çš„ç»†èƒç¤ºä¾‹
+Show Circle And Ellipse:åœ†å’Œæ¤­åœ†ç¤ºä¾‹
+Show ConvexHull:å‡¸åŒ…ç¤ºä¾‹
+Show DOG Filter:å·®åˆ†é«˜æ–¯ç¤ºä¾‹
+Show Dilation:è†¨èƒ€ç¤ºä¾‹
+Show Distance:è·ç¦»å˜åŒ–ç¤ºä¾‹
+Show Do Stairs:ç­‰é«˜çº¿ç¤ºä¾‹
+Show Do Threshold:é˜ˆå€¼ç¤ºä¾‹
+Show Dog The Gear:é½¿è½®çš„å·®åˆ†é«˜æ–¯æ»¤æ³¢ç¤ºä¾‹
+Show Double Threshold:åŒé˜ˆå€¼ç¤ºä¾‹
+Show Erosion:è…èš€ç¤ºä¾‹
+Show Fill Holes:å¡«å……ç¤ºä¾‹
+Show Filter On Binary:äºŒå€¼å›¾åƒæ»¤æ³¢ç¤ºä¾‹
+Show Find Maximum:æŸ¥æ‰¾å±€éƒ¨æœ€å¤§å€¼ç¤ºä¾‹ã€‚
+Show Find Minimum:æŸ¥æ‰¾å±€éƒ¨æœ€å°å€¼ç¤ºä¾‹
+Show Find Ridge:æŸ¥æ‰¾å±±è„Šçº¿ç¤ºä¾‹
+Show Find Watershed:åˆ†æ°´å²­ç¤ºä¾‹
+Show Gaussian And Threshold:é«˜æ–¯åŠé˜ˆå€¼ç¤ºä¾‹
+Show Gaussian Filter:é«˜æ–¯ç¤ºä¾‹
+Show Gaussian In Nature:è‡ªç„¶ç•Œä¸­çš„é«˜æ–¯ç¤ºä¾‹
+Show Global Statistic:å…¨å±€ç»Ÿè®¡ç¤ºä¾‹
+Show Graph 3D:ä¸‰ç»´æ‹“æ‰‘ç¤ºä¾‹
+Show Harris In Diff Scale:ä¸åŒå°ºå¯¸ä¸‹Harrisç¤ºä¾‹
+Show Holes Count:å­”è®¡æ•°ç¤ºä¾‹
+Show How Canny Works:Cannyå·¥ä½œåŸç†ç¤ºä¾‹
+Show How Scale Affect:å°ºå¯¸çš„å½±å“ç¤ºä¾‹
+Show How To Get Mask:è·å¾—æ©æ¨¡ç¤ºä¾‹
+Show Intensity Analysis:å¯†åº¦åˆ†æç¤ºä¾‹
+Show Label Mask:æ ‡è®°å›¾åƒç¤ºä¾‹
+Show Laplace Filter:æ‹‰æ™®æ‹‰æ–¯æ»¤æ³¢ç¤ºä¾‹
+Show Laplace Sharp Filter:æ‹‰æ™®æ‹‰æ–¯é”åŒ–ç¤ºä¾‹
+Show Laplace of Gaussian:æ‹‰æ™®æ‹‰æ–¯é«˜æ–¯ç¤ºä¾‹
+Show Make Parabola:ç»˜åˆ¶æŠ›ç‰©çº¿ç¤ºä¾‹
+Show Mask:æ·¹æ²¡ç¤ºä¾‹
+Show Max And Min Filter:æœ€å¤§å€¼æœ€å°å€¼ç¤ºä¾‹
+Show Max Circle:æœ€å¤§å†…åˆ‡åœ†ç¤ºä¾‹
+Show Medial Axis:ä¸­è½´ç¤ºä¾‹
+Show Median Filter:ä¸­å€¼æ»¤æ³¢ç¤ºä¾‹
+Show Open And Close:å¼€é—­è¿ç®—ç¤ºä¾‹
+Show Outline:è½®å»“çº¿ç¤ºä¾‹
+Show Percent Filter:ç™¾åˆ†æ¯”ç¤ºä¾‹
+Show QRCode Art:äºŒç»´ç ç¤ºä¾‹
+Show Region Analysis:åŒºåŸŸåˆ†æç¤ºä¾‹
+Show Region Filter:åŒºåŸŸè¿‡æ»¤ç¤ºä¾‹
+Show Region Solidity:ä¸°æ»¡åº¦ç¤ºä¾‹
+Show Repair Lines:çº¿æ¡ä¿®å¤ç¤ºä¾‹
+Show Ridge Sub:å±±è„Šçº¿ç¤ºä¾‹
+Show Skeleton:éª¨æ¶ç¤ºä¾‹
+Show Skeleton And MidAix:éª¨æ¶ä¸ä¸­è½´çº¿ç¤ºä¾‹
+Show Smooth The Gear:é½¿è½®å¹³æ»‘ç¤ºä¾‹
+Show Smooth The Rec:çŸ©å½¢å¹³æ»‘ç¤ºä¾‹
+Show Sobel Filter:Sobelè¾¹ç¼˜ç¤ºä¾‹
+Show The Lighter One:æ‰¾åˆ°æœ€äº®çš„ç¤ºä¾‹
+Show The Pure One:æ‰¾åˆ°æœ€çº¯å‡€çš„ç¤ºä¾‹
+Show Uniform Filter:å‡å€¼æ»¤æ³¢ç¤ºä¾‹
+Show Unsharp Mask Filter:USMé”åŒ–ç¤ºä¾‹
+Show Voronoi:Voronoiå›¾ç¤ºä¾‹
+Show Watershed Inv:åˆ†æ°´å²­è½æ°´ç¤ºä¾‹
+Show Watershed Inv Sub:é€è¿‡ç¨‹åˆ†æ°´å²­è½æ°´ç¤ºä¾‹
+Show Watershed Sub:é€è¿‡ç¨‹åˆ†æ°´å²­ç¤ºä¾‹
+Show how to Laplace Sharp:æ‹‰æ™®æ‹‰æ–¯é”åŒ–åŸç†
+Show how to Unsharp Mask:USMé”åŒ–ç¤ºåŸç†
+Shrink:æ”¶ç¼©é€‰åŒº
+Skeleton:éª¨æ¶
+Skeleton 3D:ä¸‰ç»´éª¨æ¶
+Skeleton Network:éª¨æ¶æ‹“æ‰‘å…³ç³»
+Sketch:æè¾¹
+Sobel:Sobelæ¢¯åº¦ç®—å­
+Split RGB Channels:RGBæ‹†åˆ†é€šé“
+Squre Root:å¹³æ–¹æ ¹è¿ç®—
+Stack:å›¾åƒæ ˆ
+Surf:Surfç‰¹å¾æå–
+Surf Demo:SurfåŒ¹é…ç¤ºä¾‹
+Surf Detect:æ£€æµ‹Surfç‰¹å¾ç‚¹
+Surf Matcher:ç‰¹å¾ç‚¹åŒ¹é…
+TIF:TIFæ ¼å¼
+TIF 3D Open:æ‰“å¼€åºåˆ—
+TIF 3D Save:å­˜å‚¨åºåˆ—
+TIF Open:æ‰“å¼€
+TIF Save:ä¿å­˜
+Tables:è¡¨æ ¼
+Temperature Difference:æ¸©åº¦å˜åŒ–ç¤ºä¾‹
+Threshold:é˜ˆå€¼
 Tomasi:--
-Tool Tree View:¹¤¾ßÊ÷ÊÓÍ¼
-Topic:Ö÷Ìå°ïÖú
-Trans to List:×ªÎªÀëÉ¢Í¼ÏñĞòÁĞ
-Trans to Stack:×ªÎªÁ¬ĞøÍ¼ÏñÕ¾
-Transform:¼¸ºÎ±ä»»
-Two Boxes:Á½±¾Êé
-Type:ÀàĞÍ
-Undo:³·Ïú
-Uniform:¾ùÖµÂË²¨
-Uniform 3D:ÈıÎ¬¾ùÖµÂË²¨
-Union:Ñ¡ÇøºÏ²¢
-Unsharp Mask:USMÈñ»¯
-Up And Down Watershed:¸ßµÍãĞÖµ·ÖË®Áë
-Update Dictionary:¸üĞÂ×Öµä
-Update Software:×Ô¶¯¸üĞÂ
-Use Filter To Extract Text:ÎÄ×ÖÌáÈ¡Ê¾Àı
-Use Filter To Extract Text Step:ÎÄ×ÖÌáÈ¡·Ö½â
-Watershed Sub:Öğ¹ı³Ì·ÖË®Áë
-Watershed With ROI:·ÖË®ÁëÓÃROI×öÖÖ×Ó
-Window:´°¿Ú
-XYZ To RGB:XYZ×ªRGB
-Yuan:Ô¬´óÍ·
+Tool Tree View:å·¥å…·æ ‘è§†å›¾
+Topic:ä¸»ä½“å¸®åŠ©
+Trans to List:è½¬ä¸ºç¦»æ•£å›¾åƒåºåˆ—
+Trans to Stack:è½¬ä¸ºè¿ç»­å›¾åƒç«™
+Transform:å‡ ä½•å˜æ¢
+Two Boxes:ä¸¤æœ¬ä¹¦
+Type:ç±»å‹
+Undo:æ’¤é”€
+Uniform:å‡å€¼æ»¤æ³¢
+Uniform 3D:ä¸‰ç»´å‡å€¼æ»¤æ³¢
+Union:é€‰åŒºåˆå¹¶
+Unsharp Mask:USMé”åŒ–
+Up And Down Watershed:é«˜ä½é˜ˆå€¼åˆ†æ°´å²­
+Update Dictionary:æ›´æ–°å­—å…¸
+Update Software:è‡ªåŠ¨æ›´æ–°
+Use Filter To Extract Text:æ–‡å­—æå–ç¤ºä¾‹
+Use Filter To Extract Text Step:æ–‡å­—æå–åˆ†è§£
+Watershed Sub:é€è¿‡ç¨‹åˆ†æ°´å²­
+Watershed With ROI:åˆ†æ°´å²­ç”¨ROIåšç§å­
+Window:çª—å£
+XYZ To RGB:XYZè½¬RGB
+Yuan:è¢å¤§å¤´
 abc:--
-ailurus:Ğ¡ĞÜÃ¨
-ascent:Ô¶¹ÅµÄ
-astronaut:Óîº½Ô±
-bee:ÃÛ·ä
-block:¿é
-camera:Ïà»ú
-cell:Ï¸°û
-coins:Ó²±Ò
-dem:Êı×Ö¸ß³ÌÄ£ĞÍ
-distance:¾àÀë
-face:Á³
-game:ÓÎÏ·
-gear:³İÂÖ
-honeycomb:·ä³²
-horse:Âí
-house:·¿×Ó
+ailurus:å°ç†ŠçŒ«
+ascent:è¿œå¤çš„
+astronaut:å®‡èˆªå‘˜
+bee:èœœèœ‚
+block:å—
+camera:ç›¸æœº
+cell:ç»†èƒ
+coins:ç¡¬å¸
+dem:æ•°å­—é«˜ç¨‹æ¨¡å‹
+distance:è·ç¦»
+face:è„¸
+game:æ¸¸æˆ
+gear:é½¿è½®
+honeycomb:èœ‚å·¢
+horse:é©¬
+house:æˆ¿å­
 hubble_deep_field:--
-img:Í¼
+img:å›¾
 immunohistochemistry:--
-insect:À¥³æ
-marble:´óÀíÊ¯
-moon:Ô½ÁÁ
-necklace:ÏîÁ´
+insect:æ˜†è™«
+marble:å¤§ç†çŸ³
+moon:è¶Šäº®
+necklace:é¡¹é“¾
 neubauer:--
-page:Ò³Ãæ
-pointline:µãÏßÍ¼
-points:µã
-qin:Çß
-qrcode:¶şÎ¬Âë
-region statistic:ÇøÓòÍ³¼Æ
-road:µÀÂ·
-saltpepper:½·ÑÎÔëÉù
-street:½ÖµÀ
-sunglow:²ÊÏ¼
-towel-far:Ã«½íÔ¶¾°
-towel-near:Ã«½í½ü¾°
-trafficsign:½»Í¨±êÊ¶
-universe:ÓîÖæ
-windmill:·ç³µ
+page:é¡µé¢
+pointline:ç‚¹çº¿å›¾
+points:ç‚¹
+qin:æ²
+qrcode:äºŒç»´ç 
+region statistic:åŒºåŸŸç»Ÿè®¡
+road:é“è·¯
+saltpepper:æ¤’ç›å™ªå£°
+street:è¡—é“
+sunglow:å½©éœ
+towel-far:æ¯›å·¾è¿œæ™¯
+towel-near:æ¯›å·¾è¿‘æ™¯
+trafficsign:äº¤é€šæ ‡è¯†
+universe:å®‡å®™
+windmill:é£è½¦

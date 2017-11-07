@@ -11,7 +11,7 @@ class LanguageManager:
     @classmethod
     def set(cls, cur):
         cls.cur = None if cur=='English' else cls.langs[cur]
-        curfile = open(os.path.join(root_dir,'data/language/cur.txt'), 'w')
+        curfile = open(os.path.join(root_dir,'data/language/cur.txt'), 'w', encoding='utf-8')
         cur = curfile.write(cur)
         curfile.close()
 
@@ -19,7 +19,7 @@ class LanguageManager:
     def read(cls):
         path = os.path.join(root_dir,'data/language/*.dic')
         for name in glob(path):
-            pkl_file = open(name,'r')
+            pkl_file = open(name, 'r', encoding='utf-8')
             fp, fn = os.path.split(name)
             fn, fe = os.path.splitext(fn)
             cls.langs[fn] = {}
@@ -29,7 +29,7 @@ class LanguageManager:
             pkl_file.close()
         curfile = os.path.join(root_dir,'data/language/cur.txt')
         if not os.path.exists(curfile): return
-        curfile = open(os.path.join(root_dir,'data/language/cur.txt'), 'r')
+        curfile = open(os.path.join(root_dir,'data/language/cur.txt'), 'r', encoding='utf-8')
         cur = curfile.read()
         
         curfile.close()
@@ -40,7 +40,7 @@ class LanguageManager:
         for key in cls.langs:
             dic = cls.langs[key]
             titles = sorted(dic.keys())
-            pkl_file = open(os.path.join(root_dir,'data/language/%s.dic'%key), 'w')
+            pkl_file = open(os.path.join(root_dir,'data/language/%s.dic'%key), 'w', encoding='utf-8')
             for i in titles:
                 pkl_file.write('%s:%s\n'%(i,dic[i]))
             pkl_file.close()
