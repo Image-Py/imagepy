@@ -48,6 +48,7 @@ def fill(plgs, img, color = 1, o=(0,0)):
         for i in zip(rs[::2],rs[1::2]):
             x1, x2 = int(np.ceil(i[0])), int(np.floor(i[1])+2)
             x1, x2 = max(x1,0), min(x2, shape[1])
+            if x1 >= shape[1] or x2 < 0: continue
             #rst.extend([(x,y) for x in range(max(x1,o[0]), min(x2, shape[2]))])
             img[y,x1:x2] = color
 

@@ -8,6 +8,7 @@ import os, sys
 from ..engine import Macros, MkDown
 from ..manager import ToolsManager,PluginsManager
 from ... import IPy, root_dir
+from codecs import open
 
 first = [0,0]
 def extend_plugins(path, lst, err):
@@ -24,7 +25,7 @@ def extend_plugins(path, lst, err):
                 rst.append(Macros(i[:-3], cmds))
             PluginsManager.add(rst[-1])
         elif i[-3:] == '.md':
-            f = open(os.path.join(root_dir,path)+'/'+i, encoding='utf-8')
+            f = open(os.path.join(root_dir,path)+'/'+i, 'r', 'utf-8')
             cont = f.read()
             f.close()
             if i[-3:]=='.md':
@@ -34,6 +35,7 @@ def extend_plugins(path, lst, err):
             try:
                 rpath = path.replace('/', '.').replace('\\','.')
                 #rpath = rpath[rpath.index('imagepy.'):]
+
                 plg = __import__('imagepy.'+ rpath+'.'+i[:-3],'','',[''])
                 if hasattr(plg, 'plgs'):
                     rst.extend([j for j in plg.plgs])
@@ -74,10 +76,10 @@ def build_plugins(path, err=None):
             subtree.append(i)
     if len(subtree)==0:return []
     
+
     rpath = path.replace('/', '.').replace('\\','.')
 
     #rpath = rpath[rpath.index('imagepy.'):]
-
     pg = __import__('imagepy.'+rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):

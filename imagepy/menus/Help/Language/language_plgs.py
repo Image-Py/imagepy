@@ -2,7 +2,7 @@ from imagepy import IPy
 from imagepy.core.manager import ColorManager, LanguageManager
 from imagepy.core.engine import Free
 
-class Plugin(Free):
+class Language(Free):
 	def __init__(self, key):
 		self.title = key
 		asyn = False
@@ -15,8 +15,8 @@ class Plugin(Free):
 	def __call__(self):
 		return self
 
-plgs = [Plugin(i) for i in list(LanguageManager.langs.keys())]
-plgs.insert(0, Plugin('English'))
+plgs = [Language(i) for i in list(LanguageManager.langs.keys())]
+plgs.insert(0, Language('English'))
 plgs.append('-')
 
 
