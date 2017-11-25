@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*
 import scipy.ndimage as ndimg
 from imagepy.core.engine import Filter, Simple
-from skimage.morphology import watershed
+#from skimage.morphology import watershed
+from imagepy.ipyalg import watershed
 import numpy as np
 
 class Gaussian3D(Simple):
@@ -96,8 +97,9 @@ class UPWatershed(Filter):
 		msk[imgs>para['thr2']] = 2
 		msk[imgs<para['thr1']] = 1
 
-		rst = watershed(gradient, msk)
-		imgs[:] = (rst==2)*255
+		#rst = watershed(gradient, msk)
+		rst = watershed(gradient, msk.astype(np.uint16))
+		imgs[:] = (rst!=1)*255
 		ips.lut = self.buflut
 
 plgs = [Gaussian3D, Uniform3D, '-', Sobel3D, USM3D, '-', UPWatershed]

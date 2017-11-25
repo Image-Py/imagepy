@@ -1,8 +1,9 @@
 import numpy as np
 from numba import jit
 from scipy.ndimage import label, generate_binary_structure
-from skimage.morphology import watershed as skwsh
+#from skimage.morphology import watershed as skwsh
 from scipy.misc import imread, imsave
+from itertools import permutations
 
 def neighbors(shape, conn=1):
     dim = len(shape)
@@ -70,17 +71,27 @@ def collect(img, mark, nbs, pts):
 
 @jit
 def erose(mark):
-    
     for i in range(len(mark)):
         if mark[i]>0xfff0:mark[i]=0
         
+def conner(mark):
+    ls = list(permutations([1,0] + [None]*(mark.ndim-2), 3))
+    ls.extend(permutations([0,0] + [None]*(mark.ndim-2), 3))
+    ls.extend(permutations([1,1] + [None]*(mark.ndim-2), 3))
+    ls = list(set(ls))
+    dic1 = {None:slice(None), 1:0, 0:-1}
+    dic2 = {None:slice(None), 1:1, 0:-2}
+    ls1 = [tuple([dic1[j] for j in i]) for i in ls]
+    ls2 = [tuple([dic2[j] for j in i]) for i in ls]
+    for i,j in zip(ls1, ls2): mark[i] = mark[j]
+
 def watershed(img, mark, conn=1, up=True):
     maxv = img.max(); minv = img.min();
     if img.dtype != np.uint8:
         img = ((img-minv)*(255/(maxv-minv))).astype(np.uint8)
     ndim = img.ndim
     for n in range(ndim):
-        idx = [slice(None) if i==n else [0,-1] for i in range(ndim)]
+        idx = [slice(None) if i!=n else [0,-1] for i in range(ndim)]
         mark[tuple(idx)] = 0xffff
     
     nbs = neighbors(img.shape, conn)
@@ -94,12 +105,13 @@ def watershed(img, mark, conn=1, up=True):
         if bins[level]==0:continue
         s, c = clear(pts, s, 0)
         s = step(img, mark1d, pts, s, level, up, nbs)
-
+    '''
     conner = [[v>>i&1 for i in range(ndim)] for v in range(2**ndim)]
     con1 = np.array(conner, dtype=np.int8)-1
     con2 = np.array(conner, dtype=np.int8)*3-2
     mark[tuple(con1.T)] = mark[tuple(con2.T)]
-                      
+    '''
+    conner(mark)    
     erose(mark1d)
     return mark
     
