@@ -188,6 +188,10 @@ class UPWatershed(Filter):
         self.ips.lut[para['thr2']:] = [255,0,0]
         self.ips.update = 'pix'
 
+    def cancel(self, ips):
+        ips.lut = self.buflut
+        ips.update = 'pix'
+
     #process
     def run(self, ips, snap, img, para = None):
         edge = sobel(snap)
