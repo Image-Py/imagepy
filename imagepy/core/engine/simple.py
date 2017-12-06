@@ -46,6 +46,7 @@ class Simple:
 
     def check(self, ips):
         note = self.note
+        print('iiiiiiiii', ips.get_imgtype())
         if ips == None:
             IPy.alert('no image opened!')
             return False
@@ -60,9 +61,12 @@ class Simple:
                 IPy.alert('do not surport 8-bit image')
                 return False
             elif ips.get_imgtype()=='16-bit' and not '16-bit' in note:
-                IPy.alert('do not surport 16-bit image')
+                IPy.alert('do not surport 16-bit uint image')
                 return False
-            elif ips.get_imgtype()=='float' and not 'float' in note:
+            elif ips.get_imgtype()=='32-int' and not 'int' in note:
+                IPy.alert('do not surport 32-bit int uint image')
+                return False
+            elif 'float' in ips.get_imgtype() and not 'float' in note:
                 IPy.alert('do not surport float image')
                 return False
         if sum([i in note for i in ('stack','stack2d','stack3d')])>0:

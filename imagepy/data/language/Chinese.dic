@@ -1,15 +1,15 @@
+16-bit uint:16位灰度
 16_Colors:--
 2D Surface:二维表面
 2DSurface Demo:二维表面示例
+32-bit float:32位浮点
+32-bit int:32位整数
 3D Surface:三维表面
-3D Viewer:三维窗口
-3dtooltest:--
+64-bit float:64位浮点
 6_Shades:--
 8-bit:8位灰度
 About:关于
 Active Ridge:交互山脊线
-Active Watershed:--
-Adaptive Threshold:--
 Add:加法运算
 Add Field *:--
 Add Slice:添加切片
@@ -17,7 +17,6 @@ Add To Manager:加入选区管理器
 Adjust:调整
 Analysis:分析
 Analysis 3D:三维分析
-Angkor:吴哥窟
 Author:作者
 BMP:BMP格式
 BMP Open:打开
@@ -41,13 +40,6 @@ Build Graph 3D:三维拓扑重建
 CIERGB To RGB:CIE转RGB
 Canny:Canny边缘算子
 Canvas Size:画布大小
-Chapter1 Digital-Image:数字图像
-Chapter3 Pixel-Operate:像素操作
-Chapter4 Digital-Filter:数字滤波
-Chapter5 Elevation-Analysis:高程分析
-Chapter6 Edge-Angular:边缘与角点
-Chapter7 Binary-Image:二值图像
-Chengdu Temperature:程度的温度
 Chinese:中文
 Clean Dictionary:清洁字典
 Clear:清除选区内部
@@ -56,8 +48,6 @@ Clip Roi:选区裁剪
 Closing 3D:三维闭运算
 Color:色彩
 Color Balance:色彩平衡
-Color Balance Demo:色彩平衡示例
-Color Histogram Match:彩色直方图匹配
 Color Stairs:色阶
 Command Line:命令行工具
 Convex Hull:凸包
@@ -68,13 +58,11 @@ Cut By ROI:修剪roi穿过的分支
 Cyan_Hot:--
 DCM Open:--
 DEM:数字高程模型
-DICOM:--
+DICOM:DICOM格式
 DOG:差分高斯金字塔
 Decoration Demo:三维奖杯示例
 Delete Slice:删除切片
-Demo:--
 Difference:差分
-Difference of Gaussian Core:差分高斯滤波核
 Dilation 3D:三维膨胀
 Distance Transform:距离变换
 Double Threshold:双阈值
@@ -84,7 +72,6 @@ English:英文
 Erosion 3D:三维腐蚀
 Exit:退出
 Export:导出
-Extend Full:--
 Features:特征提取
 File:文件
 Fill:填充选区
@@ -100,17 +87,12 @@ Find Watershed:分水岭
 Frequence:频率
 Frequence Field *:--
 GIF:GIF格式
-GIF Animate Open:打开GIF动画
-GIF Animate Save:保存GIF动画
 GIF Open:打开
 GIF Save:保存
 Garmma:伽马矫正
-Garmma Curve:伽马曲线
 Gaussian:高斯模糊
 Gaussian 3D:三维高斯模糊
-Gaussian Core:高斯模糊核
 Gaussian Laplace:高斯拉普拉斯
-Gaussian3D:--
 Geometry Analysis:几何分析
 Geometry Analysis 3D:三维几何分析
 Geometry Filter:几何过滤器
@@ -130,19 +112,14 @@ HiLo:--
 Histogram:直方图
 Histogram Match:直方图匹配
 Histogram Normalize:直方图标准化
-Histogram Normalize And Match:直方图标准化与匹配
-Histogram Of Gray Image:灰度图像的直方图
 Home Page:主页
 Hydrology:水文运算
-IBook:教程
 ICA:--
 ICA2:--
 ICA3:--
 Ice Segment:--
 Image:图像
 Image Calculator:图像计算
-Image Merge:图像融合
-Image Referenced:相关图像
 Import:导入
 Import Sequence:导入图像序列
 Inflate:膨胀
@@ -167,8 +144,6 @@ Label Image:图像标记
 Language:语言
 Laplace:拉普拉斯
 Laplace Sharp:拉普拉斯锐化
-Laplace of Gaussian Core:高斯拉普拉斯核
-Laplacian:--
 Lena:雷娜
 Lines Demo:三维曲线示例
 List Packages:列出已安装包
@@ -204,10 +179,8 @@ Open:打开
 Open Raw:Raw格式
 Open Recent:最近打开文件
 Open Url:通过链接打开
-Opencv:--
 Opening 3D:三维开运算
 Orange_Hot:--
-Orignal Line:--
 Orthogonal view:正交视图
 PNG:PNG格式
 PNG Open:打开
@@ -222,7 +195,6 @@ Points Value:点所在位置的值
 Previous Slice:上一张
 Prewitt:Prewitt边缘算子
 Process:处理
-Psychological Inertia:--
 RGB:RGB色彩
 RGB To CIERGB:RGB转CIE
 RGB To Gray:RGB转灰度
@@ -234,12 +206,10 @@ Random Balls Demo:随机彩球示例
 Red_Hot:--
 Region Analysis:区域分析
 Relation:关系
-Reload Plugins:--
-Reloas:重新加载
+Reload Plugins:重载插件
 Remove Isolate 3D:去除三维碎片
 Remove Isolate Node:节点裁剪
 Resize:画像大小
-Riedge Sub:逐过程山脊线
 Roi Setting:设置ROI属性
 Rotate:旋转
 Run Macros:执行宏
@@ -253,89 +223,20 @@ Save With Mark:带标记保存
 Scale:缩放
 Scale And Unit:比例尺和单位
 Screen Capture:截屏
-Segmentation:--
 Select All:全选
 Select None:不选
 Selection:选择
 Set Background:设置背景
 Set Slice:设置当前切片
-Shake Damping:阻尼振动
 Shotcut Editor:快捷键编辑器
-Show Base Analysis:基础分析示例
-Show Binary Watershed:二值分水岭示例
-Show Buffer By Distance:距离缓冲区示例
-Show Canny In Diff Scale:Canny在不同尺度的示例
-Show Cell Analysis:细胞分析示例
-Show Cell Connected:细胞接触示例
-Show Cell With Granule:带颗粒的细胞示例
-Show Circle And Ellipse:圆和椭圆示例
-Show ConvexHull:凸包示例
-Show DOG Filter:差分高斯示例
-Show Dilation:膨胀示例
-Show Distance:距离变化示例
-Show Do Stairs:等高线示例
-Show Do Threshold:阈值示例
-Show Dog The Gear:齿轮的差分高斯滤波示例
-Show Double Threshold:双阈值示例
-Show Erosion:腐蚀示例
-Show Fill Holes:填充示例
-Show Filter On Binary:二值图像滤波示例
-Show Find Maximum:查找局部最大值示例。
-Show Find Minimum:查找局部最小值示例
-Show Find Ridge:查找山脊线示例
-Show Find Watershed:分水岭示例
-Show Gaussian And Threshold:高斯及阈值示例
-Show Gaussian Filter:高斯示例
-Show Gaussian In Nature:自然界中的高斯示例
-Show Global Statistic:全局统计示例
 Show Graph 3D:三维拓扑示例
-Show Harris In Diff Scale:不同尺寸下Harris示例
-Show Holes Count:孔计数示例
-Show How Canny Works:Canny工作原理示例
-Show How Scale Affect:尺寸的影响示例
-Show How To Get Mask:获得掩模示例
-Show Intensity Analysis:密度分析示例
-Show Label Mask:标记图像示例
-Show Laplace Filter:拉普拉斯滤波示例
-Show Laplace Sharp Filter:拉普拉斯锐化示例
-Show Laplace of Gaussian:拉普拉斯高斯示例
-Show Make Parabola:绘制抛物线示例
-Show Mask:淹没示例
-Show Max And Min Filter:最大值最小值示例
-Show Max Circle:最大内切圆示例
-Show Medial Axis:中轴示例
-Show Median Filter:中值滤波示例
-Show Open And Close:开闭运算示例
-Show Outline:轮廓线示例
-Show Percent Filter:百分比示例
-Show QRCode Art:二维码示例
-Show Region Analysis:区域分析示例
-Show Region Filter:区域过滤示例
-Show Region Solidity:丰满度示例
-Show Repair Lines:线条修复示例
-Show Ridge Sub:山脊线示例
-Show Skeleton:骨架示例
-Show Skeleton And MidAix:骨架与中轴线示例
-Show Smooth The Gear:齿轮平滑示例
-Show Smooth The Rec:矩形平滑示例
-Show Sobel Filter:Sobel边缘示例
-Show The Lighter One:找到最亮的示例
-Show The Pure One:找到最纯净的示例
-Show Uniform Filter:均值滤波示例
-Show Unsharp Mask Filter:USM锐化示例
-Show Voronoi:Voronoi图示例
-Show Watershed Inv:分水岭落水示例
-Show Watershed Inv Sub:逐过程分水岭落水示例
-Show Watershed Sub:逐过程分水岭示例
-Show how to Laplace Sharp:拉普拉斯锐化原理
-Show how to Unsharp Mask:USM锐化示原理
 Shrink:收缩选区
 Skeleton:骨架
 Skeleton 3D:三维骨架
 Skeleton Network:骨架拓扑关系
 Sketch:描边
 Sobel:Sobel梯度算子
-Sobel 3D:--
+Sobel 3D:三维梯度
 Split RGB Channels:RGB拆分通道
 Squre Root:平方根运算
 Stack:图像栈
@@ -349,11 +250,10 @@ TIF 3D Save:存储序列
 TIF Open:打开
 TIF Save:保存
 Tables:表格
-Temperature Difference:温度变化示例
 Threshold:阈值
 Tomasi:--
 Tool Tree View:工具树视图
-Topic:主体帮助
+Topic:主题帮助
 Trans to List:转为离散图像序列
 Trans to Stack:转为连续图像站
 Transform:几何变换
@@ -364,57 +264,22 @@ Uniform:均值滤波
 Uniform 3D:三维均值滤波
 Union:选区合并
 Unsharp Mask:USM锐化
-Unsharp Mask 3D:--
+Unsharp Mask 3D:三维USM锐化
 Up And Down Watershed:高低阈值分水岭
-Up Down Watershed 3D:--
+Up Down Watershed 3D:三维双阈值分水岭
 Update Dictionary:更新字典
 Update Software:自动更新
-Use Filter To Extract Text:文字提取示例
-Use Filter To Extract Text Step:文字提取分解
-Viewer 3D:--
-Watershed Sub:逐过程分水岭
+Viewer 3D:三维画布
 Watershed With ROI:分水岭用ROI做种子
 Window:窗口
 XYZ To RGB:XYZ转RGB
-Yuan:袁大头
-abc:--
-ailurus:小熊猫
 ascent:远古的
 astronaut:宇航员
-bee:蜜蜂
-block:块
 camera:相机
-cell:细胞
 coins:硬币
-dem:数字高程模型
-distance:距离
 face:脸
-game:游戏
-gear:齿轮
-honeycomb:蜂巢
 horse:马
-house:房子
 hubble_deep_field:--
-img:图
 immunohistochemistry:--
-insect:昆虫
-marble:大理石
-mea coins:--
 moon:越亮
-necklace:项链
-neubauer:--
 page:页面
-pointline:点线图
-points:点
-qin:沁
-qrcode:二维码
-region statistic:区域统计
-road:道路
-saltpepper:椒盐噪声
-street:街道
-sunglow:彩霞
-towel-far:毛巾远景
-towel-near:毛巾近景
-trafficsign:交通标识
-universe:宇宙
-windmill:风车

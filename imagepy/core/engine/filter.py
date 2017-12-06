@@ -26,13 +26,14 @@ def process_channels(plg, ips, src, des, para):
 
 def process_one(plg, ips, src, img, para, callafter=None):
     TaskManager.add(plg)
-    transint = '2int' in plg.note and ips.dtype == np.uint8
+    transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
     if transint: buf =  img.astype(np.int32)
     if transfloat: buf = img.astype(np.float32)
     rst = process_channels(plg, ips, src, buf if transint or transfloat else img, para)
     if not img is rst and not rst is None:
-        np.clip(rst, ips.range[0], ips.range[1], out=img)
+        imgrange = {np.uint8:(0,255), np.uint16:(0,65535)}[img.dtype.type]
+        np.clip(rst, imgrange[0], imgrange[1], out=img)
     if 'auto_msk' in plg.note and not ips.get_msk() is None:
         msk = True ^ ips.get_msk()
         img[msk] = src[msk]
@@ -44,7 +45,7 @@ def process_stack(plg, ips, src, imgs, para):
     TaskManager.add(plg)
     from time import time, sleep
     start = time()
-    transint = '2int' in plg.note and ips.dtype == np.uint8
+    transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
     if transint: buf =  imgs[0].astype(np.int32)
     if transfloat: buf = imgs[0].astype(np.float32)
@@ -55,7 +56,8 @@ def process_stack(plg, ips, src, imgs, para):
         if transint or transfloat: buf[:] = i
         rst = process_channels(plg, ips, src, buf if transint or transfloat else i, para)
         if not i is rst and not rst is None:
-            np.clip(rst, ips.range[0], ips.range[1], out=i)
+            imgrange = {np.uint8:(0,255), np.uint16:(0,65535)}[i.dtype.type]
+            np.clip(rst, imgrange[0], imgrange[1], out=i)
         if 'auto_msk' in plg.note and not ips.get_msk() is None:
             msk = True ^ ips.get_msk()
             i[msk] = src[msk]
@@ -66,7 +68,7 @@ class Filter:
     title = 'Filter'
     modal = True
     note = []
-    'all, 8_bit, 16_bit, rgb, float, not_channel, not_slice, req_roi, auto_snap, auto_msk, preview, 2int, 2float'
+    'all, 8-bit, 16-bit, int, rgb, float, not_channel, not_slice, req_roi, auto_snap, auto_msk, preview, 2int, 2float'
     para = None
     view = None
     prgs = (None, 1)
@@ -107,9 +109,12 @@ class Filter:
                 IPy.alert('do not surport 8-bit image')
                 return False
             elif ips.get_imgtype()=='16-bit' and not '16-bit' in note:
-                IPy.alert('do not surport 16-bit image')
+                IPy.alert('do not surport 16-bit uint image')
                 return False
-            elif ips.get_imgtype()=='float' and not 'float' in note:
+            elif ips.get_imgtype()=='32-int' and not 'int' in note:
+                IPy.alert('do not surport 32-bit int uint image')
+                return False
+            elif 'float' in ips.get_imgtype() and not 'float' in note:
                 IPy.alert('do not surport float image')
                 return False
         return True

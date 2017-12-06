@@ -172,7 +172,7 @@ class Canvas (wx.Panel):
         '''
     def merge(self, img, back, M, O, mode, shape, win, lookup):
         if img.ndim == 2:
-            rstarr = np.zeros(shape, dtype=np.uint8)
+            rstarr = np.zeros(shape, dtype=img.dtype)
             my_transform(img, M, offset=O, output=rstarr, k=1, clip=False)
             rstarr = lookup(rstarr)
         
