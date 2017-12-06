@@ -132,4 +132,3 @@ if __name__=='__main__':
     frame.set_ips(ips)
     frame.Show()
     app.MainLoop()
-
