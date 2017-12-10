@@ -78,11 +78,11 @@ class UPWatershed(Filter):
 		ips.lut = self.buflut
 		ips.update = 'pix'
 
-	def preview(self, para):
-		self.ips.lut[:] = self.buflut
-		self.ips.lut[:para['thr1']] = [0,255,0]
-		self.ips.lut[para['thr2']:] = [255,0,0]
-		self.ips.update = 'pix'
+	def preview(self, ips, para):
+		ips.lut[:] = self.buflut
+		ips.lut[:para['thr1']] = [0,255,0]
+		ips.lut[para['thr2']:] = [255,0,0]
+		ips.update = 'pix'
 
 	#process
 	def run(self, ips, snap, img, para = None):

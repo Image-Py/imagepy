@@ -48,8 +48,9 @@ class Watershed(Filter):
 	note = ['8-bit', 'auto_msk', 'auto_snap', 'preview']
 
 
-	para = {'tor':2}
-	view = [(int, (1,255), 0, 'tolerance', 'tor', 'value')]
+	para = {'tor':2, 'con':False}
+	view = [(int, (0,255), 0, 'tolerance', 'tor', 'value'),
+			(bool, 'full connectivity', 'con')]
 
 	## TODO: Fixme!
 	def run(self, ips, snap, img, para = None):
@@ -59,7 +60,7 @@ class Watershed(Filter):
 		buf = np.zeros(ips.size, dtype=np.uint16)
 		buf[pts[:,0], pts[:,1]] = 1
 		markers, n = ndimg.label(buf, np.ones((3,3)))
-		line = watershed(dist, markers)
+		line = watershed(dist, markers, line=True, conn=para['con']+1)
 		img[line==0] = 0
 
 class Voronoi(Filter):

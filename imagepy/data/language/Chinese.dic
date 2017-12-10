@@ -39,6 +39,7 @@ Build Graph:拓扑重建
 Build Graph 3D:三维拓扑重建
 CIERGB To RGB:CIE转RGB
 Canny:Canny边缘算子
+Canny EdgeDetection:--
 Canvas Size:画布大小
 Chinese:中文
 Clean Dictionary:清洁字典
@@ -59,9 +60,12 @@ Cyan_Hot:--
 DCM Open:--
 DEM:数字高程模型
 DICOM:DICOM格式
+DICOM Open:--
+DICOM Save:--
 DOG:差分高斯金字塔
 Decoration Demo:三维奖杯示例
 Delete Slice:删除切片
+Demo:--
 Difference:差分
 Dilation 3D:三维膨胀
 Distance Transform:距离变换
@@ -79,6 +83,7 @@ Fill Holes:填充空洞
 Fill Holes 3D:填充三维空洞
 Filters:滤波器
 Filters 3D:三维滤波器
+Filters3D:--
 Find IsoLine:等高线
 Find Maximum:局部最大值
 Find Minimum:局部最小值
@@ -97,6 +102,8 @@ Geometry Analysis:几何分析
 Geometry Analysis 3D:三维几何分析
 Geometry Filter:几何过滤器
 Geometry Filter 3D:三维几何过滤器
+Gradient Magnitude:--
+Gradient Magnitude 3D:--
 Graph Cut Branch 3D:修剪分支
 Graph Statistic:拓扑统计
 Graph Statistic 3D:拓扑统计
@@ -117,6 +124,17 @@ Hydrology:水文运算
 ICA:--
 ICA2:--
 ICA3:--
+IITK Watershed Manual Marker:--
+IO:--
+ITK:--
+ITK Canny EdgeDetection:--
+ITK Discrete Gaussian:--
+ITK Discrete Gaussian 3D:--
+ITK Gradient Magnitude:--
+ITK Gradient Magnitude 3D:--
+ITK Up Down Watershed:--
+ITK Up Down Watershed 3D:--
+ITK Watershed Manual Marker:--
 Ice Segment:--
 Image:图像
 Image Calculator:图像计算
@@ -167,6 +185,8 @@ Min:最小值运算
 Minimum:最小值滤波
 Moravec:--
 Multiply:乘法
+NII Open:--
+NII Save:--
 Network 3D:三维拓扑分析
 New:新建
 New Filter:新建滤波器
@@ -223,6 +243,8 @@ Save With Mark:带标记保存
 Scale:缩放
 Scale And Unit:比例尺和单位
 Screen Capture:截屏
+Segmentation:--
+Segmentation3D:--
 Select All:全选
 Select None:不选
 Selection:选择
@@ -270,6 +292,7 @@ Up Down Watershed 3D:三维双阈值分水岭
 Update Dictionary:更新字典
 Update Software:自动更新
 Viewer 3D:三维画布
+Watershed Manual Marker:--
 Watershed With ROI:分水岭用ROI做种子
 Window:窗口
 XYZ To RGB:XYZ转RGB
