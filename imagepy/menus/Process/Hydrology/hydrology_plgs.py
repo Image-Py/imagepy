@@ -57,16 +57,6 @@ class FindMin(Filter):
         pts = find_maximum(self.ips.img, para['tol'], False)
         self.ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
         self.ips.update = True
-        '''
-        pts = find_maximum(ips.img, para['tol'], not para['mode'])
-        ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
-        markers, n = ndimg.label(ips.get_msk(), np.ones((3,3)))
-        if not para['wsd']:return
-        img = 255-img if not para['mode'] else img
-        labels = watershed(img, markers, watershed_line=True)
-        mask = np.array((labels==0)*255, dtype = np.uint8)
-        IPy.show_img([mask], ips.title+'-watershed')
-        '''
 
 class UPRidge(Filter):
     title = 'Find Riedge'
