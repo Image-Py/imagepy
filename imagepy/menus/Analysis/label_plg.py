@@ -24,10 +24,10 @@ class Plugin(Filter):
         ips.lut = self.lut.copy()
         return True
         
-    def preview(self, para):
-        self.ips.lut[:] = self.lut
-        self.ips.lut[para['thr']:] = [255,0,0]
-        self.ips.update = 'pix'
+    def preview(self, ips, para):
+        ips.lut[:] = self.lut
+        ips.lut[para['thr']:] = [255,0,0]
+        ips.update = 'pix'
         
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para

@@ -17,6 +17,7 @@ class Simple:
     'all, 8-bit, 16-bit, rgb, float, req_roi, stack, stack2d, stack3d'
     view = None
     prgs = (None, 1)
+    modal = True
 
     def __init__(self, ips=None):
         print('simple start')
@@ -26,17 +27,31 @@ class Simple:
     def progress(self, i, n):
         self.prgs = (i, n)
 
-    def load(self, ips):
-        return True
+    def load(self, ips):return True
         
+    def preview(self, ips, para):pass
+
     def show(self):
         if self.view==None:return wx.ID_OK
         self.dialog = ParaDialog(IPy.get_window(), self.title)
-        self.dialog.init_view(self.view, self.para, modal=True)
-        return self.dialog.ShowModal()
+        self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
+        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
+        if self.modal: return self.dialog.ShowModal()
+        self.dialog.on_ok = lambda : self.ok(self.ips)
+        self.dialog.on_cancel = lambda : self.cancel(self.ips)
+        self.dialog.Show()
     
     def run(self, ips, imgs, para = None):pass
         
+    def cancel(self, ips):pass
+
+    def ok(self, ips, para=None, callafter=None):
+        if para == None: para = self.para
+        threading.Thread(target = self.runasyn, 
+                    args = (ips, ips.imgs, para, callafter)).start()
+        win = TextLogManager.get('Recorder')
+        if win!=None: win.append('{}>{}'.format(self.title, para))
+
     def runasyn(self,  ips, imgs, para = None, callback = None):
         TaskManager.add(self)
         self.run(ips, imgs, para)
@@ -46,7 +61,6 @@ class Simple:
 
     def check(self, ips):
         note = self.note
-        print('iiiiiiiii', ips.get_imgtype())
         if ips == None:
             IPy.alert('no image opened!')
             return False
@@ -86,13 +100,13 @@ class Simple:
         #print self.title, para
         if not self.check(self.ips):return
         if not self.load(self.ips):return
-        if para!=None or self.show() == wx.ID_OK:
-            if para == None:para = self.para
-            win = TextLogManager.get('Recorder')
-            if win!=None: win.append('{}>{}'.format(self.title, para))
-            #self.run(self.ips, self.ips.imgs, para)
-            t =threading.Thread(target = self.runasyn, 
-                args = (self.ips, self.ips.imgs, para, callback))
-            t.start()
+        if para!=None or self.view==None:
+            self.ok(self.ips, para, callback)
+        elif self.modal:
+            if self.show() == wx.ID_OK:
+                self.ok(self.ips, para, callback)
+            else:self.cancel(ips)
+            self.dialog.Destroy()
+        else: self.show()
 
-        if self.dialog!=None:self.dialog.Destroy()
+            
