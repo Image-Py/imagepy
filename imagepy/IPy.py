@@ -25,10 +25,20 @@ def get_ips():
     return None if win==None else win.canvas.ips
 
 def showips(ips):
+    
+    from .ui.canvasframe import CanvasPanel
+    canvasp = CanvasPanel(curapp.canvasnb)
+    curapp.canvasnb.AddPage( canvasp, ips.title, True, wx.NullBitmap )
+    #canvasp.canvas.initBuffer()
+    print('ppp', canvasp.GetClientSize())
+    canvasp.set_ips(ips)
+    curapp.auimgr.Update()
+    '''
     from .ui.canvasframe import CanvasFrame
     frame = CanvasFrame(curapp)
     frame.set_ips(ips)
     frame.Show()
+    '''
 
 pub.subscribe(showips, 'showips')
 def show_ips(ips):

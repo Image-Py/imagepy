@@ -10,8 +10,9 @@ from .. import IPy, root_dir
 # TODO: @2017.05.01
 #from ui import pluginloader, toolsloader
 from . import pluginloader, toolsloader
-from ..core.manager import ConfigManager, PluginsManager, TaskManager
+from ..core.manager import ConfigManager, PluginsManager, TaskManager, WindowsManager
 from ..core.engine import Macros
+import wx.aui as aui
 
 class FileDrop(wx.FileDropTarget):
     def OnDropFiles(self, x, y, path):
@@ -24,6 +25,11 @@ class ImagePy(wx.Frame):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', 
                             size = wx.Size(-1,-1), pos = wx.DefaultPosition, 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+
+        self.auimgr = aui.AuiManager()
+        self.auimgr.SetManagedWindow( self )
+        self.auimgr.SetFlags(aui.AUI_MGR_DEFAULT)
+
         logopath = os.path.join(root_dir, 'data/logo.ico')
         #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
@@ -38,18 +44,22 @@ class ImagePy(wx.Frame):
         self.SetMenuBar( self.menubar )
         self.shortcut = pluginloader.buildShortcut(self)
         self.SetAcceleratorTable(self.shortcut)
-        sizer = wx.BoxSizer(wx.VERTICAL)
+        #sizer = wx.BoxSizer(wx.VERTICAL)
         self.toolbar = toolsloader.build_tools(self, 'tools')
 
-        #self.toolbar.Realize()
-        #sizertool.Add(self.toolbar, 1, 0, 5 )
-        #sizertool.Add(self.morebar, 0, 0, 5)
-        sizer.Add(self.toolbar, 0, wx.EXPAND, 5 )
-        #sizer.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
-        self.line_color = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+        self.auimgr.AddPane( self.toolbar, wx.aui.AuiPaneInfo() .Top() .CaptionVisible( False ).PinButton( True ).Dock()
+            .PaneBorder( False ).Resizable().BestSize( wx.Size( -1,32 ) ).DockFixed( True ).Layer( 1 ) )
+        
+
+        self.load_aui()
+        
+
+
+        #sizer.Add(self.toolbar, 0, wx.EXPAND, 5 )
+        #self.line_color = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
         #self.line_color.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
-        sizer.AddStretchSpacer(prop=1)
-        sizer.Add(self.line_color, 0, wx.EXPAND |wx.ALL, 0 )
+        #sizer.AddStretchSpacer(prop=1)
+        #sizer.Add(self.line_color, 0, wx.EXPAND |wx.ALL, 0 )
         stapanel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         sizersta = wx.BoxSizer( wx.HORIZONTAL )
         self.txt_info = wx.StaticText( stapanel, wx.ID_ANY, "ImagePy  v0.2", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -60,11 +70,15 @@ class ImagePy(wx.Frame):
         sizersta.Add( self.pro_bar, 0, wx.ALIGN_BOTTOM|wx.BOTTOM|wx.LEFT|wx.RIGHT, 2 )
         stapanel.SetSizer(sizersta)
         stapanel.SetDropTarget(FileDrop())
-        sizer.Add(stapanel, 0, wx.EXPAND, 5 )
-        self.SetSizer( sizer )
+        self.auimgr.AddPane( stapanel, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True ).Dock()
+            .PaneBorder( False ).Resizable().BestSize( wx.Size( -1,-1 ) ).DockFixed( True ).Layer( 1 ) )
+        
+        #sizer.Add(stapanel, 0, wx.EXPAND, 5 )
+        #self.SetSizer( sizer )
 
         self.Centre( wx.BOTH )
         self.Layout()
+        self.auimgr.Update()
         self.Fit()
         self.update = False
 
@@ -72,6 +86,20 @@ class ImagePy(wx.Frame):
         thread = threading.Thread(None, self.hold, ())
         thread.setDaemon(True)
         thread.start()
+
+    def load_aui(self):
+        
+        self.canvasnb = wx.aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
+        self.auimgr.AddPane( self.canvasnb, wx.aui.AuiPaneInfo() .Center() .CaptionVisible( False ).PinButton( True ).Dock()
+            .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ) )
+        self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)
+        self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.on_pageclosed)
+
+    def on_pagevalid(self, event):
+        WindowsManager.add(event.GetEventObject().GetPage(event.GetSelection()))
+        
+    def on_pageclosed(self, event):
+        WindowsManager.remove(event.GetEventObject().GetPage(event.GetSelection()))
 
     def reload_plugins(self):
         for i in range(self.menubar.GetMenuCount()): self.menubar.Remove(0)

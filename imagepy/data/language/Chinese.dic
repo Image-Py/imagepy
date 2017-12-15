@@ -79,11 +79,13 @@ Dilation 3D:三维膨胀
 Distance Transform:距离变换
 Double Threshold:双阈值
 Duplicate:制作副本
+Duplicate With Projection:--
 Edit:编辑
 English:英文
 Erosion 3D:三维腐蚀
 Exit:退出
 Export:导出
+Export To Shapefile:--
 Extend Full:--
 Features:特征提取
 File:文件
@@ -111,6 +113,7 @@ Gaussian 3D:三维高斯模糊
 Gaussian Core:高斯模糊核
 Gaussian Laplace:高斯拉普拉斯
 Gaussian3D:--
+Geo TIF Open:--
 Geometry Analysis:几何分析
 Geometry Analysis 3D:三维几何分析
 Geometry Filter:几何过滤器
@@ -123,6 +126,7 @@ Graph Summarise 3D:拓扑汇总
 Gray Stairs:灰度色阶
 Grays:--
 Green_Fire_Blue:--
+HD Segment Demo:--
 HSV To RGB:HSV转RGB
 Harris:Harris角点描述子
 Help:帮助
@@ -138,7 +142,10 @@ IBook:教程
 ICA:--
 ICA2:--
 ICA3:--
+Ice:--
 Ice Segment:--
+Ice Software Instructions:--
+Ice Static:--
 Image:图像
 Image Calculator:图像计算
 Image Merge:图像融合
@@ -164,6 +171,7 @@ Kitchen Rosenfeld:--
 LUV To RGB:LUV转RGB
 Lab To RGB:Lab转RGB
 Label Image:图像标记
+Land Edge:--
 Language:语言
 Laplace:拉普拉斯
 Laplace Sharp:拉普拉斯锐化
@@ -190,7 +198,10 @@ Median:中值滤波
 Merge RGB Channels:通道融合
 Min:最小值运算
 Minimum:最小值滤波
+Modis Segment Demo:--
 Moravec:--
+Move Detect Demo:--
+Moving Detect:--
 Multiply:乘法
 Network 3D:三维拓扑分析
 New:新建
@@ -294,6 +305,7 @@ Show Holes Count:孔计数示例
 Show How Canny Works:Canny工作原理示例
 Show How Scale Affect:尺寸的影响示例
 Show How To Get Mask:获得掩模示例
+Show Ice Result:--
 Show Intensity Analysis:密度分析示例
 Show Label Mask:标记图像示例
 Show Laplace Filter:拉普拉斯滤波示例

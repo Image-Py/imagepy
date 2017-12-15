@@ -10,18 +10,14 @@ from ..core.manager import WindowsManager
 from ..core.manager import ShotcutManager,PluginsManager
 from .. import IPy, root_dir
 
-class CanvasFrame(wx.Frame):
+class CanvasPanel(wx.Panel):
     """CanvasFrame: derived from the wx.core.Frame"""
     ## TODO: Main frame ???
     def __init__(self, parent=None):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY,
-                            title = wx.EmptyString,
-                            pos = wx.DefaultPosition,
-                            size = wx.Size( -1,-1 ),
-                            style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-        logopath = os.path.join(root_dir, 'data/logo.ico')
+        wx.Frame.__init__ ( self, parent)
+
         self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
-        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
+        
         self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
         WindowsManager.add(self)
         print('frame added')
@@ -65,8 +61,10 @@ class CanvasFrame(wx.Frame):
     def on_idle(self, event):
         if self.ips.update:
             self.set_info(self.ips)
-        if self.canvas.resized:
+        if False and self.canvas.resized:
+            print(self.GetParent())
             self.Fit()
+            #self.GetParent().Fit()
             #print 'fit'
             self.canvas.resized = False
 
@@ -84,7 +82,7 @@ class CanvasFrame(wx.Frame):
         self.Destroy()
 
     def set_info(self, ips):
-        self.SetTitle(ips.title)
+        #self.GetParent().SetTitle(ips.title)
         if ips.tool != None: self.SetTitle(ips.title + ' [CustomTool]')
         stk = 'stack' if ips.is3d else 'list'
         label="{}/{}; {}  {}x{} pixels; {}; {} M".format(ips.cur+1, ips.get_nslices(),
@@ -116,6 +114,21 @@ class CanvasFrame(wx.Frame):
         self.ips.update = 'pix'
         self.on_idle(None)
         self.canvas.on_idle(None)
+
+
+class CanvasFrame(wx.Frame):
+    """CanvasFrame: derived from the wx.core.Frame"""
+    ## TODO: Main frame ???
+    def __init__(self, parent=None):
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY,
+                            title = wx.EmptyString,
+                            pos = wx.DefaultPosition,
+                            size = wx.Size( -1,-1 ),
+                            style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        self.canvaspanel = CanvasPanel(self)
+        logopath = os.path.join(root_dir, 'data/logo.ico')
+        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
+        self.set_ips = self.canvaspanel.set_ips
 
 if __name__=='__main__':
     app = wx.PySimpleApp()

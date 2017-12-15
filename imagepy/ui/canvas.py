@@ -60,7 +60,7 @@ class Canvas (wx.Panel):
         self.oldscale = 1
         self.o = (0,0)
         self.reInitBuffer = True
-        self.resized = True
+        #self.resized = True
         self.ips = None
         self.scrsize = wx.DisplaySize()
         self.s = 0
@@ -98,10 +98,12 @@ class Canvas (wx.Panel):
 
     def initBuffer(self):
         box = self.GetClientSize()
+        #print(self.GetChientSize())
         self.buffer = wx.Bitmap(box.width, box.height)
         self.box = [0,0,box[0],box[1]]
 
     def self_fit(self):
+        #print('self_fit')
         for i in self.scales[6::-1]:
             if self.ips.size[1]*i<=self.scrsize[0]*0.9 and\
             self.ips.size[0]*i<=self.scrsize[1]*0.9:
@@ -125,9 +127,9 @@ class Canvas (wx.Panel):
         self.imgbox[3] = int(self.ips.size[0] * k2+0.5)
         lay(self.box, self.imgbox)
         if self.imgbox[2]<=self.scrsize[0]*0.9 and\
-        self.imgbox[3]<=self.scrsize[1]*0.9:
-            self.SetInitialSize((self.imgbox[2], self.imgbox[3]))
-            self.resized=True
+        self.imgbox[3]<=self.scrsize[1]*0.9:pass
+            #self.SetInitialSize((self.imgbox[2], self.imgbox[3]))
+            #self.resized=True
 
     def move(self, dx, dy):
         if self.imgbox[2]<=self.box[2] and self.imgbox[3]<=self.box[3]:return
@@ -190,6 +192,7 @@ class Canvas (wx.Panel):
         return rstarr
 
     def draw_image(self, dc, ndarr, back, mode, rect, scale, dirty):
+        #print(rect, self.box)
         win = cross(self.box, rect)
         win2 = trans(rect, win)
         sx = sy = 1.0/scale

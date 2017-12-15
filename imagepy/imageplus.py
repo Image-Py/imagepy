@@ -27,6 +27,7 @@ class ImagePlus:
         self.backmode = (0.5, 'Mean')
         self.tool = None
         self.data = None
+        self.info = {}
         self.unit = (1, 'pix')
 
     def set_title(self, title):
