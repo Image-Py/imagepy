@@ -59,7 +59,7 @@ class LanguageManager:
         titles = cls.plgs
         for key in cls.langs:
             dic = cls.langs[key]
-            for i in dic:
+            for i in list(dic.keys()):
                 if not i in titles: del dic[i]
         cls.write()
 

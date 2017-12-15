@@ -2,6 +2,7 @@ import os
 from ..manager import ReaderManager, WriterManager, ViewerManager, ConfigManager
 from ... import IPy, root_dir
 from ..engine import Free, Simple, Macros
+import numpy as np
 
 def show(data, title):
     IPy.show_img(data, title)
@@ -54,10 +55,14 @@ class Reader(Free):
         fn, fe = os.path.splitext(fn)
         read = ReaderManager.get(fe[1:])
         view = ViewerManager.get(fe[1:])
+
+        group, read = (True, read[0]) if isinstance(read, tuple) else (False, read)
         img = read(para['path'])
-        if img.ndim==3 and img.shape[2]==4:
-            img = img[:,:,:3].copy()
-        view([img], fn)
+        if img.dtype==np.uint8 and img.ndim==3 and img.shape[2]==4:
+            img = [img[:,:,:3].copy()]
+        print(img.shape, group)
+        if not group: img = [img]
+        view(img, fn)
 
 class Writer(Simple):
     note = ['all']
@@ -72,4 +77,5 @@ class Writer(Simple):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
         write = WriterManager.get(fe[1:])
-        write(para['path'], ips.img)
+        group, write = (True, write[0]) if isinstance(write, tuple) else (False, write)
+        write(para['path'], imgs if group else ips.img)

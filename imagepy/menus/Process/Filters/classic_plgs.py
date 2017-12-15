@@ -172,23 +172,10 @@ class USM(Filter):
 
     #process
     def run(self, ips, snap, img, para = None):
-        print('USM runing...')
         nimg.gaussian_filter(snap, para['sigma'], output=img)
         img -= snap
         np.multiply(img, -para['weight'], out=img, casting='unsafe')
         img += snap
-        
-class Gaussian3D(Simple):
-    title = 'Gaussian3D'
-    note = ['all', 'stack3d']
-    
-    #parameter
-    para = {'sigma':2}
-    view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
-
-    #process
-    def run(self, ips, imgs, para = None):
-        imgs[:] = nimg.gaussian_filter(imgs, para['sigma'])
 
 plgs = [Uniform, Gaussian, '-', Maximum, Minimum, Median, Percent, '-', 
-    Prewitt, Sobel, Laplace, GaussianLaplace, DOG, '-', LaplaceSharp, USM, '-', Gaussian3D]
+    Prewitt, Sobel, Laplace, GaussianLaplace, DOG, '-', LaplaceSharp, USM]

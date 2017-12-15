@@ -57,16 +57,6 @@ class FindMin(Filter):
         pts = find_maximum(self.ips.img, para['tol'], False)
         self.ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
         self.ips.update = True
-        '''
-        pts = find_maximum(ips.img, para['tol'], not para['mode'])
-        ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
-        markers, n = ndimg.label(ips.get_msk(), np.ones((3,3)))
-        if not para['wsd']:return
-        img = 255-img if not para['mode'] else img
-        labels = watershed(img, markers, watershed_line=True)
-        mask = np.array((labels==0)*255, dtype = np.uint8)
-        IPy.show_img([mask], ips.title+'-watershed')
-        '''
 
 class UPRidge(Filter):
     title = 'Find Riedge'
@@ -83,13 +73,13 @@ class UPRidge(Filter):
         ips.lut = ips.lut.copy()
         return True
     
-    def preview(self, para):
-        self.ips.lut[:] = self.buflut
+    def preview(self, ips, para):
+        ips.lut[:] = self.buflut
         if para['ud']:
-            self.ips.lut[:para['thr']] = [0,255,0]
+            ips.lut[:para['thr']] = [0,255,0]
         else:
-            self.ips.lut[para['thr']:] = [255,0,0]
-        self.ips.update = 'pix'
+            ips.lut[para['thr']:] = [255,0,0]
+        ips.update = 'pix'
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -130,11 +120,12 @@ class ARidge(Filter):
 
 class Watershed(Filter):
     title = 'Find Watershed'
-    note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'preview']
+    note = ['8-bit', 'auto_snap', 'not_channel', 'preview']
     
-    para = {'sigma':1.0, 'thr':0, 'ud':True, 'type':'white line'}
+    para = {'sigma':1.0, 'thr':0, 'con':False, 'ud':True, 'type':'white line'}
     view = [(float, (0,5), 1, 'sigma', 'sigma', 'pix'),
             ('slide', (0,255), 'Low', 'thr', ''),
+            (bool, 'full connectivity', 'con'),
             (bool, 'ascend', 'ud'),
             (list, ['white line', 'gray line', 'white line on ori'], str, 'output', 'type', '')]
 
@@ -143,13 +134,13 @@ class Watershed(Filter):
         ips.lut = ips.lut.copy()
         return True
     
-    def preview(self, para):
-        self.ips.lut[:] = self.buflut
+    def preview(self, ips, para):
+        ips.lut[:] = self.buflut
         if para['ud']:
-            self.ips.lut[:para['thr']] = [0,255,0]
+            ips.lut[:para['thr']] = [0,255,0]
         else:
-            self.ips.lut[para['thr']:] = [255,0,0]
-        self.ips.update = 'pix'
+            ips.lut[para['thr']:] = [255,0,0]
+        ips.update = 'pix'
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -159,7 +150,7 @@ class Watershed(Filter):
 
         markers, n = ndimg.label(mark, np.ones((3,3)), output=np.uint16)
         if not para['ud']:img[:] = 255-img
-        mark = watershed(img, markers)
+        mark = watershed(img, markers, line=True, conn=para['con']+1)
         mark = np.multiply((mark==0), 255, dtype=np.uint8)
         if para['type'] == 'white line':
             img[:] = mark
@@ -173,20 +164,25 @@ class UPWatershed(Filter):
     title = 'Up And Down Watershed'
     note = ['8-bit', 'auto_msk', 'auto_snap', 'preview']
     
-    para = {'thr1':0, 'thr2':255}
+    para = {'thr1':0, 'thr2':255, 'type':'line'}
     view = [('slide', (0,255), 'Low', 'thr1', ''),
-            ('slide', (0,255), 'High', 'thr2', '')]
+            ('slide', (0,255), 'High', 'thr2', ''),
+            (list, ['line', 'up area', 'down area'], str, 'output', 'type', '')]
 
     def load(self, ips):
         self.buflut = ips.lut
         ips.lut = ips.lut.copy()
         return True
     
-    def preview(self, para):
-        self.ips.lut[:] = self.buflut
-        self.ips.lut[:para['thr1']] = [0,255,0]
-        self.ips.lut[para['thr2']:] = [255,0,0]
-        self.ips.update = 'pix'
+    def preview(self, ips, para):
+        ips.lut[:] = self.buflut
+        ips.lut[:para['thr1']] = [0,255,0]
+        ips.lut[para['thr2']:] = [255,0,0]
+        ips.update = 'pix'
+
+    def cancel(self, ips):
+        ips.lut = self.buflut
+        ips.update = 'pix'
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -195,16 +191,22 @@ class UPWatershed(Filter):
         img[snap>para['thr2']] = 2
         img[snap<para['thr1']] = 1
         ips.lut = self.buflut
-        mark = watershed(edge, img.astype(np.uint16))
-        return (mark==2) * 255
+        mark = watershed(edge, img, line=True)
+        if para['type'] == 'line': 
+            img[mark==0] = ips.range[1]
+        elif para['type'] == 'up area':
+            img[mark!=1] = ips.range[1]
+        elif para['type'] == 'down area':
+            img[mark!=2] = ips.range[1]
 
 class ROIWatershed(Filter):
     title = 'Watershed With ROI'
-    note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel']
+    note = ['8-bit', 'auto_snap', 'not_channel']
     
-    para = {'sigma':0, 'type':'white line', 'ud':True}
+    para = {'sigma':0, 'type':'white line', 'con':False, 'ud':True}
     view = [#(int, (0,10), 0,  'sigma', 'sigma', 'pix'),
             #(int, (0, 10), 0,  'gradient', 'gdt', ''),
+            (bool, 'full connectivity', 'con'),
             (bool, 'ascend', 'ud'),
             (list, ['white line', 'gray line', 'white line on ori'], str, 'output', 'type', '')]
     
@@ -215,7 +217,7 @@ class ROIWatershed(Filter):
 
         markers, n = ndimg.label(ips.get_msk(), np.ones((3,3)), output=np.uint16)
         if not para['ud']:img[:] = 255-img
-        mark = watershed(img, markers)
+        mark = watershed(img, markers, line=True, conn=para['con']+1)
         mark = np.multiply((mark==0), 255, dtype=np.uint8)
 
         if para['type'] == 'white line':
@@ -223,7 +225,6 @@ class ROIWatershed(Filter):
         if para['type'] == 'gray line':
             np.minimum(snap, mark, out=img)
         if para['type'] == 'white line on ori':
-            #img //=2
             np.maximum(snap, mark, out=img)
 
 plgs = [FindMax, FindMin, IsoLine, '-', UPRidge, ARidge, '-', Watershed, UPWatershed, ROIWatershed]

@@ -1,1 +1,1 @@
-catlog = ['File','Edit','Image','Process','Selection', 'Analysis','Kit3D', 'Plugins','Window','Skimage','Opencv','Help']
+catlog = ['File','Edit','Image','Process','Selection', 'Analysis','Kit3D', 'Plugins','Window','Skimage','Opencv','ITK','Help']

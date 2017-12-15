@@ -55,21 +55,21 @@ class Plugin(Filter):
         self.dialog = ThresholdDialog(IPy.get_window(), self.title)
         hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
         self.dialog.init_view(self.view, self.para, hist, self.ips.range)
-        self.dialog.set_handle(lambda x:self.preview(self.para))
+        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
         self.dialog.on_ok = lambda : self.ok(self.ips)
         self.dialog.on_cancel = lambda : self.cancel(self.ips)
         self.dialog.Show()
 
-    def preview(self, para):
-        self.ips.lut[:] = self.lut
+    def preview(self, ips, para):
+        ips.lut[:] = self.lut
         thr1 = int((para['thr1']-self.arange[0])*(
             255.0/max(1, self.arange[1]-self.arange[0])))
         thr2 = int((para['thr2']-self.arange[0])*(
             255.0/max(1, self.arange[1]-self.arange[0])))
         # print(thr1, thr2)
-        self.ips.lut[:thr1] = [0,255,0]
-        self.ips.lut[thr2:] = [255,0,0]
-        self.ips.update = 'pix'
+        ips.lut[:thr1] = [0,255,0]
+        ips.lut[thr2:] = [255,0,0]
+        ips.update = 'pix'
     
     #process
     def run(self, ips, snap, img, para = None):

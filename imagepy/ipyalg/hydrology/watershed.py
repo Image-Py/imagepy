@@ -1,7 +1,6 @@
 import numpy as np
 from numba import jit
 from scipy.ndimage import label, generate_binary_structure
-from skimage.morphology import watershed as skwsh
 from scipy.misc import imread, imsave
 
 def neighbors(shape, conn=1):
@@ -15,7 +14,7 @@ def neighbors(shape, conn=1):
     return np.dot(idx, acc[::-1])
 
 @jit
-def step(img, msk, pts, s, level, up, nbs):
+def step(img, msk, line, pts, s, level, up, nbs):
     cur = 0
     while cur<s:
         p = pts[cur]
@@ -30,15 +29,15 @@ def step(img, msk, pts, s, level, up, nbs):
                     s, cur = clear(pts, s, cur)
                 pts[s] = cp
                 s+=1
+                
             elif msk[cp] == msk[p]:
                 continue
             elif msk[cp] == 0xffff:
-                msk[cp] = msk[p]
                 continue
             elif msk[cp] == 0xfffe:
                 continue
-            else:
-                msk[cp] = 0xfffe
+                
+            elif line : msk[cp] = 0xfffe
         pts[cur] = -1
         cur+=1
     return cur
@@ -70,17 +69,23 @@ def collect(img, mark, nbs, pts):
 
 @jit
 def erose(mark):
-    
     for i in range(len(mark)):
         if mark[i]>0xfff0:mark[i]=0
-        
-def watershed(img, mark, conn=1, up=True):
+
+def buffer(img, dtype):
+    buf = np.zeros(tuple(np.array(img.shape)+2), dtype=dtype)
+    buf[tuple([slice(1,-1)]*buf.ndim)] = img
+    return buf
+
+def watershed(img, mark, conn=1, line=False, up=True):
     maxv = img.max(); minv = img.min();
     if img.dtype != np.uint8:
         img = ((img-minv)*(255/(maxv-minv))).astype(np.uint8)
+    img = buffer(img, np.uint8)
+    mark = buffer(mark, np.uint16)
     ndim = img.ndim
     for n in range(ndim):
-        idx = [slice(None) if i==n else [0,-1] for i in range(ndim)]
+        idx = [slice(None) if i!=n else [0,-1] for i in range(ndim)]
         mark[tuple(idx)] = 0xffff
     
     nbs = neighbors(img.shape, conn)
@@ -93,15 +98,9 @@ def watershed(img, mark, conn=1, up=True):
     for level in range(len(bins))[::1 if up else -1]:
         if bins[level]==0:continue
         s, c = clear(pts, s, 0)
-        s = step(img, mark1d, pts, s, level, up, nbs)
-
-    conner = [[v>>i&1 for i in range(ndim)] for v in range(2**ndim)]
-    con1 = np.array(conner, dtype=np.int8)-1
-    con2 = np.array(conner, dtype=np.int8)*3-2
-    mark[tuple(con1.T)] = mark[tuple(con2.T)]
-                      
-    erose(mark1d)
-    return mark
+        s = step(img, mark1d, line, pts, s, level, up, nbs)
+    if line:erose(mark1d)
+    return mark[tuple([slice(1,-1)]*ndim)]
     
 if __name__ == '__main__':
     import matplotlib.pyplot as plt

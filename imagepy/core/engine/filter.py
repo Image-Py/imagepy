@@ -26,13 +26,18 @@ def process_channels(plg, ips, src, des, para):
 
 def process_one(plg, ips, src, img, para, callafter=None):
     TaskManager.add(plg)
-    transint = '2int' in plg.note and ips.dtype == np.uint8
+    transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
-    if transint: buf =  img.astype(np.int32)
-    if transfloat: buf = img.astype(np.float32)
+    if transint: 
+        buf = img.astype(np.int32)
+        src = src.astype(np.int32)
+    if transfloat: 
+        buf = img.astype(np.float32)
+        src = src.astype(np.float32)
     rst = process_channels(plg, ips, src, buf if transint or transfloat else img, para)
     if not img is rst and not rst is None:
-        np.clip(rst, ips.range[0], ips.range[1], out=img)
+        imgrange = {np.uint8:(0,255), np.uint16:(0,65535)}[img.dtype.type]
+        np.clip(rst, imgrange[0], imgrange[1], out=img)
     if 'auto_msk' in plg.note and not ips.get_msk() is None:
         msk = True ^ ips.get_msk()
         img[msk] = src[msk]
@@ -44,10 +49,16 @@ def process_stack(plg, ips, src, imgs, para):
     TaskManager.add(plg)
     from time import time, sleep
     start = time()
-    transint = '2int' in plg.note and ips.dtype == np.uint8
+    transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
-    if transint: buf =  imgs[0].astype(np.int32)
-    if transfloat: buf = imgs[0].astype(np.float32)
+    if transint: 
+        buf =  imgs[0].astype(np.int32)
+        src = src.astype(np.int32)
+    elif transfloat: 
+        buf = imgs[0].astype(np.float32)
+        src = src.astype(np.float32)
+    else: src = src * 1
+
     for i,n in zip(imgs,list(range(len(imgs)))):
         #sleep(0.5)
         plg.progress(n, len(imgs))
@@ -55,18 +66,20 @@ def process_stack(plg, ips, src, imgs, para):
         if transint or transfloat: buf[:] = i
         rst = process_channels(plg, ips, src, buf if transint or transfloat else i, para)
         if not i is rst and not rst is None:
-            np.clip(rst, ips.range[0], ips.range[1], out=i)
+            imgrange = {np.uint8:(0,255), np.uint16:(0,65535)}[i.dtype.type]
+            np.clip(rst, imgrange[0], imgrange[1], out=i)
         if 'auto_msk' in plg.note and not ips.get_msk() is None:
             msk = True ^ ips.get_msk()
             i[msk] = src[msk]
     ips.update = 'pix'
     TaskManager.remove(plg)
     
+
 class Filter:
     title = 'Filter'
     modal = True
     note = []
-    'all, 8_bit, 16_bit, rgb, float, not_channel, not_slice, req_roi, auto_snap, auto_msk, preview, 2int, 2float'
+    'all, 8-bit, 16-bit, int, rgb, float, not_channel, not_slice, req_roi, auto_snap, auto_msk, preview, 2int, 2float'
     para = None
     view = None
     prgs = (None, 1)
@@ -82,7 +95,7 @@ class Filter:
     def show(self):
         self.dialog = ParaDialog(WindowsManager.get(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
-        self.dialog.set_handle(lambda x:self.preview(self.para))
+        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
         if self.modal: return self.dialog.ShowModal()
         self.dialog.on_ok = lambda : self.ok(self.ips)
         self.dialog.on_cancel = lambda : self.cancel(self.ips)
@@ -107,15 +120,18 @@ class Filter:
                 IPy.alert('do not surport 8-bit image')
                 return False
             elif ips.get_imgtype()=='16-bit' and not '16-bit' in note:
-                IPy.alert('do not surport 16-bit image')
+                IPy.alert('do not surport 16-bit uint image')
                 return False
-            elif ips.get_imgtype()=='float' and not 'float' in note:
+            elif ips.get_imgtype()=='32-int' and not 'int' in note:
+                IPy.alert('do not surport 32-bit int uint image')
+                return False
+            elif 'float' in ips.get_imgtype() and not 'float' in note:
                 IPy.alert('do not surport float image')
                 return False
         return True
         
-    def preview(self, para):
-        process_one(self, self.ips, self.ips.snap, self.ips.img, para, None)
+    def preview(self, ips, para):
+        process_one(self, ips, ips.snap, ips.img, para, None)
         
     def load(self, ips):return True
           
@@ -131,14 +147,6 @@ class Filter:
             print(111)
             threading.Thread(target = process_one, args = 
                 (self, ips, ips.snap, ips.img, para, callafter)).start()
-
-            '''
-            run = lambda p=para:process_one(self, ips, ips.snap, ips.img, p, True)
-
-            thread = threading.Thread(None, run, ())
-            thread.start()
-            if not thd:thread.join()
-            '''
             if win!=None: win.append('{}>{}'.format(self.title, para))
         elif ips.get_nslices()>1:
             has, rst = 'stack' in para, None
@@ -151,15 +159,6 @@ class Filter:
                 print(222)
                 threading.Thread(target = process_stack, args = 
                     (self, ips, ips.snap, ips.imgs, para)).start()
-                '''
-                run = lambda p=para:process_stack(self, ips, ips.snap, ips.imgs, p)
-                
-                print( 'new thread')
-                thread = threading.Thread(None, run, ())
-                thread.start()
-                if not thd:thread.join()
-                '''
-                
                 if win!=None: win.append('{}>{}'.format(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
@@ -167,13 +166,6 @@ class Filter:
                 print(333)
                 threading.Thread(target = process_one, args = 
                     (self, ips, ips.snap, ips.img, para, callafter)).start()
-                ''' multithread
-                run = lambda p=para:process_one(self, ips, ips.snap, ips.img, p, True)
-                
-                thread = threading.Thread(None, run, ())
-                thread.start()
-                if thd:thread.join()
-                '''
                 if win!=None: win.append('{}>{}'.format(self.title, para))
             elif rst == 'cancel': pass
         #ips.update = 'pix'
