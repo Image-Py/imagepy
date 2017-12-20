@@ -59,7 +59,7 @@ class Reader(Free):
         group, read = (True, read[0]) if isinstance(read, tuple) else (False, read)
         img = read(para['path'])
         if img.dtype==np.uint8 and img.ndim==3 and img.shape[2]==4:
-            img = [img[:,:,:3].copy()]
+            img = img[:,:,:3].copy()
         print(img.shape, group)
         if not group: img = [img]
         view(img, fn)
