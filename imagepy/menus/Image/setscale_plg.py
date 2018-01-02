@@ -38,7 +38,7 @@ class Plugin(Simple):
     def show(self):
         self.dialog = ScaleDialog(IPy.get_window(), self.title)
         self.dialog.init_view(self.view, self.para)
-        self.dialog.set_handle(lambda x:self.preview(self.para))
+        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
         return self.dialog.ShowModal()
 
     def load(self, ips):
