@@ -18,7 +18,7 @@ class Open(fileio.Reader):
 
 	#process
 	def run(self, para = None):
-		imgs = imread(para['path'])
+		imgs = imread(para['path']).transpose(2,0,1)
 		fp, fn = os.path.split(para['path'])
 		fn, fe = os.path.splitext(fn) 
 		IPy.show_img(imgs, fn)

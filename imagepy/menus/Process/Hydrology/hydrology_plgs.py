@@ -215,7 +215,7 @@ class ROIWatershed(Filter):
         #gradient = rank.gradient(denoised, disk(para['gdt']))
         ndimg.gaussian_filter(snap, para['sigma'], output=img)
 
-        markers, n = ndimg.label(ips.get_msk(), np.ones((3,3)), output=np.uint16)
+        markers, n = ndimg.label(ips.get_msk(), np.ones((3,3)), output=np.uint32)
         if not para['ud']:img[:] = 255-img
         mark = watershed(img, markers, line=True, conn=para['con']+1)
         mark = np.multiply((mark==0), 255, dtype=np.uint8)

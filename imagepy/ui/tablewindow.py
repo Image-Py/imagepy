@@ -101,9 +101,9 @@ class TableLog(wx.Frame):
         
     def save_tab(self, tablepath, sep):
         with open(tablepath,"w") as f:
-            f.write(sep.join([str(col) for col in self.cols])+'\r\n')
+            f.write(sep.join([str(col) for col in self.cols])+'\n')
             for line in self.data:
-                f.write(sep.join([str(item) for item in line])+'\r\n')
+                f.write(sep.join([str(item) for item in line])+'\n')
 
     def _OnSave(self,typename="Csv",sep=","):
         dialog=wx.FileDialog(self,typename,style=wx.FD_SAVE)
