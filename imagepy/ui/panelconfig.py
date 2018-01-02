@@ -53,8 +53,12 @@ class ParaDialog (wx.Dialog):
     def parse(self, para) :
         self.funcs[para[0]](*para[1:])
 
-    def add_ctrl(self, key, ctrl):
+    def add_ctrl(self, ctrl, key=None):
         self.lst.Add( ctrl, 0, wx.EXPAND, 5 )
+        if not key is None:
+            self.ctrl_dic[key] = ctrl
+            ctrl.set_handle(lambda x : self.para_changed(key))
+
 
     def add_num(self, rang, accu, title, key, unit):
         sizer = wx.BoxSizer( wx.HORIZONTAL )
@@ -218,7 +222,7 @@ class ParaDialog (wx.Dialog):
             if p in self.ctrl_dic:
                 para[p] = self.ctrl_dic[p].GetValue()
         self.para_check(para, key)
-        sta = sum([i==None for i in list(para.values())])==0
+        sta = sum([i is None for i in list(para.values())])==0
         self.btn_OK.Enable(sta)
         if not sta: return
         if 'preview' not in self.ctrl_dic:return

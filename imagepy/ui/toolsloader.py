@@ -26,7 +26,7 @@ def build_tools(parent, toolspath):
     return toolsbar#, btn   
 
 def buildToolsBar(parent, datas):    
-    box = wx.BoxSizer( wx.HORIZONTAL )
+    box = wx.BoxSizer( wx.VERTICAL )
     #toolsbar =  wx.ToolBar( parent, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TB_HORIZONTAL ) 
     toolsbar = wx.Panel( parent, wx.ID_ANY, 
                          wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )

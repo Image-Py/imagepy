@@ -47,8 +47,8 @@ class ImagePy(wx.Frame):
         #sizer = wx.BoxSizer(wx.VERTICAL)
         self.toolbar = toolsloader.build_tools(self, 'tools')
 
-        self.auimgr.AddPane( self.toolbar, wx.aui.AuiPaneInfo() .Top() .CaptionVisible( False ).PinButton( True ).Dock()
-            .PaneBorder( False ).Resizable().BestSize( wx.Size( -1,32 ) ).DockFixed( True ).Layer( 1 ) )
+        self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Left() .PinButton( True )
+            .Dock().Resizable().FloatingSize( wx.Size( 48,520 ) ).Layer( 1 ) )
         
 
         self.load_aui()
