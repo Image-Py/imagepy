@@ -64,10 +64,19 @@ class FillHole(Simple):
 
 class Skeleton3D(Simple):
     title = 'Skeleton 3D'
-    note = ['8-bit', 'stack3d']
+    note = ['all', 'stack3d']
 
     #process
     def run(self, ips, imgs, para = None):
-        imgs[:] = skeletonize_3d(imgs>0)
+        imgs[skeletonize_3d(imgs>0)==0] = 0
 
-plgs = [Dilation, Erosion, Opening, Closing, '-', FillHole, Skeleton3D]
+class Distance3D(Simple):
+    title = 'Distance 3D'
+    note = ['all', 'stack3d']
+
+    #process
+    def run(self, ips, imgs, para = None):
+        dismap = ndimg.distance_transform_edt(imgs>0)
+        imgs[:] = np.clip(dismap, ips.range[0], ips.range[1])
+
+plgs = [Dilation, Erosion, Opening, Closing, '-', FillHole, Skeleton3D, '-', Distance3D]

@@ -18,7 +18,7 @@ def step(img, msk, line, pts, s, level, up, nbs):
     cur = 0
     while cur<s:
         p = pts[cur]
-        if msk[p] == 0xfffe or up and img[p]>level or not up and img[p]<level:
+        if msk[p] == 0xfffffffe or up and img[p]>level or not up and img[p]<level:
             cur += 1
             continue
         for dp in nbs:
@@ -32,12 +32,12 @@ def step(img, msk, line, pts, s, level, up, nbs):
                 
             elif msk[cp] == msk[p]:
                 continue
-            elif msk[cp] == 0xffff:
+            elif msk[cp] == 0xffffffff:
                 continue
-            elif msk[cp] == 0xfffe:
+            elif msk[cp] == 0xfffffffe:
                 continue
                 
-            elif line : msk[cp] = 0xfffe
+            elif line : msk[cp] = 0xfffffffe
         pts[cur] = -1
         cur+=1
     return cur
@@ -58,7 +58,7 @@ def collect(img, mark, nbs, pts):
     cur = 0
     for p in range(len(mark)):
         bins[img[p]] += 1
-        if mark[p]==0xffff: continue # edge
+        if mark[p]==0xffffffff: continue # edge
         if mark[p]==0: continue      # zero
         for dp in nbs:
             if mark[p+dp]!=mark[p]:
@@ -70,7 +70,7 @@ def collect(img, mark, nbs, pts):
 @jit
 def erose(mark):
     for i in range(len(mark)):
-        if mark[i]>0xfff0:mark[i]=0
+        if mark[i]>0xfffffff0:mark[i]=0
 
 def buffer(img, dtype):
     buf = np.zeros(tuple(np.array(img.shape)+2), dtype=dtype)
@@ -82,11 +82,11 @@ def watershed(img, mark, conn=1, line=False, up=True):
     if img.dtype != np.uint8:
         img = ((img-minv)*(255/(maxv-minv))).astype(np.uint8)
     img = buffer(img, np.uint8)
-    mark = buffer(mark, np.uint16)
+    mark = buffer(mark, np.uint32)
     ndim = img.ndim
     for n in range(ndim):
         idx = [slice(None) if i!=n else [0,-1] for i in range(ndim)]
-        mark[tuple(idx)] = 0xffff
+        mark[tuple(idx)] = 0xffffffff
     
     nbs = neighbors(img.shape, conn)
     img = img.ravel()
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     from skimage.data import coins
     coins = coins()
     dem = sobel(coins)
-    markers = np.zeros_like(coins, dtype=np.uint16)
+    markers = np.zeros_like(coins, dtype=np.uint32)
     markers[coins < 30] = 1
     markers[coins > 150] = 2
     plt.imshow(markers)

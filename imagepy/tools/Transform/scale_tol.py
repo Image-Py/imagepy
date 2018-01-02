@@ -30,7 +30,7 @@ class ScaleTool(Tool):
         print(self.moving)
         
     def mouse_up(self, ips, x, y, btn, **key):
-        if self.moving : self.plg.preview(self.para)
+        if self.moving : self.plg.preview(self.ips, self.para)
         
     def mouse_move(self, ips, x, y, btn, **key):
         lim = 5.0/key['canvas'].get_scale()

@@ -48,7 +48,7 @@ class Plugin(Filter):
         self.dialog = ThresholdDialog(IPy.get_window(), self.title)
         hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
         self.dialog.init_view(self.view, self.para, hist)
-        self.dialog.set_handle(lambda x:self.preview(self.para))
+        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
         return self.dialog.ShowModal()
 
     #process
