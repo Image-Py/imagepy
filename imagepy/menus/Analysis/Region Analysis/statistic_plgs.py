@@ -65,6 +65,7 @@ class RegionStatistic(Simple):
             msks = [ips.img]
         else: 
             msks = ips.imgs
+            imgs = inten.imgs
             if len(msks)==1:
                 msks *= len(imgs)
         buf = imgs[0].astype(np.uint16)
