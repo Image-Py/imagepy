@@ -101,8 +101,7 @@ class Simple:
         if not self.check(self.ips):return
         if not self.load(self.ips):return
         if para!=None or self.view==None:
-            if self.show() == wx.ID_OK:
-                self.ok(self.ips, para, callback)
+            self.ok(self.ips, para, callback)
         elif self.modal:
             if self.show() == wx.ID_OK:
                 self.ok(self.ips, para, callback)
