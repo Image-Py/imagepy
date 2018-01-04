@@ -8,7 +8,7 @@ class HistCanvas(wx.Panel):
                             pos = wx.DefaultPosition, size = wx.Size(256,81), 
                             style = wx.TAB_TRAVERSAL )
         self.init_buf()
-        self.his = None
+        self.hist = None
         self.update = False
         self.x1, self.x2 = 0, 255
         self.Bind(wx.EVT_SIZE, self.on_size)  

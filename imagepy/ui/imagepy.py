@@ -9,7 +9,7 @@ import time, threading
 from .. import IPy, root_dir
 # TODO: @2017.05.01
 #from ui import pluginloader, toolsloader
-from . import pluginloader, toolsloader
+from . import pluginloader, toolsloader, widgetsloader
 from ..core.manager import ConfigManager, PluginsManager, TaskManager, WindowsManager
 from ..core.engine import Macros
 import wx.aui as aui
@@ -50,7 +50,9 @@ class ImagePy(wx.Frame):
         self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Left() .PinButton( True )
             .Dock().Resizable().FloatingSize( wx.Size( 48,520 ) ).Layer( 1 ) )
         
-
+        self.widgets = widgetsloader.build_widgets(self, 'widgets')
+        self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right() .PinButton( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) )
+        
         self.load_aui()
         
 

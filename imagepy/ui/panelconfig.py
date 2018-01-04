@@ -57,7 +57,7 @@ class ParaDialog (wx.Dialog):
         self.lst.Add( ctrl, 0, wx.EXPAND, 5 )
         if not key is None:
             self.ctrl_dic[key] = ctrl
-            ctrl.set_handle(lambda x : self.para_changed(key))
+            ctrl.set_handle(lambda x=None : self.para_changed(key))
 
 
     def add_num(self, rang, accu, title, key, unit):

@@ -157,6 +157,58 @@ def build_tools(path, err=None):
     if root : first[1]=1
     return (pg, subtree)
     
+def extend_widgets(path, lst, err):
+    rst = []
+    for i in lst:
+        try:
+            rpath = path.replace('/', '.').replace('\\','.')
+            #rpath = rpath[rpath.index('imagepy.'):]
+            plg = __import__('imagepy.'+rpath+'.'+i,'','',[''])
+            rst.append(plg.Plugin)
+        except Exception as e:
+            err.append((path, i, sys.exc_info()[1]))
+    #for i in rst:ToolsManager.add(i[0])
+    return rst
+            
+def sort_widgets(catlog, lst):
+    rst = []
+    for i in catlog:
+        if i=='-':rst.append('-')
+        for j in lst:
+            if j[:-3]==i or j[0].title==i:
+                lst.remove(j)
+                rst.append(j)
+    rst.extend(lst)
+    return rst
+    
+def build_widgets(path, err=None):
+    root = err==None
+    if err==None:err=[]
+    subtree = []
+    cont = os.listdir(os.path.join(root_dir, path))
+    for i in cont:
+        subp = os.path.join(path,i)
+        if root and os.path.isdir(os.path.join(root_dir, subp)):
+            sub = build_widgets(subp, err)
+            if len(sub)!=0:subtree.append(sub)
+        elif not root:
+            if i[len(i)-7:] in ('_wgt.py', 'wgts.py'):
+                subtree.append(i[:-3])
+                print('====', subtree)
+    if len(subtree)==0:return []
+    rpath = path.replace('/', '.').replace('\\','.')
+    #rpath = rpath[rpath.index('imagepy.'):]
+    pg = __import__('imagepy.' + rpath,'','',[''])
+    pg.title = os.path.basename(path)
+    if hasattr(pg, 'catlog'):
+        subtree = sort_widgets(pg.catlog, subtree)
+    if not root:subtree = extend_widgets(path, subtree, err)    
+    elif first[1]==0 and len(err)>0: 
+        IPy.write('widgets not loaded:')
+        for i in err: IPy.write('>>> %-50s%-20s%s'%i)
+    if root : first[1]=1
+    return (pg, subtree)
+
 if __name__ == "__main__":
     print (os.getcwd())
     os.chdir('../../')
