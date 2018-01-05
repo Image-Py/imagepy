@@ -100,13 +100,15 @@ class Simple:
         #print self.title, para
         if not self.check(self.ips):return
         if not self.load(self.ips):return
+
         if para!=None or self.view==None:
-            self.ok(self.ips, para, callback)
+            if not self.__class__.show is Simple.show:
+                if self.show() == wx.ID_OK:
+                    self.ok(self.ips, para, callback)
+            else: self.ok(self.ips, para, callback)
         elif self.modal:
             if self.show() == wx.ID_OK:
                 self.ok(self.ips, para, callback)
             else:self.cancel(ips)
             self.dialog.Destroy()
         else: self.show()
-
-            
