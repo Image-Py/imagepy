@@ -5,16 +5,17 @@ from scipy import interpolate
 
 class CurvePanel(wx.Panel):
     """ HistCanvas: diverid from wx.core.Panel """
-    def __init__(self, parent ):
+    def __init__(self, parent, l=255):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
-                            pos = wx.DefaultPosition, size = wx.Size(281,281), 
+                            pos = wx.DefaultPosition, size = wx.Size(l+25, l+25), 
                             style = wx.TAB_TRAVERSAL )
         self.init_buf()
-        self.offset = (20,5)
+        self.offset = (20, 5)
+        self.l, self.k = l, l/255.0
         self.idx = -1
         self.hist = None
         self.update = False
-        self.pts = [(0,0), (255,255)]
+        self.pts = [(0,0), (255, 255)]
         self.Bind(wx.EVT_SIZE, self.on_size)  
         self.Bind(wx.EVT_IDLE, self.on_idle)
         self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -22,8 +23,14 @@ class CurvePanel(wx.Panel):
         self.Bind( wx.EVT_LEFT_UP, self.on_lu )
         self.Bind( wx.EVT_MOTION, self.on_mv )
         self.Bind( wx.EVT_RIGHT_DOWN, self.on_rd )
-        self.handle = self.handle_
 
+    @classmethod
+    def lookup(cls, pts):
+        x, y = np.array(pts).T
+        kind = 'linear' if len(pts)==2 else 'quadratic'
+        f = interpolate.interp1d(x, y, kind=kind)
+        return np.clip(f(np.arange(256)),0,255).astype(np.uint8)
+            
     def init_buf(self):
         box = self.GetClientSize()
         self.buffer = wx.Bitmap(box.width, box.height)
@@ -43,7 +50,8 @@ class CurvePanel(wx.Panel):
         return np.argmin(dis)
 
     def on_ld(self, event):
-        x,y = event.GetX()-self.offset[0], event.GetY()-self.offset[1]
+        x = (event.GetX()-self.offset[0])/self.k 
+        y = (event.GetY()-self.offset[1])/self.k
         self.idx = self.pick(x, 255-y)
         if self.idx==-1: 
             self.pts.append((x, 255-y))
@@ -55,7 +63,8 @@ class CurvePanel(wx.Panel):
         self.idx = -1
 
     def on_rd(self, event):
-        x,y = event.GetX()-self.offset[0], event.GetY()-self.offset[1]
+        x = (event.GetX()-self.offset[0])/self.k 
+        y = (event.GetY()-self.offset[1])/self.k
         self.idx = self.pick(x, 255-y)
         if self.idx==-1: return
         if not self.pts[self.idx][0] in (0, 255):
@@ -65,7 +74,8 @@ class CurvePanel(wx.Panel):
             self.handle()
 
     def on_mv(self, event):
-        x,y = event.GetX()-self.offset[0], event.GetY()-self.offset[1]
+        x = (event.GetX()-self.offset[0])/self.k 
+        y = (event.GetY()-self.offset[1])/self.k
         if self.pick(x, 255-y)!=-1:
             self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
         else: self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
@@ -84,7 +94,8 @@ class CurvePanel(wx.Panel):
         wx.BufferedPaintDC(self, self.buffer)
         
     def set_hist(self, hist):
-        self.hist = (hist*255/hist.max()).astype(np.uint8)
+        if hist is None:self.hist=None
+        else:self.hist = (hist*self.l/hist.max()).astype(np.uint8)
         self.update = True
         
     def set_pts(self, pts):
@@ -101,46 +112,51 @@ class CurvePanel(wx.Panel):
         # the main draw process 
         dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID))
         if not self.hist is None:      
-            for i in range(256):
-                dc.DrawLine(i+ox,256+oy,i+ox,256-self.hist[i]+oy)
+            for i in np.linspace(0,self.l,256).astype(np.int16):
+                dc.DrawLine(i+ox,self.l+1+oy,i+ox,self.l+1-self.hist[i]+oy)
         x, y = np.array(self.pts).T
         kind = 'linear' if len(self.pts)==2 else 'quadratic'
         f = interpolate.interp1d(x, y, kind=kind)
-        ys = np.clip(f(np.arange(256)), 0, 255)
-        lut = np.clip(f(np.arange(256)), 0, 255)
+        ys = np.clip(f(np.linspace(0, 255, self.l+1)), 0, 255)
         if ys is None:return
         dc.SetBrush(wx.Brush((0,0,0)))
         dc.SetPen(wx.Pen((0,0,0), width=1))
-        for i in self.pts: dc.DrawCircle(i[0]+ox, 255-i[1]+oy, 2)
-        dc.DrawPointList(list(zip(np.arange(256)+ox, 255-ys+oy)))
+        for i in self.pts: 
+            dc.DrawCircle(round(i[0]*self.k+ox), round(self.l+1-i[1]*self.k+oy), 2)
+        xs, ys = np.linspace(0,self.l, self.l+1)+ox, self.l+1-ys*self.k+oy
+        dc.DrawPointList(list(zip(xs.round(), ys.round())))
 
         dc.SetPen(wx.Pen((0,0,0), width=1, style=wx.SOLID))
-        for i in range(0,257, 64):
-            dc.DrawLine(0+ox, i+oy, 256+ox, i+oy)
-            dc.DrawLine(i+ox, 0+oy, i+ox, 256+oy)
+        for i in np.linspace(0, self.l+1, 5):
+            dc.DrawLine(0+ox, i+oy, self.l+1+ox, i+oy)
+            dc.DrawLine(i+ox, 0+oy, i+ox, self.l+1+oy)
         dc.SetBrush(wx.Brush((0,0,0), wx.BRUSHSTYLE_TRANSPARENT))
-        arr = np.zeros((10,256,3),dtype=np.uint8)
-        arr[:] = np.vstack([np.arange(256)]*3).T
-        bmp = wx.Bitmap.FromBuffer(256,10, memoryview(arr))
-        dc.DrawBitmap(bmp, 0+ox, 260+oy)
-        dc.DrawRectangle(0+ox, 260+oy, 256, 10)
+        arr = np.zeros((10,self.l+1,3),dtype=np.uint8)
+        arr[:] = np.vstack([np.linspace(0,255,self.l+1)]*3).T
+        bmp = wx.Bitmap.FromBuffer(self.l+1,10, memoryview(arr))
+        dc.DrawBitmap(bmp, 0+ox, self.l+6+oy)
+        dc.DrawRectangle(0+ox, self.l+6+oy, self.l+1, 10)
         arr = arr.transpose((1,2,0))[::-1].copy()
-        bmp = wx.Bitmap.FromBuffer(10, 256, memoryview(arr))
+        bmp = wx.Bitmap.FromBuffer(10, self.l+1, memoryview(arr))
         dc.DrawBitmap(bmp, -15+ox, 0+oy)
-        dc.DrawRectangle(-15+ox, 0+oy, 10, 256)
+        dc.DrawRectangle(-15+ox, 0+oy, 10, self.l+1)
         
-    def handle_(self):pass
+    def handle(self):pass
     
     def set_handle(self, handle):self.handle = handle
 
-    def SetValue(self, value):pass
+    def SetValue(self, value=None):
+        if not value is None:
+            self.pts = value
+        else: self.pts = [(0,0), (255, 255)]
+        self.update = True
 
     def GetValue(self): return sorted(self.pts)
 
 if __name__ == '__main__':
     app = wx.PySimpleApp()
     frame = wx.Frame(None)
-    hist = CurvePanel(frame)
+    hist = CurvePanel(frame, l=255)
     frame.Fit()
     frame.Show(True)
     hist.set_hist(np.random.rand(256)+2)

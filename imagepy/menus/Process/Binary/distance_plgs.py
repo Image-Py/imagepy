@@ -75,7 +75,7 @@ class Voronoi(Filter):
 		dist = ndimg.distance_transform_edt(snap)
 		markers, n = ndimg.label(snap==0, np.ones((3,3)))
 
-		line = watershed(dist, markers)
+		line = watershed(dist, markers, line=True)
 		if para['type']=='segment with ori':
 			img[:] = np.where(line==0, 0, snap)
 		if para['type']=='segment only':

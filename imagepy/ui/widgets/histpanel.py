@@ -39,10 +39,7 @@ class HistCanvas(wx.Panel):
         self.x1, self.x2 = x1, x2
         self.update = True
         
-    def draw(self):
-        if self.hist is None:
-            return
-        
+    def draw(self):        
         # get client device context buffer
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
         dc.Clear()
@@ -50,9 +47,10 @@ class HistCanvas(wx.Panel):
     
         # the main draw process 
         print("drawing histogram")
-        dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID))        
-        for i in range(256):
-            dc.DrawLine(i,80,i,80-self.hist[i])            
+        dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID))    
+        if not self.hist is None:
+            for i in range(256):
+                dc.DrawLine(i,80,i,80-self.hist[i])            
         dc.SetPen(wx.Pen((0,0,0), width=1, style=wx.SOLID))
         dc.DrawLine(self.x1, 80, self.x2, 0)
         dc.DrawLines([(0,0),(255,0),(255,80),(0,80),(0,0)])

@@ -7,11 +7,11 @@ class CMapPanel(wx.Panel):
     """ HistCanvas: diverid from wx.core.Panel """
     def __init__(self, parent ):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
-                            pos = wx.DefaultPosition, size = wx.Size(266,30), 
+                            pos = wx.DefaultPosition, size = wx.Size(255,30), 
                             style = wx.TAB_TRAVERSAL )
         self.init_buf()
-        self.offset = (5,5)
-        self.cmap = np.vstack([np.arange(256)]*3).T
+        self.offset = (0,0)
+        self.cmap = np.vstack([np.arange(256)]*3).T.astype(np.uint8)
         self.idx = -1
         self.his = None
         self.update = False
@@ -30,12 +30,15 @@ class CMapPanel(wx.Panel):
         box = self.GetClientSize()
         self.buffer = wx.Bitmap(box.width, box.height)
         
-    def linear_color(self, cs):
+    @classmethod
+    def linear_color(cls, cs):
         cs = sorted(cs)
+        cmap = np.vstack([np.arange(256)]*3).T
         for i in range(1, len(cs)):
             c1, c2 = cs[i-1][1:], cs[i][1:]
             rs, gs, bs = [np.linspace(c1[j], c2[j], cs[i][0]-cs[i-1][0]+1) for j in (0,1,2)]
-            self.cmap[cs[i-1][0]:cs[i][0]+1] = np.array((rs, gs, bs)).T
+            cmap[cs[i-1][0]:cs[i][0]+1] = np.array((rs, gs, bs)).T
+        return cmap.astype(np.uint8)
 
     def on_size(self, event):
         self.init_buf()
@@ -59,7 +62,7 @@ class CMapPanel(wx.Panel):
         if self.idx==-1: 
             self.pts.append((x,)+tuple(self.cmap[x]))
             self.idx = len(self.pts)-1
-            self.linear_color(self.pts)
+            self.cmap[:] = self.linear_color(self.pts)
             self.update = True
             self.handle()
 
@@ -73,7 +76,7 @@ class CMapPanel(wx.Panel):
         if not self.pts[self.idx][0] in (0, 255):
             del self.pts[self.idx]
             self.idx = -1
-            self.linear_color(self.pts)
+            self.cmap[:] = self.linear_color(self.pts)
             self.update = True
             self.handle()
 
@@ -88,9 +91,10 @@ class CMapPanel(wx.Panel):
             x = self.pts[self.idx][0]
             self.pts[self.idx] = (x,)+rst[:-1]
             self.idx=-1
-            self.linear_color(self.pts)
+            self.cmap[:] = self.linear_color(self.pts)
             self.update = True
         dlg.Destroy()
+        self.handle()
 
 
     def on_mv(self, event):
@@ -105,7 +109,7 @@ class CMapPanel(wx.Panel):
             else: x = np.clip(x, 1, 254)
             cl = self.pts[self.idx][1:]
             self.pts[self.idx] = (x,)+cl
-            self.linear_color(self.pts)
+            self.cmap[:] = self.linear_color(self.pts)
             self.update = True
             self.handle()
         

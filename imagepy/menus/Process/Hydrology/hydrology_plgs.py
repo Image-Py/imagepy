@@ -192,6 +192,7 @@ class UPWatershed(Filter):
         img[snap<para['thr1']] = 1
         ips.lut = self.buflut
         mark = watershed(edge, img, line=True)
+        img[:] = ips.range[0]
         if para['type'] == 'line': 
             img[mark==0] = ips.range[1]
         elif para['type'] == 'up area':

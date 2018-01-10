@@ -1,7 +1,10 @@
-from images2gif import writeGif, readGif
 from imagepy.core.util import fileio
 from imagepy import IPy
 import os
+import numpy as np
+from PIL import Image, ImageSequence
+
+
 
 class SaveAnimate(fileio.Writer):
 	title = 'GIF Animate Save'
@@ -10,7 +13,8 @@ class SaveAnimate(fileio.Writer):
 
 	#process
 	def run(self, ips, imgs, para = None):
-		writeGif(para['path'], imgs, duration=0.2, subRectangles = False)
+		imgs = [Image.fromarray(i) for i in imgs] 
+		imgs[0].save(para['path'], save_all=True, append_images=imgs[1:])
 
 class OpenAnimate(fileio.Reader):
 	title = 'GIF Animate Open'
@@ -19,7 +23,11 @@ class OpenAnimate(fileio.Reader):
 
 	#process
 	def run(self, para = None):
-		imgs = readGif(para['path'])
+		#imgs = readGif(para['path'])
+
+		imgs = Image.open(para['path'])
+		imgs = ImageSequence.Iterator(imgs)
+		imgs = [np.array(i.convert('RGB')) for i in imgs]
 		for i in range(len(imgs)):
 			if imgs[i].ndim==3 and imgs[i].shape[2]>3:
 				imgs[i] = imgs[i][:,:,:3].copy()

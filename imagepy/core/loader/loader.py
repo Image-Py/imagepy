@@ -10,7 +10,7 @@ from ..manager import ToolsManager,PluginsManager
 from ... import IPy, root_dir
 from codecs import open
 
-first = [0,0]
+first = [0,0,0]
 def extend_plugins(path, lst, err):
     rst = []
     for i in lst:
@@ -202,11 +202,13 @@ def build_widgets(path, err=None):
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
         subtree = sort_widgets(pg.catlog, subtree)
-    if not root:subtree = extend_widgets(path, subtree, err)    
-    elif first[1]==0 and len(err)>0: 
+    print('kkkk', first, root, err)
+    if not root:
+        subtree = extend_widgets(path, subtree, err)  
+    elif first[2]==0 and len(err)>0: 
         IPy.write('widgets not loaded:')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
-    if root : first[1]=1
+    if root : first[2]=1
     return (pg, subtree)
 
 if __name__ == "__main__":
