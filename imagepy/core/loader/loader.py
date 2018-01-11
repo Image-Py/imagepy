@@ -175,7 +175,7 @@ def sort_widgets(catlog, lst):
     for i in catlog:
         if i=='-':rst.append('-')
         for j in lst:
-            if j[:-3]==i or j[0].title==i:
+            if j==i or j[:-3]==i or j[0].title==i:
                 lst.remove(j)
                 rst.append(j)
     rst.extend(lst)
@@ -194,7 +194,7 @@ def build_widgets(path, err=None):
         elif not root:
             if i[len(i)-7:] in ('_wgt.py', 'wgts.py'):
                 subtree.append(i[:-3])
-                print('====', subtree)
+                #print('====', subtree)
     if len(subtree)==0:return []
     rpath = path.replace('/', '.').replace('\\','.')
     #rpath = rpath[rpath.index('imagepy.'):]
@@ -202,7 +202,6 @@ def build_widgets(path, err=None):
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
         subtree = sort_widgets(pg.catlog, subtree)
-    print('kkkk', first, root, err)
     if not root:
         subtree = extend_widgets(path, subtree, err)  
     elif first[2]==0 and len(err)>0: 

@@ -53,11 +53,12 @@ class ParaDialog (wx.Dialog):
     def parse(self, para) :
         self.funcs[para[0]](*para[1:])
 
-    def add_ctrl(self, ctrl, key=None):
+    def add_ctrl(self, key, ctrl):
         self.lst.Add( ctrl, 0, wx.EXPAND, 5 )
         if not key is None:
             self.ctrl_dic[key] = ctrl
-            ctrl.set_handle(lambda x=None : self.para_changed(key))
+            if hasattr(ctrl, 'set_handle'):
+                ctrl.set_handle(lambda x=None : self.para_changed(key))
 
 
     def add_num(self, rang, accu, title, key, unit):

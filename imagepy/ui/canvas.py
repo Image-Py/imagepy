@@ -137,6 +137,12 @@ class Canvas (wx.Panel):
         self.imgbox[1] += int(dy+0.5)
         self.update(True)
 
+    def center(self, x, y):
+        k = self.scales[self.scaleidx]
+        self.imgbox[0] = self.box[2]/2 - x*k
+        self.imgbox[1] = self.box[3]/2 - y*k
+        lay(self.box, self.imgbox)
+
     def on_size(self, event):
         self.reInitBuffer = True
 
