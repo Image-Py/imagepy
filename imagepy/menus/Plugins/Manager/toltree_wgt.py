@@ -11,14 +11,13 @@ from imagepy import IPy, root_dir
 from imagepy.core.loader import loader
 from wx.py.editor import EditorFrame
 
-class TreeFrame ( wx.Frame ):
+class Plugin ( wx.Panel ):
+    title = 'Tool Tree View'
+    single = None
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = "Tools Tree", 
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size( 452,300 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-        logopath = os.path.join(root_dir, 'data/logo.ico')
-        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
-        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.HORIZONTAL )
         
@@ -85,9 +84,6 @@ class TreeFrame ( wx.Frame ):
                 it = self.tre_plugins.AppendItem(item, j[0].title)
                 self.tre_plugins.SetItemData(it, j[0])
     
-    def __del__( self ):
-        pass
-    
     # Virtual event handlers, overide them in your derived class
     def on_run( self, event ):
         plg = self.tre_plugins.GetItemData(event.GetItem())
@@ -110,12 +106,3 @@ class TreeFrame ( wx.Frame ):
         root = os.path.split(root_dir)[0]
         filename=os.path.join(root,filename)
         EditorFrame(filename=filename).Show()        
-
-class PlgTree(Free):
-    title = 'Tool Tree View'
-    asyn = False
-        
-    def run(self, para=None):
-        TreeFrame(IPy.curapp).Show()
-        
-plgs = [PlgTree]

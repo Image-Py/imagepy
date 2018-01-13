@@ -48,12 +48,14 @@ class ImagePy(wx.Frame):
         self.toolbar = toolsloader.build_tools(self, 'tools')
 
         self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Left() .PinButton( True )
-            .Dock().Resizable().FloatingSize( wx.Size( 48,520 ) ).Layer( 1 ) )
+            .Dock().Resizable().FloatingSize( wx.Size( 48,520 ) ).Layer( 10 ) )
         
         self.widgets = widgetsloader.build_widgets(self, 'widgets')
-        self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) )
+        self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
+            .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) .Layer( 10 ) )
         
         self.load_aui()
+        self.load_dev()
         
 
 
@@ -73,7 +75,7 @@ class ImagePy(wx.Frame):
         stapanel.SetSizer(sizersta)
         stapanel.SetDropTarget(FileDrop())
         self.auimgr.AddPane( stapanel, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True ).Dock()
-            .PaneBorder( False ).Resizable().BestSize( wx.Size( -1,-1 ) ).DockFixed( True ).Layer( 1 ) )
+            .PaneBorder( False ).Resizable().BestSize( wx.Size( -1,-1 ) ).DockFixed( True ).Layer( 10 ) )
         
         #sizer.Add(stapanel, 0, wx.EXPAND, 5 )
         #self.SetSizer( sizer )
@@ -85,9 +87,12 @@ class ImagePy(wx.Frame):
         self.update = False
 
         self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.Bind( wx.aui.EVT_AUI_PANE_CLOSE, self.on_panel_closed)
         thread = threading.Thread(None, self.hold, ())
         thread.setDaemon(True)
         thread.start()
+
+    def on_panel_closed(self, event):pass
 
     def load_aui(self):
         
@@ -96,6 +101,12 @@ class ImagePy(wx.Frame):
             .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ) )
         self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)
         self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.on_pageclosed)
+
+    def load_dev(self):
+        return
+        self.devpan = wx.aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
+        self.auimgr.AddPane( self.devpan, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True ).Dock()
+            .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ) )
 
     def on_pagevalid(self, event):
         WindowsManager.add(event.GetEventObject().GetPage(event.GetSelection()))

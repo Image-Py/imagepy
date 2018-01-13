@@ -4,9 +4,9 @@ Created on Fri Jan  6 23:45:59 2017
 
 @author: yxl
 """
-import os, sys
-from ..engine import Macros, MkDown
-from ..manager import ToolsManager,PluginsManager
+import os, sys, wx
+from ..engine import Macros, MkDown, Widget
+from ..manager import ToolsManager, PluginsManager, WidgetsManager
 from ... import IPy, root_dir
 from codecs import open
 
@@ -21,15 +21,13 @@ def extend_plugins(path, lst, err):
             f = open(os.path.join(root_dir,path)+'/'+i)
             cmds = f.readlines()
             f.close()
-            if i[-3:]=='.mc':
-                rst.append(Macros(i[:-3], cmds))
+            rst.append(Macros(i[:-3], cmds))
             PluginsManager.add(rst[-1])
         elif i[-3:] == '.md':
             f = open(os.path.join(root_dir,path)+'/'+i, 'r', 'utf-8')
             cont = f.read()
             f.close()
-            if i[-3:]=='.md':
-                rst.append(MkDown(i[:-3], cont))
+            rst.append(MkDown(i[:-3], cont))
             PluginsManager.add(rst[-1])
         else:
             try:
@@ -41,6 +39,9 @@ def extend_plugins(path, lst, err):
                     rst.extend([j for j in plg.plgs])
                     for p in plg.plgs:
                         if not isinstance(p, str):PluginsManager.add(p)
+                elif i[-6:] == 'wgt.py':
+                    rst.append(Widget(plg.Plugin))
+                    WidgetsManager.add(plg.Plugin)
                 else: 
                     rst.append(plg.Plugin)
                     PluginsManager.add(plg.Plugin)
@@ -70,7 +71,7 @@ def build_plugins(path, err=None):
         if os.path.isdir(os.path.join(root_dir, subp)):
             sub = build_plugins(subp, err)
             if len(sub)!=0:subtree.append(sub)
-        elif i[-6:] in ('plg.py', 'lgs.py'):
+        elif i[-6:] in ('plg.py', 'lgs.py', 'wgt.py'):
             subtree.append(i)
         elif i[-3:] in ('.mc', '.md'):
             subtree.append(i)
@@ -167,7 +168,7 @@ def extend_widgets(path, lst, err):
             rst.append(plg.Plugin)
         except Exception as e:
             err.append((path, i, sys.exc_info()[1]))
-    #for i in rst:ToolsManager.add(i[0])
+    for i in rst:WidgetsManager.add(i)
     return rst
             
 def sort_widgets(catlog, lst):

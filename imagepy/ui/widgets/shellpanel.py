@@ -1,12 +1,12 @@
+from wx.py.shell import Shell
+import wx
+
 # -*- coding: utf-8 -*-
 import wx
-from wx.py.shell import ShellFrame
+from wx.py.shell import Shell
 import scipy.ndimage as ndimg
 import numpy as np
 from imagepy import IPy
-
-from imagepy.core.engine import Free
-from imagepy.core.manager import PluginsManager
 
 ## There is something wrong!
 ## To be fixed!
@@ -39,17 +39,21 @@ class Macros(dict):
 
 cmds = {'IPy':IPy, 'ndimg':ndimg, 'update':update, 'curips':get_ips}
 
-class Plugin(Free):
-    title = 'Command Line'
-    asyn = False
+class ShellPanel ( Shell ):
+	def __init__( self, parent ):
+		Shell.__init__ ( self, parent, size = wx.Size( 500,300 ), locals=cmds)
+		bSizer1 = wx.BoxSizer( wx.VERTICAL )
+		self.shell = Shell( self)
+		bSizer1.Add( self.shell, 1, wx.EXPAND |wx.ALL, 5 )
+		self.SetSizer( bSizer1 )
+		self.Layout()
+	
+	def __del__( self ): pass
 
-    def load(self):
-        cmds['plgs'] = Macros()
-        return True
-
-    def run(self, para=None):
-        frame = ShellFrame(IPy.curapp, locals=cmds)
-        frame.shell.run('# numpy(np) and scipy.ndimage(ndimg) has been imported!\n')
-        frame.shell.run('# plgs.run_name() to call a ImagePy plugin.\n')
-        frame.shell.run('# IPy is avalible here, and curips() to get the current ImagePlus, update() to redraw.\n')
-        frame.Show(True)
+if __name__ == '__main__':
+    app = wx.PySimpleApp()
+    frame = wx.Frame(None)
+    shell = ShellPanel(frame)
+    frame.Fit()
+    frame.Show(True)
+    app.MainLoop() 

@@ -1,1 +1,1 @@
-catlog = ['plgtree_plg', 'toltree_plg', 'plglist_plg', '-', 'shotcut_plg']
+catlog = ['plgtree_wgt', 'toltree_wgt', 'plglist_wgt', '-', 'shotcut_wgt']

@@ -5,9 +5,8 @@ Created on Sat Jan  7 16:01:14 2017
 @author: yxl
 """
 import wx, os
-from imagepy.core.engine import Free
-from imagepy.core.manager import ShotcutManager,PluginsManager
 from imagepy import IPy, root_dir
+from imagepy.core.manager import PluginsManager
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):
@@ -28,18 +27,18 @@ class VirtualListCtrl(wx.ListCtrl):
     def set_data(self, data):
         self.data = data
         self.SetItemCount(len(data))
+        print(len(data))
         
     def refresh(self):
         self.SetItemCount(len(self.data))
         
-class PlgListFrame( wx.Frame ):
-    def __init__( self, parent):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'Plugin List',
-                            pos = wx.DefaultPosition, size = wx.Size( 412,500 ), 
+class Plugin( wx.Panel ):
+    title = 'Plugin List View'
+    single = None
+    def __init__( self, parent,):
+        wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
+                            pos = wx.DefaultPosition, size = wx.Size( 612,500 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-        logopath = os.path.join(root_dir, 'data/logo.ico')
-        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
-        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
         bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
@@ -51,18 +50,17 @@ class PlgListFrame( wx.Frame ):
                                        wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer2.Add( self.txt_search, 1, wx.ALL, 5 )
         bSizer1.Add( bSizer2, 0, wx.EXPAND, 5 )
-        self.lst_plgs = VirtualListCtrl( self, ['Name', 'Shotcut'])
+        self.lst_plgs = VirtualListCtrl( self, ['Name', 'Location'])
         self.lst_plgs.SetColumnWidth(0,200)
-        self.lst_plgs.SetColumnWidth(1,200)
+        self.lst_plgs.SetColumnWidth(1,400)
         bSizer1.Add( self.lst_plgs, 1, wx.ALL|wx.EXPAND, 5 )
         self.SetSizer( bSizer1 )
         self.Layout()
         self.Centre( wx.BOTH )
         # Connect Events
         self.txt_search.Bind( wx.EVT_TEXT, self.on_search )
-        self.lst_plgs.Bind(wx.EVT_LIST_KEY_DOWN, self.on_run)
+        self.lst_plgs.Bind( wx.EVT_LIST_ITEM_ACTIVATED, self.on_run )
         self.load()
-        self.Bind(wx.EVT_CLOSE, self.on_close)
     
     def __del__( self ):
         pass
@@ -70,9 +68,7 @@ class PlgListFrame( wx.Frame ):
     #def list_plg(self, lst, items
     def load(self):
         lst = list(PluginsManager.plgs.values())
-        self.plgs = [[i.title, ShotcutManager.get(i.title)] for i in lst]
-        for i in self.plgs:
-            if i[1]==None:i[1]=''
+        self.plgs = [(i.title, i.__module__) for i in lst]
         self.plgs.sort()
         self.buf = self.plgs
         self.lst_plgs.set_data(self.plgs)
@@ -82,47 +78,7 @@ class PlgListFrame( wx.Frame ):
         wd = self.txt_search.GetValue()
         self.buf = [i for i in self.plgs if wd.lower() in i[0].lower()]
         self.lst_plgs.set_data(self.buf)
+        self.lst_plgs.Refresh()
         
-    def ist(self, cont, txt):
-        sep = cont.split('-')
-        if txt in sep: sep.remove(txt)
-        else:sep.append(txt)
-        cas = [i for i in ('Ctrl','Alt','Shift') if i in sep]
-        sep = [i for i in sep if not i in cas]
-        if len(sep)>0:cas.append(sep[-1])
-        return '-'.join(cas)
-
     def on_run(self, event):
-        code = event.GetKeyCode()
-        title = self.buf[event.GetIndex()][0]
-        txt = self.buf[event.GetIndex()][1]
-        if code == wx.WXK_DELETE:
-            txt = ''
-        elif code == wx.WXK_CONTROL: 
-            txt = self.ist(txt, 'Ctrl')
-        elif code == wx.WXK_ALT: 
-            txt = self.ist(txt, 'Alt')
-        elif code == wx.WXK_SHIFT: 
-            txt = self.ist(txt, 'Shift')
-        elif code in range(340,352):
-            fs = ['F'+str(i) for i in range(1,13)]
-            txt = self.ist(txt, fs[code-340])
-        elif code<100: 
-            txt = self.ist(txt, chr(event.GetKeyCode()))
-        if len(txt)>0 and txt[-1]=='-':txt=txt[:-1]
-        self.buf[event.GetIndex()][1] = txt
-        self.lst_plgs.RefreshItem(event.GetIndex())
-        if txt=='':ShotcutManager.rm(title)
-        ShotcutManager.set(title, txt)
-        #PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
-        
-    def on_close(self, event):
-        ShotcutManager.write()
-        self.Destroy()
-
-class Plugin(Free):
-    title = 'Shotcut Editor'
-    asyn = False
-    
-    def run(self, para=None):
-        PlgListFrame(IPy.curapp).Show()
+        PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
