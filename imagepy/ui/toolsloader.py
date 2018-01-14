@@ -26,7 +26,7 @@ def build_tools(parent, toolspath):
     return toolsbar#, btn   
 
 def buildToolsBar(parent, datas):    
-    box = wx.BoxSizer( wx.VERTICAL )
+    box = wx.BoxSizer( wx.HORIZONTAL )
     #toolsbar =  wx.ToolBar( parent, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TB_HORIZONTAL ) 
     toolsbar = wx.Panel( parent, wx.ID_ANY, 
                          wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
@@ -41,6 +41,7 @@ def buildToolsBar(parent, datas):
     box.Add(btn)
     btn.Bind(wx.EVT_LEFT_DOWN, lambda x:menu_drop(parent, toolsbar, datas, btn, x))
     add_tools(toolsbar, datas[1][1][1])
+    toolsbar.Fit()
     return toolsbar
 
 def menu_drop(parent, toolbar, datas, btn, e):
