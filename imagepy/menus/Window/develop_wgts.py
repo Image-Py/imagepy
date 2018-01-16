@@ -1,5 +1,5 @@
 import wx
-
+from imagepy.core.manager import WidgetsManager
 from imagepy.menus.Plugins.Macros.recorder_wgt import Plugin as recorder
 from imagepy.menus.Plugins.Manager.console_wgt import Plugin as console
 from imagepy.menus.Plugins.Manager.plglist_wgt import Plugin as plglist
@@ -14,12 +14,14 @@ class DevelopToolSute ( wx.Panel ):
 		
 		sizer = wx.BoxSizer( wx.VERTICAL )
 		
+		mrecorder = recorder(self)
 		self.notebook = wx.aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
-		self.notebook.AddPage( recorder(self), recorder.title, True, wx.NullBitmap )
+		self.notebook.AddPage( mrecorder, mrecorder.title, True, wx.NullBitmap )
 		self.notebook.AddPage( console(self), console.title, False, wx.NullBitmap )
 		self.notebook.AddPage( plglist(self), plglist.title, False, wx.NullBitmap )
 		self.notebook.AddPage( plgtree(self), plgtree.title, False, wx.NullBitmap )
 		self.notebook.AddPage( toltree(self), toltree.title, False, wx.NullBitmap )
+		WidgetsManager.addref(mrecorder)
 		sizer.Add( self.notebook, 1, wx.EXPAND |wx.ALL, 0 )
 		self.SetSizer( sizer )
 		self.Layout()
