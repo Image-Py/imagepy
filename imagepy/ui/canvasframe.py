@@ -33,7 +33,6 @@ class CanvasPanel(wx.Panel):
         sizer.Add( self.txt_info, 0, wx.ALL, 0 )
 
         self.canvas = Canvas(self)
-        self.canvas.fit = self
 
         sizer.Add( self.canvas, 1, wx.EXPAND |wx.ALL, 0 )
 
@@ -46,10 +45,8 @@ class CanvasPanel(wx.Panel):
         self.SetSizer(sizer)
         self.Layout()
 
-        self.Bind(wx.EVT_IDLE, self.on_idle)
         self.Bind(wx.EVT_SCROLL, self.on_scroll)
-        self.Bind(wx.EVT_ACTIVATE, self.on_valid)
-        self.Bind(wx.EVT_CLOSE, self.on_close)
+        
         self.canvas.Bind(wx.EVT_CHAR, self.on_key)
         self.canvas.SetFocus()
         # panel.Bind(wx.EVT_CHAR, self.OnKeyDown)
@@ -58,28 +55,10 @@ class CanvasPanel(wx.Panel):
 
         self.SetAcceleratorTable(IPy.curapp.shortcut)
 
-    def on_idle(self, event):
-        if self.ips.update:
-            self.set_info(self.ips)
-        if False and self.canvas.resized:
-            print(self.GetParent())
-            self.Fit()
-            #self.GetParent().Fit()
-            #print 'fit'
-            self.canvas.resized = False
-
     def on_key(self, event):
         if event.GetKeyCode()==27:
             self.ips.tool=None
             self.SetTitle(self.ips.title)
-
-    def on_valid(self, event):
-        if event.GetActive():
-            WindowsManager.add(self)
-
-    def on_close(self, event):
-        WindowsManager.remove(self)
-        self.Destroy()
 
     def set_info(self, ips):
         #self.GetParent().SetTitle(ips.title)
@@ -115,6 +94,13 @@ class CanvasPanel(wx.Panel):
         self.on_idle(None)
         self.canvas.on_idle(None)
 
+    def close(self):
+        parent = self.GetParent()
+        if not IPy.aui: parent.Close()
+        else: parent.DeletePage(parent.GetPageIndex(self))
+
+    def __del__(self):
+        print('==========')
 
 class CanvasFrame(wx.Frame):
     """CanvasFrame: derived from the wx.core.Frame"""
@@ -128,7 +114,27 @@ class CanvasFrame(wx.Frame):
         self.canvaspanel = CanvasPanel(self)
         logopath = os.path.join(root_dir, 'data/logo.ico')
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
-        self.set_ips = self.canvaspanel.set_ips
+        self.Bind(wx.EVT_IDLE, self.on_idle)
+        self.Bind(wx.EVT_ACTIVATE, self.on_valid)
+    
+    def set_ips(self, ips):
+        self.canvaspanel.set_ips(ips)
+        self.SetTitle(ips.title)
+
+    def on_idle(self, event):
+        #if self.canvaspanel.canvas.ips.update:
+        #    self.set_info(self.ips)
+        if self.canvaspanel.canvas.resized:
+            #self.GetParent().Fit()
+            self.canvaspanel.Fit()
+            self.Fit()
+            #self.GetParent().Fit()
+            #print 'fit'
+            self.canvaspanel.canvas.resized = False
+
+    def on_valid(self, event):
+        if event.GetActive():
+            WindowsManager.add(self.canvaspanel)
 
 if __name__=='__main__':
     app = wx.PySimpleApp()

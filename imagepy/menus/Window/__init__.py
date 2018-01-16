@@ -1,1 +1,1 @@
-#
+catlog = ['windowskiller_plg', '-', 'widgets_plgs']#

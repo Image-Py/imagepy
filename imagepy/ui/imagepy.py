@@ -33,7 +33,7 @@ class ImagePy(wx.Frame):
         logopath = os.path.join(root_dir, 'data/logo.ico')
         #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
-        self.SetSizeHints( wx.Size( 600,-1 ), wx.DefaultSize )
+        self.SetSizeHints( wx.Size(800, 600) if IPy.aui else wx.Size( 600,-1 ))
         IPy.curapp = self
         # Todo:Fixed absolute/relative path!
         # print("menuspath:{}".format( os.path.join(root_dir,"menus")))
@@ -57,7 +57,9 @@ class ImagePy(wx.Frame):
         #self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
         #    .Float().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) .Layer( 10 ) )
         
-        self.load_ijui()
+        if IPy.aui: self.load_aui()
+        else: self.load_ijui()
+
         #self.load_dev()
         
 
@@ -90,9 +92,13 @@ class ImagePy(wx.Frame):
         self.Layout()
         self.auimgr.Update()
         self.Fit()
+        if(not IPy.aui):
+            self.SetMaxSize((-1, self.GetSize()[1]))
+            self.SetMinSize((-1, self.GetSize()[1]))
         self.update = False
 
         self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.Bind(aui.EVT_AUI_PANE_CLOSE, self.on_pan_close)
         thread = threading.Thread(None, self.hold, ())
         thread.setDaemon(True)
         thread.start()
@@ -101,22 +107,27 @@ class ImagePy(wx.Frame):
         self.toolbar.GetSizer().SetOrientation(wx.VERTICAL)
         self.toolbar.GetSizer().Layout()
         self.toolbar.Fit()
-        self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Left() .PinButton( True )
-            .CaptionVisible( True ).Dock().Resizable().FloatingSize( wx.Size( 48,600 ) ).Layer( 10 ) )
+        self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Left()  .PinButton( True )
+            .CaptionVisible( True ).Dock().Resizable().FloatingSize( wx.Size( 48,600 ) )
+            . BottomDockable( False ).TopDockable( False ).Layer( 10 ) )
         self.widgets = widgetsloader.build_widgets(self, 'widgets')
         self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) .Layer( 10 ) )
-        '''
+        
         self.canvasnb = wx.aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
         self.auimgr.AddPane( self.canvasnb, wx.aui.AuiPaneInfo() .Center() .CaptionVisible( False ).PinButton( True ).Dock()
-            .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ) )
-        self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)
-        self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.on_pageclosed)
-        '''
+            .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ). BottomDockable( True ).TopDockable( False )
+            .LeftDockable( True ).RightDockable( True ) )
+        self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)        
 
     def load_ijui(self):
         self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Top() .CaptionVisible( False ).PinButton( True )
-            .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True ). MinSize(wx.Size(-1, 34)). Layer( 10 ) )
+            .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True ) 
+            .BottomDockable( False ).TopDockable( False ).LeftDockable( False ).RightDockable( False )
+            .MinSize(wx.Size(-1, 34)). Layer( 10 ) )
+        self.widgets = widgetsloader.build_widgets(self, 'widgets')
+        self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
+            .Float().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ).Hide() .Layer( 10 ) )
         
 
     def load_dev(self):
@@ -127,9 +138,12 @@ class ImagePy(wx.Frame):
 
     def on_pagevalid(self, event):
         WindowsManager.add(event.GetEventObject().GetPage(event.GetSelection()))
-        
-    def on_pageclosed(self, event):
-        WindowsManager.remove(event.GetEventObject().GetPage(event.GetSelection()))
+
+    def on_pan_close(self, event):
+        if event.GetPane().window in [self.toolbar, self.widgets]:
+            event.Veto()
+            event.GetPane().Show(False)
+            self.auimgr.Update()
 
     def reload_plugins(self):
         for i in range(self.menubar.GetMenuCount()): self.menubar.Remove(0)
@@ -177,6 +191,8 @@ class ImagePy(wx.Frame):
 
     def on_close(self, event):
         ConfigManager.write()
+        self.auimgr.UnInit()
+        del self.auimgr
         self.Destroy()
         sys.exit()
 

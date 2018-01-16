@@ -109,6 +109,6 @@ class Simple:
         elif self.modal:
             if self.show() == wx.ID_OK:
                 self.ok(self.ips, para, callback)
-            else:self.cancel(ips)
+            else:self.cancel(self.ips)
             self.dialog.Destroy()
         else: self.show()

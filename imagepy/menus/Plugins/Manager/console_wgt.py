@@ -44,7 +44,7 @@ class Plugin(wx.Panel):
     single = None
     def __init__(self, parent):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
-                                pos = wx.DefaultPosition, size = wx.Size( 612,500 ), 
+                                pos = wx.DefaultPosition, size = wx.Size( 500,300 ), 
                                 style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         shell = Shell(self, locals=cmds)
         bSizer = wx.BoxSizer( wx.VERTICAL )

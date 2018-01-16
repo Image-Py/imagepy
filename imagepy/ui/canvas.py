@@ -60,7 +60,7 @@ class Canvas (wx.Panel):
         self.oldscale = 1
         self.o = (0,0)
         self.reInitBuffer = True
-        #self.resized = True
+        self.resized = True
         self.ips = None
         self.scrsize = wx.DisplaySize()
         self.s = 0
@@ -127,9 +127,9 @@ class Canvas (wx.Panel):
         self.imgbox[3] = int(self.ips.size[0] * k2+0.5)
         lay(self.box, self.imgbox)
         if self.imgbox[2]<=self.scrsize[0]*0.9 and\
-        self.imgbox[3]<=self.scrsize[1]*0.9:pass
-            #self.SetInitialSize((self.imgbox[2], self.imgbox[3]))
-            #self.resized=True
+        self.imgbox[3]<=self.scrsize[1]*0.9 and not IPy.aui:
+            self.SetInitialSize((self.imgbox[2], self.imgbox[3]))
+            self.resized=True
 
     def move(self, dx, dy):
         if self.imgbox[2]<=self.box[2] and self.imgbox[3]<=self.box[3]:return
