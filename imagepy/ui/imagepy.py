@@ -33,7 +33,7 @@ class ImagePy(wx.Frame):
         logopath = os.path.join(root_dir, 'data/logo.ico')
         #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
-        self.SetSizeHints( wx.Size(800, 600) if IPy.aui else wx.Size( 600,-1 ))
+        self.SetSizeHints( wx.Size(1024, 768) if IPy.aui else wx.Size( 600,-1 ))
         IPy.curapp = self
         # Todo:Fixed absolute/relative path!
         # print("menuspath:{}".format( os.path.join(root_dir,"menus")))
@@ -70,7 +70,7 @@ class ImagePy(wx.Frame):
         #sizer.AddStretchSpacer(prop=1)
         #sizer.Add(self.line_color, 0, wx.EXPAND |wx.ALL, 0 )
 
-        stapanel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        self.stapanel = stapanel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         sizersta = wx.BoxSizer( wx.HORIZONTAL )
         self.txt_info = wx.StaticText( stapanel, wx.ID_ANY, "ImagePy  v0.2", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.txt_info.Wrap( -1 )
@@ -92,6 +92,7 @@ class ImagePy(wx.Frame):
         self.Layout()
         self.auimgr.Update()
         self.Fit()
+        self.Centre( wx.BOTH )
         if(not IPy.aui):
             self.SetMaxSize((-1, self.GetSize()[1]))
             self.SetMinSize((-1, self.GetSize()[1]))
@@ -184,6 +185,7 @@ class ImagePy(wx.Frame):
             self.pro_bar.Hide()
         elif not self.pro_bar.IsShown():
             self.pro_bar.Show()
+            self.stapanel.GetSizer().Layout()
         self.pro_bar.Update()
 
     def set_color(self, value):

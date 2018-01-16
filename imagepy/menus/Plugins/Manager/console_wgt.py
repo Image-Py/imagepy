@@ -48,7 +48,7 @@ class Plugin(wx.Panel):
                                 style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         shell = Shell(self, locals=cmds)
         bSizer = wx.BoxSizer( wx.VERTICAL )
-        bSizer.Add( shell, 1, wx.EXPAND, 5 )
+        bSizer.Add( shell, 1, wx.EXPAND|wx.ALL, 5 )
         self.SetSizer(bSizer)
         cmds['plgs'] = Macros()
         shell.run('# numpy(np) and scipy.ndimage(ndimg) has been imported!\n')

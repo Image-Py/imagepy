@@ -14,7 +14,7 @@ from .core import manager
 from .imageplus import ImagePlus
 from . import root_dir
 
-aui = False
+aui = manager.ConfigManager.get('uistyle') != 'ij'
 curapp = None
 
 def get_window():

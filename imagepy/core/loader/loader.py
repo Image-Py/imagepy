@@ -29,19 +29,29 @@ def extend_plugins(path, lst, err):
             f.close()
             rst.append(MkDown(i[:-3], cont))
             PluginsManager.add(rst[-1])
+        elif i[-6:] in ['wgt.py', 'gts.py']:
+            try:
+                rpath = path.replace('/', '.').replace('\\','.')
+                #rpath = rpath[rpath.index('imagepy.'):]
+                plg = __import__('imagepy.'+ rpath+'.'+i[:-3],'','',[''])
+                if hasattr(plg, 'wgts'):
+                    rst.extend([j if j=='-' else Widget(j) for j in plg.wgts])
+                    for p in plg.wgts:
+                        if not isinstance(p, str):WidgetsManager.add(p)
+                else: 
+                    rst.append(Widget(plg.Plugin))
+                    WidgetsManager.add(plg.Plugin)
+            except Exception as  e:
+                err.append((path, i, sys.exc_info()[1]))
         else:
             try:
                 rpath = path.replace('/', '.').replace('\\','.')
                 #rpath = rpath[rpath.index('imagepy.'):]
-
                 plg = __import__('imagepy.'+ rpath+'.'+i[:-3],'','',[''])
                 if hasattr(plg, 'plgs'):
                     rst.extend([j for j in plg.plgs])
                     for p in plg.plgs:
                         if not isinstance(p, str):PluginsManager.add(p)
-                elif i[-6:] == 'wgt.py':
-                    rst.append(Widget(plg.Plugin))
-                    WidgetsManager.add(plg.Plugin)
                 else: 
                     rst.append(plg.Plugin)
                     PluginsManager.add(plg.Plugin)
@@ -71,7 +81,7 @@ def build_plugins(path, err=None):
         if os.path.isdir(os.path.join(root_dir, subp)):
             sub = build_plugins(subp, err)
             if len(sub)!=0:subtree.append(sub)
-        elif i[-6:] in ('plg.py', 'lgs.py', 'wgt.py'):
+        elif i[-6:] in ('plg.py', 'lgs.py', 'wgt.py', 'gts.py'):
             subtree.append(i)
         elif i[-3:] in ('.mc', '.md'):
             subtree.append(i)
