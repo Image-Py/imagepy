@@ -64,6 +64,10 @@ class Canvas (wx.Panel):
         self.ips = None
         self.scrsize = wx.DisplaySize()
         self.s = 0
+        self.handle = None
+
+    def set_handler(self, handle=None):
+        self.handle = handle
 
     def on_mouseevent(self, me):
         tool = self.ips.tool
@@ -113,6 +117,7 @@ class Canvas (wx.Panel):
 
 
     def set_ips(self, ips):
+        if ips==self.ips:return
         self.ips = ips
         self.imgbox = [0,0,ips.size[1],ips.size[0]]
         self.self_fit()
@@ -129,7 +134,7 @@ class Canvas (wx.Panel):
         if self.imgbox[2]<=self.scrsize[0]*0.9 and\
         self.imgbox[3]<=self.scrsize[1]*0.9 and not IPy.aui:
             self.SetInitialSize((self.imgbox[2], self.imgbox[3]))
-            self.resized=True
+            if not self.handle is None: self.handle(self.ips, True)
 
     def move(self, dx, dy):
         if self.imgbox[2]<=self.box[2] and self.imgbox[3]<=self.box[3]:return
@@ -254,6 +259,7 @@ class Canvas (wx.Panel):
         #cdc.EndDrawing()
         if self.ips.unit!=(1,'pix'):
             self.draw_ruler(dc)
+        if self.handle != None: self.handle(self.ips)
         dc.UnMask()
 
     def zoomout(self, x, y):
@@ -282,6 +288,9 @@ class Canvas (wx.Panel):
         x = x * self.get_scale() + self.imgbox[0] + self.box[0]
         y = y * self.get_scale() + self.imgbox[1] + self.box[1]
         return x,y
+
+    def on_update(self):
+        pass
 
 if __name__=='__main__':
     import sys

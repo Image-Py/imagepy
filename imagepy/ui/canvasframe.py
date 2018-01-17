@@ -33,6 +33,7 @@ class CanvasPanel(wx.Panel):
         sizer.Add( self.txt_info, 0, wx.ALL, 0 )
 
         self.canvas = Canvas(self)
+        self.canvas.set_handler(self.set_ips)
 
         sizer.Add( self.canvas, 1, wx.EXPAND |wx.ALL, 0 )
 
@@ -46,23 +47,21 @@ class CanvasPanel(wx.Panel):
         self.Layout()
 
         self.Bind(wx.EVT_SCROLL, self.on_scroll)
-        
-        self.canvas.Bind(wx.EVT_CHAR, self.on_key)
-        self.canvas.SetFocus()
+
         # panel.Bind(wx.EVT_CHAR, self.OnKeyDown)
         self.opage = 0
         self.Fit()
 
-        self.SetAcceleratorTable(IPy.curapp.shortcut)
+        #self.SetAcceleratorTable(IPy.curapp.shortcut)
 
-    def on_key(self, event):
-        if event.GetKeyCode()==27:
-            self.ips.tool=None
-            self.SetTitle(self.ips.title)
+    def SetTitle(self, title):
+        parent = self.GetParent()
+        if not IPy.aui: parent.SetTitle(title)
+        else: parent.SetPageText(parent.GetPageIndex(self), title)#print(dir(parent)) #parent.DeletePage(parent.GetPageIndex(self))
 
     def set_info(self, ips):
-        #self.GetParent().SetTitle(ips.title)
-        if ips.tool != None: self.SetTitle(ips.title + ' [CustomTool]')
+        self.SetTitle(ips.title)
+        if ips.tool != None: self.SetTitle(ips.title + ' [%s]'%ips.tool.title)
         stk = 'stack' if ips.is3d else 'list'
         label="{}/{}; {}  {}x{} pixels; {}; {} M".format(ips.cur+1, ips.get_nslices(),
             stk if ips.get_nslices()>1 else '',ips.size[0], ips.size[1],
@@ -82,10 +81,13 @@ class CanvasPanel(wx.Panel):
         print('CanvasFrame:set_info')
         #self.page.Show()
 
-    def set_ips(self, ips):
+    def set_ips(self, ips, resize=False):
         self.ips = ips
         self.set_info(ips)
         self.canvas.set_ips(ips)
+        if resize:
+            self.Fit()
+            self.GetParent().Fit()
         print('CanvasFrame:set_ips')
 
     def on_scroll(self, event):
@@ -114,23 +116,12 @@ class CanvasFrame(wx.Frame):
         self.canvaspanel = CanvasPanel(self)
         logopath = os.path.join(root_dir, 'data/logo.ico')
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
-        self.Bind(wx.EVT_IDLE, self.on_idle)
         self.Bind(wx.EVT_ACTIVATE, self.on_valid)
+        self.SetAcceleratorTable(IPy.curapp.shortcut)
     
     def set_ips(self, ips):
         self.canvaspanel.set_ips(ips)
-        self.SetTitle(ips.title)
-
-    def on_idle(self, event):
-        #if self.canvaspanel.canvas.ips.update:
-        #    self.set_info(self.ips)
-        if self.canvaspanel.canvas.resized:
-            #self.GetParent().Fit()
-            self.canvaspanel.Fit()
-            self.Fit()
-            #self.GetParent().Fit()
-            #print 'fit'
-            self.canvaspanel.canvas.resized = False
+        #self.SetTitle(ips.title)
 
     def on_valid(self, event):
         if event.GetActive():

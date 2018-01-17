@@ -9,14 +9,13 @@ class ThresholdDialog(ParaDialog):
     def init_view(self, items, para, hist):
         self.curvep = CurvePanel(self)
         self.curvep.set_hist(hist)
-        self.add_ctrl(self.curvep, 'curve')
+        self.add_ctrl('curve', self.curvep)
         ParaDialog.init_view(self, items, para, True)
-    
-        
+
 class Plugin(Filter):
     title = 'Curve Adjust'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
-    para = {'curve': 1}
+    para = {'curve': [(0,0), (255, 255)]}
     view = []
 
     def show(self):

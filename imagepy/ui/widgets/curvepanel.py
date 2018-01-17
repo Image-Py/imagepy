@@ -146,6 +146,7 @@ class CurvePanel(wx.Panel):
     def set_handle(self, handle):self.handle = handle
 
     def SetValue(self, value=None):
+        print('here', value)
         if not value is None:
             self.pts = value
         else: self.pts = [(0,0), (255, 255)]

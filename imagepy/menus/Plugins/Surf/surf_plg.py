@@ -35,6 +35,7 @@ class Surf(Filter):
         IPy.write("Detect completed, {} points found!".format(len(kps)), 'Surf')
 
 class Pick(Tool):
+    title = 'Key Point Pick Tool'
     def __init__(self, pts1, pts2, pair, msk, ips1, ips2, host, style):
         self.pts1, self.pts2 = pts1, pts2
         self.ips1, self.ips2 = ips1, ips2
