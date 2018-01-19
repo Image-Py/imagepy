@@ -28,7 +28,7 @@ def showips(ips):
     if aui:
         from .ui.canvasframe import CanvasPanel
         canvasp = CanvasPanel(curapp.canvasnb)
-        curapp.canvasnb.AddPage( canvasp, ips.title, True, wx.NullBitmap )
+        curapp.canvasnb.add_page( canvasp, ips)
         #canvasp.canvas.initBuffer()
         canvasp.set_ips(ips)
         curapp.auimgr.Update()

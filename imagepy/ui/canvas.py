@@ -58,13 +58,15 @@ class Canvas (wx.Panel):
         self.bindEvents()
         self.scaleidx = 4
         self.oldscale = 1
-        self.o = (0,0)
+        self.o = (0, 0)
         self.reInitBuffer = True
         self.resized = True
         self.ips = None
         self.scrsize = wx.DisplaySize()
         self.s = 0
         self.handle = None
+        self.imgbox = [0,0,0,0]
+        self.imgsize = (0,0)
 
     def set_handler(self, handle=None):
         self.handle = handle
@@ -115,9 +117,10 @@ class Canvas (wx.Panel):
         self.scaleidx = self.scales.index(i)
         self.zoom(self.scales[self.scaleidx], 0, 0)
 
-
     def set_ips(self, ips):
-        if ips==self.ips:return
+        samesize = tuple(ips.img.shape[:2]) == self.imgsize
+        if ips==self.ips and samesize:return
+        self.imgsize = tuple(ips.img.shape[:2])
         self.ips = ips
         self.imgbox = [0,0,ips.size[1],ips.size[0]]
         self.self_fit()
@@ -291,6 +294,9 @@ class Canvas (wx.Panel):
 
     def on_update(self):
         pass
+
+    def __del__(self):
+        print('========== canvas')
 
 if __name__=='__main__':
     import sys

@@ -12,6 +12,7 @@ from .. import IPy, root_dir
 from . import pluginloader, toolsloader, widgetsloader
 from ..core.manager import ConfigManager, PluginsManager, TaskManager, WindowsManager
 from ..core.engine import Macros
+from .canvasframe import CanvasNoteBook
 import wx.aui as aui
 
 class FileDrop(wx.FileDropTarget):
@@ -33,7 +34,7 @@ class ImagePy(wx.Frame):
         logopath = os.path.join(root_dir, 'data/logo.ico')
         #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
-        self.SetSizeHints( wx.Size(1024, 768) if IPy.aui else wx.Size( 600,-1 ))
+        self.SetSizeHints( wx.Size(900,700) if IPy.aui else wx.Size( 600,-1 ))
         IPy.curapp = self
         # Todo:Fixed absolute/relative path!
         # print("menuspath:{}".format( os.path.join(root_dir,"menus")))
@@ -109,17 +110,17 @@ class ImagePy(wx.Frame):
         self.toolbar.GetSizer().Layout()
         self.toolbar.Fit()
         self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Left()  .PinButton( True )
-            .CaptionVisible( True ).Dock().Resizable().FloatingSize( wx.Size( 32,600 ) )
+            .CaptionVisible( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ).MaxSize(wx.Size( 32,-1 ))
             . BottomDockable( False ).TopDockable( False ).Layer( 10 ) )
         self.widgets = widgetsloader.build_widgets(self, 'widgets')
         self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) .Layer( 10 ) )
         
-        self.canvasnb = wx.aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
+        self.canvasnb = CanvasNoteBook( self)
         self.auimgr.AddPane( self.canvasnb, wx.aui.AuiPaneInfo() .Center() .CaptionVisible( False ).PinButton( True ).Dock()
             .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ). BottomDockable( True ).TopDockable( False )
             .LeftDockable( True ).RightDockable( True ) )
-        self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)        
+        #self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)        
 
     def load_ijui(self):
         self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Top() .CaptionVisible( False ).PinButton( True )
@@ -136,9 +137,6 @@ class ImagePy(wx.Frame):
         self.devpan = wx.aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
         self.auimgr.AddPane( self.devpan, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True ).Dock()
             .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ) )
-
-    def on_pagevalid(self, event):
-        WindowsManager.add(event.GetEventObject().GetPage(event.GetSelection()))
 
     def on_pan_close(self, event):
         if event.GetPane().window in [self.toolbar, self.widgets]:
