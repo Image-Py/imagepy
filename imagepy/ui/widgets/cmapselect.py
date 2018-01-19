@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-import wx
+import wx, sys
 import wx.adv
 import numpy as np
 
+if sys.version_info[0]==2:memoryview=np.getbuffer
 class CMapSelPanel(wx.adv.OwnerDrawnComboBox):
     def __init__(self, parent):
         wx.adv.OwnerDrawnComboBox.__init__(self, parent, choices=[], 

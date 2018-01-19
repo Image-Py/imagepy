@@ -1,8 +1,9 @@
-import wx
+import wx, sys
 import numpy as np
 from numpy.linalg import norm
 from scipy import interpolate
 
+if sys.version_info[0]==2:memoryview=np.getbuffer
 class CurvePanel(wx.Panel):
     """ HistCanvas: diverid from wx.core.Panel """
     def __init__(self, parent, l=255):

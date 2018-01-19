@@ -111,7 +111,7 @@ class ImagePy(wx.Frame):
         self.toolbar.Fit()
         self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Left()  .PinButton( True )
             .CaptionVisible( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ).MaxSize(wx.Size( 32,-1 ))
-            . BottomDockable( False ).TopDockable( False ).Layer( 10 ) )
+            . BottomDockable( True ).TopDockable( False ).Layer( 10 ) )
         self.widgets = widgetsloader.build_widgets(self, 'widgets')
         self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) .Layer( 10 ) )
@@ -131,7 +131,6 @@ class ImagePy(wx.Frame):
         self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Float().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ).Hide() .Layer( 10 ) )
         
-
     def load_dev(self):
         return
         self.devpan = wx.aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )

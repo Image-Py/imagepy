@@ -46,8 +46,8 @@ class ViewPort(wx.Panel):
 
     def on_ld(self, event):
         x, y = event.GetX(), event.GetY()
-        x = (x-self.offx)/self.imgw
-        y = (y-self.offy)/self.imgh
+        x = 1.0*(x-self.offx)/self.imgw
+        y = 1.0*(y-self.offy)/self.imgh
         if x<0 or x>1 or y<0 or y>1:return
         self.loc = (x*self.ibox[0], y*self.ibox[1])
         self.handle()
@@ -59,8 +59,8 @@ class ViewPort(wx.Panel):
     def on_mv(self, event):
         if not self.drag:return
         x, y = event.GetX(), event.GetY()
-        x = (x-self.offx)/self.imgw
-        y = (y-self.offy)/self.imgh
+        x = 1.0*(x-self.offx)/self.imgw
+        y = 1.0*(y-self.offy)/self.imgh
         if x<0 or x>1 or y<0 or y>1:return
         self.loc = (x*self.ibox[0], y*self.ibox[1])
         self.handle()
@@ -70,15 +70,16 @@ class ViewPort(wx.Panel):
     def set_img(self, img, size):
         self.ibox = size[:2][::-1]
         bmp = wx.Bitmap.FromBuffer(img.shape[1], img.shape[0], memoryview(img.copy()))
-        if self.box[0]/self.box[1]<self.ibox[0]/self.ibox[1]:
-            k = self.box[0]/self.ibox[0]
+        if 1.0*self.box[0]/self.box[1]<1.0*self.ibox[0]/self.ibox[1]:
+            k = 1.0*self.box[0]/self.ibox[0]
             self.imgw, self.imgh = self.box[0], self.ibox[1]*k
-            self.offx, self.offy = 0, (self.box[1]-self.imgh)/2
+            self.offx, self.offy = 0, (self.box[1]-self.imgh)/2.0
             self.img = bmp.ConvertToImage().Rescale(self.imgw, self.imgh).ConvertToBitmap()
         else:
-            k = self.box[1]/self.ibox[1]
+            k = 1.0*self.box[1]/self.ibox[1]
             self.imgw, self.imgh = self.ibox[0]*k, self.box[1]
-            self.offx, self.offy = (self.box[0]-self.imgw)/2, 0
+            self.offx, self.offy = (self.box[0]-self.imgw)/2.0, 0
+            print(self.imgw, self.imgh)
             self.img = bmp.ConvertToImage().Rescale(self.imgw, self.imgh).ConvertToBitmap()
 
 
@@ -96,10 +97,10 @@ class ViewPort(wx.Panel):
             dc.DrawRectangle(0, 0, self.box[0], self.box[1])
             return
         # w, h = self.GetClientSize()
-        l = max(self.boxpan[0]-self.boximg[0], 0)/self.boximg[2]
-        r = min((self.boxpan[2]-self.boximg[0])/self.boximg[2],1)
-        t = max(self.boxpan[1]-self.boximg[1], 0)/self.boximg[3]
-        b = min((self.boxpan[3]-self.boximg[1])/self.boximg[3],1)
+        l = 1.0*max(self.boxpan[0]-self.boximg[0], 0)/self.boximg[2]
+        r = 1.0*min((self.boxpan[2]-self.boximg[0])/self.boximg[2],1)
+        t = 1.0*max(self.boxpan[1]-self.boximg[1], 0)/self.boximg[3]
+        b = 1.0*min((self.boxpan[3]-self.boximg[1])/self.boximg[3],1)
         # the main draw process 
         
         

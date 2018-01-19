@@ -1,7 +1,9 @@
-import wx
+import wx, sys
 import numpy as np
 from numpy.linalg import norm
 from scipy import interpolate
+
+if sys.version_info[0]==2:memoryview=np.getbuffer
 
 class CMapPanel(wx.Panel):
     """ HistCanvas: diverid from wx.core.Panel """
