@@ -24,6 +24,7 @@ class DevelopToolSute ( wx.Panel ):
 		WidgetsManager.addref(mrecorder)
 		sizer.Add( self.notebook, 1, wx.EXPAND |wx.ALL, 0 )
 		self.SetSizer( sizer )
+		self.Fit()
 		self.Layout()
 		
 wgts = [recorder, console, plglist, plgtree, toltree, '-', DevelopToolSute]

@@ -114,4 +114,4 @@ class Plugin ( wx.Panel ):
 
 	def write(self, cont):
 		if not self.recording: return
-		self.txt_cont.AppendText(cont+'\r\n')
+		self.txt_cont.AppendText(cont+'\n')
