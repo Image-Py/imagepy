@@ -17,6 +17,7 @@ Add To Manager:加入选区管理器
 Adjust:调整
 Analysis:分析
 Analysis 3D:三维分析
+Angkor:--
 Author:作者
 BMP:BMP格式
 BMP Open:打开
@@ -41,7 +42,15 @@ CIERGB To RGB:CIE转RGB
 Canny:Canny边缘算子
 Canny EdgeDetection:--
 Canvas Size:画布大小
+Chapter1 Digital-Image:--
+Chapter3 Pixel-Operate:--
+Chapter4 Digital-Filter:--
+Chapter5 Elevation-Analysis:--
+Chapter6 Edge-Angular:--
+Chapter7 Binary-Image:--
+Chengdu Temperature:--
 Chinese:中文
+Circle Check:--
 Clean Dictionary:清洁字典
 Clear:清除选区内部
 Clear Out:清除选区外部
@@ -49,6 +58,8 @@ Clip Roi:选区裁剪
 Closing 3D:三维闭运算
 Color:色彩
 Color Balance:色彩平衡
+Color Balance Demo:--
+Color Histogram Match:--
 Color Stairs:色阶
 Command Line:命令行工具
 Convex Hull:凸包
@@ -67,7 +78,9 @@ Decoration Demo:三维奖杯示例
 Delete Slice:删除切片
 Demo:--
 Difference:差分
+Difference of Gaussian Core:--
 Dilation 3D:三维膨胀
+Distance 3D:--
 Distance Transform:距离变换
 Double Threshold:双阈值
 Duplicate:制作副本
@@ -76,6 +89,7 @@ English:英文
 Erosion 3D:三维腐蚀
 Exit:退出
 Export:导出
+Extend Full:--
 Features:特征提取
 File:文件
 Fill:填充选区
@@ -84,19 +98,26 @@ Fill Holes 3D:填充三维空洞
 Filters:滤波器
 Filters 3D:三维滤波器
 Filters3D:--
+Find And Mark Coins:--
 Find IsoLine:等高线
 Find Maximum:局部最大值
 Find Minimum:局部最小值
 Find Riedge:山脊线
 Find Watershed:分水岭
 Frequence:频率
+Frequence 3D:--
 Frequence Field *:--
 GIF:GIF格式
+GIF Animate Open:--
+GIF Animate Save:--
 GIF Open:打开
 GIF Save:保存
+Gamma Curve:--
 Garmma:伽马矫正
+Garmma Curve:--
 Gaussian:高斯模糊
 Gaussian 3D:三维高斯模糊
+Gaussian Core:--
 Gaussian Laplace:高斯拉普拉斯
 Geometry Analysis:几何分析
 Geometry Analysis 3D:三维几何分析
@@ -119,8 +140,11 @@ HiLo:--
 Histogram:直方图
 Histogram Match:直方图匹配
 Histogram Normalize:直方图标准化
+Histogram Normalize And Match:--
+Histogram Of Gray Image:--
 Home Page:主页
 Hydrology:水文运算
+IBook:--
 ICA:--
 ICA2:--
 ICA3:--
@@ -138,6 +162,8 @@ ITK Watershed Manual Marker:--
 Ice Segment:--
 Image:图像
 Image Calculator:图像计算
+Image Merge:--
+Image Referenced:--
 Import:导入
 Import Sequence:导入图像序列
 Inflate:膨胀
@@ -162,12 +188,14 @@ Label Image:图像标记
 Language:语言
 Laplace:拉普拉斯
 Laplace Sharp:拉普拉斯锐化
+Laplace of Gaussian Core:--
 Lena:雷娜
 Lines Demo:三维曲线示例
 List Packages:列出已安装包
 Load Roi:载入选区
 Logo:图标
 Lookup table:索引表
+MSER:--
 Macros:宏
 Macros Editor:宏编辑器
 Macros Recorder:宏录音机
@@ -201,13 +229,16 @@ Open Recent:最近打开文件
 Open Url:通过链接打开
 Opening 3D:三维开运算
 Orange_Hot:--
+Orignal Line:--
 Orthogonal view:正交视图
 PNG:PNG格式
 PNG Open:打开
 PNG Save:保存
 Paste:粘贴
+Pencil Draw:--
 Percent:百分比滤波
 Pixel Statistic:像素统计
+Pixel Statistic 3D:--
 Plugin List View:插件列表
 Plugin Tree View:插件树
 Plugins:插件
@@ -215,6 +246,7 @@ Points Value:点所在位置的值
 Previous Slice:上一张
 Prewitt:Prewitt边缘算子
 Process:处理
+Psychological Inertia:--
 RGB:RGB色彩
 RGB To CIERGB:RGB转CIE
 RGB To Gray:RGB转灰度
@@ -230,6 +262,7 @@ Reload Plugins:重载插件
 Remove Isolate 3D:去除三维碎片
 Remove Isolate Node:节点裁剪
 Resize:画像大小
+Riedge Sub:--
 Roi Setting:设置ROI属性
 Rotate:旋转
 Run Macros:执行宏
@@ -250,8 +283,76 @@ Select None:不选
 Selection:选择
 Set Background:设置背景
 Set Slice:设置当前切片
+Shake Damping:--
 Shotcut Editor:快捷键编辑器
+Show Base Analysis:--
+Show Binary Watershed:--
+Show Buffer By Distance:--
+Show Canny In Diff Scale:--
+Show Cell Analysis:--
+Show Cell Connected:--
+Show Cell With Granule:--
+Show Circle And Ellipse:--
+Show ConvexHull:--
+Show DOG Filter:--
+Show Dilation:--
+Show Distance:--
+Show Do Stairs:--
+Show Do Threshold:--
+Show Dog The Gear:--
+Show Double Threshold:--
+Show Erosion:--
+Show Fill Holes:--
+Show Filter On Binary:--
+Show Find Maximum:--
+Show Find Minimum:--
+Show Find Ridge:--
+Show Find Watershed:--
+Show Gaussian And Threshold:--
+Show Gaussian Filter:--
+Show Gaussian In Nature:--
+Show Global Statistic:--
 Show Graph 3D:三维拓扑示例
+Show Harris In Diff Scale:--
+Show Holes Count:--
+Show How Canny Works:--
+Show How Scale Affect:--
+Show How To Get Mask:--
+Show Intensity Analysis:--
+Show Label Mask:--
+Show Laplace Filter:--
+Show Laplace Sharp Filter:--
+Show Laplace of Gaussian:--
+Show Make Parabola:--
+Show Mask:--
+Show Max And Min Filter:--
+Show Max Circle:--
+Show Medial Axis:--
+Show Median Filter:--
+Show Open And Close:--
+Show Outline:--
+Show Percent Filter:--
+Show QRCode Art:--
+Show Region Analysis:--
+Show Region Filter:--
+Show Region Solidity:--
+Show Repair Lines:--
+Show Ridge Sub:--
+Show Skeleton:--
+Show Skeleton And MidAix:--
+Show Smooth The Gear:--
+Show Smooth The Rec:--
+Show Sobel Filter:--
+Show The Lighter One:--
+Show The Pure One:--
+Show Uniform Filter:--
+Show Unsharp Mask Filter:--
+Show Voronoi:--
+Show Watershed Inv:--
+Show Watershed Inv Sub:--
+Show Watershed Sub:--
+Show how to Laplace Sharp:--
+Show how to Unsharp Mask:--
 Shrink:收缩选区
 Skeleton:骨架
 Skeleton 3D:三维骨架
@@ -272,6 +373,7 @@ TIF 3D Save:存储序列
 TIF Open:打开
 TIF Save:保存
 Tables:表格
+Temperature Difference:--
 Threshold:阈值
 Tomasi:--
 Tool Tree View:工具树视图
@@ -291,18 +393,50 @@ Up And Down Watershed:高低阈值分水岭
 Up Down Watershed 3D:三维双阈值分水岭
 Update Dictionary:更新字典
 Update Software:自动更新
+Use Filter To Extract Text:--
+Use Filter To Extract Text Step:--
 Viewer 3D:三维画布
 Watershed Manual Marker:--
+Watershed Sub:--
 Watershed With ROI:分水岭用ROI做种子
 Window:窗口
 XYZ To RGB:XYZ转RGB
+Yuan:--
+ailurus:--
 ascent:远古的
 astronaut:宇航员
+bee:--
+block:--
 camera:相机
+cell:--
 coins:硬币
+dem:--
+distance:--
 face:脸
+game:--
+gear:--
+honeycomb:--
 horse:马
+house:--
 hubble_deep_field:--
+img:--
 immunohistochemistry:--
+insect:--
+marble:--
 moon:越亮
+necklace:--
+neubauer:--
 page:页面
+pointline:--
+points:--
+qin:--
+qrcode:--
+road:--
+saltpepper:--
+street:--
+sunglow:--
+towel-far:--
+towel-near:--
+trafficsign:--
+universe:--
+windmill:--
