@@ -49,8 +49,7 @@ class ImagePlus:
 
         if self.dtype == np.uint8:
             self.range = (0, 255)
-        else:
-            self.range = self.get_updown()
+        else: self.range = self.get_updown()
 
     def get_updown(self):
         arr = np.array(([(i.min(),i.max()) for i in self.imgs]))
