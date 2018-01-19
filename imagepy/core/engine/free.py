@@ -7,7 +7,7 @@ import threading, wx
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ...core.manager import TextLogManager, TaskManager
+from ...core.manager import TextLogManager, TaskManager, WidgetsManager
 
 class Free:
     title = 'Free'
@@ -41,9 +41,9 @@ class Free:
         if not self.load():return
         if para!=None or self.show() == wx.ID_OK:
             if para==None:para = self.para
-            win = TextLogManager.get('Recorder')
+            win = WidgetsManager.getref('Macros Recorder')
             if win!=None: 
-                win.append('{}>{}'.format(self.title, para))
+                win.write('{}>{}'.format(self.title, para))
             if self.asyn:
                 t = threading.Thread(target = self.runasyn, args = (para, callback))
                 t.start()

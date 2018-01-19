@@ -41,6 +41,7 @@ def buildToolsBar(parent, datas):
     box.Add(btn)
     btn.Bind(wx.EVT_LEFT_DOWN, lambda x:menu_drop(parent, toolsbar, datas, btn, x))
     add_tools(toolsbar, datas[1][1][1])
+    toolsbar.Fit()
     return toolsbar
 
 def menu_drop(parent, toolbar, datas, btn, e):
@@ -109,4 +110,3 @@ def add_tools(bar, datas, curids=[]):
                             wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
         box.Add( sp, 0, wx.ALL|wx.EXPAND, 2 )
         box.AddStretchSpacer(1)
-        

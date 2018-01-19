@@ -8,7 +8,7 @@ import threading
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ..manager import TextLogManager, TaskManager
+from ..manager import TextLogManager, TaskManager, WidgetsManager
 
 class Simple:
     title = 'SimpleFilter'
@@ -49,8 +49,8 @@ class Simple:
         if para == None: para = self.para
         threading.Thread(target = self.runasyn, 
                     args = (ips, ips.imgs, para, callafter)).start()
-        win = TextLogManager.get('Recorder')
-        if win!=None: win.append('{}>{}'.format(self.title, para))
+        win = WidgetsManager.getref('Macros Recorder')
+        if win!=None: win.write('{}>{}'.format(self.title, para))
 
     def runasyn(self,  ips, imgs, para = None, callback = None):
         TaskManager.add(self)
@@ -109,6 +109,6 @@ class Simple:
         elif self.modal:
             if self.show() == wx.ID_OK:
                 self.ok(self.ips, para, callback)
-            else:self.cancel(ips)
+            else:self.cancel(self.ips)
             self.dialog.Destroy()
         else: self.show()

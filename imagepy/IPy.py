@@ -14,7 +14,7 @@ from .core import manager
 from .imageplus import ImagePlus
 from . import root_dir
 
-
+aui = manager.ConfigManager.get('uistyle') != 'ij'
 curapp = None
 
 def get_window():
@@ -25,20 +25,18 @@ def get_ips():
     return None if win==None else win.canvas.ips
 
 def showips(ips):
-    
-    from .ui.canvasframe import CanvasPanel
-    canvasp = CanvasPanel(curapp.canvasnb)
-    curapp.canvasnb.AddPage( canvasp, ips.title, True, wx.NullBitmap )
-    #canvasp.canvas.initBuffer()
-    print('ppp', canvasp.GetClientSize())
-    canvasp.set_ips(ips)
-    curapp.auimgr.Update()
-    '''
-    from .ui.canvasframe import CanvasFrame
-    frame = CanvasFrame(curapp)
-    frame.set_ips(ips)
-    frame.Show()
-    '''
+    if aui:
+        from .ui.canvasframe import CanvasPanel
+        canvasp = CanvasPanel(curapp.canvasnb)
+        curapp.canvasnb.add_page( canvasp, ips)
+        #canvasp.canvas.initBuffer()
+        canvasp.set_ips(ips)
+        curapp.auimgr.Update()
+    else:
+        from .ui.canvasframe import CanvasFrame
+        frame = CanvasFrame(curapp)
+        frame.set_ips(ips)
+        frame.Show()   
 
 pub.subscribe(showips, 'showips')
 def show_ips(ips):

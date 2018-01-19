@@ -110,16 +110,27 @@ class ImagePlus:
                 self.imgs[self.cur][msk] = self.snap[msk]
             else : self.imgs[self.cur][:] = self.snap
 
+    def histogram(self, arange=None, stack=False):
+        if arange == None: arange=self.range
+        if not stack:
+            return np.histogram(self.img, np.linspace(arange[0], arange[1]+1, 257))[0]
+        # if stack
+        hists = []
+        for i in self.imgs:
+            hists.append(np.histogram(i, np.linspace(arange[0], arange[1]+1, 257))[0])
+        return np.array(hists).sum(axis=0)
+
     def lookup(self, img=None):
         if img is None: img = self.img
-        print(self.channels, self.dtype, img.dtype)
-        if img.ndim==2 and img.dtype==np.uint8:
-            return self.lut[img]
-        elif img.ndim==2:
+        #print(self.channels, self.dtype, img.dtype)
+        #if img.ndim==2 and img.dtype==np.uint8:
+        #    return self.lut[img]
+        #el
+        if img.ndim==2:
             k = 255.0/(max(1, self.range[1]-self.range[0]))
             bf = np.clip(img, self.range[0], self.range[1])
             bf = ((bf - self.range[0]) * k).astype(np.uint8)
-            print(bf.max(), self.range)
+            #print(bf.max(), self.range)
             return self.lut[bf]
         if img.ndim==3 and self.dtype==np.uint8:
             return img

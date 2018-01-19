@@ -6,26 +6,9 @@ Created on Wed Dec 28 23:24:43 2016
 """
 import wx 
 from imagepy.core.engine import Free, Macros
-from imagepy.core.manager import TextLogManager
-from imagepy.ui.macroseditor import MacrosEditor
 from imagepy import IPy
 
-class Recorder(Free):
-    title = 'Macros Recorder'
-    asyn = False
-    
-    def run(self, para = None):
-        if TextLogManager.get('Recorder')==None:
-            MacrosEditor('Recorder').Show()
-            
-class Edit(Free):
-    title = 'Macros Editor'
-    asyn = False
-    
-    def run(self, para = None):
-        MacrosEditor(TextLogManager.name('Macros Editor')).Show()
-        
-class Run(Free):
+class Plugin(Free):
     title = 'Run Macros'
     para = {'path':''}
     
@@ -38,6 +21,3 @@ class Run(Free):
         lines = f.readlines()
         f.close()
         Macros('noname', lines).start()
-
-## three MacroRecoder class 
-plgs = [Recorder, Edit, Run]

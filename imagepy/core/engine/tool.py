@@ -19,7 +19,12 @@ class Tool:
     def load(self):pass
     def switch(self):pass
     
-    def start(self):ToolsManager.set(self)
+    def start(self):
+        ips = IPy.get_ips()
+        if not ips is None and not ips.tool is None:
+            ips.tool = None
+            ips.update = True
+        ToolsManager.set(self)
         
     def mouse_down(self, ips, x, y, btn, **key): pass
     def mouse_up(self, ips, x, y, btn, **key): pass
