@@ -112,7 +112,7 @@ class Frequence(Simple):
         
 class Statistic(Simple):
     title = 'Pixel Statistic'
-    note = ['8-bit', '16-bit']
+    note = ['8-bit', '16-bit', 'int', 'float']
     
     para = {'max':True, 'min':True,'mean':False,'var':False,'std':False,'slice':False}
     view = [(bool, 'Max', 'max'),

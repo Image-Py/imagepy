@@ -3,37 +3,39 @@
 Created on Sat Jan 14 23:22:53 2017
 @author: yxl
 """
+import weakref
 
 class WindowsManager:
     windows = []
-    
+
     @classmethod
     def add(cls, win):
-        if win in cls.windows: 
-            cls.windows.remove(win)
-        cls.windows.insert(0, win)
+        print(win)
+        cls.remove(win)
+        callback = lambda a: cls.remove(a())
+        cls.windows.insert(0, weakref.ref(win, callback))
         
     @classmethod
     def remove(cls, win):
-        if win in cls.windows: 
-            cls.windows.remove(win)
+        for i in cls.windows:
+            if i() == win: cls.windows.remove(i)
             
     @classmethod
     def get(cls, title=None):
         if len(cls.windows)==0:return None
-        if title==None:return cls.windows[0]
-        titles = [i.canvas.ips.title for i in cls.windows]
+        if title==None:return cls.windows[0]()
+        titles = [i().canvas.ips.title for i in cls.windows]
         if not title in titles:return None
-        return cls.windows[titles.index(title)]
+        return cls.windows[titles.index(title)]()
           
     @classmethod
     def get_titles(cls):
-        return [i.canvas.ips.title for i in cls.windows]
+        return [i().canvas.ips.title for i in cls.windows]
         
     @classmethod
     def name(cls, name):
         if name==None:name='Undefined'
-        titles = [i.canvas.ips.title for i in cls.windows]
+        titles = [i().canvas.ips.title for i in cls.windows]
         if not name in titles :
             return name
         for i in range(1, 100) : 
@@ -46,7 +48,7 @@ class WindowsManager:
         win = cls.get(name)
         if win==None:return
         cls.remove(win)
-        win.Close()
+        win.close()
         
 class TextLogManager:
     windows = {}

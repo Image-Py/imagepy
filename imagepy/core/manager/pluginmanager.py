@@ -3,6 +3,8 @@
 Created on Sat Jan 14 23:23:30 2017
 @author: yxl
 """
+import weakref
+
 class ToolsManager:
     tools = {}
     curtool = None
@@ -29,3 +31,22 @@ class PluginsManager:
         
     @classmethod
     def get(cls, name):return cls.plgs[name]
+
+class WidgetsManager:
+    wgts, insts = {}, {}
+    
+    @classmethod
+    def add(cls, wgt): cls.wgts[wgt.title] = wgt
+        
+    @classmethod
+    def addref(cls, obj):
+        cls.insts[obj.title] = weakref.ref(obj)
+
+    @classmethod
+    def get(cls, name):return cls.wgts[name]
+
+    @classmethod
+    def getref(cls, name):
+        if not name in cls.insts: return None
+        if cls.insts[name] is None: return None
+        return cls.insts[name]()

@@ -10,7 +10,7 @@ import numpy as np
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ...core.manager import TextLogManager, WindowsManager, TaskManager
+from ...core.manager import TextLogManager, WindowsManager, TaskManager, WidgetsManager
         
 def process_channels(plg, ips, src, des, para):
     if ips.channels>1 and not 'not_channel' in plg.note:
@@ -141,13 +141,13 @@ class Filter:
             if not 'not_slice' in self.note and ips.get_nslices()>1:
                 if para == None:para = {}
             if para!=None and 'stack' in para:del para['stack']
-        win = TextLogManager.get('Recorder')
+        win = WidgetsManager.getref('Macros Recorder')
         if ips.get_nslices()==1 or 'not_slice' in self.note:
             # process_one(self, ips, ips.snap, ips.img, para)
             print(111)
             threading.Thread(target = process_one, args = 
                 (self, ips, ips.snap, ips.img, para, callafter)).start()
-            if win!=None: win.append('{}>{}'.format(self.title, para))
+            if win!=None: win.write('{}>{}'.format(self.title, para))
         elif ips.get_nslices()>1:
             has, rst = 'stack' in para, None
             if not has:
@@ -159,14 +159,14 @@ class Filter:
                 print(222)
                 threading.Thread(target = process_stack, args = 
                     (self, ips, ips.snap, ips.imgs, para)).start()
-                if win!=None: win.append('{}>{}'.format(self.title, para))
+                if win!=None: win.write('{}>{}'.format(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
                 #process_one(self, ips, ips.snap, ips.img, para)
                 print(333)
                 threading.Thread(target = process_one, args = 
                     (self, ips, ips.snap, ips.img, para, callafter)).start()
-                if win!=None: win.append('{}>{}'.format(self.title, para))
+                if win!=None: win.write('{}>{}'.format(self.title, para))
             elif rst == 'cancel': pass
         #ips.update = 'pix'
         
