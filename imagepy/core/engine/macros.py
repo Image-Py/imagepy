@@ -19,7 +19,6 @@ class Macros:
         self.cmds = cmds
         
     def _next(self, callafter=None):
-        print(self.cmds[self.cur])
         if self.cur==len(self.cmds):
             if self.callafter!=None:
                 self.callafter()

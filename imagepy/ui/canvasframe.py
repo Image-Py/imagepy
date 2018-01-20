@@ -43,15 +43,14 @@ class CanvasPanel(wx.Panel):
 
         self.page.SetScrollbar(0,0,0,0, refresh=True)
         sizer.Add( self.page, 0, wx.ALL|wx.EXPAND, 0 )
-        #self.page.Hide()
+        self.page.Hide()
         self.SetSizer(sizer)
         self.Layout()
-
         self.Bind(wx.EVT_SCROLL, self.on_scroll)
 
         # panel.Bind(wx.EVT_CHAR, self.OnKeyDown)
         self.opage = 0
-        self.Fit()
+        #self.Fit()
 
         #self.SetAcceleratorTable(IPy.curapp.shortcut)
 
@@ -80,12 +79,17 @@ class CanvasPanel(wx.Panel):
             if ips.get_nslices()==1 and self.page.Shown:
                 self.page.Hide()
                 resize = True
-            elif not self.page.Shown:
+            if ips.get_nslices()>1 and not self.page.Shown:
                 self.page.Show()
                 resize = True
             self.page.SetScrollbar(0, 0, ips.get_nslices()-1, 0, refresh=True)
 
-        if not IPy.aui and resize: self.Fit()
+        if resize: 
+            if not IPy.aui: self.Fit()
+            else: 
+                #self.SetSizer(self.GetSizer())
+                self.Layout() 
+                #self.GetSizer().Layout()
         if not self.handle is None: self.handle(ips, resize)
         
         #print('CanvasFrame:set_info')
