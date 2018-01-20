@@ -72,28 +72,28 @@ class CanvasPanel(wx.Panel):
             stk if ips.get_nslices()>1 else '',ips.size[0], ips.size[1],
             ips.imgtype, round(ips.get_nbytes()/1024.0/1024.0, 2))
         self.txt_info.SetLabel(label)
+        
+        
+
+        if ips.get_nslices() != self.opage:
+            self.opage = ips.get_nslices()
+            if ips.get_nslices()==1 and self.page.Shown:
+                self.page.Hide()
+                resize = True
+            elif not self.page.Shown:
+                self.page.Show()
+                resize = True
+            self.page.SetScrollbar(0, 0, ips.get_nslices()-1, 0, refresh=True)
+
         if not IPy.aui and resize: self.Fit()
         if not self.handle is None: self.handle(ips, resize)
-
-        if ips.get_nslices() == self.opage:return
-        self.opage = ips.get_nslices()
-        if ips.get_nslices()==1 and self.page.Shown:
-            self.page.Hide()
-            if not IPy.aui: self.Fit()
-        elif not self.page.Shown:
-            self.page.Show()
-            if not IPy.aui: self.Fit()
-        self.page.SetScrollbar(0, 0, ips.get_nslices()-1, 0, refresh=True)
-        
         
         #print('CanvasFrame:set_info')
         #self.page.Show()
 
     def set_ips(self, ips):
         self.ips = ips
-        #self.set_info(ips)
         self.canvas.set_ips(ips)
-        print('CanvasFrame:set_ips')
 
     def on_scroll(self, event):
         self.ips.cur = self.page.GetThumbPosition()
@@ -105,8 +105,7 @@ class CanvasPanel(wx.Panel):
         if not IPy.aui: parent.Close()
         else: parent.DeletePage(parent.GetPageIndex(self))
 
-    def __del__(self):
-        print('==========')
+    def __del__(self):pass
 
 class CanvasFrame(wx.Frame):
     """CanvasFrame: derived from the wx.core.Frame"""
@@ -129,7 +128,6 @@ class CanvasFrame(wx.Frame):
         self.canvaspanel.set_ips(ips)
 
     def set_title(self, ips, resized):
-        print('title', resized)
         title = ips.title + '' if ips.tool==None else ' [%s]'%ips.tool.title
         self.SetTitle(ips.title)
         if resized: self.Fit()

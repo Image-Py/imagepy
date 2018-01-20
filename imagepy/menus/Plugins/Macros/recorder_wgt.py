@@ -7,7 +7,6 @@ class Plugin ( wx.Panel ):
 
 	def __init__( self, parent ):
 		wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.TAB_TRAVERSAL )
-		
 		bSizer1 = wx.BoxSizer( wx.VERTICAL )
 		
 		root = osp.abspath(osp.dirname(__file__))
@@ -43,10 +42,11 @@ class Plugin ( wx.Panel ):
 		
 		self.txt_cont = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
 		bSizer1.Add( self.txt_cont, 1, wx.ALL|wx.EXPAND, 5 )
-		
+		self.file = ''
 		
 		self.SetSizer( bSizer1 )
 		self.Layout()
+		self.Fit()
 		
 		# Connect Events
 		self.Bind( wx.EVT_TOOL, self.on_open, id = self.tol_open.GetId() )
@@ -77,6 +77,7 @@ class Plugin ( wx.Panel ):
 		dialog.Destroy()
 	
 	def on_save( self, event ):
+		print('save')
 		if self.file=='':
 			dialog=wx.FileDialog(None,'wxpython Notebook(s)',style=wx.FD_SAVE)
 			if dialog.ShowModal()==wx.ID_OK:
@@ -114,4 +115,4 @@ class Plugin ( wx.Panel ):
 
 	def write(self, cont):
 		if not self.recording: return
-		self.txt_cont.AppendText(cont+'\n')
+		self.txt_cont.AppendText((cont+'\n'))

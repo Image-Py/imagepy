@@ -18,7 +18,7 @@ def extend_plugins(path, lst, err):
             rst.append(i)
             
         elif i[-3:] == '.mc':
-            f = open(os.path.join(root_dir,path)+'/'+i)
+            f = open(os.path.join(root_dir,path)+'/'+i, 'r', 'utf-8')
             cmds = f.readlines()
             f.close()
             rst.append(Macros(i[:-3], cmds))
