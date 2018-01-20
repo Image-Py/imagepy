@@ -45,7 +45,7 @@ def process_one(plg, ips, src, img, para, callafter=None):
     TaskManager.remove(plg)
     if not callafter is None:callafter()
     
-def process_stack(plg, ips, src, imgs, para):
+def process_stack(plg, ips, src, imgs, para, callafter=None):
     TaskManager.add(plg)
     from time import time, sleep
     start = time()
@@ -73,6 +73,7 @@ def process_stack(plg, ips, src, imgs, para):
             i[msk] = src[msk]
     ips.update = 'pix'
     TaskManager.remove(plg)
+    if not callafter is None:callafter()
     
 
 class Filter:
@@ -158,7 +159,7 @@ class Filter:
                 #process_stack(self, ips, ips.snap, ips.imgs, para)
                 print(222)
                 threading.Thread(target = process_stack, args = 
-                    (self, ips, ips.snap, ips.imgs, para)).start()
+                    (self, ips, ips.snap, ips.imgs, para, callafter)).start()
                 if win!=None: win.write('{}>{}'.format(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
