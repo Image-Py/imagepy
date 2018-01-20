@@ -76,7 +76,7 @@ class Show3DGraph(Simple):
 		self.frame.viewer.add_surf_asyn('paths', vts, fs, ns, cs, mode='grid')
 		vts, fs, ns, cs = myvi.build_lines(lxs, lys, lzs, (0,1,0))
 		self.frame.viewer.add_surf_asyn('lines', vts, fs, ns, cs, mode='grid')
-
+		self.frame.Raise()
 		self.frame = None
 
 class Statistic(Simple):

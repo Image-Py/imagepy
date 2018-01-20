@@ -47,6 +47,7 @@ class Plugin(Filter):
         cs = tuple([int(i/255.0) for i in para['color']])
         vts, fs, ns, cs = myvi.build_surf3d(ips.imgs, para['ds'], para['thr'], para['step'], cs)
         self.frame.viewer.add_surf_asyn(para['name'], vts, fs, ns, cs)
+        self.frame.Raise()
         self.frame = None
 
 
