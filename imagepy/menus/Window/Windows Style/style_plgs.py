@@ -4,7 +4,7 @@ from imagepy import IPy
 
 class ImageJStyle(Free):
     title = 'Pay Tribute To ImageJ'
-    asyn = True
+    asyn = False
     #process
     def run(self, para = None):
         ConfigManager.set('uistyle', 'ij')
@@ -12,7 +12,7 @@ class ImageJStyle(Free):
 
 class ImagePyStyle(Free):
     title = 'Elegant ImagePy Style'
-    asyn = True
+    asyn = False
     def run(self, para = None):
         ConfigManager.set('uistyle', 'ipy')
         IPy.alert('Shown in ImagePy style when next setup!')

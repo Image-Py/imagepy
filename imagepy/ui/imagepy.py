@@ -138,6 +138,7 @@ class ImagePy(wx.Frame):
             .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ) )
 
     def on_pan_close(self, event):
+        return
         if event.GetPane().window in [self.toolbar, self.widgets]:
             event.Veto()
             event.GetPane().Show(False)

@@ -63,7 +63,8 @@ class Plugin ( wx.Panel ):
 
 		self.recording = True
 	
-	def __del__(self):pass
+	def __del__(self):
+		print('Recoder closed!')
 	
 	
 	# Virtual event handlers, overide them in your derived class
