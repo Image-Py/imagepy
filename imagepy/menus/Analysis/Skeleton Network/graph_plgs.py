@@ -174,5 +174,34 @@ class CutROI(Filter):
             if img[y,x]>0:
                 floodfill(img, x, y)
         
+class ShortestPath(Simple):
+    title = 'Graph Shortest Path'
+    note = ['all']
 
-plgs = [BuildGraph, Statistic, Sumerise, '-', RemoveIsolate, CutBranch, CutROI]
+    para = {'start':0, 'end':1}
+    view = [(int, (0,1e8), 0, 'start', 'start', 'id'),
+            (int, (0,1e8), 0, 'end', 'end', 'id')]
+
+    def load(self, ips):
+        if not isinstance(ips.data, nx.MultiGraph):
+            IPy.alert("Please build graph!");
+            return False;
+        return True;
+
+    def run(self, ips, imgs, para = None):
+        nodes = nx.shortest_path(ips.data, source=para['start'], target=para['end'], weight='weight')
+        path = zip(nodes[:-1], nodes[1:])
+        paths = []
+        for s,e in path:
+            ps = ips.data[s][e].values()
+            pts = sorted([(i['weight'], i['pts']) for i in ps])
+            paths.append(((s,e), pts[0]))
+        sknw.draw_graph(ips.img, ips.data)
+        for i in paths:
+            ips.img[i[1][1][:,0], i[1][1][:,1]] = 255
+            IPy.write('%s-%s:%.4f'%(i[0][0], i[0][1], i[1][0]), 'ShortestPath')
+        IPy.write('Nodes:%s, Length:%.4f'%(len(nodes), sum([i[1][0] for i in paths])), 'ShortestPath')
+
+
+
+plgs = [BuildGraph, Statistic, Sumerise, '-', RemoveIsolate, CutBranch, CutROI, '-', ShortestPath]
