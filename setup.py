@@ -1,11 +1,20 @@
 from setuptools import setup
-import setuptools
+import setuptools, os
 
 descr = 'Image process framework based on plugin like imagej, it is esay to glue with scipy.ndimage, scikit-image, opencv, simpleitk, mayavi...and any libraries based on numpy'
 
+def get_data_files():
+    dic = {}
+    for root, dirs, files in os.walk('imagepy', True):
+        root = root.replace('/', '.').replace('\\', '.')
+        files = [i for i in files if not '.py' in i]
+        if len(files)==0:continue
+        dic[root] = files
+    return dic
+
 if __name__ == '__main__':
     setup(name='imagepy',
-        version='0.1',
+        version='0.13',
         url='https://github.com/Image-Py/imagepy',
         description='interactive python image-processing plugin framework',
         long_description=descr,
@@ -13,8 +22,7 @@ if __name__ == '__main__':
         author_email='yxdragon@imagepy.org',
         license='BSD 3-clause',
         packages=setuptools.find_packages(),
-        include_package_data=True,
-        data_files=[('123', ['imagepy/data/123.dat'])],
+        package_data=get_data_files(),
         install_requires=[
             'scikit-image',
             'shapely',
