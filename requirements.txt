@@ -1,6 +1,5 @@
-numpy
-Pillow
-scipy
-Shapely
-wxPython>=4.0
+scikit-image
+shapely
+wxpython
 numba
+dicom

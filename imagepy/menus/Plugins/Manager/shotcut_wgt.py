@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import wx, os
 from imagepy.core.engine import Free
-from imagepy.core.manager import ShotcutManager,PluginsManager
+from imagepy.core.manager import ShotcutManager, PluginsManager
 from imagepy import IPy, root_dir
 
 class VirtualListCtrl(wx.ListCtrl):
@@ -55,7 +55,6 @@ class Plugin( wx.Panel ):
         self.txt_search.Bind( wx.EVT_TEXT, self.on_search )
         self.lst_plgs.Bind(wx.EVT_LIST_KEY_DOWN, self.on_run)
         self.load()
-        self.Bind(wx.EVT_CLOSE, self.on_close)
     
     #def list_plg(self, lst, items
     def load(self):
@@ -106,6 +105,5 @@ class Plugin( wx.Panel ):
         ShotcutManager.set(title, txt)
         #PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
         
-    def on_close(self, event):
+    def __del__(self):
         ShotcutManager.write()
-        self.Destroy()
