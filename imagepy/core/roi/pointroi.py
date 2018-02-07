@@ -5,7 +5,7 @@ Created on Tue Nov  8 22:35:55 2016
 """
 import wx
 from ..draw import paint
-from .roi import ROI, affine
+from .roi import ROI
 from ..manager import RoiManager
 from imagepy import IPy
 
@@ -55,12 +55,14 @@ class PointRoi(ROI):
         x, y = self.body[cur]
         IPy.set_info('points:%.0f x:%.1f y:%.1f'%(len(self.body), x*k, y*k))
 
+    '''
     def affine(self, m, o):
         plg = PointRoi()
         plg.body = affine(self.body, m, o)
         plg.update = True
         plg.infoupdate = True
         return plg
+    '''
         
     def draw(self, dc, f):
         dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))

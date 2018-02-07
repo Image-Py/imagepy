@@ -17,7 +17,7 @@ class RotateTool(Tool):
         
     def mouse_up(self, ips, x, y, btn, **key):
         if self.moving : self.moving = False
-        else : self.plg.preview(self.ips, self.para)
+        else : self.plg.preview(ips, self.para)
         
     def mouse_move(self, ips, x, y, btn, **key):
         lim = 5.0/key['canvas'].get_scale()
@@ -68,7 +68,7 @@ class Plugin(Filter):
         ips.roi = self.bufroi
         ips.mark = None
         ips.tool = None
-        ips.update = True
+        ips.update = 'pix'
         
     def ok(self, ips, para=None):
         Filter.ok(self, ips, para)

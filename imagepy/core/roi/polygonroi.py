@@ -8,7 +8,6 @@ from shapely.geometry import Polygon, Point, LineString
 from shapely.ops import cascaded_union
 from shapely.ops import polygonize
 from ..draw import paint
-from .operator import affine
 from .roi import ROI
 from ..manager import RoiManager
 from imagepy import IPy
@@ -119,13 +118,15 @@ class PolygonRoi(ROI):
             return True
         
     def topolygon(self):return self
-        
+     
+    '''   
     def affine(self, m, o):
         plg = PolygonRoi()
         plg.body = affine(self.body, m, o)
         plg.update = True
         plg.infoupdate = True
         return plg
+    '''
         
     def draw(self, dc, f):
         dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))

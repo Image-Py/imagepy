@@ -7,7 +7,6 @@ Created on Fri Nov 11 12:10:17 2016
 from __future__ import absolute_import
 import wx
 from ..draw import paint
-from .operator import affine
 from .roi import ROI
 from ..manager import RoiManager
 from imagepy import IPy
@@ -69,12 +68,14 @@ class LineRoi(ROI):
                 dc.DrawLines([f(*i) for i in line])
                 for i in line:dc.DrawCircle(f(*i),2)
         
+    '''
     def affine(self, m, o):
         plg = LineRoi()
         plg.body = affine(self.body, m, o)
         plg.update = True
         plg.infoupdate = True
         return plg
+    '''
         
     def sketch(self, img, w=1, color=None):
         pen = paint.Paint()

@@ -30,7 +30,7 @@ class ScaleTool(Tool):
         print(self.moving)
         
     def mouse_up(self, ips, x, y, btn, **key):
-        if self.moving : self.plg.preview(self.ips, self.para)
+        if self.moving : self.plg.preview(ips, self.para)
         
     def mouse_move(self, ips, x, y, btn, **key):
         lim = 5.0/key['canvas'].get_scale()
@@ -124,7 +124,7 @@ class Plugin(Filter):
         ips.roi = self.bufroi
         ips.mark = None
         ips.tool = None
-        ips.update = True
+        ips.update = 'pix'
         
     def run(self, ips, img, buf, para = None):
         if para == None: para = self.para
