@@ -10,9 +10,12 @@ imagepy/menus/ITK/
 imagepy/menus/Skimage/
 imagepy/menus/Opencv/
 imagepy/menus/IBook/
+imagepy/menus/Ice/
 imagepy/tools/Extend/
 imagepy/tools/Cvtools/
 imagepy/tools/IBook/
+imagepy/tools/Ice Analysis/
+imagepy/imgs/
 imagepy/preference.cfg
 
 # C extensions
