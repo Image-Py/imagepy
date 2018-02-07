@@ -5,6 +5,12 @@ Created on Wed Dec 21 15:05:16 2016
 """
 from .convert import roi2shape, shape2roi
 
+def geomtrans(body, f):
+    if isinstance(body, list):
+        return [affine(i, f) for i in body]
+    if isinstance(body, tuple):
+        return tuple(f(body))
+
 def affine(body, m, o):
     if isinstance(body, list):
         return [affine(i, m, o) for i in body]

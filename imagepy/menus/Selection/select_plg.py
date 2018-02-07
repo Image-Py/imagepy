@@ -6,7 +6,8 @@ Created on Sun Dec 18 22:31:12 2016
 """
 from imagepy.core.manager import RoiManager
 from imagepy.core.engine import Simple
-from imagepy.core.roi.rectangleroi import RectangleRoi
+from imagepy.core.roi import RectangleRoi
+from imagepy.core.roi import roiio
 from imagepy import IPy
 
 class SelectAll(Simple):
@@ -107,6 +108,37 @@ class Invert(Simple):
         rect = RectangleRoi(0,0,ips.size[1],ips.size[0])
         ips.roi = ips.roi.invert(rect)
         
+class Save(Simple):
+    """Save: save roi as a wkt file """
+    title = 'Save ROI'
+    note = ['all', 'req_roi']
+    para={'path':''}
+
+    def show(self):
+        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in ['roi', 'wkt']])
+        return IPy.getpath('Save..', filt, 'save', self.para)
+
+    def run(self, ips, imgs, para = None):
+        file = para['path']
+        if file[-3:] == 'wkt':roiio.savewkt(ips.roi, file)
+        if file[-3:] == 'roi':roiio.saveroi(ips.roi, file)
+
+class Open(Simple):
+    """Save: save roi as a wkt file """
+    title = 'Open ROI'
+    note = ['all']
+    para={'path':''}
+
+    def show(self):
+        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in ['roi', 'wkt']])
+        return IPy.getpath('Save..', filt, 'open', self.para)
+
+    def run(self, ips, imgs, para = None):
+        file = para['path']
+
+        if file[-3:] == 'wkt':ips.roi = roiio.readwkt(file)
+        if file[-3:] == 'roi':ips.roi = roiio.readroi(file)
+
 plgs = [SelectAll, SelectNone, 
         '-', Inflate, Shrink, Convex, Box, Clip, Invert, 
-        '-', Add2Manager, LoadRoi]
+        '-', Open, Save, Add2Manager, LoadRoi]

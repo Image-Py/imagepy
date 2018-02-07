@@ -2,4 +2,4 @@ scikit-image
 shapely
 wxpython
 numba
-dicom
+pydicom

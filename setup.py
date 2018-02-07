@@ -28,6 +28,6 @@ if __name__ == '__main__':
             'shapely',
             'wxpython',
             'numba',
-            'dicom'
+            'pydicom'
         ],
     )
