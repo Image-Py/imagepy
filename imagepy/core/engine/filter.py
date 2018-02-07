@@ -183,12 +183,12 @@ class Filter:
         if 'auto_snap' in self.note:ips.snapshot()
         
         if para!=None:
-            self.ok(self.ips, para, callback)
+            self.ok(self.ips, para, callafter)
         elif self.view==None:
-            if not self.__class__.show is Simple.show:
+            if not self.__class__.show is Filter.show:
                 if self.show() == wx.ID_OK:
-                    self.ok(self.ips, para, callback)
-            else: self.ok(self.ips, para, callback)
+                    self.ok(self.ips, para, callafter)
+            else: self.ok(self.ips, para, callafter)
         elif self.modal:
             if self.show() == wx.ID_OK:
                 self.ok(ips, None, callafter)
