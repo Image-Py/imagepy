@@ -27,7 +27,6 @@ if __name__ == '__main__':
             'scikit-image',
             'shapely',
             'wxpython',
-            'numba',
-            'pydicom'
+            'numba'
         ],
     )
