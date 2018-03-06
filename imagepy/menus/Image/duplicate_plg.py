@@ -48,10 +48,11 @@ class Plugin(Simple):
                 sc, sr = ips.get_rect()
                 if ips.is3d: imgs=imgs[:, sc, sr].copy()
                 else: imgs = [i[sc,sr].copy() for i in imgs]
-                backimg = ips.backimg[sr, cr]
+                if not ips.backimg is None:
+                    backimg = ips.backimg[sr, sr]
             ipsd = ImagePlus(imgs, name)
             if ips.roi != None:
                 ipsd.roi = ips.roi.affine(np.eye(2), (-sr.start, -sc.start))
-            ipsd.backimg = backimg
+            if not ips.backimg is None: ipsd.backimg = backimg
         ipsd.backmode = ips.backmode
         IPy.show_ips(ipsd)

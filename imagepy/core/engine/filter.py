@@ -11,6 +11,7 @@ import numpy as np
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
 from ...core.manager import TextLogManager, WindowsManager, TaskManager, WidgetsManager
+from time import time
         
 def process_channels(plg, ips, src, des, para):
     if ips.channels>1 and not 'not_channel' in plg.note:
@@ -26,6 +27,7 @@ def process_channels(plg, ips, src, des, para):
 
 def process_one(plg, ips, src, img, para, callafter=None):
     TaskManager.add(plg)
+    start = time()
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
     if transint: 
@@ -41,13 +43,13 @@ def process_one(plg, ips, src, img, para, callafter=None):
     if 'auto_msk' in plg.note and not ips.get_msk() is None:
         msk = True ^ ips.get_msk()
         img[msk] = src[msk]
+    IPy.set_info('%s: cost %.3fs'%(ips.title, time()-start))
     ips.update = 'pix'
     TaskManager.remove(plg)
     if not callafter is None:callafter()
     
 def process_stack(plg, ips, src, imgs, para, callafter=None):
     TaskManager.add(plg)
-    from time import time, sleep
     start = time()
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
@@ -71,6 +73,7 @@ def process_stack(plg, ips, src, imgs, para, callafter=None):
         if 'auto_msk' in plg.note and not ips.get_msk() is None:
             msk = True ^ ips.get_msk()
             i[msk] = src[msk]
+    IPy.set_info('%s: cost %.3fs'%(ips.title, time()-start))
     ips.update = 'pix'
     TaskManager.remove(plg)
     if not callafter is None:callafter()

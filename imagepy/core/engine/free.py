@@ -8,6 +8,7 @@ import threading, wx
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
 from ...core.manager import TextLogManager, TaskManager, WidgetsManager
+from time import time
 
 class Free:
     title = 'Free'
@@ -24,7 +25,9 @@ class Free:
         
     def runasyn(self, para, callback=None):
         TaskManager.add(self)
+        start = time()
         self.run(para)
+        IPy.set_info('%s: cost %.3fs'%(self.title, time()-start))
         TaskManager.remove(self)
         if callback!=None:callback()
 

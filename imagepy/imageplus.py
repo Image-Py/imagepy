@@ -86,7 +86,7 @@ class ImagePlus:
         return self.msk
 
     def get_rect(self):
-        if self.roi==None:return None
+        if self.roi==None:return slice(None), slice(None)
         box = self.roi.get_box()
         l, r = max(0, box[0]), min(self.size[1], box[2])
         t, b = max(0, box[1]), min(self.size[0], box[3])

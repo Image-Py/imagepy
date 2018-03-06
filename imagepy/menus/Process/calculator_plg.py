@@ -45,14 +45,17 @@ class Plugin(Simple):
         w, h = ips1.size, ips2.size
         w, h = min(w[0], h[0]), min(w[1], h[1])
         if sl1 == 1:
-            bliter.blit(ips1.img, ips2.img, mode=para['op'])
+            bliter.blit(ips1.get_subimg(), ips2.get_subimg(), mode=para['op'])
         elif sl1>1 and sl2==1:
             for i in range(sl1):
                 self.progress(i, sl1)
-                bliter.blit(ips1.imgs[i], ips2.img, mode=para['op'])
+                ss1, se1 = ips1.get_rect()
+                bliter.blit(ips1.imgs[i][ss1, se1], ips2.get_subimg(), mode=para['op'])
         elif sl1>1 and sl2>1:
             for i in range(sl1):
                 self.progress(i, sl1)
-                bliter.blit(ips1.imgs[i], ips2.imgs[i], mode=para['op'])
+                ss1, se1 = ips1.get_rect()
+                ss2, se2 = ips2.get_rect()
+                bliter.blit(ips1.imgs[i][ss1, se1], ips2.imgs[i][ss2, se2], mode=para['op'])
         ips1.update = 'pix'
         

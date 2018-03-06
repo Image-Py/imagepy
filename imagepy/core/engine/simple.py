@@ -9,6 +9,7 @@ import threading
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
 from ..manager import TextLogManager, TaskManager, WidgetsManager
+from time import time
 
 class Simple:
     title = 'SimpleFilter'
@@ -54,7 +55,9 @@ class Simple:
 
     def runasyn(self,  ips, imgs, para = None, callback = None):
         TaskManager.add(self)
+        start = time()
         self.run(ips, imgs, para)
+        IPy.set_info('%s: cost %.3fs'%(ips.title, time()-start))
         ips.update = 'pix'
         TaskManager.remove(self)
         if callback!=None:callback()
@@ -113,5 +116,5 @@ class Simple:
             if self.show() == wx.ID_OK:
                 self.ok(self.ips, para, callback)
             else:self.cancel(self.ips)
-            self.dialog.Destroy()
+            if not self.dialog is None: self.dialog.Destroy()
         else: self.show()

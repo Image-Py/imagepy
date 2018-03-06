@@ -10,9 +10,7 @@ class Add(Filter):
     view = [('slide', (-100, 100), '-100', 'num', '+100')]
     
     def run(self, ips, snap, img, para = None):
-        if para == None: para = self.para
-        img[:] = snap
-        np.add(img, para['num'], out=img, casting='unsafe')
+        np.add(snap, para['num'], out=img, casting='unsafe')
         
 class Multiply(Filter):
     """Multiply_plg: derived from imagepy.core.engine.Filter """
@@ -22,9 +20,7 @@ class Multiply(Filter):
     view = [(float, (-100,100), 2, '-100', 'num', '+100')]
     
     def run(self, ips, snap, img, para = None):
-        if para == None: para = self.para     
-        img[:] = snap
-        np.multiply(img, para['num'], out=img, casting='unsafe')
+        np.multiply(snap, para['num'], out=img, casting='unsafe')
         
 class Max(Filter):
     """Max_plg: derived from imagepy.core.engine.Filter """
@@ -33,8 +29,7 @@ class Max(Filter):
     para = {'num':0}
     view = [('slide', (-100,100), '-100', 'num', '+100')]
     
-    def run(self, ips, snap, img, para = None):
-        if para == None: para = self.para     
+    def run(self, ips, snap, img, para = None):   
         img[:] = snap
         img[img<para['num']] = para['num']
         
@@ -46,7 +41,6 @@ class Min(Filter):
     view = [('slide', (-100,100), '-100', 'num', '+100')]
     
     def run(self, ips, snap, img, para = None):
-        if para == None: para = self.para
         img[:] = snap
         img[img>para['num']] = para['num']
         
