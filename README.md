@@ -1,11 +1,32 @@
 ImagePy Basic Tutorial   
-======================
+==============
 [https://github.com/yxdragon/imagepy.git](https://github.com/yxdragon/imagepy.git)
 
-**Introduction:**ImagePy is an image processing software developed in Python, supporting bmp, rgb, png and other commonly used image formats. It can handle grayscale images and multi-channel (color) images, and supports image stack (sequence) operations. It supports a variety of selection operations (point, line, surface, multi-line, multi-face, hollow polygon).  It can carry out a variety of commonly used mathematical operations, commonly used filter operation, image measurements, as well as pixel statistics. It can carry on dem surface reconstruction and three-dimensional reconstruction of image sequences. And the framework is based around Python development. The image data is represented by numpy. And thus it can easily access scikit-image, opencv, itk, mayavi and other third-party mature image processing libraries.
+**Introduction:**
+ImagePy is an image processing software developed in Python, supporting bmp, rgb, png and other commonly used image formats. It can handle grayscale images and multi-channel (color) images, and supports image stack (sequence) operations. It supports a variety of selection operations (point, line, surface, multi-line, multi-face, hollow polygon).  It can carry out a variety of commonly used mathematical operations, commonly used filter operation, image measurements, as well as pixel statistics. It can carry on dem surface reconstruction and three-dimensional reconstruction of image sequences. And the framework is based around Python development. The image data is represented by numpy. And thus it can easily access scikit-image, opencv, itk, mayavi and other third-party mature image processing libraries.
+
+Download and install
+-----------------------
+**works on windows, linux, mac, under python2.7 and python3.4+**
+
+```bash
+# Now ImagePy is on Pypi
+pip install imagepy
+
+# Or install with conda
+conda install imagepy
+
+# Then start imagepy like this
+python -m imagepy
+```
+**some trouble**
+1. ImagePy is a ui framework based on wxpython, which can not install with pip on Linux. You need download **[the whl acrodding to your Linux system](https://wxpython.org/pages/downloads/)**.
+2. On Linux and Mac, there may be permission denied promblem, for ImagePy will write some config information, So please **start with sudo**. If you install with pip, please add --user parameter like this: **pip install -user imagepy**
+3. If you install ImagePy in a Anaconda virtual environment, you may got a error when start like this: **This program needs access to the screen. Please run with a Framework
+build of python, and only when you are logged in on the main display**, if so, please start with pythonw -m imagepy.
 
 Main Interface
---------------
+----------------
 ![](http://idoc.imagepy.org/imgs/main.png "main")  
 The main interface consists of four parts, from top to bottom: the title bar, menu bar, toolbar, and status bar. 
 Here are a few examples to illustrate what ImagePy can do.
