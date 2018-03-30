@@ -72,20 +72,20 @@ class FloatSlider(wx.Panel):
     def __init__( self, parent, rang, accury):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.TAB_TRAVERSAL )
         sizer = wx.BoxSizer( wx.HORIZONTAL )
-        self.slider = wx.Slider( self, wx.ID_ANY, 128, 0, 255, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL|wx.SL_SELRANGE )
-        sizer.Add( self.slider, 1, wx.ALIGN_CENTER|wx.ALL, 0 )
+        self.slider = wx.ScrollBar( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,25 ), wx.SB_HORIZONTAL )
+        sizer.Add( self.slider, 1, wx.ALL, 0 )
         self.text = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 40,-1 ), 0 )
         sizer.Add( self.text, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
-        self.spin = wx.SpinButton( self, wx.ID_ANY, wx.DefaultPosition, wx.Size(25, 25), 0 )
-        sizer.Add( self.spin, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
+        #self.spin = wx.SpinButton( self, wx.ID_ANY, wx.DefaultPosition, wx.Size(25, 25), 0 )
+        #sizer.Add( self.spin, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
         self.SetSizer( sizer )
         self.Layout()
         
         # Connect Events
         self.slider.Bind( wx.EVT_SCROLL, self.on_scroll )
         self.text.Bind( wx.EVT_KEY_UP, self.on_text )
-        self.spin.Bind( wx.EVT_SPIN_DOWN, self.on_down )
-        self.spin.Bind( wx.EVT_SPIN_UP, self.on_up )
+        #self.spin.Bind( wx.EVT_SPIN_DOWN, self.on_down )
+        #self.spin.Bind( wx.EVT_SPIN_UP, self.on_up )
         self.set_para(rang, accury)
 
     def Bind(self, z, f):
@@ -97,7 +97,7 @@ class FloatSlider(wx.Panel):
         self.accury = accury
 
     def on_scroll(self, event):
-        n = self.slider.GetValue()/255.0*(self.max-self.min)+self.min
+        n = self.slider.GetThumbPosition()/255.0*(self.max-self.min)+self.min
         print(n, round(n, self.accury))
         self.text.SetValue(str(round(n,self.accury) if self.accury>0 else int(n)))
         self.text.SetBackgroundColour((255,255,255))
@@ -121,7 +121,8 @@ class FloatSlider(wx.Panel):
     def SetValue(self, n):
         if not self.text.HasFocus():
             self.text.SetValue(str(round(n,self.accury) if self.accury>0 else int(n)))
-        self.slider.SetValue(int(round((n-self.min)/(self.max-self.min)*255)))
+        pos = int(round((n-self.min)/(self.max-self.min)*255))
+        self.slider.SetScrollbar(pos, 0, 255, 0)
         
     def GetValue(self):
         sval = self.text.GetValue()

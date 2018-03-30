@@ -92,16 +92,12 @@ class Watershed(Simple):
 
     ## TODO: Fixme!
     def run(self, ips, imgs, para = None):
-        print(1)
         dist = -ndimg.distance_transform_edt(imgs)
-        print(2)
         pts = find_maximum(dist, para['tor'], False)
-        print(3)
         buf = np.zeros(imgs.shape, dtype=np.uint16)
         buf[pts[:,0], pts[:,1], pts[:,2]] = 1
         markers, n = ndimg.label(buf, np.ones((3,3, 3)))
         line = watershed(dist, markers, line=True, conn=para['con']+1)
         imgs[line==0] = 0
-        print(4)
 
 plgs = [Dilation, Erosion, Opening, Closing, '-', FillHole, Skeleton3D, '-', Distance3D, Watershed]
