@@ -2,6 +2,7 @@
 import scipy.ndimage as ndimg
 from imagepy.core.engine import Simple
 from skimage.morphology import skeletonize_3d
+from imagepy.ipyalg import find_maximum, watershed
 import numpy as np
 
 class Dilation(Simple):
@@ -79,4 +80,28 @@ class Distance3D(Simple):
         dismap = ndimg.distance_transform_edt(imgs>0)
         imgs[:] = np.clip(dismap, ips.range[0], ips.range[1])
 
-plgs = [Dilation, Erosion, Opening, Closing, '-', FillHole, Skeleton3D, '-', Distance3D]
+class Watershed(Simple):
+    """Mark class plugin with events callback functions"""
+    title = 'Binary Watershed 3D'
+    note = ['8-bit', 'stack3d']
+
+
+    para = {'tor':2, 'con':False}
+    view = [(int, (0,255), 0, 'tolerance', 'tor', 'value'),
+            (bool, 'full connectivity', 'con')]
+
+    ## TODO: Fixme!
+    def run(self, ips, imgs, para = None):
+        print(1)
+        dist = -ndimg.distance_transform_edt(imgs)
+        print(2)
+        pts = find_maximum(dist, para['tor'], False)
+        print(3)
+        buf = np.zeros(imgs.shape, dtype=np.uint16)
+        buf[pts[:,0], pts[:,1], pts[:,2]] = 1
+        markers, n = ndimg.label(buf, np.ones((3,3, 3)))
+        line = watershed(dist, markers, line=True, conn=para['con']+1)
+        imgs[line==0] = 0
+        print(4)
+
+plgs = [Dilation, Erosion, Opening, Closing, '-', FillHole, Skeleton3D, '-', Distance3D, Watershed]

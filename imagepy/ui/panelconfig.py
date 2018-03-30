@@ -251,7 +251,7 @@ class ParaDialog (wx.Dialog):
 
     def reset(self, para=None):
         if para!=None:self.para = para
-        print(para, '====')
+        #print(para, '====')
         for p in list(self.para.keys()):
             if p in self.ctrl_dic:
                 self.ctrl_dic[p].SetValue(self.para[p])

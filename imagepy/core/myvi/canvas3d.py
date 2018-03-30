@@ -1,5 +1,5 @@
 import sys
-import ModernGL
+import moderngl
 import numpy as np
 import wx, math
 import wx.glcanvas as glcanvas

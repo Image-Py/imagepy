@@ -1,6 +1,6 @@
 import struct
 import numpy as np
-import ModernGL
+import moderngl
 from time import time
 
 from scipy.misc import imread
@@ -71,7 +71,7 @@ class Surface:
 		self.vbo = ctx.buffer(buf.tobytes())
 		ibo = ctx.buffer(ids.tobytes())
 		
-		content = [(self.vbo, '3f3f3f', ['v_vert', 'v_norm', 'v_color'])]
+		content = [(self.vbo, '3f 3f 3f', 'v_vert', 'v_norm', 'v_color')]
 		self.vao = ctx.vertex_array(prog, content, ibo)
 		self.prog = prog
 
@@ -88,10 +88,10 @@ class Surface:
 		if not self.visible: return
 		self.ctx.line_width = 1
 		mvp = np.dot(*mvp)
-		self.prog.uniforms['Mvp'].write(mvp.astype(np.float32).tobytes())
-		self.prog.uniforms['blend'].value = self.blend
+		self.prog['Mvp'].write(mvp.astype(np.float32).tobytes())
+		self.prog['blend'].value = self.blend
 
-		self.vao.render({'mesh':ModernGL.TRIANGLES, 'grid':ModernGL.LINES}[self.mode])
+		self.vao.render({'mesh':moderngl.TRIANGLES, 'grid':moderngl.LINES}[self.mode])
 
 class MarkText:
 	def __init__(self, vts, ids, os, h, color):
@@ -105,7 +105,7 @@ class MarkText:
 		buf[:,0:3], buf[:,3:6] = vts, os
 		self.vbo = ctx.buffer(buf.tobytes())
 		ibo = ctx.buffer(ids.tobytes())
-		content = [(self.vbo, '3f3f', ['v_vert', 'v_pos'])]
+		content = [(self.vbo, '3f 3f', 'v_vert', 'v_pos')]
 		self.vao = ctx.vertex_array(prog, content, ibo)
 		self.prog = prog
 
@@ -116,11 +116,11 @@ class MarkText:
 	def draw(self, mvp):
 		if not self.visible: return
 		self.ctx.line_width = 2
-		self.prog.uniforms['mv'].write(mvp[0].astype(np.float32).tobytes())
-		self.prog.uniforms['proj'].write(mvp[1].astype(np.float32).tobytes())
-		self.prog.uniforms['f_color'].write(np.array(self.color).astype(np.float32).tobytes())
-		self.prog.uniforms['h'].value = self.h
-		self.vao.render(ModernGL.LINES)
+		self.prog['mv'].write(mvp[0].astype(np.float32).tobytes())
+		self.prog['proj'].write(mvp[1].astype(np.float32).tobytes())
+		self.prog['f_color'].write(np.array(self.color).astype(np.float32).tobytes())
+		self.prog['h'].value = self.h
+		self.vao.render(moderngl.LINES)
 
 class Manager:
 	def __init__(self):
@@ -132,9 +132,9 @@ class Manager:
 		self.ctx = None
 
 	def on_ctx(self):
-		self.ctx = ModernGL.create_context()
-		self.prog_suf = self.ctx.program([
-			self.ctx.vertex_shader('''
+		self.ctx = moderngl.create_context()
+		self.prog_suf = self.ctx.program(
+			vertex_shader='''
                 #version 330
                 uniform mat4 Mvp;
                 in vec3 v_vert;
@@ -147,8 +147,8 @@ class Manager:
                     f_norm = v_norm;
                     f_color = v_color;
                 }
-            '''),
-            self.ctx.fragment_shader('''
+            ''',
+            fragment_shader='''
                 #version 330
                 uniform vec3 light = vec3(1,1,0.8);
                 uniform float blend = 0.1;
@@ -159,11 +159,11 @@ class Manager:
                     float d = clamp((dot(light, f_norm)+1)*0.5, 0, 1);
            			color = vec4(f_color*d, blend);
                 }
-			'''),
-		])
+			'''
+		)
 
-		self.prog_txt = self.ctx.program([
-			self.ctx.vertex_shader('''
+		self.prog_txt = self.ctx.program(
+			vertex_shader='''
                 #version 330
                 uniform mat4 mv;
                 uniform mat4 proj;
@@ -174,16 +174,15 @@ class Manager:
                     vec4 o = mv * vec4(v_pos, 1);
                     gl_Position = proj *(o + vec4(v_vert.x*h, v_vert.y*h, v_vert.z, 0));
                 }
-            '''),
-            self.ctx.fragment_shader('''
+            ''',
+            fragment_shader='''
                 #version 330
                 uniform vec3 f_color;
                 out vec4 color;
                 void main() {
            			color = vec4(f_color, 1);
                 }
-			'''),
-		])
+			''')
 
 		for i in self.objs.values():
 			if isinstance(i, Surface): i.on_ctx(self.ctx, self.prog_suf)
@@ -212,9 +211,9 @@ class Manager:
 
 	def draw(self):
 		self.ctx.clear(*self.background)
-		self.ctx.enable(ModernGL.DEPTH_TEST)
+		self.ctx.enable(moderngl.DEPTH_TEST)
 		#self.ctx.enable(ModernGL.CULL_FACE)
-		self.ctx.enable(ModernGL.BLEND)
+		self.ctx.enable(moderngl.BLEND)
 		for i in self.objs.values(): i.draw(self.mvp)
 
 	def count_box(self):

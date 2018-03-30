@@ -5,6 +5,21 @@ from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
 from numpy.linalg import norm
 
+class RegionLabel(Simple):
+    title = 'Region Label 3D'
+    note = ['8-bit', '16-bit', 'stack3d']
+
+    para = {'con':'8-connect'}
+
+    view = [(list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix')]
+
+    #process
+    def run(self, ips, imgs, para = None):
+        buf = imgs.astype(np.uint16)
+        strc = generate_binary_structure(3, 1 if para['con']=='4-connect' else 2)
+        label(imgs, strc, output=buf)
+        IPy.show_img(buf, ips.title+'-label')
+
 # center, area, l, extent, cov
 class RegionCounter(Simple):
     title = 'Geometry Analysis 3D'
@@ -94,4 +109,4 @@ class RegionFilter(Simple):
         idx[0] = para['front'] if para['inv'] else 0
         imgs[:] = idx[lab]
 
-plgs = [RegionCounter, RegionFilter]
+plgs = [RegionLabel, RegionCounter, RegionFilter]
