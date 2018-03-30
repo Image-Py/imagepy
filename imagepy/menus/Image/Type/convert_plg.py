@@ -22,7 +22,7 @@ class To8bit(Simple):
                     img8[i] = imgs[i].mean(axis=2)
             else:
                 minv, maxv = ips.get_updown()
-                k = 255.0/(max(1, maxv-minv))
+                k = 255.0/(max(1e-8, maxv-minv))
                 bf = np.clip(imgs, minv, maxv)
                 img8 = ((bf - minv) * k).astype(np.uint8)
         else:
@@ -33,7 +33,7 @@ class To8bit(Simple):
                 if ips.imgtype == 'rgb':
                     img8.append(imgs[i].mean(axis=2).astype(np.uint8))
                 else:
-                    k = 255.0/(max(1, maxv-minv))
+                    k = 255.0/(max(1e-8, maxv-minv))
                     bf = np.clip(imgs[i], minv, maxv)
                     img8.append(((bf - minv) * k).astype(np.uint8))
         ips.set_imgs(img8)
@@ -50,7 +50,7 @@ class ToRGB(Simple):
             if ips.dtype == np.uint8: img8 = imgs
             else:
                 minv, maxv = ips.get_updown()
-                k = 255.0/(max(1, maxv-minv))
+                k = 255.0/(max(1e-8, maxv-minv))
                 bf = np.clip(imgs, minv, maxv)
                 img8 = ((bf - minv) * k).astype(np.uint8)
             rgb = ips.lut[img8]
@@ -62,7 +62,7 @@ class ToRGB(Simple):
                 if ips.dtype==np.uint8:
                     rgb.append(ips.lut[imgs[i]])
                 else:
-                    k = 255.0/(max(1, maxv-minv))
+                    k = 255.0/(max(1e-8, maxv-minv))
                     bf = np.clip(imgs[i], minv, maxv)
                     img8 = ((bf - minv) * k).astype(np.uint8)
                     rgb.append(ips.lut[img8])
@@ -88,7 +88,7 @@ class ToUint16(Simple):
                 if ips.imgtype == 'rgb':
                     img16.append(imgs[i].mean(axis=2).astype(np.uint16))
                 else:
-                    k = 255.0/(max(1, maxv-minv))
+                    k = 255.0/(max(1e-10, maxv-minv))
                     img16.append(np.clip(imgs[i], 0, 65535).astype(np.uint16))
         ips.set_imgs(img16)
 
@@ -112,7 +112,7 @@ class ToInt32(Simple):
                 if ips.imgtype == 'rgb':
                     img32.append(imgs[i].mean(axis=2).astype(np.int32))
                 else:
-                    k = 255.0/(max(1, maxv-minv))
+                    k = 255.0/(max(1e-10, maxv-minv))
                     img32.append(imgs[i].astype(np.int32))
         ips.set_imgs(img32)
 
@@ -136,7 +136,7 @@ class ToFloat32(Simple):
                 if ips.imgtype == 'rgb':
                     img32.append(imgs[i].mean(axis=2).astype(np.float32))
                 else:
-                    k = 255.0/(max(1, maxv-minv))
+                    k = 255.0/(max(1e-10, maxv-minv))
                     img32.append(imgs[i].astype(np.float32))
         ips.set_imgs(img32)
 
@@ -160,7 +160,7 @@ class ToFloat64(Simple):
                 if ips.imgtype == 'rgb':
                     img64.append(imgs[i].mean(axis=2).astype(np.float64))
                 else:
-                    k = 255.0/(max(1, maxv-minv))
+                    k = 255.0/(max(1e-10, maxv-minv))
                     img64.append(imgs[i].astype(np.float64))
         ips.set_imgs(img64)
         

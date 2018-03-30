@@ -37,15 +37,15 @@ class Plugin(Filter):
     def load(self, ips):
         if ips.imgtype in ('8-bit', 'rgb'):
             self.para = {'thr1':0, 'thr2':255}
-            self.view = [('slide', (0,255), 'Low', 'thr1', ''),
-                ('slide', (0,255), 'High', 'thr2', '')]
+            self.view = [('slide', (0,255), 0, 'Low', 'thr1'),
+                ('slide', (0,255), 0, 'High', 'thr2')]
             if 'not_slice' in self.note:
                 self.note.remove('not_slice')
         else :
             self.arange = minv, maxv = ips.img.min(), ips.img.max()
             self.para = {'thr1':ips.range[0], 'thr2':ips.range[1]}
-            self.view = [('slide', (minv, maxv), 'Low', 'thr1', ''),
-                ('slide', (minv, maxv), 'High', 'thr2', '')]
+            self.view = [('slide', (minv, maxv), 10, 'Low', 'thr1'),
+                ('slide', (minv, maxv), 10, 'High', 'thr2')]
             if not 'not_slice' in self.note:
                 self.note.append('not_slice')
         return True
@@ -64,7 +64,7 @@ class Plugin(Filter):
             return
         img[:] = snap
         np.subtract(img, para['thr1'], out=img, casting='unsafe')
-        k = 255.0/max(para['thr2']-para['thr1'], 1)
+        k = 255.0/max(para['thr2']-para['thr1'], 1e-10)
         np.multiply(img, k, out=img, casting='unsafe')
         img[snap<para['thr1']] = 0
         img[snap>para['thr2']] = 255

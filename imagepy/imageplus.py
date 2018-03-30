@@ -54,6 +54,7 @@ class ImagePlus:
 
     def get_updown(self):
         arr = np.array(([(i.min(),i.max()) for i in self.imgs]))
+        print('range', arr[:,0].min(), arr[:,1].max())
         return arr[:,0].min(), arr[:,1].max()
 
     def get_imgtype(self):return self.imgtype
@@ -113,11 +114,11 @@ class ImagePlus:
     def histogram(self, arange=None, stack=False):
         if arange == None: arange=self.range
         if not stack:
-            return np.histogram(self.img, np.linspace(arange[0], arange[1]+1, 257))[0]
+            return np.histogram(self.img, np.linspace(arange[0], arange[1], 257))[0]
         # if stack
         hists = []
         for i in self.imgs:
-            hists.append(np.histogram(i, np.linspace(arange[0], arange[1]+1, 257))[0])
+            hists.append(np.histogram(i, np.linspace(arange[0], arange[1], 257))[0])
         return np.array(hists).sum(axis=0)
 
     def lookup(self, img=None):
@@ -127,7 +128,7 @@ class ImagePlus:
         #    return self.lut[img]
         #el
         if img.ndim==2:
-            k = 255.0/(max(1, self.range[1]-self.range[0]))
+            k = 255.0/(max(1e-10, self.range[1]-self.range[0]))
             bf = np.clip(img, self.range[0], self.range[1])
             bf = ((bf - self.range[0]) * k).astype(np.uint8)
             #print(bf.max(), self.range)

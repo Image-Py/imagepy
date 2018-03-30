@@ -35,13 +35,14 @@ class Plugin(Filter):
     def load(self, ips):
         if ips.imgtype == '8-bit':
             self.para = {'thr1':0, 'thr2':255}
-            self.view = [('slide', (0,255), 'Low', 'thr1', ''),
-                ('slide', (0,255), 'High', 'thr2', '')]
+            self.view = [('slide', (0,255), 0, 'Low', 'thr1'),
+                ('slide', (0,255), 0, 'High', 'thr2')]
         else :
             self.para = {'thr1':ips.range[0], 'thr2':ips.range[1]}
-            self.view = [('slide', ips.range, 'Low', 'thr1', ''),
-                ('slide', ips.range, 'High', 'thr2', '')]
+            self.view = [('slide', ips.range, 10, 'Low', 'thr1'),
+                ('slide', ips.range, 10, 'High', 'thr2')]
             self.arange = ips.range
+            print(ips.range,'range')
         self.lut = ips.lut
         ips.lut = self.lut.copy()
         return True
@@ -63,9 +64,9 @@ class Plugin(Filter):
     def preview(self, ips, para):
         ips.lut[:] = self.lut
         thr1 = int((para['thr1']-self.arange[0])*(
-            255.0/max(1, self.arange[1]-self.arange[0])))
+            255.0/max(1e-10, self.arange[1]-self.arange[0])))
         thr2 = int((para['thr2']-self.arange[0])*(
-            255.0/max(1, self.arange[1]-self.arange[0])))
+            255.0/max(1e-10, self.arange[1]-self.arange[0])))
         # print(thr1, thr2)
         ips.lut[:thr1] = [0,255,0]
         ips.lut[thr2:] = [255,0,0]

@@ -16,7 +16,7 @@ class Plugin(Filter):
     note = ['8-bit', 'not_slice', 'preview']
     
     para = {'thr':128, 'con':'4-Connect'}
-    view = [('slide', (0,255), 'Threshold', 'thr', ''),
+    view = [('slide', (0,255), 0, 'Threshold', 'thr'),
             (list, ['4-Connect','8-Connect'], str, 'Structure', 'con', 'connect')]
         
     def load(self, ips):

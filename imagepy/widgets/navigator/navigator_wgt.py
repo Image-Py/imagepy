@@ -18,7 +18,7 @@ class Plugin ( wx.Panel ):
 		self.viewport = ViewPort( self)
 		bSizer3.Add( self.viewport, 1, wx.EXPAND |wx.ALL, 5 )
 		
-		self.slider = wx.Slider( self, wx.ID_ANY, 6, 0, 13, wx.DefaultPosition, wx.DefaultSize, wx.SL_LEFT|wx.SL_VERTICAL )
+		self.slider = wx.Slider( self, wx.ID_ANY, 6, 0, 13, wx.DefaultPosition, wx.DefaultSize, wx.SL_LEFT|wx.SL_VERTICAL|wx.SL_SELRANGE )
 		bSizer3.Add( self.slider, 0, wx.ALL|wx.EXPAND, 0 )
 		
 		

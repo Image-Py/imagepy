@@ -50,16 +50,17 @@ class Balance_Dialog(ParaDialog):
         
 class Plugin(Filter):
     title = 'Color Stairs'
-    note = ['all', 'auto_msk', 'auto_snap', 'not_channel', 'preview']
+    note = ['rgb', 'auto_msk', 'auto_snap', 'not_channel', 'preview']
     
     #parameter
     para = {'t1_red':0, 't2_red':255,'t1_green':0, 't2_green':255,'t1_blue':0, 't2_blue':255}
-    view = [('slide', (0,255), 'Low', 't1_red', ''),
-            ('slide', (0,255), 'High', 't2_red', ''),
-            ('slide', (0,255), 'Low', 't1_green', ''),
-            ('slide', (0,255), 'High', 't2_green', ''),
-            ('slide', (0,255), 'Low', 't1_blue', ''),
-            ('slide', (0,255), 'High', 't2_blue', '')]
+    view = [('slide', (0,255), 0, 'Low', 't1_red'),
+            ('slide', (0,255), 0, 'High', 't2_red'),
+            ('slide', (0,255), 0, 'Low', 't1_green'),
+            ('slide', (0,255), 0, 'High', 't2_green'),
+            ('slide', (0,255), 0, 'Low', 't1_blue'),
+            ('slide', (0,255), 0, 'High', 't2_blue')]
+
     def show(self):
         self.dialog = Balance_Dialog(IPy.get_window(), self.title)
         self.dialog.init_view(self.para, self.view, self.ips.img)
@@ -70,9 +71,8 @@ class Plugin(Filter):
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         for i, c in zip([0,1,2],['red','green','blue']):
-            img[:,:,i] = snap[:,:,i]
-            np.subtract(img[:,:,i], para['t1_'+c], out=img[:,:,i], casting='unsafe')
-            k = 255.0/max(para['t2_'+c]-para['t1_'+c], 1)
-            np.multiply(img[:,:,i], k, out=img[:,:,i], casting='unsafe')
-            img[:,:,i][snap[:,:,i]<para['t1_'+c]] = 0
-            img[:,:,i][snap[:,:,i]>para['t2_'+c]] = 255
+            t1, t2 = para['t1_'+c], para['t2_'+c]
+            xs = np.linspace(0,255,256)
+            ys = (xs-t1)*(255/max(0.5, t2-t1))
+            index = np.clip(ys, 0, 255).astype(np.uint8)
+            img[:,:,i] = index[snap[:,:,i]]

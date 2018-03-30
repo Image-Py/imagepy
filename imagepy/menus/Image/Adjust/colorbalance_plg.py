@@ -50,16 +50,16 @@ class Balance_Dialog(ParaDialog):
         
 class Plugin(Filter):
     title = 'Color Balance'
-    note = ['all', 'auto_msk', 'auto_snap', 'not_channel', 'preview']
+    note = ['rgb', 'auto_msk', 'auto_snap', 'not_channel', 'preview']
     
     #parameter
     para = {'b_red':0, 'c_red':45,'b_green':0, 'c_green':45,'b_blue':0, 'c_blue':45}
-    view = [('slide', (-100,100), 'Brightness', 'b_red', ''),
-            ('slide', (1,89), 'Contrast', 'c_red', ''),
-            ('slide', (-100,100), 'Brightness', 'b_green', ''),
-            ('slide', (1,89), 'Contrast', 'c_green', ''),
-            ('slide', (-100,100), 'Brightness', 'b_blue', ''),
-            ('slide', (1,89), 'Contrast', 'c_blue', '')]
+    view = [('slide', (-100,100), 0, 'Brightness', 'b_red'),
+            ('slide', (1,89), 0, 'Contrast', 'c_red'),
+            ('slide', (-100,100), 0, 'Brightness', 'b_green'),
+            ('slide', (1,89), 0, 'Contrast', 'c_green'),
+            ('slide', (-100,100), 0, 'Brightness', 'b_blue'),
+            ('slide', (1,89), 0, 'Contrast', 'c_blue')]
     
     def show(self):
         self.dialog = Balance_Dialog(IPy.get_window(), self.title)
@@ -72,12 +72,7 @@ class Plugin(Filter):
         for i, c in zip([0,1,2],['red','green','blue']):
             mid = 128-para['b_'+c]
             length = 255/np.tan(para['c_'+c]/180.0*np.pi)
-            img[:,:,i] = snap[:,:,i]
-            if mid-length/2>0:
-                np.subtract(img[:,:,i], mid-length/2, out=img[:,:,i], casting='unsafe')
-                np.multiply(img[:,:,i], 255.0/length, out=img[:,:,i], casting='unsafe')
-            else:
-                np.multiply(img[:,:,i], 255.0/length, out=img[:,:,i], casting='unsafe')
-                np.subtract(img[:,:,i], (mid-length/2)/length*255, out=img[:,:,i], casting='unsafe')
-            img[:,:,i][snap[:,:,i]<mid-length/2] = 0
-            img[:,:,i][snap[:,:,i]>mid+length/2] = 255
+            xs = np.linspace(0,255,256)
+            ys = 128 + (xs-mid)*(255/length)
+            index = np.clip(ys, 0, 255).astype(np.uint8)
+            img[:,:,i] = index[snap[:,:,i]]

@@ -1,4 +1,4 @@
-from ...ui.widgets import HistCanvas, CMapPanel, CMapSelPanel
+from ...ui.widgets import HistCanvas, CMapPanel, CMapSelPanel, FloatSlider
 from  imagepy.core.manager import ColorManager
 from imagepy import IPy
 import numpy as np
@@ -14,10 +14,12 @@ class Plugin( wx.Panel ):
 		self.histpan = HistCanvas(self)
 		bSizer1.Add(self.histpan, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.sli_high = wx.Slider( self, wx.ID_ANY, 255, 0, 255, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL|wx.SL_LABELS )
+		self.sli_high = FloatSlider(self, (0,255), 0)
+		self.sli_high.SetValue(255)
 		bSizer1.Add( self.sli_high, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		self.sli_low = wx.Slider( self, wx.ID_ANY, 0, 0, 255, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL|wx.SL_LABELS )
+		self.sli_low = FloatSlider(self, (0,255), 0)
+		self.sli_low.SetValue(0)
 		bSizer1.Add( self.sli_low, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -52,7 +54,9 @@ class Plugin( wx.Panel ):
 		bSizer1.Add( bSizer2, 0, wx.EXPAND |wx.ALL, 5 )
 
 		line = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+		txtlut = wx.StaticText( self, wx.ID_ANY, 'Look Up Table', wx.DefaultPosition, wx.DefaultSize)
 		bSizer1.Add( line, 0, wx.EXPAND |wx.ALL, 5 )
+		bSizer1.Add( txtlut, 0, wx.EXPAND |wx.ALL, 5 )
 
 		self.cmapsel = CMapSelPanel(self)
 		luts = ColorManager.luts
@@ -121,10 +125,8 @@ class Plugin( wx.Panel ):
 		self.range = ips.range = (0,255)
 		hist = ips.histogram()
 		self.histpan.set_hist(hist)
-		self.sli_low.SetMax(255)
-		self.sli_low.SetMin(0)
-		self.sli_high.SetMax(255)
-		self.sli_high.SetMin(0)
+		self.sli_low.set_para((0,255), 0)
+		self.sli_high.set_para((0,255), 0)
 		self.sli_low.SetValue(0)
 		self.sli_high.SetValue(255)
 		self.histpan.set_lim(0,255)
@@ -137,10 +139,8 @@ class Plugin( wx.Panel ):
 		self.range = ips.range = (minv, maxv)
 		hist = ips.histogram()
 		self.histpan.set_hist(hist)
-		self.sli_low.SetMax(maxv)
-		self.sli_low.SetMin(minv)
-		self.sli_high.SetMax(maxv)
-		self.sli_high.SetMin(minv)
+		self.sli_low.set_para(self.range, 10)
+		self.sli_high.set_para(self.range, 10)
 		self.sli_low.SetValue(minv)
 		self.sli_high.SetValue(maxv)
 		self.histpan.set_lim(0,255)

@@ -64,7 +64,7 @@ class UPRidge(Filter):
     
     para = {'sigma':1.0, 'thr':0, 'ud':True, 'type':'white line'}
     view = [(float, (0,5), 1, 'sigma', 'sigma', 'pix'),
-            ('slide', (0,255), 'Low', 'thr', ''),
+            ('slide', (0,255), 0, 'Low', 'thr'),
             (bool, 'ascend', 'ud'),
             (list, ['white line', 'gray line', 'white line on ori'], str, 'output', 'type', '')]
 
@@ -124,7 +124,7 @@ class Watershed(Filter):
     
     para = {'sigma':1.0, 'thr':0, 'con':False, 'ud':True, 'type':'white line'}
     view = [(float, (0,5), 1, 'sigma', 'sigma', 'pix'),
-            ('slide', (0,255), 'Low', 'thr', ''),
+            ('slide', (0,255), 0, 'Low', 'thr'),
             (bool, 'full connectivity', 'con'),
             (bool, 'ascend', 'ud'),
             (list, ['white line', 'gray line', 'white line on ori'], str, 'output', 'type', '')]
@@ -165,8 +165,8 @@ class UPWatershed(Filter):
     note = ['8-bit', 'auto_msk', 'auto_snap', 'preview']
     
     para = {'thr1':0, 'thr2':255, 'type':'line'}
-    view = [('slide', (0,255), 'Low', 'thr1', ''),
-            ('slide', (0,255), 'High', 'thr2', ''),
+    view = [('slide', (0,255), 0, 'Low', 'thr1'),
+            ('slide', (0,255), 0, 'High', 'thr2'),
             (list, ['line', 'up area', 'down area'], str, 'output', 'type', '')]
 
     def load(self, ips):

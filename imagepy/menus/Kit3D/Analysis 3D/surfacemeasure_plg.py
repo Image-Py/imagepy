@@ -8,7 +8,7 @@ class Plugin(Filter):
     title = 'Measure Surface And Volume'
     note = ['8-bit', 'not_slice', 'not_channel', 'preview']
     para = {'ds':2, 'thr':128, 'step':1}
-    view = [('slide', (0,255), 'threshold', 'thr', ''),
+    view = [('slide', (0,255), 0, 'threshold', 'thr'),
             (int, (1,20), 0, 'down scale', 'ds', 'pix'),
             (int, (1,20), 0, 'march step', 'step', 'pix')]
 

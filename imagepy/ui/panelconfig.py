@@ -2,7 +2,7 @@
 # ConfigPanel used for parameters setting
 import wx, platform
 from ..core.manager import WindowsManager, TableLogManager
-from .widgets import NumCtrl, ColorCtrl
+from .widgets import NumCtrl, ColorCtrl, FloatSlider
 
 
 class ParaDialog (wx.Dialog):
@@ -142,7 +142,8 @@ class ParaDialog (wx.Dialog):
         self.para[key] = titles[0]
         return True
 
-    def add_slide(self, rang, title, key, unit):
+    def add_slide(self, rang, accu, title, key):
+        '''
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         lab_title = wx.StaticText( self, wx.ID_ANY, title,
                                    wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
@@ -165,6 +166,23 @@ class ParaDialog (wx.Dialog):
         lab_unit.Wrap( -1 )
         sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
         self.tus.append((lab_title, lab_unit))
+        self.lst.Add( sizer, 0, wx.EXPAND, 5 )
+        '''
+        sizer = wx.BoxSizer( wx.HORIZONTAL )
+        lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        iswin = platform.system() == 'Windows'
+        lab  = wx.SL_VALUE_LABEL if iswin else wx.SL_LABELS
+
+        ctrl = FloatSlider( self, rang, accu)
+
+        self.ctrl_dic[key] = ctrl
+        ctrl.Bind(None, lambda x : self.para_changed(key))
+        sizer.Add( ctrl, 2, wx.ALL, 5 )
+        self.tus.append((lab_title, None))
         self.lst.Add( sizer, 0, wx.EXPAND, 5 )
 
     def add_lab(self, cont):
@@ -207,11 +225,11 @@ class ParaDialog (wx.Dialog):
     def pack(self):
         mint, minu = [], []
         for t,u in self.tus:
-            mint.append(t.GetSize()[0])
-            minu.append(u.GetSize()[0])
+            if not t is None: mint.append(t.GetSize()[0])
+            if not u is None:minu.append(u.GetSize()[0])
         for t,u in self.tus:
-            t.SetInitialSize((max(mint),-1))
-            u.SetInitialSize((max(minu),-1))
+            if not t is None:t.SetInitialSize((max(mint),-1))
+            if not u is None:u.SetInitialSize((max(minu),-1))
         self.Fit()
 
     def para_check(self, para, key):pass
@@ -222,16 +240,18 @@ class ParaDialog (wx.Dialog):
         for p in list(para.keys()):
             if p in self.ctrl_dic:
                 para[p] = self.ctrl_dic[p].GetValue()
-        self.para_check(para, key)
+        
         sta = sum([i is None for i in list(para.values())])==0
         self.btn_OK.Enable(sta)
         if not sta: return
+        self.para_check(para, key)
         if 'preview' not in self.ctrl_dic:return
         if not self.ctrl_dic['preview'].GetValue():return
         self.handle(para)
 
     def reset(self, para=None):
         if para!=None:self.para = para
+        print(para, '====')
         for p in list(self.para.keys()):
             if p in self.ctrl_dic:
                 self.ctrl_dic[p].SetValue(self.para[p])

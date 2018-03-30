@@ -96,7 +96,6 @@ class Simple:
             elif 'stack3d' in note and not ips.is3d:
                 IPy.alert('stack3d required!')
                 return False
-            
         return True
         
     def start(self, para=None, callback=None):

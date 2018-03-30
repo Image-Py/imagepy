@@ -10,14 +10,15 @@ from imagepy.ui.panelconfig import ParaDialog
 from imagepy.ui.widgets import HistCanvas
 
 class ThresholdDialog(ParaDialog):
-    def init_view(self, items, para, hist):
+    def init_view(self, items, para, hist, arange):
+        self.range = arange
         self.histcvs = HistCanvas(self)
         self.histcvs.set_hist(hist)
         self.add_ctrl('hist', self.histcvs)
         ParaDialog.init_view(self, items, para, True)
     
     def para_check(self, para, key):
-        mid = 128-para['bright']
+        mid = 128-para['bright']/(self.range[1]-self.range[0])*255
         length = 255/np.tan(para['contrast']/180.0*np.pi)
         self.histcvs.set_lim(mid-length/2, mid+length/2)
         self.reset()
@@ -29,17 +30,18 @@ class Plugin(Filter):
         
     def load(self, ips):
         if ips.imgtype in ('8-bit', 'rgb'):
+            self.arange = (0, 255)
             self.para = {'bright':0, 'contrast':45}
-            self.view = [('slide', (-100,100), 'Brightness', 'bright', ''),
-                ('slide', (1,89), 'Contrast', 'contrast', '')]
+            self.view = [('slide', (-100,100), 0, 'Brightness', 'bright'),
+                ('slide', (1,89), 0, 'Contrast', 'contrast')]
             if 'not_slice' in self.note:
                 self.note.remove('not_slice')
         else :
             self.arange = minv, maxv = ips.img.min(), ips.img.max()
             self.para = {'bright':np.mean(ips.range) - np.mean(self.arange), 
                 'contrast':round(np.arctan((maxv-minv)/(ips.range[1]-ips.range[0]))/np.pi*180)}
-            self.view = [('slide', (-(maxv-minv)/2, (maxv-minv)/2), 'Brightness', 'bright', ''),
-                ('slide', (1,89), 'Contrast', 'contrast', '')]
+            self.view = [('slide', (-(maxv-minv)/2, (maxv-minv)/2), 10, 'Brightness', 'bright'),
+                ('slide', (1,89), 0, 'Contrast', 'contrast')]
             if not 'not_slice' in self.note:
                 self.note.append('not_slice')
         return True
@@ -47,7 +49,7 @@ class Plugin(Filter):
     def show(self):
         self.dialog = ThresholdDialog(IPy.get_window(), self.title)
         hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
-        self.dialog.init_view(self.view, self.para, hist)
+        self.dialog.init_view(self.view, self.para, hist, self.arange)
         self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
         return self.dialog.ShowModal()
 
