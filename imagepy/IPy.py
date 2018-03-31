@@ -146,7 +146,7 @@ def plot(title, gtitle='Graph', labelx='X-Unit', labely='Y-Unit'):
     # MT callafter(curapp.set_progress, i)
 
 def set_info(i):
-    curapp.set_info(i)
+    wx.CallAfter(curapp.set_info, i)
     # MT callafter(curapp.set_info, i)
 
 def run(cmd):

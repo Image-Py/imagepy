@@ -115,6 +115,7 @@ class FloatSlider(wx.Panel):
 
     def on_scroll(self, event):
         value = self.slider.GetValue()#self.slider.GetThumbPosition() if self.linux else 
+        self.spin.SetValue(value)
         n = value/255.0*(self.max-self.min)+self.min
         self.text.SetValue(str(round(n,self.accury) if self.accury>0 else int(n)))
         self.text.SetBackgroundColour((255,255,255))
