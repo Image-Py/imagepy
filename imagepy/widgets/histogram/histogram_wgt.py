@@ -53,10 +53,10 @@ class Plugin( wx.Panel ):
 		
 		bSizer1.Add( bSizer2, 0, wx.EXPAND |wx.ALL, 5 )
 
-		line = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-		txtlut = wx.StaticText( self, wx.ID_ANY, 'Look Up Table', wx.DefaultPosition, wx.DefaultSize)
-		bSizer1.Add( line, 0, wx.EXPAND |wx.ALL, 5 )
-		bSizer1.Add( txtlut, 0, wx.EXPAND |wx.ALL, 5 )
+		#line = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+		#txtlut = wx.StaticText( self, wx.ID_ANY, 'Look Up Table', wx.DefaultPosition, wx.DefaultSize)
+		#bSizer1.Add( line, 0, wx.EXPAND |wx.ALL, 5 )
+		#bSizer1.Add( txtlut, 0, wx.EXPAND |wx.ALL, 5 )
 
 		self.cmapsel = CMapSelPanel(self)
 		luts = ColorManager.luts
