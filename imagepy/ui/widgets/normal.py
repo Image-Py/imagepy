@@ -73,7 +73,7 @@ class FloatSlider(wx.Panel):
         self.linux = platform.system() == 'Linux'
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(-1,-1), style = wx.TAB_TRAVERSAL )
         sizer = wx.BoxSizer( wx.VERTICAL )
-        self.slider = wx.Slider( self, wx.ID_ANY, 50, 0, 100, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL)
+        self.slider = wx.Slider( self, wx.ID_ANY, 128, 0, 255, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL)
         sizer.Add( self.slider, 0, wx.ALL|wx.EXPAND, 0 )
         subsizer = wx.BoxSizer( wx.HORIZONTAL )
         self.lab_min = wx.StaticText( self, wx.ID_ANY, '0', wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -82,7 +82,9 @@ class FloatSlider(wx.Panel):
         subsizer.AddStretchSpacer(prop=1)
         self.text = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(50,-1), 0 )
         subsizer.Add( self.text, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
-        self.spin = wx.SpinButton( self, wx.ID_ANY, wx.DefaultPosition, wx.Size(20,-1),  wx.SP_HORIZONTAL if self.linux else 0)
+        self.spin = wx.SpinButton( self, wx.ID_ANY, wx.DefaultPosition, wx.Size([20,-1][self.linux],-1),  [0, wx.SP_HORIZONTAL][self.linux])
+        self.spin.SetRange(0, 255)
+        self.spin.SetValue(128)
         subsizer.Add( self.spin, 0, wx.ALIGN_CENTER|wx.ALL|wx.EXPAND, 0 )
         subsizer.AddStretchSpacer(prop=1)
         self.lab_max = wx.StaticText( self, wx.ID_ANY, '0', wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -98,8 +100,7 @@ class FloatSlider(wx.Panel):
         self.slider.Bind( wx.EVT_SCROLL, self.on_scroll )
         self.text.Bind( wx.EVT_KEY_UP, self.on_text )
         #if not self.linux:
-        self.spin.Bind( wx.EVT_SPIN_DOWN, self.on_down )
-        self.spin.Bind( wx.EVT_SPIN_UP, self.on_up )
+        self.spin.Bind( wx.EVT_SPIN, self.on_spin )
         self.set_para(rang, accury)
 
     def Bind(self, z, f):
@@ -119,12 +120,8 @@ class FloatSlider(wx.Panel):
         self.text.SetBackgroundColour((255,255,255))
         self.f(event)
 
-    def on_up(self, event):
-        self.slider.SetValue(self.slider.GetValue()+1)
-        self.on_scroll(event)
-
-    def on_down(self, event):
-        self.slider.SetValue(self.slider.GetValue()-1)
+    def on_spin(self, event):
+        self.slider.SetValue(self.spin.GetValue())
         self.on_scroll(event)
 
     def on_text(self, event):
@@ -133,6 +130,7 @@ class FloatSlider(wx.Panel):
             self.text.SetBackgroundColour((255,255,0))
         else:
             self.text.SetBackgroundColour((255,255,255))
+            self.SetValue(self.GetValue())
 
     def SetValue(self, n):
         if not self.text.HasFocus():
@@ -141,6 +139,7 @@ class FloatSlider(wx.Panel):
         #if self.linux:self.slider.SetScrollbar(pos, 0, 255, 0)
         #if not self.linux:
         self.slider.SetValue(pos)
+        self.spin.SetValue(pos)
         
     def GetValue(self):
         sval = self.text.GetValue()
