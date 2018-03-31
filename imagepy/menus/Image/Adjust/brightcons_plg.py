@@ -21,7 +21,7 @@ class ThresholdDialog(ParaDialog):
         mid = 128-para['bright']/(self.range[1]-self.range[0])*255
         length = 255/np.tan(para['contrast']/180.0*np.pi)
         self.histcvs.set_lim(mid-length/2, mid+length/2)
-        self.reset()
+        #self.reset()
         return True
         
 class Plugin(Filter):

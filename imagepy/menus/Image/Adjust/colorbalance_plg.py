@@ -45,7 +45,7 @@ class Balance_Dialog(ParaDialog):
         mid = 128-para['b_blue']
         length = 255/np.tan(para['c_blue']/180.0*np.pi)
         self.bluecvs.set_lim(mid-length/2, mid+length/2)
-        self.reset()
+        #self.reset()
         return True
         
 class Plugin(Filter):

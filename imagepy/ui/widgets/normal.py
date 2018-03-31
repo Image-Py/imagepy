@@ -70,35 +70,22 @@ class ColorCtrl(wx.TextCtrl):
 class FloatSlider(wx.Panel):
     
     def __init__( self, parent, rang, accury):
-        #self.linux = platform.system() == 'Linux'
-        '''
-        wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.TAB_TRAVERSAL )
-        sizer = wx.BoxSizer( wx.HORIZONTAL )
-        if self.linux:
-            self.slider = wx.ScrollBar( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,25 ), wx.SB_HORIZONTAL )
-        else: self.slider = wx.Slider( self, wx.ID_ANY, 128, 0, 255, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL|wx.SL_SELRANGE )
-        sizer.Add( self.slider, 1, wx.ALIGN_CENTER|wx.ALL, 0 )
-        self.text = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 40,-1 ), 0 )
-        sizer.Add( self.text, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
-        if not self.linux:
-            self.spin = wx.SpinButton( self, wx.ID_ANY, wx.DefaultPosition, wx.Size(25, 25), 0 )
-            sizer.Add( self.spin, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
-        '''
+        self.linux = platform.system() == 'Linux'
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(-1,-1), style = wx.TAB_TRAVERSAL )
         sizer = wx.BoxSizer( wx.VERTICAL )
         self.slider = wx.Slider( self, wx.ID_ANY, 50, 0, 100, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL)
         sizer.Add( self.slider, 0, wx.ALL|wx.EXPAND, 0 )
         subsizer = wx.BoxSizer( wx.HORIZONTAL )
-        self.lab_min = wx.StaticText( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lab_min = wx.StaticText( self, wx.ID_ANY, '0', wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lab_min.Wrap( -1 )
         subsizer.Add( self.lab_min, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
         subsizer.AddStretchSpacer(prop=1)
-        self.text = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(50,20), 0 )
+        self.text = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(50,-1), 0 )
         subsizer.Add( self.text, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
-        self.spin = wx.SpinButton( self, wx.ID_ANY, wx.DefaultPosition, wx.Size(-1,20), wx.SP_HORIZONTAL)
-        subsizer.Add( self.spin, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
+        self.spin = wx.SpinButton( self, wx.ID_ANY, wx.DefaultPosition, wx.Size(20,-1),  wx.SP_HORIZONTAL if self.linux else 0)
+        subsizer.Add( self.spin, 0, wx.ALIGN_CENTER|wx.ALL|wx.EXPAND, 0 )
         subsizer.AddStretchSpacer(prop=1)
-        self.lab_max = wx.StaticText( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lab_max = wx.StaticText( self, wx.ID_ANY, '0', wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lab_max.Wrap( -1 )
         subsizer.Add( self.lab_max, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
         sizer.Add( subsizer, 1, wx.EXPAND, 5 )
