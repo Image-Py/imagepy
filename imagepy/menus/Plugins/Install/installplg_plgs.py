@@ -37,8 +37,8 @@ class Install(Free):
         name = '~'.join(para['pkg'].split('/')[-2:])+'.zip'
         print(url, name)
         IPy.set_info('downloading plugin from %s'%para['pkg'])
-        #urlretrieve(url, os.path.join('./plugins/cache', name), 
-        #    lambda a,b,c, p=self: Schedule(a,b,c,p))
+        urlretrieve(url, os.path.join('./plugins/cache', name), 
+            lambda a,b,c, p=self: Schedule(a,b,c,p))
         zipf = zipfile.ZipFile(os.path.join('./plugins/cache', name))
         zipf.extractall('./plugins/cache')
         destpath = os.path.join('./plugins/', name[:-4])
