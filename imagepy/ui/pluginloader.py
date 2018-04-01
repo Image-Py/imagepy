@@ -2,6 +2,7 @@
 import wx  
 from ..core.loader import loader
 from ..core.manager import ShotcutManager, PluginsManager, LanguageManager
+from glob import glob
 
 def buildItem(parent, root, item):
     if item=='-':
@@ -30,10 +31,6 @@ def buildMenu(parent, data, curpath):
     return menu
 
 def buildMenuBar(parent, datas, menuBar=None):
-    # datas:tuple 
-    # datas[1]: list 
-    # datas[1][-1]: tuple 
-    # datas[1][-1][-1]: list 
     if menuBar==None:
         menuBar = wx.MenuBar()
     for data in datas[1]:
@@ -43,10 +40,23 @@ def buildMenuBar(parent, datas, menuBar=None):
         menuBar.Append(buildMenu(parent, data, data[0].title), LanguageManager.get(data[0].title))
     return menuBar
 
-
 #!ToDO: tongguo lujing goujian menu 
-def buildMenuBarByPath(parent, path, menuBar=None):
-    datas = loader.build_plugins(path)
+def buildMenuBarByPath(parent, path, extends, menuBar=None, report=False):
+    datas = loader.build_plugins(path, report)
+    keydata = {}
+    for i in datas[1]:
+        if isinstance(i, tuple): keydata[i[0].__name__.split('.')[-1]] = i[1]
+    #print(keydata)
+    extends = glob(extends+'/*/menus')
+    for i in extends:
+        plgs = loader.build_plugins(i, report)
+        for j in plgs[1]:
+            if not isinstance(j, tuple): continue
+            name = j[0].__name__.split('.')[-1]
+            if name in keydata: 
+                keydata[name].extend(j[1])
+            else: datas[1].append(j)
+        #if len(wgts)!=0: datas[1].extend(wgts[1])
     # print(datas)
     return buildMenuBar(parent, datas, menuBar)
 

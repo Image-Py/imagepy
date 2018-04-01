@@ -6,30 +6,34 @@ from .. import IPy
 from .. import root_dir 
 from ..core.engine import Tool, Macros
 from ..core.loader import loader
-
+from glob import glob
 
 def make_bitmap(bmp):
     img = bmp.ConvertToImage()
     img.Resize((20, 20), (2, 2))
     return img.ConvertToBitmap()
 
-def build_tools(parent, toolspath):
+def build_tools(parent, toolspath, extends, bar=None, report=False):
     global host
     host = parent
     ## get tool datas from the loader.build_tools(toolspath)
     ## then generate toolsbar
-    datas = loader.build_tools(toolspath)
-    toolsbar = buildToolsBar(parent, datas)
-    gifpath = os.path.join(root_dir, "tools/drop.gif")
+    datas = loader.build_tools(toolspath, report)
+    extends = glob(extends+'/*/tools')
+    for i in extends:
+        tols = loader.build_tools(i, report)
+        if len(tols)!=0: datas[1].extend(tols[1])
+    toolsbar = buildToolsBar(parent, datas, bar)
+    #gifpath = os.path.join(root_dir, "tools/drop.gif")
     #btn = wx.BitmapButton(parent, wx.ID_ANY, wx.Bitmap(gifpath), wx.DefaultPosition, (30,30), wx.BU_AUTODRAW)
     #btn.Bind(wx.EVT_LEFT_DOWN, lambda x:menu_drop(parent, toolsbar, datas, btn, x))   
     return toolsbar#, btn   
 
-def buildToolsBar(parent, datas):    
+def buildToolsBar(parent, datas, toolsbar=None):    
     box = wx.BoxSizer( wx.HORIZONTAL )
     #toolsbar =  wx.ToolBar( parent, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TB_HORIZONTAL ) 
-    toolsbar = wx.Panel( parent, wx.ID_ANY, 
-                         wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+    if toolsbar is None:
+        toolsbar = wx.Panel( parent, wx.ID_ANY,  wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
     
     toolsbar.SetSizer( box )
     add_tools(toolsbar, datas[1][0][1], None)
@@ -48,6 +52,7 @@ def menu_drop(parent, toolbar, datas, btn, e):
     menu = wx.Menu()
     for data in datas[1][1:]:
         item = wx.MenuItem(menu, wx.ID_ANY, data[0].title, wx.EmptyString, wx.ITEM_NORMAL )
+
         menu.Append(item)
         parent.Bind(wx.EVT_MENU, lambda x,p=data[1]:add_tools(toolbar, p), item)
     parent.PopupMenu( menu )

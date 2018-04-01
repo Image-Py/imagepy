@@ -10,7 +10,6 @@ from ..manager import ToolsManager, PluginsManager, WidgetsManager
 from ... import IPy, root_dir
 from codecs import open
 
-first = [0,0,0]
 def extend_plugins(path, lst, err):
     rst = []
     for i in lst:
@@ -71,9 +70,9 @@ def sort_plugins(catlog, lst):
     rst.extend(lst)
     return rst
         
-def build_plugins(path, err=None):
-    root = err==None
-    if err==None:err = []
+def build_plugins(path, err=False):
+    root = err in (True, False)
+    if root: sta, err = err, []
     subtree = []
     cont = os.listdir(os.path.join(root_dir, path))
     for i in cont:
@@ -87,9 +86,7 @@ def build_plugins(path, err=None):
             subtree.append(i)
     if len(subtree)==0:return []
     
-
     rpath = path.replace('/', '.').replace('\\','.')
-
     #rpath = rpath[rpath.index('imagepy.'):]
     pg = __import__('imagepy.'+rpath,'','',[''])
     pg.title = os.path.basename(path)
@@ -97,10 +94,9 @@ def build_plugins(path, err=None):
         subtree = sort_plugins(pg.catlog, subtree)
     subtree = extend_plugins(path, subtree, err)
     
-    if first[0]==0 and root and len(err)>0:
+    if root and sta and len(err)>0:
         IPy.write('some plugin may be not loaded, but not affect otheres!')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
-    if root : first[0]=1
     return (pg, subtree)  
     
 def extend_tools(path, lst, err):
@@ -138,9 +134,9 @@ def sort_tools(catlog, lst):
     rst.extend(lst)
     return rst
     
-def build_tools(path, err=None):
-    root = err==None
-    if err==None:err=[]
+def build_tools(path, err=False):
+    root = err in (True, False)
+    if root: sta, err = err, []
     subtree = []
     cont = os.listdir(os.path.join(root_dir, path))
 
@@ -162,10 +158,9 @@ def build_tools(path, err=None):
     if hasattr(pg, 'catlog'):
         subtree = sort_tools(pg.catlog, subtree)
     if not root:subtree = extend_tools(path, subtree, err)    
-    elif first[1]==0 and len(err)>0: 
+    elif sta and len(err)>0: 
         IPy.write('tools not loaded:')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
-    if root : first[1]=1
     return (pg, subtree)
     
 def extend_widgets(path, lst, err):
@@ -192,9 +187,9 @@ def sort_widgets(catlog, lst):
     rst.extend(lst)
     return rst
     
-def build_widgets(path, err=None):
-    root = err==None
-    if err==None:err=[]
+def build_widgets(path, err=False):
+    root = err in (True, False)
+    if root: sta, err = err, []
     subtree = []
     cont = os.listdir(os.path.join(root_dir, path))
     for i in cont:
@@ -215,10 +210,9 @@ def build_widgets(path, err=None):
         subtree = sort_widgets(pg.catlog, subtree)
     if not root:
         subtree = extend_widgets(path, subtree, err)  
-    elif first[2]==0 and len(err)>0: 
+    elif sta and len(err)>0: 
         IPy.write('widgets not loaded:')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
-    if root : first[2]=1
     return (pg, subtree)
 
 if __name__ == "__main__":

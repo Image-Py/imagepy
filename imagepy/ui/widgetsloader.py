@@ -3,6 +3,7 @@
 import wx
 import numpy as np
 from ..core.loader import loader
+from glob import glob
 
 def build_widget(parent, datas):
     for i in datas[1]:
@@ -22,6 +23,11 @@ def build_widgets_panel(parent, datas):
     sizer.Fit( wpanel )
     return wpanel
 
-def build_widgets(parent, toolspath):
+def build_widgets(parent, toolspath, extends):
     datas = loader.build_widgets(toolspath)
+    extends = glob(extends+'/*/widgets')
+    for i in extends:
+        wgts = loader.build_widgets(i)
+        print(wgts)
+        if len(wgts)!=0: datas[1].extend(wgts[1])
     return build_widgets_panel(parent, datas)
