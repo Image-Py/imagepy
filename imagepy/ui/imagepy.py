@@ -34,19 +34,19 @@ class ImagePy(wx.Frame):
         logopath = os.path.join(root_dir, 'data/logo.ico')
         #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
-        self.SetSizeHints( wx.Size(900,700) if IPy.aui else wx.Size( 600,-1 ))
+        self.SetSizeHints( wx.Size(900,700) if IPy.aui else wx.Size( 560,-1 ))
         IPy.curapp = self
         # Todo:Fixed absolute/relative path!
         # print("menuspath:{}".format( os.path.join(root_dir,"menus")))
         # print("toolspath:{}".format(os.path.join(root_dir,"tools"))
         # menuspath = os.path.join(root_dir, "menus")
         # toolspath = os.path.join(root_dir,"tools")
-        self.menubar = pluginloader.buildMenuBarByPath(self, 'menus')
+        self.menubar = pluginloader.buildMenuBarByPath(self, 'menus', 'plugins', None, True)
         self.SetMenuBar( self.menubar )
         self.shortcut = pluginloader.buildShortcut(self)
         self.SetAcceleratorTable(self.shortcut)
         #sizer = wx.BoxSizer(wx.VERTICAL)
-        self.toolbar = toolsloader.build_tools(self, 'tools')
+        self.toolbar = toolsloader.build_tools(self, 'tools', 'plugins', None, True)
 
         
 
@@ -112,7 +112,7 @@ class ImagePy(wx.Frame):
         self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Left()  .PinButton( True )
             .CaptionVisible( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ).MaxSize(wx.Size( 32,-1 ))
             . BottomDockable( True ).TopDockable( False ).Layer( 10 ) )
-        self.widgets = widgetsloader.build_widgets(self, 'widgets')
+        self.widgets = widgetsloader.build_widgets(self, 'widgets', 'plugins')
         self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) .Layer( 10 ) )
         
@@ -144,10 +144,13 @@ class ImagePy(wx.Frame):
             event.GetPane().Show(False)
             self.auimgr.Update()
 
-    def reload_plugins(self):
+    def reload_plugins(self, report=False):
         for i in range(self.menubar.GetMenuCount()): self.menubar.Remove(0)
+        #for i in self.toolbar.GetChildren(): self.toolbar.RemoveChild(i)
         # menuspath = os.path.join(root_dir,"menus")
-        pluginloader.buildMenuBarByPath(self, "menus", self.menubar)
+        pluginloader.buildMenuBarByPath(self, 'menus', 'plugins', self.menubar, report)
+        #toolsloader.build_tools(self, 'tools', 'plugins', self.toolbar, report)
+        #self.toolbar.Refresh()
 
     def hold(self):
         dire = 1
