@@ -15,7 +15,7 @@ class Simple:
     title = 'SimpleFilter'
     note = []
     para = None
-    'all, 8-bit, 16-bit, rgb, float, req_roi, stack, stack2d, stack3d'
+    'all, 8-bit, 16-bit, rgb, float, req_roi, stack, stack2d, stack3d, preview'
     view = None
     prgs = (None, 1)
     modal = True

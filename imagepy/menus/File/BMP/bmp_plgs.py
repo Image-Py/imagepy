@@ -1,8 +1,9 @@
 from imagepy.core.util import fileio
 from scipy.misc import imread, imsave
+from imagepy.core.manager import ReaderManager, WriterManager
 
-fileio.add_reader(['bmp'], imread)
-fileio.add_writer(['bmp'], imsave)
+ReaderManager.add('bmp', imread)
+WriterManager.add('bmp', imsave)
 
 class OpenFile(fileio.Reader):
 	title = 'BMP Open'

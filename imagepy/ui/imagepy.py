@@ -127,7 +127,7 @@ class ImagePy(wx.Frame):
             .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True ) 
             .BottomDockable( False ).TopDockable( False ).LeftDockable( False ).RightDockable( False )
             .MinSize(wx.Size(-1, 32)). Layer( 10 ) )
-        self.widgets = widgetsloader.build_widgets(self, 'widgets')
+        self.widgets = widgetsloader.build_widgets(self, 'widgets', 'plugins')
         self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Float().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ).Hide() .Layer( 10 ) )
         

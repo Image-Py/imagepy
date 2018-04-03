@@ -2,7 +2,12 @@ class ReaderManager:
     reader = {}
     
     @classmethod
-    def add(cls, ext, read):cls.reader[ext.lower()] = read
+    def add(cls, ext, read):
+        if isinstance(ext, str):
+            cls.reader[ext.lower()] = read
+            return
+        for i in ext:
+            cls.reader[i.lower()] = read
         
     @classmethod
     def get(cls, ext):
@@ -17,7 +22,12 @@ class WriterManager:
     writer = {}
     
     @classmethod
-    def add(cls, ext, write):cls.writer[ext.lower()] = write
+    def add(cls, ext, write):
+        if isinstance(ext, str):
+            cls.writer[ext.lower()] = write
+            return
+        for i in ext:
+            cls.writer[i.lower()] = write
         
     @classmethod
     def get(cls, ext):

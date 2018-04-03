@@ -1,8 +1,9 @@
 from imagepy.core.util import fileio
 from scipy.misc import imread, imsave
+from imagepy.core.manager import ReaderManager, WriterManager
 
-fileio.add_reader(['png'], imread)
-fileio.add_writer(['png'], imsave)
+ReaderManager.add('png', imread)
+WriterManager.add('png', imsave)
 
 class OpenFile(fileio.Reader):
 	title = 'PNG Open'

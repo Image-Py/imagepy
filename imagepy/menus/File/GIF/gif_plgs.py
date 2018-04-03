@@ -1,9 +1,9 @@
 from imagepy.core.util import fileio
 from scipy.misc import imread, imsave
+from imagepy.core.manager import ReaderManager, WriterManager
 
-
-fileio.add_reader(['gif'], imread)
-fileio.add_writer(['gif'], imsave)
+ReaderManager.add('gif', imread)
+WriterManager.add('fig', imsave)
 
 class OpenFile(fileio.Reader):
 	title = 'GIF Open'

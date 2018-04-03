@@ -1,20 +1,12 @@
 import os
-from ..manager import ReaderManager, WriterManager, ViewerManager, ConfigManager
+from ..manager import ViewerManager, ConfigManager
+from imagepy.core.manager import ReaderManager, WriterManager
 from ... import IPy, root_dir
 from ..engine import Free, Simple, Macros
 import numpy as np
 
 def show(data, title):
     IPy.show_img(data, title)
-    
-def add_reader(exts, read):
-    for i in exts:
-        ReaderManager.add(i, read)
-        ViewerManager.add(i, show)
-
-def add_writer(exts, save):
-    for i in exts:
-        WriterManager.add(i, save)
 
 recent = ConfigManager.get('recent')
 if recent==None : recent = []
@@ -54,13 +46,12 @@ class Reader(Free):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
         read = ReaderManager.get(fe[1:])
-        view = ViewerManager.get(fe[1:])
+        view = ViewerManager.get(fe[1:]) or show
 
         group, read = (True, read[0]) if isinstance(read, tuple) else (False, read)
         img = read(para['path'])
         if img.dtype==np.uint8 and img.ndim==3 and img.shape[2]==4:
             img = img[:,:,:3].copy()
-        print(img.shape, group)
         if not group: img = [img]
         view(img, fn)
 
