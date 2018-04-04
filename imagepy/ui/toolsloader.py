@@ -6,6 +6,7 @@ from .. import IPy
 from .. import root_dir 
 from ..core.engine import Tool, Macros
 from ..core.loader import loader
+from imagepy.core.manager import ConfigManager
 from glob import glob
 
 def make_bitmap(bmp):
@@ -23,6 +24,10 @@ def build_tools(parent, toolspath, extends, bar=None, report=False):
     for i in extends:
         tols = loader.build_tools(i, report)
         if len(tols)!=0: datas[1].extend(tols[1])
+    for i in datas[1]:
+        if i[0].title == ConfigManager.get('tools'):
+            datas[1].remove(i)
+            datas[1].insert(1, i)
     toolsbar = buildToolsBar(parent, datas, bar)
     #gifpath = os.path.join(root_dir, "tools/drop.gif")
     #btn = wx.BitmapButton(parent, wx.ID_ANY, wx.Bitmap(gifpath), wx.DefaultPosition, (30,30), wx.BU_AUTODRAW)

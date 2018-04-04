@@ -89,8 +89,8 @@ class ImagePlus:
     def get_rect(self):
         if self.roi==None:return slice(None), slice(None)
         box = self.roi.get_box()
-        l, r = max(0, box[0]), min(self.size[1], box[2])
-        t, b = max(0, box[1]), min(self.size[0], box[3])
+        l, r = max(0, int(box[0])), min(self.size[1], int(box[2]))
+        t, b = max(0, int(box[1])), min(self.size[0], int(box[3]))
         return slice(t,b), slice(l,r)
 
     def get_subimg(self, s1=None, s2=None):
