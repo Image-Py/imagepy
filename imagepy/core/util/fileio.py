@@ -1,6 +1,6 @@
 import os
 from ..manager import ViewerManager, ConfigManager
-from imagepy.core.manager import ReaderManager, WriterManager
+from ..manager import ReaderManager, WriterManager
 from ... import IPy, root_dir
 from ..engine import Free, Simple, Macros
 import numpy as np

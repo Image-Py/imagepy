@@ -13,7 +13,7 @@ class Plugin(Simple):
     """Calculator Plugin derived from imagepy.core.engine.Simple """
     title = 'Image Calculator'
     note = ['all']
-    para = {'img1':'','op':'add','img2':''}
+    para = {'img1':None,'op':'add','img2':None}
     
     def load(self, ips):
         titles = WindowsManager.get_titles()

@@ -10,7 +10,7 @@ class DevelopToolSute ( wx.Panel ):
 	title = 'Develop Tool Sute'
 	single = True
 	def __init__( self, parent ):
-		wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 808,300 ), style = wx.TAB_TRAVERSAL )
+		wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 300,200), style = wx.TAB_TRAVERSAL )
 		
 		sizer = wx.BoxSizer( wx.VERTICAL )
 		
