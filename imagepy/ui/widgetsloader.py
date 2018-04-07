@@ -30,6 +30,5 @@ def build_widgets(parent, toolspath, extends, panel=None):
     extends = glob(extends+'/*/widgets')
     for i in extends:
         wgts = loader.build_widgets(i)
-        print(wgts)
         if len(wgts)!=0: datas[1].extend(wgts[1])
     return build_widgets_panel(parent, datas, panel)

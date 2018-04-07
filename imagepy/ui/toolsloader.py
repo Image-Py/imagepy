@@ -61,7 +61,7 @@ def buildToolsBar(parent, datas, toolsbar=None):
     add_tools(toolsbar, datas[1][1][1])
 
     toolsbar.GetSizer().Layout()
-    toolsbar.Fit()
+    #toolsbar.Fit()
     
     return toolsbar
 
