@@ -3,12 +3,14 @@ from imagepy.core.engine import Free
 import sys, os
 import zipfile,urllib
 import shutil
+
 if sys.version_info[0]==2:
     from urllib import urlretrieve
     from cStringIO import StringIO
 else: 
     from urllib.request import urlretrieve
     from io import BytesIO as StringIO
+
 def Schedule(a,b,c, plg):
     per = 100.0 * a * b / c
     if per > 100 : per = 100
@@ -61,7 +63,7 @@ class Update(Free):
 class Refresh(Free):
     title = 'Reload Plugins'
 
-	def run(self, para=None):
-		IPy.reload_plgs(True, True, True, True)
+    def run(self, para=None):
+        IPy.reload_plgs(True, True, True, True)
 
 plgs = [Update, Refresh]
