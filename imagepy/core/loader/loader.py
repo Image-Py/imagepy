@@ -10,6 +10,14 @@ from ..manager import ToolsManager, PluginsManager, WidgetsManager
 from ... import IPy, root_dir
 from codecs import open
 
+def getpath(root, path):
+    for i in range(10,0,-1):
+        if not '../'*i in path: continue
+        s = root
+        for j in range(i):s=os.path.dirname(s)
+        path = path.replace('../'*i, s+'/')
+    return path.replace('\\\\','\\').replace('\\','/')
+
 def extend_plugins(path, lst, err):
     rst = []
     for i in lst:
@@ -17,10 +25,11 @@ def extend_plugins(path, lst, err):
             rst.append(i)
             
         elif i[-3:] == '.mc':
-            f = open(os.path.join(root_dir,path)+'/'+i, 'r', 'utf-8')
+            pt = os.path.join(root_dir,path)
+            f = open(pt+'/'+i, 'r', 'utf-8')
             cmds = f.readlines()
             f.close()
-            rst.append(Macros(i[:-3], cmds))
+            rst.append(Macros(i[:-3], [getpath(pt, i) for i in cmds]))
             PluginsManager.add(rst[-1])
         elif i[-3:] == '.md':
             f = open(os.path.join(root_dir,path)+'/'+i, 'r', 'utf-8')
@@ -103,10 +112,11 @@ def extend_tools(path, lst, err):
     rst = []
     for i in lst:
         if i[-3:] in ('.mc', '.md'):
-            f = open(os.path.join(root_dir, path)+'/'+i)
+            pt = os.path.join(root_dir, path)
+            f = open(pt+'/'+i)
             cmds = f.readlines()
             f.close()
-            rst.append((Macros(i[:-3], cmds),  
+            rst.append((Macros(i[:-3], [getpath(pt, i) for i in cmds]),  
                 os.path.join(root_dir, path)+'/'+i[:-3]+'.gif'))
         else:
             try:
