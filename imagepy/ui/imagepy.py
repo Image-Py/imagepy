@@ -60,7 +60,7 @@ class ImagePy(wx.Frame):
         
         if IPy.aui: self.load_aui()
         else: self.load_ijui()
-
+        self.Fit()
         #self.load_dev()
         
 
@@ -144,13 +144,12 @@ class ImagePy(wx.Frame):
             event.GetPane().Show(False)
             self.auimgr.Update()
 
-    def reload_plugins(self, report=False):
-        for i in range(self.menubar.GetMenuCount()): self.menubar.Remove(0)
-        #for i in self.toolbar.GetChildren(): self.toolbar.RemoveChild(i)
-        # menuspath = os.path.join(root_dir,"menus")
-        pluginloader.buildMenuBarByPath(self, 'menus', 'plugins', self.menubar, report)
-        #toolsloader.build_tools(self, 'tools', 'plugins', self.toolbar, report)
-        #self.toolbar.Refresh()
+    def reload_plugins(self, report=False, menus=True, tools=False, widgets=False):
+        print(menus, tools, widgets)
+        if menus: pluginloader.buildMenuBarByPath(self, 'menus', 'plugins', self.menubar, report)
+        if tools: toolsloader.build_tools(self, 'tools', 'plugins', self.toolbar, report)
+        if widgets: widgetsloader.build_widgets(self, 'widgets', 'plugins', self.widgets)
+        if not IPy.aui: self.Fit()
 
     def hold(self):
         dire = 1

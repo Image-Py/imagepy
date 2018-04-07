@@ -10,8 +10,10 @@ def build_widget(parent, datas):
         parent.AddPage(i(parent), i.title, False )
 
 
-def build_widgets_panel(parent, datas):
-    wpanel = wx.ScrolledWindow( parent, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+def build_widgets_panel(parent, datas, wpanel):
+    if wpanel is None:
+        wpanel = wx.ScrolledWindow( parent, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+    else: wpanel.DestroyChildren()
     wpanel.SetScrollRate( 5, 5 ) 
     sizer = wx.BoxSizer( wx.VERTICAL )
     for i in datas[1]:
@@ -23,11 +25,11 @@ def build_widgets_panel(parent, datas):
     sizer.Fit( wpanel )
     return wpanel
 
-def build_widgets(parent, toolspath, extends):
+def build_widgets(parent, toolspath, extends, panel=None):
     datas = loader.build_widgets(toolspath)
     extends = glob(extends+'/*/widgets')
     for i in extends:
         wgts = loader.build_widgets(i)
         print(wgts)
         if len(wgts)!=0: datas[1].extend(wgts[1])
-    return build_widgets_panel(parent, datas)
+    return build_widgets_panel(parent, datas, panel)

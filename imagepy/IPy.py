@@ -51,6 +51,15 @@ pub.subscribe(showimg, 'showimg')
 def show_img(imgs, title):
     wx.CallAfter(pub.sendMessage, 'showimg', imgs=imgs, title=title) 
 
+def reloadplgs(report=False, menus=True, tools=False, widgets=False):
+    print('reload........')
+    curapp.reload_plugins(report, menus, tools, widgets)
+
+pub.subscribe(reloadplgs, 'reload')
+def reload_plgs(report=False, menus=True, tools=False, widgets=False):
+    print('reload========')
+    wx.CallAfter(pub.sendMessage, 'reload', report=report, menus=menus, tools=tools, widgets=widgets) 
+
 def showmd(title, cont, url=''):
     from .ui.mkdownwindow import MkDownWindow
     MkDownWindow(curapp, title, cont, url).Show()

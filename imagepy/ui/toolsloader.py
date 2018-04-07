@@ -35,22 +35,34 @@ def build_tools(parent, toolspath, extends, bar=None, report=False):
     return toolsbar#, btn   
 
 def buildToolsBar(parent, datas, toolsbar=None):    
-    box = wx.BoxSizer( wx.HORIZONTAL )
+    #if not toolsbar is None:toolsbar.BeginRepositioningChildren()
     #toolsbar =  wx.ToolBar( parent, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TB_HORIZONTAL ) 
+    
     if toolsbar is None:
+        box = wx.BoxSizer( wx.HORIZONTAL )
         toolsbar = wx.Panel( parent, wx.ID_ANY,  wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-    
-    toolsbar.SetSizer( box )
-    add_tools(toolsbar, datas[1][0][1], None)
-    
+        toolsbar.SetSizer( box )
+    else:
+        box = toolsbar.GetSizer()
+        toolsbar.DestroyChildren()
+        box.Clear()
+
+
+    add_tools(toolsbar, datas[1][0][1], clear=True)
+
     gifpath = os.path.join(root_dir, "tools/drop.gif")
     btn = wx.BitmapButton(toolsbar, wx.ID_ANY, make_bitmap(wx.Bitmap(gifpath)),
                           wx.DefaultPosition, (32, 32), wx.BU_AUTODRAW|wx.RAISED_BORDER)
-
+    sp = wx.StaticLine( toolsbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
+    box.Add( sp, 0, wx.ALL|wx.EXPAND, 2 )
+    box.AddStretchSpacer(1)
     box.Add(btn)
-    btn.Bind(wx.EVT_LEFT_DOWN, lambda x:menu_drop(parent, toolsbar, datas, btn, x))
+    btn.Bind(wx.EVT_LEFT_DOWN, lambda x, ds=datas, b=btn:menu_drop(parent, toolsbar, ds, b, x))
     add_tools(toolsbar, datas[1][1][1])
+
+    toolsbar.GetSizer().Layout()
     toolsbar.Fit()
+    
     return toolsbar
 
 def menu_drop(parent, toolbar, datas, btn, e):
@@ -83,27 +95,21 @@ def setting(tol, btn):
     else:
         tol().view(btn)
         
-def add_tools(bar, datas, curids=[]):
-    ##! TODO: 
-    ## datas? dirpath tree to generate menus/toolsbar?
-    ## curids? ??
+def add_tools(bar, datas, clear=False, curids=[]):
     box = bar.GetSizer() 
-    if curids!=None:
+    if not clear:
         for curid in curids:
-            bar.RemoveChild(curid)
-            box.Hide(curid)
-            box.Detach(curid)
-    if curids!=None:
-        del curids[:]
+            #bar.RemoveChild(curid)
+            #box.Hide(curid)
+            curid.Destroy()
+            #box.Detach(curid)
+    del curids[:]
+
     for data in datas:
-        btn = wx.BitmapButton(bar, wx.ID_ANY, 
-                              make_bitmap(wx.Bitmap(data[1])), 
-                              wx.DefaultPosition, (32,32), 
-                              wx.BU_AUTODRAW|wx.RAISED_BORDER )        
-        if curids!=None:
-            curids.append(btn)        
-        if curids==None:
-            box.Add(btn)
+        btn = wx.BitmapButton(bar, wx.ID_ANY, make_bitmap(wx.Bitmap(data[1])), 
+            wx.DefaultPosition, (32,32), wx.BU_AUTODRAW|wx.RAISED_BORDER )        
+        if not clear:curids.append(btn)        
+        if clear: box.Add(btn)
         else: 
             box.Insert(len(box.GetChildren())-2, btn)
             
@@ -115,8 +121,3 @@ def add_tools(bar, datas, curids=[]):
         btn.SetDefault()
     box.Layout()
     bar.Refresh()
-    if curids==None:
-        sp = wx.StaticLine( bar, wx.ID_ANY, 
-                            wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
-        box.Add( sp, 0, wx.ALL|wx.EXPAND, 2 )
-        box.AddStretchSpacer(1)

@@ -24,6 +24,6 @@ class Refresh(Free):
 	title = 'Reload Plugins'
 
 	def run(self, para=None):
-		IPy.curapp.reload_plugins()
+		IPy.reload_plgs(True, True, True, True)
 
 plgs = [Update, Refresh]

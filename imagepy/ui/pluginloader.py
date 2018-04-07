@@ -58,6 +58,7 @@ def buildMenuBarByPath(parent, path, extends, menuBar=None, report=False):
             else: datas[1].append(j)
         #if len(wgts)!=0: datas[1].extend(wgts[1])
     # print(datas)
+    if not menuBar is None:menuBar.SetMenus([])
     return buildMenuBar(parent, datas, menuBar)
 
 def codeSplit(txt):

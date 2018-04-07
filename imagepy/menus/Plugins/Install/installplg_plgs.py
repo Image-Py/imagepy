@@ -21,7 +21,8 @@ if not os.path.exists('./plugins/cache'):
 def Schedule(a,b,c, plg):
     per = 100.0 * a * b / c
     if per > 100 : per = 100
-    plg.prgs = (int(per), 100)
+    print('%-3d%%'%per)
+    plg.progress(int(per), 100)
 
 class Install(Free):
     title = 'Install Plugins'
@@ -56,7 +57,7 @@ class Install(Free):
         self.prgs = (None, 1)
         cmds = 'python -m pip install -r %s/requirements.txt'%destpath
         subprocess.call(cmds)
-        IPy.curapp.reload_plugins(True)
+        IPy.reload_plgs(True, True, True, True)
 
 class List(Free):
     title = 'List Plugins'
