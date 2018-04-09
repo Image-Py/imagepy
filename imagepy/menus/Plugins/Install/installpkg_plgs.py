@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from imagepy import IPy
 from imagepy.core.engine import Free
-import subprocess
+import subprocess, sys
 
 class Install(Free):
     title = 'Install Packages'
@@ -10,7 +10,7 @@ class Install(Free):
             (bool, 'update', 'update')]
 
     def run(self, para=None):
-        cmds = 'python -m pip install ' + para['pkg']
+        cmds = '%s -m pip install '%sys.executable + para['pkg']
         if para['update']: cmds+' --update'
         subprocess.call(cmds)
 
@@ -18,7 +18,8 @@ class List(Free):
     title = 'List Packages'
 
     def run(self, para=None):
-        p = subprocess.Popen("python -m pip list", stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True)  
+        p = subprocess.Popen('%s -m pip list'%sys.executable, 
+        stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True)  
         lst = str(p.stdout.read(), encoding="utf-8").split('\r\n')
         IPy.table('Packages', [[i] for i in lst], ['Packages'])
 

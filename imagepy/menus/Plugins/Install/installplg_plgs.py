@@ -55,7 +55,7 @@ class Install(Free):
         zipf.close()
         IPy.set_info('installing requirement liberies')
         self.prgs = (None, 1)
-        cmds = 'python -m pip install -r %s/requirements.txt'%destpath
+        cmds = '%s -m pip install -r %s/requirements.txt'%(sys.executable, destpath)
         subprocess.call(cmds)
         IPy.reload_plgs(True, True, True, True)
 
@@ -63,9 +63,7 @@ class List(Free):
     title = 'List Plugins'
 
     def run(self, para=None):
-        p = subprocess.Popen("python -m pip list", stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True)  
-        lst = str(p.stdout.read(), encoding="utf-8").split('\r\n')
-        IPy.table('Packages', [[i] for i in lst], ['Packages'])
+        pass
 
 
 plgs = [Install, List]
