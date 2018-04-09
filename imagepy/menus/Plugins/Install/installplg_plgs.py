@@ -55,7 +55,7 @@ class Install(Free):
         zipf.close()
         IPy.set_info('installing requirement liberies')
         self.prgs = (None, 1)
-        cmds = '%s -m pip install -r %s/requirements.txt'%(sys.executable, destpath)
+        cmds = [sys.executable, '-m', 'pip', 'install', '-r', '%s/requirements.txt'%destpath]
         subprocess.call(cmds)
         IPy.reload_plgs(True, True, True, True)
 

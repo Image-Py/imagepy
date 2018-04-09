@@ -10,8 +10,8 @@ class Install(Free):
             (bool, 'update', 'update')]
 
     def run(self, para=None):
-        cmds = '%s -m pip install '%sys.executable + para['pkg']
-        if para['update']: cmds+' --update'
+        cmds = [sys.executable, '-m', 'pip', 'install', para['pkg']]
+        if para['update']: cmds.append('--upgrade')
         subprocess.call(cmds)
 
 class List(Free):
@@ -20,7 +20,7 @@ class List(Free):
     def run(self, para=None):
         p = subprocess.Popen('%s -m pip list'%sys.executable, 
         stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True)  
-        lst = str(p.stdout.read(), encoding="utf-8").split('\r\n')
+        lst = str(p.stdout.read(), encoding='utf-8').replace('\r\n', '\n').split('\n')
         IPy.table('Packages', [[i] for i in lst], ['Packages'])
 
 
