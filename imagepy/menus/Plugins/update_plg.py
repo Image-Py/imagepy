@@ -29,8 +29,7 @@ class Update(Free):
 
     def download_zip(self):
         pkg='https://github.com/Image-Py/imagepy'
-        #获得前两级目录
-        path=os.path.dirname(os.path.dirname(os.getcwd()))
+        path=os.path.dirname(os.getcwd())
         url =pkg+'/archive/master.zip'
         name = '~'.join(pkg.split('/')[-2:])+'.zip'
         print(url, name)
@@ -43,23 +42,36 @@ class Update(Free):
 
     def deal_file(self):
         path=os.getcwd()
-        path_src=os.path.dirname(os.path.dirname(os.getcwd()))
+        path_src=os.path.dirname(os.getcwd())
         files = os.listdir(path)
+        #remove 
         for i in files:
-            if i=='plugins' or i=='preference.cfg' or i=='__pycache__':continue
+            if i=='plugins' or i=='preference.cfg' or i=='.gitignore':continue
+            if '.' in i: os.remove(os.path.join(path,i))
+            else : shutil.rmtree(os.path.join(path,i))
+        files = os.listdir(os.path.join(path_src,'imagepy-master','imagepy'))
+        #copy
+        for i in files:
+            if i=='plugins' or i=='preference.cfg' or i =='.gitignore':continue
             print(i)
             if '.' in i: 
-                os.remove(os.path.join(path,i))
                 shutil.copyfile(os.path.join(path_src,'imagepy-master','imagepy',i),os.path.join(path,i))
             else : 
-                shutil.rmtree(os.path.join(path,i))
                 shutil.copytree(os.path.join(path_src,'imagepy-master','imagepy',i),os.path.join(path,i))
-
+        files = os.listdir(path_src)
+        #remove
+        for i in files:
+            if i=='imagepy' or i=='imagepy-master' or i=='Image-Py~imagepy.zip' or i=='.git':continue
+            os.remove(os.path.join(path_src,i))
+        files = os.listdir(os.path.join(path_src,'imagepy-master'))
+        #copy
+        for i in files:
+            if i=='imagepy':continue
+            shutil.copyfile(os.path.join(path_src,'imagepy-master',i),os.path.join(path_src,i))
     def delete_cache(self):
-        path_src=os.path.dirname(os.path.dirname(os.getcwd()))
+        path_src=os.path.dirname(os.getcwd())
         shutil.rmtree(os.path.join(path_src,'imagepy-master'))
         os.remove(os.path.join(path_src,'Image-Py~imagepy.zip'))
-
 class Refresh(Free):
     title = 'Reload Plugins'
 
