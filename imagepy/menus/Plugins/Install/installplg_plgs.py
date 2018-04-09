@@ -21,6 +21,7 @@ if not os.path.exists('./plugins/cache'):
 def Schedule(a,b,c, plg):
     per = 100.0 * a * b / c
     if per > 100 : per = 100
+    print(a, b, c)
     print('%-3d%%'%per)
     plg.progress(int(per), 100)
 

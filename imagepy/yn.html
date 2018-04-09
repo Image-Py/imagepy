@@ -1,0 +1,226 @@
+
+<html lang="zh-cn">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+</head>
+
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+}
+table {
+    margin: 10px 0 15px 0;
+    border-collapse: collapse;
+}
+td,th { 
+    border: 1px solid #ddd;
+    padding: 3px 10px;
+}
+th {
+    padding: 5px 10px;  
+}
+
+a {
+    color: #0069d6;
+}
+a:hover {
+    color: #0050a3;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+p img {
+    width:100%;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #404040;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+    background-color: #fee9cc;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #d9d9d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #fff;
+    color:#737373;
+    font-size: 11px;
+    padding: 0;
+}
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+    -webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:10px auto;
+    }
+}
+@media print {
+    body,code,pre code,h1,h2,h3,h4,h5,h6 {
+        color: black;
+    }
+    table, pre {
+        page-break-inside: avoid;
+    }
+}
+</style>
+
+<body>
+
+<h1 id="_1">海冰影像分析软件操作手册</h1>
+<p><img alt="" src="http://idoc.imagepy.org/ice//logo.png" title="" /></p>
+<h2 id="modis">Modis 影像分割</h2>
+<hr />
+<h3 id="_2">打开影像</h3>
+<p>这里不要使用软件默认的打开方式，请使用 <strong>Ice &gt; Geo TIF Open</strong> 进行导入，这样能保证读取时同时得到TIF的投影信息。 
+<img alt="" src="http://idoc.imagepy.org/ice//modis1.jpg" title="" /></p>
+<h3 id="_3">框选感兴趣区域</h3>
+<p>用矩形工具框选冰取，然后 <strong>Ice &gt; Duplicate With Projection</strong>
+<img alt="" src="http://idoc.imagepy.org/ice//modis2.jpg" title="" /></p>
+<h3 id="grabcut">导入海岸线数据，并用Grabcut工具分割</h3>
+<ol>
+<li><strong>Ice &gt; Land Edge</strong> 导入海岸线</li>
+<li><strong>Edit &gt; Clear Out</strong> 清除背景</li>
+<li>选择grabcut工具，在图像上标记前景（左键，红色），背景（右键，蓝色）</li>
+<li>按住<em>ctrl</em>键，单机左键，得到冰缘线</li>
+<li>如果不满意，可以继续用左键，右键修补标记，然后<em>ctrl+z</em>进行撤销，然后再次按住<em>ctrl</em>键，单机左键，直到效果满意。</li>
+<li>最后一次撤销后，按住<em>alt</em>键，单机左键，得到分割结果</li>
+</ol>
+<p><em>以上操作也可使用右键，不同的是程序使用分水岭进行分割</em></p>
+<p><img alt="" src="http://idoc.imagepy.org/ice//modis3.jpg" title="" /></p>
+<h3 id="_4">转灰度，增强</h3>
+<p><strong>Image &gt; Type &gt; 8-bit</strong> 将图像转为8为灰度，<strong>Process &gt; Filter &gt; Unsharp Mask</strong> 锐化增强
+<img alt="" src="http://idoc.imagepy.org/ice//modis4.jpg" title="" /></p>
+<h3 id="_5">阈值化，打碎</h3>
+<p><strong>Image &gt; Adjust &gt; Threshold</strong> 阈值化处理， <strong>Process &gt; Binary &gt; Binary Watershed</strong> 打碎
+<img alt="" src="http://idoc.imagepy.org/ice//modis5.jpg" title="" /></p>
+<h3 id="_6">叠加效果展示</h3>
+<p><img alt="" src="http://idoc.imagepy.org/ice//modis.gif" title="" /></p>
+<h2 id="_7">高分辨率影像分割</h2>
+<hr />
+<h3 id="_8">打开图像，进行梯度提取</h3>
+<ol>
+<li><strong>File &gt; Open</strong> 打开图像</li>
+<li><strong>Process &gt; Filter &gt; Sobel</strong> 梯度计算</li>
+<li><strong>Process &gt; Math &gt; Multiply</strong> 根据情况可以适当对图像进行乘法，提高亮度</li>
+<li><strong>Process &gt; Filter &gt; Gaussian</strong> 对图像进行一定程度的平滑（这个可以防止过度分割）</li>
+</ol>
+<p><img alt="" src="http://idoc.imagepy.org/ice//hd1.jpg" title="" /></p>
+<h3 id="_9">求局部极值点，对梯度图做分水岭分割</h3>
+<ol>
+<li>*<em>Process &gt; Hydrology &gt; Find Minimum</em> 求局部最小值点</li>
+<li><strong>Process &gt; Hydrology &gt; Watershed With ROI</strong> 用最小值点当作种子，对梯度图做分水岭分割</li>
+</ol>
+<p><img alt="" src="http://idoc.imagepy.org/ice//hd2.jpg" title="" /></p>
+<h3 id="_10">密度分析</h3>
+<p>用 <strong>Analysis &gt; Region Analysis &gt; Intensity Filter</strong> 结合掩模与原图，用密度分析，识别每个块是冰还是水
+<img alt="" src="http://idoc.imagepy.org/ice//hd3.jpg" title="" /></p>
+<h3 id="_11">叠加效果展示</h3>
+<p><img alt="" src="http://idoc.imagepy.org/ice//hd.gif" title="" /></p>
+<h2 id="_12">雷达影像运动检测</h2>
+<hr />
+<h3 id="_13">导入雷达影像</h3>
+<p><strong>File &gt; Import &gt; Import Sequence</strong> 导入雷达影像序列
+<img alt="" src="http://idoc.imagepy.org/ice//move.jpg" title="" /></p>
+<h3 id="_14">运动分析</h3>
+<p><strong>Ice &gt; Moveing Detect</strong> 运动分析
+<img alt="" src="http://idoc.imagepy.org/ice//move.gif" title="" /></p>
+<h2 id="_15">更多功能</h2>
+<hr />
+<p>软件使用 ImagePy 开源框架为底层，在此基础上，进行了一系列扩展开发，ImagePy 包含了丰富的图像处理功能，对滤波，增强，分割，测量都有很好的支持，并且是一个扩展性很强的开源框架，更多功能可以就在官网获得技术支持。
+<img alt="" src="http://idoc.imagepy.org/ice//view.jpg" title="" /></p>
+</body>
+</html>
+	
