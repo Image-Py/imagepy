@@ -28,7 +28,6 @@ class Macros:
         title, para = self.cmds[self.cur].split('>')
         self.cur += 1
         plg = PluginsManager.get(title)()
-        print(para)
         plg.start(eval(para), self.next)
 
     def next(self):
