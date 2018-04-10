@@ -31,7 +31,7 @@ class Update(Free):
         pkg='https://github.com/Image-Py/imagepy'
         path=os.path.dirname(os.getcwd())
         url =pkg+'/archive/master.zip'
-        name = '~'.join(pkg.split('/')[-2:])+'.zip'
+        name = 'imagepy_cache.zip'
         print(url, name)
         print('downloading from %s'%url)
         urlretrieve(url, os.path.join(path, name), 
@@ -61,7 +61,7 @@ class Update(Free):
         files = os.listdir(path_src)
         #remove
         for i in files:
-            if i=='imagepy' or i=='imagepy-master' or i=='Image-Py~imagepy.zip' or i=='.git':continue
+            if i=='imagepy' or i=='imagepy-master' or i=='imagepy_cache.zip' or i=='.git':continue
             os.remove(os.path.join(path_src,i))
         files = os.listdir(os.path.join(path_src,'imagepy-master'))
         #copy
@@ -71,7 +71,7 @@ class Update(Free):
     def delete_cache(self):
         path_src=os.path.dirname(os.getcwd())
         shutil.rmtree(os.path.join(path_src,'imagepy-master'))
-        os.remove(os.path.join(path_src,'Image-Py~imagepy.zip'))
+        os.remove(os.path.join(path_src,'imagepy_cache.zip'))
 class Refresh(Free):
     title = 'Reload Plugins'
 
