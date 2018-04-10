@@ -1,15 +1,14 @@
-from imagepy import IPy
+from imagepy import IPy, root_dir
 from imagepy.core.engine import Free
-import sys, os
-import zipfile,urllib
+import os, sys, os.path as osp
+import zipfile, urllib
+from io import BytesIO
 import shutil
 
 if sys.version_info[0]==2:
     from urllib import urlretrieve
-    from cStringIO import StringIO
 else: 
     from urllib.request import urlretrieve
-    from io import BytesIO as StringIO
 
 def Schedule(a,b,c, plg):
     per = 100.0 * a * b / c
@@ -24,54 +23,35 @@ class Update(Free):
         IPy.set_info('update now, waiting...')
         self.download_zip()
         self.deal_file()
-        self.delete_cache()
+        #self.delete_cache()
         IPy.alert('imagepy update done!')
 
     def download_zip(self):
-        pkg='https://github.com/Image-Py/imagepy'
-        path=os.path.dirname(os.getcwd())
-        url =pkg+'/archive/master.zip'
-        name = 'imagepy_cache.zip'
-        print(url, name)
+        url='https://github.com/Image-Py/imagepy/archive/master.zip'
+        path=osp.dirname(root_dir)
+        zipname = osp.join(path, 'imagepy_cache.zip')
         print('downloading from %s'%url)
-        urlretrieve(url, os.path.join(path, name), 
+        urlretrieve(url, zipname, 
             lambda a,b,c, p=self: Schedule(a,b,c,p))
-        zipf = zipfile.ZipFile(os.path.join(path, name))
+        zipf = zipfile.ZipFile(zipname)
         zipf.extractall(path)
-        destpath = os.path.join(path, name[:-4])
 
     def deal_file(self):
-        path=os.getcwd()
-        path_src=os.path.dirname(os.getcwd())
-        files = os.listdir(path)
+        path = osp.dirname(root_dir)
         #remove 
-        for i in files:
-            if i=='plugins' or i=='preference.cfg' or i=='.gitignore':continue
-            if '.' in i: os.remove(os.path.join(path,i))
-            else : shutil.rmtree(os.path.join(path,i))
-        files = os.listdir(os.path.join(path_src,'imagepy-master','imagepy'))
-        #copy
-        for i in files:
-            if i=='plugins' or i=='preference.cfg' or i =='.gitignore':continue
-            print(i)
-            if '.' in i: 
-                shutil.copyfile(os.path.join(path_src,'imagepy-master','imagepy',i),os.path.join(path,i))
-            else : 
-                shutil.copytree(os.path.join(path_src,'imagepy-master','imagepy',i),os.path.join(path,i))
-        files = os.listdir(path_src)
-        #remove
-        for i in files:
-            if i=='imagepy' or i=='imagepy-master' or i=='imagepy_cache.zip' or i=='.git':continue
-            os.remove(os.path.join(path_src,i))
-        files = os.listdir(os.path.join(path_src,'imagepy-master'))
-        #copy
-        for i in files:
-            if i=='imagepy':continue
-            shutil.copyfile(os.path.join(path_src,'imagepy-master',i),os.path.join(path_src,i))
-    def delete_cache(self):
-        path_src=os.path.dirname(os.getcwd())
-        shutil.rmtree(os.path.join(path_src,'imagepy-master'))
-        os.remove(os.path.join(path_src,'imagepy_cache.zip'))
+        for i in os.listdir(root_dir):
+            if i in ['plugins', 'preference.cfg', '.gitignore']:continue
+            if osp.isdir(osp.join(root_dir,i)): shutil.rmtree(osp.join(root_dir, i))
+            else : os.remove(osp.join(root_dir,i))
+
+        source = zipfile.ZipFile(osp.join(path, 'imagepy_cache.zip'), 'r')
+        target = zipfile.ZipFile(BytesIO(), 'w')
+        for i in source.namelist()[1:]: target.writestr(i[15:], source.read(i))
+        target.extractall(path)
+        target.close()
+        source.close()
+        os.remove(osp.join(path,'imagepy_cache.zip'))
+
 class Refresh(Free):
     title = 'Reload Plugins'
 
