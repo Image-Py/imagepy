@@ -33,14 +33,12 @@ class Update(Free):
         print('downloading from %s'%url)
         urlretrieve(url, zipname, 
             lambda a,b,c, p=self: Schedule(a,b,c,p))
-        zipf = zipfile.ZipFile(zipname)
-        zipf.extractall(path)
 
     def deal_file(self):
         path = osp.dirname(root_dir)
         #remove 
         for i in os.listdir(root_dir):
-            if i in ['plugins', 'preference.cfg', '.gitignore']:continue
+            if i in ['plugins', 'preference.cfg', '.gitignore']: continue
             if osp.isdir(osp.join(root_dir,i)): shutil.rmtree(osp.join(root_dir, i))
             else : os.remove(osp.join(root_dir,i))
 
