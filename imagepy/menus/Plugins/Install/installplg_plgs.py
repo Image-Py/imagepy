@@ -13,10 +13,12 @@ else:
     from urllib.request import urlretrieve
     from io import BytesIO as StringIO
 
-if not os.path.exists('./plugins'):
-    os.mkdir('plugins')
-if not os.path.exists('./plugins/cache'):
-    os.mkdir('plugins/cache')
+path_plgs = os.path.join(root_dir, 'plugins')
+path_cache = os.path.join(path_plgs, 'cache')
+if not os.path.exists(path_plgs):
+    os.mkdir(path_plgs)
+if not os.path.exists(path_cache):
+    os.mkdir(path_cache)
 
 def Schedule(a,b,c, plg):
     per = 100.0 * a * b / c
@@ -44,14 +46,14 @@ class Install(Free):
         domain, name = domain.replace('_', '-'), name.replace('_', '-')
 
         IPy.set_info('downloading plugin from %s'%para['pkg'])
-        urlretrieve(url, os.path.join('./plugins/cache', domain+'_'+name+'.zip'), 
+        urlretrieve(url, os.path.join(path_cache, domain+'_'+name+'.zip'), 
             lambda a,b,c, p=self: Schedule(a,b,c,p))
-        zipf = zipfile.ZipFile(os.path.join('./plugins/cache', domain+'_'+name+'.zip'))
+        zipf = zipfile.ZipFile(os.path.join(path_cache, domain+'_'+name+'.zip'))
         folder = zipf.namelist()[0]
-        zipf.extractall('./plugins/cache')
-        destpath = os.path.join('./plugins/', domain+'_'+folder).replace('-master','')
+        zipf.extractall(path_cache)
+        destpath = os.path.join(path_plgs, domain+'_'+folder).replace('-master','')
         if os.path.exists(destpath): shutil.rmtree(destpath)
-        os.rename(os.path.join('./plugins/cache/', folder), destpath)
+        os.rename(os.path.join(path_cache, folder), destpath)
         zipf.close()
         IPy.set_info('installing requirement liberies')
         self.prgs = (None, 1)
