@@ -34,8 +34,9 @@ class ImagePy(wx.Frame):
         logopath = os.path.join(root_dir, 'data/logo.ico')
         #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
-        self.SetSizeHints( wx.Size(900,700) if IPy.aui else wx.Size( 560,-1 ))
         IPy.curapp = self
+        self.SetSizeHints( wx.Size(900,700) if IPy.uimode() == 'ipy' else wx.Size( 560,-1 ))
+        
         # Todo:Fixed absolute/relative path!
         # print("menuspath:{}".format( os.path.join(root_dir,"menus")))
         # print("toolspath:{}".format(os.path.join(root_dir,"tools"))
@@ -57,8 +58,8 @@ class ImagePy(wx.Frame):
         #self.widgets = widgetsloader.build_widgets(self, 'widgets')
         #self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
         #    .Float().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) .Layer( 10 ) )
-        
-        if IPy.aui: self.load_aui()
+        print(IPy.uimode())
+        if IPy.uimode()=='ipy': self.load_aui()
         else: self.load_ijui()
         self.Fit()
         #self.load_dev()
@@ -94,7 +95,7 @@ class ImagePy(wx.Frame):
         self.auimgr.Update()
         self.Fit()
         self.Centre( wx.BOTH )
-        if(not IPy.aui):
+        if(IPy.uimode()=='ij'):
             self.SetMaxSize((-1, self.GetSize()[1]))
             self.SetMinSize((-1, self.GetSize()[1]))
         self.update = False
@@ -149,7 +150,7 @@ class ImagePy(wx.Frame):
         if menus: pluginloader.buildMenuBarByPath(self, 'menus', 'plugins', self.menubar, report)
         if tools: toolsloader.build_tools(self, 'tools', 'plugins', self.toolbar, report)
         if widgets: widgetsloader.build_widgets(self, 'widgets', 'plugins', self.widgets)
-        if not IPy.aui: self.Fit()
+        if IPy.uimode()!='ipy': self.Fit()
 
     def hold(self):
         dire = 1

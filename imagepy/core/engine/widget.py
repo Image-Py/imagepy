@@ -19,7 +19,7 @@ class Widget():
 		pan = self.pan(IPy.curapp)
 		WidgetsManager.addref(pan)
 		IPy.curapp.auimgr.AddPane(pan, wx.aui.AuiPaneInfo(). DestroyOnClose(True). Left(). Caption(self.title)  .PinButton( True )
-			.Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(IPy.aui).Layer( 15 ) )
+			.Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(IPy.uimode()=='ipy').Layer( 15 ) )
 		IPy.curapp.Layout()
 		IPy.curapp.auimgr.Update()
 		'''

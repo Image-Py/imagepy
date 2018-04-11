@@ -8,7 +8,7 @@ import wx, os
 import wx.aui as aui
 from .canvas import Canvas
 from ..core.manager import WindowsManager
-from ..core.manager import ShotcutManager,PluginsManager
+from ..core.manager import ShotcutManager
 from .. import IPy, root_dir
 import weakref
 
@@ -85,7 +85,7 @@ class CanvasPanel(wx.Panel):
             self.page.SetScrollbar(0, 0, ips.get_nslices()-1, 0, refresh=True)
 
         if resize: 
-            if not IPy.aui: self.Fit()
+            if IPy.uimode()!='ipy': self.Fit()
             else: 
                 #self.SetSizer(self.GetSizer())
                 self.Layout() 
@@ -106,7 +106,7 @@ class CanvasPanel(wx.Panel):
 
     def close(self):
         parent = self.GetParent()
-        if not IPy.aui: parent.Close()
+        if IPy.uimode()!='ipy': parent.Close()
         else: parent.DeletePage(parent.GetPageIndex(self))
 
     def __del__(self):pass
@@ -166,6 +166,23 @@ class CanvasNoteBook(wx.aui.AuiNotebook):
     def on_close(self, event):
         event.GetEventObject().GetPage(event.GetSelection()).set_handler()
         event.GetEventObject().GetPage(event.GetSelection()).canvas.set_handler()
+
+class VirturlCanvas:
+    instance = []
+    class Canvas:
+        def __init__(self, ips):
+            self.ips = ips
+        def __del__(self):
+            print('virturl canvas deleted!')
+
+    def __init__(self, ips):
+        self.ips = ips
+        self.canvas = VirturlCanvas.Canvas(ips)
+        VirturlCanvas.instance.append(self)
+        WindowsManager.add(self)
+
+    def close(self): VirturlCanvas.instance.remove(self)
+
 
 if __name__=='__main__':
     app = wx.PySimpleApp()

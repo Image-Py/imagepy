@@ -149,7 +149,9 @@ class Filter:
         if ips.get_nslices()==1 or 'not_slice' in self.note:
             # process_one(self, ips, ips.snap, ips.img, para)
             print(111)
-            threading.Thread(target = process_one, args = 
+            if IPy.uimode() == 'no':
+                process_one(self, ips, ips.snap, ips.img, para, callafter)
+            else: threading.Thread(target = process_one, args = 
                 (self, ips, ips.snap, ips.img, para, callafter)).start()
             if win!=None: win.write('{}>{}'.format(self.title, para))
         elif ips.get_nslices()>1:
@@ -161,14 +163,18 @@ class Filter:
                 para['stack'] = True
                 #process_stack(self, ips, ips.snap, ips.imgs, para)
                 print(222)
-                threading.Thread(target = process_stack, args = 
+                if IPy.uimode() == 'no':
+                    process_stack(self, ips, ips.snap, ips.imgs, para, callafter)
+                else: threading.Thread(target = process_stack, args = 
                     (self, ips, ips.snap, ips.imgs, para, callafter)).start()
                 if win!=None: win.write('{}>{}'.format(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
                 #process_one(self, ips, ips.snap, ips.img, para)
                 print(333)
-                threading.Thread(target = process_one, args = 
+                if IPy.uimode() == 'no':
+                    process_one(self, ips, ips.snap, ips.img, para, callafter)
+                else: threading.Thread(target = process_one, args = 
                     (self, ips, ips.snap, ips.img, para, callafter)).start()
                 if win!=None: win.write('{}>{}'.format(self.title, para))
             elif rst == 'cancel': pass
@@ -181,6 +187,7 @@ class Filter:
             
     def start(self, para=None, callafter=None):
         ips = self.ips
+        print('who am i', ips)
         if not self.check(ips):return
         if not self.load(ips):return
         if 'auto_snap' in self.note:ips.snapshot()

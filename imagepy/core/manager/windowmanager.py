@@ -13,6 +13,7 @@ class WindowsManager:
         print(win)
         cls.remove(win)
         callback = lambda a: cls.remove(a())
+        print('windows add!')
         cls.windows.insert(0, weakref.ref(win, callback))
         
     @classmethod

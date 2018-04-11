@@ -47,13 +47,15 @@ class Free:
             win = WidgetsManager.getref('Macros Recorder')
             if win!=None: 
                 win.write('{}>{}'.format(self.title, para))
-            if self.asyn:
-                t = threading.Thread(target = self.runasyn, args = (para, callback))
-                t.start()
-            else:
+            if self.asyn and IPy.uimode()!='no':
+                threading.Thread(target = self.runasyn, args = (para, callback)).start()
+            else: 
+                self.runasyn(para, callback)
+                '''
                 self.run(para)
                 if not callback is None:
                     callback()
+                '''
             #if not thd:t.join()
 
             #self.run(para)

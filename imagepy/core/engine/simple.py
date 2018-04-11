@@ -48,7 +48,9 @@ class Simple:
 
     def ok(self, ips, para=None, callafter=None):
         if para == None: para = self.para
-        threading.Thread(target = self.runasyn, 
+        if IPy.uimode() == 'no':
+            self.runasyn(ips, ips.imgs, para, callafter)
+        else: threading.Thread(target = self.runasyn, 
                     args = (ips, ips.imgs, para, callafter)).start()
         win = WidgetsManager.getref('Macros Recorder')
         if win!=None: win.write('{}>{}'.format(self.title, para))
