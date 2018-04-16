@@ -8,7 +8,8 @@ os.chdir(root_dir)
 # sys.path.append(root_dir)
 
 from .imageplus import ImagePlus
-from .ui.imagepy import ImagePy
+from .tableplus import TablePlus
+from .ui.mainframe import ImagePy
 
 def show(ui = True):
 	app = wx.App(False)

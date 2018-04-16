@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ConfigPanel used for parameters setting
 import wx, platform
-from ..core.manager import WindowsManager, TableLogManager
-from .widgets import NumCtrl, ColorCtrl, FloatSlider
+from ..core.manager import ImageManager, WindowsManager, TableManager
+from .widgets import *
 
 
 class ParaDialog (wx.Dialog):
@@ -13,7 +13,8 @@ class ParaDialog (wx.Dialog):
         self.funcs = {'ctrl':self.add_ctrl, 'slide':self.add_slide, int:self.add_num,
                       float:self.add_num, 'lab':self.add_lab, bool:self.add_check,
                       str:self.add_txt, list:self.add_choice, 'img':self.add_img,
-                      'tab':self.add_tab, 'color':self.add_color}
+                      'color':self.add_color, 'any':self.add_any,
+                      'chos':self.add_choices, 'fields':self.add_fields}
 
         self.on_ok, self.on_cancel = None, None
         self.ctrl_dic = {}
@@ -81,6 +82,31 @@ class ParaDialog (wx.Dialog):
         self.tus.append((lab_title, lab_unit))
         self.lst.Add( sizer, 0, wx.EXPAND, 5 )
 
+    def add_any(self, title, key):
+        sizer = wx.BoxSizer( wx.HORIZONTAL )
+        lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        ctrl = AnyType(self)
+        self.ctrl_dic[key] = ctrl
+        ctrl.Bind(None, lambda x : self.para_changed(key))
+        sizer.Add( ctrl, 2, wx.ALL, 0 )
+        self.tus.append((lab_title, ctrl.com_type))
+        self.lst.Add( sizer, 0, wx.EXPAND, 5 )
+
+    def add_choices(self, choices, title, key):
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALL, 5 )
+        ctrl = Choices(self, choices)
+        self.ctrl_dic[key] = ctrl
+        ctrl.Bind(None, lambda x : self.para_changed(key))
+        sizer.Add( ctrl, 0, wx.ALL|wx.EXPAND, 0 )
+        self.lst.Add(sizer, 0, wx.EXPAND, 5)
+
     def add_color(self, title, key, unit):
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         lab_title = wx.StaticText( self, wx.ID_ANY, title,
@@ -129,45 +155,19 @@ class ParaDialog (wx.Dialog):
         self.lst.Add( sizer, 0, wx.EXPAND, 5 )
 
     def add_img(self, title, key, unit):
-        """ get WindowsManager titles """
-        titles = WindowsManager.get_titles()
+        """ get ImageManager titles """
+        titles = ImageManager.get_titles()
         self.add_choice(titles, str, title, key, unit)
         self.para[key] = titles[0]
-        return True
 
-    def add_tab(self, title, key, unit):
+    def add_fields(self, key):
         """ get TableLogManager titles """
-        titles = TableLogManager.get_titles()
-        self.add_choice(titles, str, title, key, unit)
-        self.para[key] = titles[0]
-        return True
+        tps = TableManager.get()
+        cols = [str(i) for i in tps.data.columns]
+        self.add_choices(cols, tps.title, key)
+        self.para[key] = [str(i) for i in tps.colmsk]
 
     def add_slide(self, rang, accu, title, key):
-        '''
-        sizer = wx.BoxSizer( wx.HORIZONTAL )
-        lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_title.Wrap( -1 )
-        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        iswin = platform.system() == 'Windows'
-        lab  = wx.SL_VALUE_LABEL if iswin else wx.SL_LABELS
-
-        ctrl = wx.Slider( self, wx.ID_ANY, 50, rang[0], rang[1],
-                          wx.DefaultPosition, wx.Size( -1,-1 ), wx.SL_HORIZONTAL|lab )
-
-        self.ctrl_dic[key] = ctrl
-        ctrl.Bind(wx.EVT_SCROLL, lambda x : self.para_changed(key))
-        sizer.Add( ctrl, 2, wx.ALL, 5 )
-
-        lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_unit.Wrap( -1 )
-        sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        self.tus.append((lab_title, lab_unit))
-        self.lst.Add( sizer, 0, wx.EXPAND, 5 )
-        '''
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         lab_title = wx.StaticText( self, wx.ID_ANY, title,
                                    wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
@@ -223,6 +223,7 @@ class ParaDialog (wx.Dialog):
         self.lst.Add(box)
 
     def pack(self):
+        self.Layout()
         mint, minu = [], []
         for t,u in self.tus:
             if not t is None: mint.append(t.GetSize()[0])

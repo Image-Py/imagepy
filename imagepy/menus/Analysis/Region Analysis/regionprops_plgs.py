@@ -6,7 +6,7 @@ Created on Tue Dec 27 01:06:59 2016
 from imagepy import IPy, wx
 import numpy as np
 from imagepy.core.engine import Simple, Filter
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
 

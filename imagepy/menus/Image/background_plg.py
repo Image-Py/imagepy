@@ -3,7 +3,7 @@
 Created on Thu Dec  1 01:22:19 2016
 @author: yxl
 """
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager
 from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Simple
@@ -22,7 +22,7 @@ class SetBackground(Simple):
         if para['kill']:
             ips.backimg = None
         else:
-            img = WindowsManager.get(para['img']).ips.img
+            img = ImageManager.get(para['img']).img
             if img.dtype != np.uint8 or img.shape[:2] != ips.img.shape[:2]:
                 IPy.alert('a background image must be 8-bit and with the same size')
                 return

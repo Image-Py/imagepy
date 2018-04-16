@@ -10,7 +10,7 @@ from .. import IPy, root_dir
 # TODO: @2017.05.01
 #from ui import pluginloader, toolsloader
 from . import pluginloader, toolsloader, widgetsloader
-from ..core.manager import ConfigManager, PluginsManager, TaskManager, WindowsManager
+from ..core.manager import ConfigManager, PluginsManager, TaskManager, ImageManager
 from ..core.engine import Macros
 from .canvasframe import CanvasNoteBook
 import wx.aui as aui

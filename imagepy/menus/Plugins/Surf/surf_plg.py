@@ -1,6 +1,6 @@
 import cv2, wx
 from imagepy.core.engine import Filter, Simple, Tool
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager
 from .matcher import Matcher
 import numpy as np
 from imagepy import IPy
@@ -90,7 +90,7 @@ class Match(Simple):
             'trans':'None', 'std':1, 'style':'Blue/Yellow'}
 
     def load(self, ips):
-        titles = WindowsManager.get_titles()
+        titles = ImageManager.get_titles()
         self.para['img1'] = titles[0]
         self.para['img2'] = titles[0]
         Match.view = [('lab','=========  two image in 8-bit  ========='),
@@ -125,8 +125,8 @@ class Match(Simple):
 
     #process
     def run(self, ips, imgs, para = None):
-        ips1 = WindowsManager.get(para['img1']).ips
-        ips2 = WindowsManager.get(para['img2']).ips
+        ips1 = ImageManager.get(para['img1'])
+        ips2 = ImageManager.get(para['img2'])
 
         detector = CVSURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
             nOctaveLayers=para['int'], upright=para['upright'],extended=para['ext'])

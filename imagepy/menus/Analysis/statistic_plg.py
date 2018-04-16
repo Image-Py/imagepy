@@ -7,7 +7,7 @@ from imagepy import IPy, root_dir
 import wx, numpy as np, os
 from imagepy.core.engine import Simple
 from imagepy.core.roi import PointRoi
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager, WindowsManager
 from imagepy.ui.widgets import HistCanvas
 from wx.lib.pubsub import pub
 

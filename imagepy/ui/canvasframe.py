@@ -7,7 +7,7 @@ Created on Fri Oct 14 01:24:41 2016
 import wx, os
 import wx.aui as aui
 from .canvas import Canvas
-from ..core.manager import WindowsManager
+from ..core.manager import ImageManager, WindowsManager
 from ..core.manager import ShotcutManager
 from .. import IPy, root_dir
 import weakref
@@ -138,11 +138,12 @@ class CanvasFrame(wx.Frame):
 
     def on_valid(self, event):
         if event.GetActive():
-            WindowsManager.add(self.canvaspanel)
+            ImageManager.add(self.canvaspanel.ips)
 
     def on_close(self, event):
         self.canvaspanel.set_handler()
         self.canvaspanel.canvas.set_handler()
+        WindowsManager.remove(self.canvaspanel)
         event.Skip()
 
 class CanvasNoteBook(wx.aui.AuiNotebook):
@@ -161,11 +162,12 @@ class CanvasNoteBook(wx.aui.AuiNotebook):
         self.SetPageText(self.GetPageIndex(panel), title)
 
     def on_pagevalid(self, event):
-        WindowsManager.add(event.GetEventObject().GetPage(event.GetSelection()))
+        ImageManager.add(event.GetEventObject().GetPage(event.GetSelection()).ips)
 
     def on_close(self, event):
         event.GetEventObject().GetPage(event.GetSelection()).set_handler()
         event.GetEventObject().GetPage(event.GetSelection()).canvas.set_handler()
+        WindowsManager.remove(event.GetEventObject().GetPage(event.GetSelection()))
 
 class VirturlCanvas:
     instance = []
@@ -179,7 +181,7 @@ class VirturlCanvas:
         self.ips = ips
         self.canvas = VirturlCanvas.Canvas(ips)
         VirturlCanvas.instance.append(self)
-        WindowsManager.add(self)
+        ImageManager.add(self)
 
     def close(self): VirturlCanvas.instance.remove(self)
 

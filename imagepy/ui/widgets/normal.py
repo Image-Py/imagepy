@@ -19,6 +19,7 @@ class NumCtrl(wx.TextCtrl):
             self.SetBackgroundColour((255,255,0))
         else:
             self.SetBackgroundColour((255,255,255))
+        self.Refresh()
         
     def SetValue(self, n):
         wx.TextCtrl.SetValue(self, str(round(n,self.accury) if self.accury>0 else int(n)))
@@ -66,7 +67,87 @@ class ColorCtrl(wx.TextCtrl):
         
     def GetValue(self):
         return self.GetBackgroundColour().Get(False)
+
+class AnyType( wx.Panel ):
+    
+    def __init__( self, parent, types = ['Int', 'Float', 'Str']):
+        wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(-1, -1), style = wx.TAB_TRAVERSAL )
         
+        sizer = wx.BoxSizer( wx.HORIZONTAL )
+        self.txt_value = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        sizer.Add( self.txt_value, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
+        com_typeChoices = types
+        self.com_type = wx.ComboBox( self, wx.ID_ANY, 'Float', wx.DefaultPosition, wx.DefaultSize, com_typeChoices, 0 )
+        sizer.Add( self.com_type, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        
+        
+        self.SetSizer( sizer )
+        self.Layout()
+        
+        # Connect Events
+        self.txt_value.Bind( wx.EVT_KEY_UP, self.on_text )
+        self.com_type.Bind( wx.EVT_COMBOBOX, self.on_type )
+    
+    def Bind(self, z, f):
+        self.f = f
+    
+    def SetValue(self, v):
+        self.txt_value.SetValue(str(v))
+        if isinstance(v, int):
+            self.com_type.Select(0)
+        if isinstance(v, float):
+            self.com_type.Select(1)
+        else: self.com_type.Select(2)
+
+
+    def GetValue(self):
+        tp = self.com_type.GetValue()
+        sval = wx.TextCtrl.GetValue(self.txt_value)
+        if tp == 'Float':
+            try: num = float(sval)
+            except ValueError: return None
+        if tp == 'Int':
+            try: num = int(sval)
+            except ValueError: return None
+        if tp == 'Str':
+            try: num = str(sval)
+            except ValueError: return None
+        return num
+    
+    # Virtual event handlers, overide them in your derived class
+    def on_text( self, event ):
+        self.f(event)
+        if self.GetValue()==None:
+            self.txt_value.SetBackgroundColour((255,255,0))
+        else: self.txt_value.SetBackgroundColour((255,255,255))
+        self.Refresh()
+    
+    def on_type( self, event ):
+        if self.GetValue()==None:
+            self.txt_value.SetBackgroundColour((255,255,0))
+        else: self.txt_value.SetBackgroundColour((255,255,255))
+        self.Refresh()
+
+class Choices(wx.CheckListBox):
+    def __init__( self, parent, choices):
+        self.choices = choices
+        wx.CheckListBox.__init__(self, parent, -1, (80, 50), wx.DefaultSize, choices)
+        parent.Bind(wx.EVT_CHECKLISTBOX, self.on_check, self)
+        self.SetMaxSize( wx.Size( -1,100 ) )
+
+    def Bind(self, z, f):
+        self.f = f
+
+    def on_check(self, event):
+        self.f(event)
+
+    def GetValue(self):
+        return [self.choices[i] for i in self.GetCheckedItems()]
+        
+    def SetValue(self, value):
+        self.SetCheckedItems([
+            self.choices.index(i) for i in value if i in self.choices])
+
 class FloatSlider(wx.Panel):
     
     def __init__( self, parent, rang, accury):
@@ -132,6 +213,7 @@ class FloatSlider(wx.Panel):
         else:
             self.text.SetBackgroundColour((255,255,255))
             self.SetValue(self.GetValue())
+        self.Refresh()
 
     def SetValue(self, n):
         if not self.text.HasFocus():
@@ -155,10 +237,7 @@ class FloatSlider(wx.Panel):
         return num
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = wx.Frame(None)
-    hist = Histogram(frame)
-    frame.Fit()
-    frame.Show(True)
-    hist.set_hist(np.arange(256))
+    frame.Show()
     app.MainLoop() 

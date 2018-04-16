@@ -9,7 +9,7 @@ import wx
 
 from imagepy import IPy
 from imagepy.core.engine import Simple, Filter
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager
 from imagepy.core.roi.pointroi import PointRoi
 
 class Mark:
@@ -59,7 +59,7 @@ class RegionStatistic(Simple):
             
     #process
     def run(self, ips, imgs, para = None):
-        inten = WindowsManager.get(para['inten']).ips
+        inten = ImageManager.get(para['inten'])
         if not para['slice']:
             imgs = [inten.img]
             msks = [ips.img]
@@ -151,7 +151,7 @@ class IntensityFilter(Filter):
             
     #process
     def run(self, ips, snap, img, para = None):
-        intenimg = WindowsManager.get(para['inten']).ips.img
+        intenimg = ImageManager.get(para['inten']).img
         strc = ndimage.generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
         buf, n = ndimage.label(snap, strc, output=np.uint32)
         index = range(1, n+1)
@@ -177,7 +177,7 @@ class IntensityFilter(Filter):
         idx[0] = 0
         img[:] = idx[buf]
 
-        WindowsManager.get(para['inten']).ips.mark = RGMark((xy.T, msk))
-        WindowsManager.get(para['inten']).ips.update = True
+        ImageManager.get(para['inten']).mark = RGMark((xy.T, msk))
+        ImageManager.get(para['inten']).update = True
 
 plgs = [RegionStatistic, IntensityFilter]

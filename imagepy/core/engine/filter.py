@@ -10,7 +10,8 @@ import numpy as np
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ...core.manager import TextLogManager, WindowsManager, TaskManager, WidgetsManager
+from ...core.manager import TextLogManager, ImageManager, \
+WindowsManager, TaskManager, WidgetsManager
 from time import time
         
 def process_channels(plg, ips, src, des, para):

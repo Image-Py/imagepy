@@ -30,24 +30,33 @@ def get_window():
     from .core import manager
     return manager.WindowsManager.get()
 
+def get_twindow():
+    from .core import manager
+    return manager.WTableManager.get()
+
 def get_ips():
     from .core import manager
-    win = manager.WindowsManager.get()
-    return None if win==None else win.canvas.ips
+    return manager.ImageManager.get()
+
+def get_tps():
+    from .core import manager
+    return manager.TableManager.get()
+    # return None if win==None else win.canvas.ips
 
 def showips(ips):
     if uimode()=='ipy':
         from .ui.canvasframe import CanvasPanel
         canvasp = CanvasPanel(curapp.canvasnb)
+        canvasp.set_ips(ips)
         curapp.canvasnb.add_page( canvasp, ips)
         #canvasp.canvas.initBuffer()
-        canvasp.set_ips(ips)
+        
         curapp.auimgr.Update()
     elif uimode()=='ij':
         from .ui.canvasframe import CanvasFrame
         frame = CanvasFrame(curapp)
         frame.set_ips(ips)
-        frame.Show()   
+        frame.Show()
 
 pub.subscribe(showips, 'showips')
 def show_ips(ips):
@@ -156,14 +165,18 @@ def get_para(title, view, para):
     pd.Destroy()
     return rst
 
-def showtable(title, data, cols=None, rows=None):
-    from .ui.tablewindow import TableLog
-    TableLog.table(title, data, cols, rows)
+def showtable(title, data):
+    from .ui.tablewindow import TableFrame
+    from imagepy.tableplus import TablePlus
+    tps = TablePlus(title, data)
+    frame = TableFrame(curapp)
+    frame.set_tps(tps)
+    frame.Show()   
     # MT callafter(TableLog.table, *(title, data, cols, rows))
     
 pub.subscribe(showtable, 'showtable')
-def table(title, data, cols=None, rows=None):
-    wx.CallAfter(pub.sendMessage, "showtable", title=title, data=data, cols=cols, rows=rows) 
+def table(title, data):
+    wx.CallAfter(pub.sendMessage, "showtable", title=title, data=data) 
 
 def showlog(title, cont):
     from .ui.logwindow import TextLog
