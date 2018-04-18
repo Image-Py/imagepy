@@ -15,7 +15,7 @@ class ImageKiller(Free):
     def load(self):
         ImageKiller.para = {'name':'All'}
         titles =['All'] + ImageManager.get_titles()
-        ImageKiller.view = [(list, titles, str, 'Name', 'name', 'selected')]
+        ImageKiller.view = [(list, 'name', titles, str, 'Name', 'selected')]
         return True
     
     #process
@@ -32,7 +32,7 @@ class TextKiller(Free):
     def load(self):
         TextKiller.para = {'name':'All'}
         titles =['All'] + TextLogManager.get_titles()
-        TextKiller.view = [(list, titles, str, 'Name', 'name', 'selected')]
+        TextKiller.view = [(list, 'name', titles, str, 'Name', 'selected')]
         return True
     
     #process
@@ -49,7 +49,7 @@ class TableKiller(Free):
     def load(self):
         self.para = {'name':'All'}
         titles = ['All'] + TableManager.get_titles()
-        self.view = [(list, titles, str, 'Name', 'name', 'selected')]
+        self.view = [(list, 'name', titles, str, 'Name', 'selected')]
         return True
     
     #process

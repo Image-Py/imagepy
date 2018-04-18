@@ -30,8 +30,8 @@ class Install(Free):
     title = 'Install Plugins'
     para = {'pkg':''}
     prgs = (0, 100)
-    view = [('lab', 'input a zipfile url or github url as http://github.com/username/project'),
-            (str, 'package', 'pkg', '')]
+    view = [('lab', None, 'input a zipfile url or github url as http://github.com/username/project'),
+            (str, 'pkg', 'package', '')]
 
     def run(self, para=None):
         url = para['pkg']

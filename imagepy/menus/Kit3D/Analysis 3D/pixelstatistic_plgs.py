@@ -7,13 +7,13 @@ class Statistic(Simple):
     note = ['8-bit', '16-bit', 'int', 'float', 'stack3d']
     
     para = {'nozero':False, 'max':True, 'min':True,'mean':False,'var':False,'std':False,'slice':False}
-    view = [(bool, 'no-zero', 'nozero'),
-            ('lab','=========  indecate  ========='),
-            (bool, 'Max', 'max'),
-            (bool, 'Min', 'min'),
-            (bool, 'Mean', 'mean'),
-            (bool, 'Variance', 'var'),
-            (bool, 'Standard', 'std'),
+    view = [(bool, 'nozero', 'no-zero'),
+            ('lab', None, '=========  indecate  ========='),
+            (bool, 'max', 'max'),
+            (bool, 'min', 'min'),
+            (bool, 'mean', 'mean'),
+            (bool, 'variance', 'var'),
+            (bool, 'standard', 'std'),
             (bool, 'slice', 'slice')]
         
     def count(self, img, para):
@@ -38,8 +38,8 @@ class Frequence(Simple):
     note = ['8-bit', '16-bit', 'int', 'float', 'stack3d']
     
     para = {'nozero':False, 'bins':0}
-    view = [(int, (0,1e4), 0, 'bins', 'bins', 'count'),
-            (bool, 'no-zero', 'nozero')]
+    view = [(int, 'bins', (0,1e4), 0, 'bins', 'count'),
+            (bool, 'nozero', 'no-zero')]
         
     def run(self, ips, imgs, para = None):
         if para['nozero']: imgs = imgs[imgs!=0]

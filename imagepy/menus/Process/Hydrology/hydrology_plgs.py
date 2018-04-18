@@ -14,10 +14,10 @@ class IsoLine(Filter):
     note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'preview']
     
     para = {'low':0, 'high':255, 'step':20, 'type':'stair'}
-    view = [(int, (0,255), 0, 'low', 'low', 'value'),
-            (int, (0,255), 0, 'high', 'high', 'value'),
-            (int, (0, 50), 0, 'step', 'step', ''),
-            (list, ['stair', 'white line', 'gray line', 'white line on ori'], str, 'output', 'type', '')]
+    view = [(int, 'low',  (0,255), 0, 'low', 'value'),
+            (int, 'high', (0,255), 0, 'high', 'value'),
+            (int, 'step', (0, 50), 0, 'step', ''),
+            (list, 'type', ['stair', 'white line', 'gray line', 'white line on ori'], str, 'output', '')]
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -39,7 +39,7 @@ class FindMax(Filter):
     note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'preview']
     
     para = {'tol':2, 'mode':False, 'wsd':False}
-    view = [(int, (0,100), 0,  'tolerance', 'tol', 'value')]
+    view = [(int, 'tol', (0,100), 0,  'tolerance', 'value')]
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'])
@@ -51,7 +51,7 @@ class FindMin(Filter):
     note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'preview']
     
     para = {'tol':2, 'mode':False, 'wsd':False}
-    view = [(int, (0,100), 0,  'tolerance', 'tol', 'value')]
+    view = [(int, 'tol', (0,100), 0,  'tolerance', 'value')]
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'], False)
@@ -63,10 +63,10 @@ class UPRidge(Filter):
     note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'preview']
     
     para = {'sigma':1.0, 'thr':0, 'ud':True, 'type':'white line'}
-    view = [(float, (0,5), 1, 'sigma', 'sigma', 'pix'),
-            ('slide', (0,255), 0, 'Low', 'thr'),
-            (bool, 'ascend', 'ud'),
-            (list, ['white line', 'gray line', 'white line on ori'], str, 'output', 'type', '')]
+    view = [(float, 'sigma', (0,5), 1, 'sigma', 'pix'),
+            ('slide', 'thr', (0,255), 0, 'Low'),
+            (bool, 'ud', 'ascend'),
+            (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', '')]
 
     def load(self, ips):
         self.buflut = ips.lut
@@ -103,8 +103,8 @@ class ARidge(Filter):
     
     para = {'sigma':1.0, 'ud':True, 'type':'white line'}
     view = [(float, (0,5), 1, 'sigma', 'sigma', 'pix'),
-    (list, ['white line', 'gray line', 'white line on ori'], str, 'output', 'type', ''),
-            (bool, 'ascend', 'ud')]
+    (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', ''),
+            (bool, 'ud', 'ascend')]
     
     def run(self, ips, snap, img, para = None):
         mark = np.zeros_like(img, dtype=np.uint8)
@@ -124,10 +124,10 @@ class Watershed(Filter):
     
     para = {'sigma':1.0, 'thr':0, 'con':False, 'ud':True, 'type':'white line'}
     view = [(float, (0,5), 1, 'sigma', 'sigma', 'pix'),
-            ('slide', (0,255), 0, 'Low', 'thr'),
-            (bool, 'full connectivity', 'con'),
-            (bool, 'ascend', 'ud'),
-            (list, ['white line', 'gray line', 'white line on ori'], str, 'output', 'type', '')]
+            ('slide', 'thr', (0,255), 0, 'Low'),
+            (bool, 'con', 'full connectivity'),
+            (bool, 'ud', 'ascend'),
+            (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', '')]
 
     def load(self, ips):
         self.buflut = ips.lut
@@ -165,9 +165,9 @@ class UPWatershed(Filter):
     note = ['8-bit', 'auto_msk', 'auto_snap', 'preview']
     
     para = {'thr1':0, 'thr2':255, 'type':'line'}
-    view = [('slide', (0,255), 0, 'Low', 'thr1'),
-            ('slide', (0,255), 0, 'High', 'thr2'),
-            (list, ['line', 'up area', 'down area'], str, 'output', 'type', '')]
+    view = [('slide', 'thr1', (0,255), 0, 'Low'),
+            ('slide', 'thr2', (0,255), 0, 'High'),
+            (list, 'type', ['line', 'up area', 'down area'], str, 'output', '')]
 
     def load(self, ips):
         self.buflut = ips.lut
@@ -205,11 +205,9 @@ class ROIWatershed(Filter):
     note = ['8-bit', 'auto_snap', 'not_channel']
     
     para = {'sigma':0, 'type':'white line', 'con':False, 'ud':True}
-    view = [#(int, (0,10), 0,  'sigma', 'sigma', 'pix'),
-            #(int, (0, 10), 0,  'gradient', 'gdt', ''),
-            (bool, 'full connectivity', 'con'),
-            (bool, 'ascend', 'ud'),
-            (list, ['white line', 'gray line', 'white line on ori'], str, 'output', 'type', '')]
+    view = [(bool, 'con', 'full connectivity'),
+            (bool, 'ud', 'ascend'),
+            (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', '')]
     
     def run(self, ips, snap, img, para = None):
         #denoised = rank.median(img, disk(para['sigma']))

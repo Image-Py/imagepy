@@ -35,7 +35,7 @@ from imagepy import IPy
 class One(Free):
 	title = 'Unit Matrix'
 	para = {'size':3}
-	view = [(int, (1,1024), 0, 'size', 'size', '')]
+	view = [(int, 'size', (1,10240), 0, 'size', '')]
 
 	def run(self, para=None):
 		data = np.eye(para['size'])
@@ -45,10 +45,10 @@ class One(Free):
 class Random01(Free):
 	title = 'Uniform Random'
 	para = {'row':3, 'col':5, 'low':0, 'high':1}
-	view = [(float, (-1024,1024), 0, 'low', 'low', ''),
-			(float, (-1024,1024), 0, 'high', 'high', ''),
-			(int, (1,1024), 0, 'row', 'row', ''),
-			(int, (1,1024), 0, 'col', 'col', '')]
+	view = [(float, 'low',  (-1024,1024), 0, 'low', ''),
+			(float, 'high', (-1024,1024), 0, 'high', ''),
+			(int, 'row', (1,10240), 0, 'row', ''),
+			(int, 'col', (1,10240), 0, 'col', '')]
 
 	def run(self, para=None):
 		data = np.random.rand(para['row'], para['col'])
@@ -60,10 +60,10 @@ class Random01(Free):
 class RandomN(Free):
 	title = 'Gaussian Random'
 	para = {'row':3, 'col':5, 'mean':0, 'std':1}
-	view = [(float, (-1024,1024), 0, 'mean', 'mean', ''),
-			(float, (-1024,1024), 0, 'std', 'std', ''),
-			(int, (1,1024), 0, 'row', 'row', ''),
-			(int, (1,1024), 0, 'col', 'col', '')]
+	view = [(float, 'mean', (-1024,1024), 0, 'mean', ''),
+			(float, 'std',  (-1024,1024), 0, 'std', ''),
+			(int, 'row', (1,10240), 0, 'row', ''),
+			(int, 'col', (1,10240), 0, 'col', '')]
 
 	def run(self, para=None):
 		data = np.random.randn(para['row'], para['col'])
@@ -75,8 +75,8 @@ class RandomN(Free):
 class Calendar(Free):
 	title = 'Calendar'
 	para = {'year':2018, 'month':2}
-	view = [(int, (-9999,9999), 0, 'year', 'year', ''),
-			(int, (1,12), 0, 'month', 'month', '')]
+	view = [(int, 'year',  (-9999,9999), 0, 'year', ''),
+			(int, 'month', (1,12), 0, 'month', '')]
 
 	def run(self, para=None):
 		import calendar

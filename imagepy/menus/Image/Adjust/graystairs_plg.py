@@ -11,19 +11,16 @@ from imagepy.ui.panelconfig import ParaDialog
 from imagepy.ui.widgets import HistCanvas
 
 class ThresholdDialog(ParaDialog):
-    def init_view(self, items, para, hist, lim):
-        self.histcvs = HistCanvas(self)
-        self.histcvs.set_hist(hist)
+    def __init__(self, parent, title, lim):
+        ParaDialog.__init__(self, parent, title)
         self.lim = lim
-        self.add_ctrl('hist', self.histcvs)
-        ParaDialog.init_view(self, items, para, True)
-    
+
     def para_check(self, para, key):
         if key=='thr1':para['thr2'] = max(para['thr1'], para['thr2'])
         if key=='thr2':para['thr1'] = min(para['thr1'], para['thr2'])
         lim1 = 1.0 * (para['thr1'] - self.lim[0])/(self.lim[1]-self.lim[0])
         lim2 = 1.0 * (para['thr2'] - self.lim[0])/(self.lim[1]-self.lim[0])
-        self.histcvs.set_lim(lim1*255, lim2*255)
+        self.ctrl_dic['hist'].set_lim(lim1*255, lim2*255)
         self.reset()
         return True
         
@@ -31,31 +28,29 @@ class Plugin(Filter):
     title = 'Gray Stairs'
     note = ['all', 'auto_msk', 'auto_snap', 'not_channel', 'preview']
     arange = (0,255)
-    #parameter
-    
 
     def load(self, ips):
+        hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
         if ips.imgtype in ('8-bit', 'rgb'):
             self.para = {'thr1':0, 'thr2':255}
-            self.view = [('slide', (0,255), 0, 'Low', 'thr1'),
-                ('slide', (0,255), 0, 'High', 'thr2')]
+            self.view = [('hist', 'hist', hist),
+                         ('slide', 'thr1', (0,255), 0, 'Low'),
+                         ('slide', 'thr2', (0,255), 0, 'High')]
             if 'not_slice' in self.note:
                 self.note.remove('not_slice')
         else :
             self.arange = minv, maxv = ips.img.min(), ips.img.max()
             self.para = {'thr1':ips.range[0], 'thr2':ips.range[1]}
-            self.view = [('slide', (minv, maxv), 10, 'Low', 'thr1'),
-                ('slide', (minv, maxv), 10, 'High', 'thr2')]
+            self.view = [('hist', 'hist', hist),
+                         ('slide', 'thr1', (minv, maxv), 10, 'Low'),
+                         ('slide', 'thr2', (minv, maxv), 10, 'High')]
             if not 'not_slice' in self.note:
                 self.note.append('not_slice')
         return True
         
-    def show(self):
-        self.dialog = ThresholdDialog(IPy.get_window(), self.title)
-        hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
-        self.dialog.init_view(self.view, self.para, hist, self.arange)
-        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
-        return self.dialog.ShowModal()
+    def show(self, temp=ThresholdDialog):
+        dialog = lambda win, title, lim = self.ips.range:temp(win, title, lim)
+        return Filter.show(self, dialog)
 
     #process
     def run(self, ips, snap, img, para = None):

@@ -14,13 +14,13 @@ class Plugin( wx.Panel ):
 		self.histpan = HistCanvas(self)
 		bSizer1.Add(self.histpan, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.sli_high = FloatSlider(self, (0,255), 0)
+		self.sli_high = FloatSlider(self, (0,255), 0, '')
 		self.sli_high.SetValue(255)
-		bSizer1.Add( self.sli_high, 0, wx.ALL|wx.EXPAND, 5 )
+		bSizer1.Add( self.sli_high, 0, wx.ALL|wx.EXPAND, 0 )
 		
-		self.sli_low = FloatSlider(self, (0,255), 0)
+		self.sli_low = FloatSlider(self, (0,255), 0, '')
 		self.sli_low.SetValue(0)
-		bSizer1.Add( self.sli_low, 0, wx.ALL|wx.EXPAND, 5 )
+		bSizer1.Add( self.sli_low, 0, wx.ALL|wx.EXPAND, 0 )
 		
 		
 		bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
@@ -124,7 +124,7 @@ class Plugin( wx.Panel ):
 		if ips is None: return
 		self.range = ips.range = (0,255)
 		hist = ips.histogram()
-		self.histpan.set_hist(hist)
+		self.histpan.SetValue(hist)
 		self.sli_low.set_para((0,255), 0)
 		self.sli_high.set_para((0,255), 0)
 		self.sli_low.SetValue(0)
@@ -138,7 +138,7 @@ class Plugin( wx.Panel ):
 		minv, maxv = ips.get_updown()
 		self.range = ips.range = (minv, maxv)
 		hist = ips.histogram()
-		self.histpan.set_hist(hist)
+		self.histpan.SetValue(hist)
 		self.sli_low.set_para(self.range, 10)
 		self.sli_high.set_para(self.range, 10)
 		self.sli_low.SetValue(minv)

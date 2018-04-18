@@ -6,7 +6,7 @@ import subprocess, sys
 class Install(Free):
     title = 'Install Packages'
     para = {'pkg':'', 'update':False}
-    view = [(str, 'package', 'pkg', ''),
+    view = [(str, 'pkg', 'package', ''),
             (bool, 'update', 'update')]
 
     def run(self, para=None):

@@ -10,10 +10,10 @@ class Plugin(Free):
     para = {'path':'', 'type':'uint8', 'w':512, 'h':512, 'c':1}
     tps = ['uint8', 'int16', 'float32']
 
-    view = [(list, tps, str, 'type', 'type', ''),
-            (int, (0,2048), 0, 'width', 'w', 'pix'),
-            (int, (0,2048), 0, 'height', 'h', 'pix'),
-            (list, [1,3], int, 'channel', 'c', '')]
+    view = [(list, 'type', tps, str, 'type', ''),
+            (int, 'w', (0,2048), 0, 'width', 'pix'),
+            (int, 'h', (0,2048), 0, 'height', 'pix'),
+            (list, 'c', [1,3], int, 'channel', '')]
     
     def load(self):
         filt = 'RAW files (*.raw)|*.raw'

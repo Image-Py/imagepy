@@ -7,7 +7,7 @@ class Add(Filter):
     title = 'Add'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
     para = {'num':0}
-    view = [('slide', (-255, 255), 2, 'value', 'num')]
+    view = [('slide', 'num', (-255, 255), 2, 'value')]
     
     def run(self, ips, snap, img, para = None):
         np.add(snap, para['num'], out=img, casting='unsafe')
@@ -17,7 +17,7 @@ class Multiply(Filter):
     title = 'Multiply'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
     para = {'num':0}
-    view = [(float, (-255,255), 2, '-100', 'num', '+100')]
+    view = [(float, 'num', (-255,255), 2, '-100', '+100')]
     
     def run(self, ips, snap, img, para = None):
         np.multiply(snap, para['num'], out=img, casting='unsafe')
@@ -27,7 +27,7 @@ class Max(Filter):
     title = 'Max'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'num':0}
-    view = [('slide', (-255,255), 2, '-100', 'num')]
+    view = [('slide', 'num', (-255,255), 2, '-100')]
     
     def run(self, ips, snap, img, para = None):   
         img[:] = snap
@@ -38,7 +38,7 @@ class Min(Filter):
     title = 'Min'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'num':0}
-    view = [('slide', (-255,255), 2, '-100', 'num')]
+    view = [('slide', 'num', (-255,255), 2, '-100')]
     
     def run(self, ips, snap, img, para = None):
         img[:] = snap
@@ -57,7 +57,7 @@ class Garmma(Filter):
     title = 'Garmma'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2float']
     para = {'num':0}
-    view = [(float, (-255,255), 2, '0.1', 'num', '10')]
+    view = [(float, 'num', (-255,255), 2, '0.1', '10')]
     
     def run(self, ips, snap, img, para = None):
         x1, x2 = ips.range

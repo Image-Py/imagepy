@@ -16,8 +16,8 @@ class Closing(Filter):
     title = 'Binary Closeing'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
     para = {'w':3, 'h':3}
-    view = [(int, (1,15), 0, 'width', 'w', 'pix'),
-            (int, (1,15), 0, 'height', 'h', 'pix')]
+    view = [(int, 'w', (1,15), 0, 'width', 'pix'),
+            (int, 'h', (1,15), 0, 'height', 'pix')]
 
     def run(self, ips, snap, img, para = None):
         strc = np.ones((para['h'], para['w']), dtype=np.uint8)
@@ -29,8 +29,8 @@ class Opening(Filter):
     title = 'Binary Opening'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
     para = {'w':3, 'h':3}
-    view = [(int, (1,15), 0, 'width', 'w', 'pix'),
-            (int, (1,15), 0, 'height', 'h', 'pix')]
+    view = [(int, 'w', (1,15), 0, 'width', 'pix'),
+            (int, 'h', (1,15), 0, 'height', 'pix')]
 
     def run(self, ips, snap, img, para = None):
         strc = np.ones((para['h'], para['w']), dtype=np.uint8)
@@ -42,8 +42,8 @@ class Dilation(Filter):
     title = 'Binary Dilation'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
     para = {'w':3, 'h':3}
-    view = [(int, (1,15), 0, 'width', 'w', 'pix'),
-            (int, (1,15), 0, 'height', 'h', 'pix')]
+    view = [(int, 'w', (1,15), 0, 'width', 'pix'),
+            (int, 'h', (1,15), 0, 'height', 'pix')]
 
     def run(self, ips, snap, img, para = None):
         strc = np.ones((para['h'], para['w']), dtype=np.uint8)
@@ -55,8 +55,8 @@ class Erosion(Filter):
     title = 'Binary Erosion'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
     para = {'w':3, 'h':3}
-    view = [(int, (1,15), 0, 'width', 'w', 'pix'),
-            (int, (1,15), 0, 'height', 'h', 'pix')]
+    view = [(int, 'w', (1,15), 0, 'width', 'pix'),
+            (int, 'h', (1,15), 0, 'height', 'pix')]
 
     def run(self, ips, snap, img, para = None):
         strc = np.ones((para['h'], para['w']), dtype=np.uint8)

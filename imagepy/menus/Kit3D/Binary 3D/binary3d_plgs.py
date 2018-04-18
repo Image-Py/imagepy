@@ -10,7 +10,7 @@ class Dilation(Simple):
     title = 'Dilation 3D'
     note = ['all', 'stack3d']
     para = {'r':3}
-    view = [(int, (1,15), 0, 'r', 'r', 'pix')]
+    view = [(int, 'r', (1,15), 0, 'r', 'pix')]
 
     def run(self, ips, imgs, para = None):
         strc = np.ones((para['r'], para['r'],para['r']), dtype=np.uint8)
@@ -22,7 +22,7 @@ class Erosion(Simple):
     title = 'Erosion 3D'
     note = ['all', 'stack3d']
     para = {'r':3}
-    view = [(int, (1,15), 0, 'r', 'r', 'pix')]
+    view = [(int, 'r', (1,15), 0, 'r', 'pix')]
 
     def run(self, ips, imgs, para = None):
         strc = np.ones((para['r'], para['r'], para['r']), dtype=np.uint8)
@@ -34,7 +34,7 @@ class Opening(Simple):
     title = 'Opening 3D'
     note = ['all', 'stack3d']
     para = {'r':3}
-    view = [(int, (1,15), 0, 'r', 'r', 'pix')]
+    view = [(int, 'r', (1,15), 0, 'r', 'pix')]
 
     def run(self, ips, imgs, para = None):
         strc = np.ones((para['r'], para['r'], para['r']), dtype=np.uint8)
@@ -46,7 +46,7 @@ class Closing(Simple):
     title = 'Closing 3D'
     note = ['all', 'stack3d']
     para = {'r':3}
-    view = [(int, (1,15), 0, 'r', 'r', 'pix')]
+    view = [(int, 'r', (1,15), 0, 'r', 'pix')]
 
     def run(self, ips, imgs, para = None):
         strc = np.ones((para['r'], para['r'], para['r']), dtype=np.uint8)
@@ -87,8 +87,8 @@ class Watershed(Simple):
 
 
     para = {'tor':2, 'con':False}
-    view = [(int, (0,255), 0, 'tolerance', 'tor', 'value'),
-            (bool, 'full connectivity', 'con')]
+    view = [(int, 'tor', (0,255), 0, 'tolerance', 'value'),
+            (bool, 'con', 'full connectivity')]
 
     ## TODO: Fixme!
     def run(self, ips, imgs, para = None):

@@ -14,10 +14,10 @@ class Plugin(Simple):
     note = ['all']
     
     para = {'kx':0.5, 'ky':0.5, 'kz':1}
-    view = [(float, (0.1,10), 1, 'kx', 'kx', '0.1~10'),
-            (float, (0.1,10), 1, 'ky', 'ky', '0.1~10'),
-            (float, (0.1,10), 1, 'kz', 'kz', '0.1~10'),
-            ('lab', 'the kz only works on stack!')]
+    view = [(float, 'kx', (0.1,10), 1, 'kx', '0.1~10'),
+            (float, 'ky', (0.1,10), 1, 'ky', '0.1~10'),
+            (float, 'kz', (0.1,10), 1, 'kz', '0.1~10'),
+            ('lab',  None, 'the kz only works on stack!')]
     
     def run(self, ips, imgs, para = None):
         kx, ky, kz = [para[i] for i in ('ky','kx','kz')]

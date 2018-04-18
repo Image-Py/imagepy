@@ -10,7 +10,7 @@ import wx
 
 class Plugin(Tool):
     title = 'Pencil'
-    view = [(int, (0,30), 0,  'width', 'width', 'pix')]
+    view = [(int, 'width', (0,30), 0,  'width', 'pix')]
     para = {'width':1}
     
     def __init__(self):

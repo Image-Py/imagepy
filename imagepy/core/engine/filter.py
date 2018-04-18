@@ -91,20 +91,20 @@ class Filter:
 
     def __init__(self, ips=None):
         if ips==None:ips = IPy.get_ips()
-        self.dialog = None
+        self.dlg = None
         self.ips = ips
         
     def progress(self, i, n):
         self.prgs = (i, n)
 
-    def show(self):
-        self.dialog = ParaDialog(WindowsManager.get(), self.title)
-        self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
-        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
-        if self.modal: return self.dialog.ShowModal()
-        self.dialog.on_ok = lambda : self.ok(self.ips)
-        self.dialog.on_cancel = lambda : self.cancel(self.ips)
-        self.dialog.Show()
+    def show(self, temp=ParaDialog):
+        self.dlg = temp(WindowsManager.get(), self.title)
+        self.dlg.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
+        self.dlg.set_handle(lambda x:self.preview(self.ips, self.para))
+        if self.modal: return self.dlg.ShowModal()
+        self.dlg.on_ok = lambda : self.ok(self.ips)
+        self.dlg.on_cancel = lambda : self.cancel(self.ips)
+        self.dlg.Show()
     
     def run(self, ips, snap, img, para = None):
         return 255-img
@@ -204,5 +204,5 @@ class Filter:
             if self.show() == wx.ID_OK:
                 self.ok(ips, None, callafter)
             else:self.cancel(ips)
-            self.dialog.Destroy()
+            self.dlg.Destroy()
         else: self.show()

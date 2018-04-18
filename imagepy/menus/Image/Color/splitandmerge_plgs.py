@@ -16,8 +16,8 @@ class SplitRGB(Simple):
     note = ['rgb']
     
     para = {'copy':False, 'destory':True}
-    view = {(bool, 'Copy data from view', 'copy'),
-            (bool, 'Destory current image', 'destory')}
+    view = {(bool, 'copy', 'Copy data from view'),
+            (bool, 'destory', 'Destory current image')}
     #process
     def run(self, ips, imgs, para = None):
         r,g,b = [],[],[]
@@ -43,7 +43,7 @@ class ToRGB(Simple):
         self.view = [('img', r, 'red', ''),
                     ('img', g, 'green', ''),
                     ('img', b, 'blue', ''),
-                    (bool, 'Destory', 'destory')]
+                    (bool, 'destory', 'destory')]
         return True
     
     def titles(self): return 'RGB-Merge', 'Red', 'Green', 'Blue'

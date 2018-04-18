@@ -97,8 +97,8 @@ class CutBranch(Filter):
     note = ['8-bit', 'not_slice', 'not_channel', 'auto_snap', 'preview']
 
     para = {'lim':10, 'rec':False}
-    view = [(int, (0,1e6), 0, 'limit', 'lim', 'uint'),
-            (bool, 'recursion', 'rec')]
+    view = [(int, 'lim', (0,1e6), 0, 'limit', 'uint'),
+            (bool, 'rec', 'recursion')]
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):
@@ -179,8 +179,8 @@ class ShortestPath(Simple):
     note = ['all']
 
     para = {'start':0, 'end':1}
-    view = [(int, (0,1e8), 0, 'start', 'start', 'id'),
-            (int, (0,1e8), 0, 'end', 'end', 'id')]
+    view = [(int, 'start', (0,1e8), 0, 'start', 'id'),
+            (int, 'end',   (0,1e8), 0, 'end', 'id')]
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):

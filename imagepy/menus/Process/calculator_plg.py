@@ -15,15 +15,9 @@ class Plugin(Simple):
     note = ['all']
     para = {'img1':None,'op':'add','img2':None}
     
-    def load(self, ips):
-        titles = ImageManager.get_titles()
-        self.para['img1'] = titles[0]
-        self.para['img2'] = titles[0]
-        Plugin.view = [(list, titles, str, 'image1', 'img1', ''),
-                       (list, ['max', 'min', 'diff', 'add', 'substract'
-                               ], str, 'operator', 'op',''),
-                       (list, titles, str, 'image2', 'img2', '')]
-        return True
+    view = [('img', 'img1', 'image1', ''),
+            (list, 'op', ['max', 'min', 'diff', 'add', 'substract'], str, 'operator', ''),
+            ('img', 'img2', 'image2', '')]
     
     def run(self, ips, imgs, para = None):
         ips1 = ImageManager.get(para['img1'])

@@ -21,7 +21,7 @@ class Union(Simple):
             IPy.alert('No roi in manager!')
             return False
         self.para['name'] = titles[0]
-        self.view = [(list, titles, str, 'Name', 'name', '')]
+        self.view = [(list, 'name', titles, str, 'Name', '')]
         return True
 
     def run(self, ips, imgs, para = None):
@@ -39,7 +39,7 @@ class Diff(Simple):
             IPy.alert('No roi in manager!')
             return False
         self.para['name'] = titles[0]
-        self.view = [(list, titles, str, 'Name', 'name', '')]
+        self.view = [(list, 'name', titles, str, 'Name', '')]
         return True
 
     def run(self, ips, imgs, para = None):

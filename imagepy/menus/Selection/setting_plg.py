@@ -7,8 +7,8 @@ class Plugin(Free):
     def load(self):
     	Plugin.para = {'color':RoiManager.get_color(),
     				 'lw':RoiManager.get_lw()}
-    	Plugin.view = [('color', 'roi', 'color', 'color'),
-    				 (int, (1,5), 0, 'line width', 'lw', 'pix')]
+    	Plugin.view = [('color', 'color', 'roi', 'color'),
+    				 (int, 'lw', (1,5), 0, 'line width', 'pix')]
     	return True
 
     def run(self, para=None):

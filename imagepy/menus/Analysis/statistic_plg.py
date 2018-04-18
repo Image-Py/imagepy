@@ -85,8 +85,8 @@ class Frequence(Simple):
     note = ['8-bit', '16-bit']
     
     para = {'fre':True, 'slice':False}
-    view = [(bool, 'count frequence', 'fre'),
-            (bool, 'each slices', 'slice')]
+    view = [(bool, 'fre', 'count frequence'),
+            (bool, 'slice', 'each slices')]
         
     def run(self, ips, imgs, para = None):
         if not para['slice']: imgs = [ips.img]
@@ -115,11 +115,11 @@ class Statistic(Simple):
     note = ['8-bit', '16-bit', 'int', 'float']
     
     para = {'max':True, 'min':True,'mean':False,'var':False,'std':False,'slice':False}
-    view = [(bool, 'Max', 'max'),
-            (bool, 'Min', 'min'),
-            (bool, 'Mean', 'mean'),
-            (bool, 'Variance', 'var'),
-            (bool, 'Standard', 'std'),
+    view = [(bool, 'max', 'max'),
+            (bool, 'min', 'min'),
+            (bool, 'mean', 'mean'),
+            (bool, 'variance', 'var'),
+            (bool, 'standard', 'std'),
             (bool, 'slice', 'slice')]
         
     def count(self, img, para):
@@ -171,7 +171,7 @@ class PointsValue(Simple):
     note = ['8-bit', '16-bit', 'req_roi']
     
     para = {'buf':False, 'slice':False}
-    view = [(bool, 'buffer by the value', 'buf'),
+    view = [(bool, 'buf', 'buffer by the value'),
             (bool, 'slice', 'slice')]
         
     def load(self, ips):

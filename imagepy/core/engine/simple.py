@@ -32,9 +32,9 @@ class Simple:
         
     def preview(self, ips, para):pass
 
-    def show(self):
+    def show(self, temp=ParaDialog):
         if self.view==None:return wx.ID_OK
-        self.dialog = ParaDialog(IPy.get_window(), self.title)
+        self.dialog = temp(IPy.get_window(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
         self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
         if self.modal: return self.dialog.ShowModal()

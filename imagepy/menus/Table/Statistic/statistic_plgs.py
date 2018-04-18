@@ -9,7 +9,7 @@ class Statistic(Table):
 	para = {'axis':'Column', 'sum':True, 'mean':True,'max':False, 
 		'min':False,'var':False,'std':False,'skew':False,'kurt':False}
 		
-	view = [(list, ['Row', 'Column'], str, 'axis', 'axis', ''),
+	view = [(list, 'axis', ['Row', 'Column'], str, 'axis', ''),
 			(bool, 'Sum', 'sum'),
 			(bool, 'Mean', 'mean'),
 			(bool, 'Max', 'max'),

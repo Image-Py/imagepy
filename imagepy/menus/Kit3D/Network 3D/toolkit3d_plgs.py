@@ -32,9 +32,9 @@ class Show3DGraph(Simple):
 	note = ['8-bit', 'stack3d']
 
 	para = {'r':1, 'ncolor':(255,0,0), 'lcolor':(0,0,255)}
-	view = [(int, (1,100), 0, 'radius', 'r', 'pix'),
-			('color', 'node', 'ncolor', 'rgb'),
-			('color', 'line', 'lcolor', 'rgb')]
+	view = [(int, 'r', (1,100), 0, 'radius', 'pix'),
+			('color', 'ncolor', 'node', 'rgb'),
+			('color', 'lcolor', 'line', 'rgb')]
 
 	def load(self, ips):
 		if not isinstance(ips.data, nx.MultiGraph):
@@ -182,8 +182,8 @@ class CutBranch(Simple):
 	note = ['all']
 
 	para = {'lim':10, 'rec':False}
-	view = [(int, (0,1e6), 0, 'limit', 'lim', 'uint'),
-			(bool, 'recursion', 'rec')]
+	view = [(int, 'lim', (0,1e6), 0, 'limit', 'uint'),
+			(bool, 'rec', 'recursion')]
 
 	def load(self, ips):
 		if not isinstance(ips.data, nx.MultiGraph):

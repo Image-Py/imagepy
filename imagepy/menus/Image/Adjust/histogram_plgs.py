@@ -65,8 +65,8 @@ class Match(Simple):
         titles = ImageManager.get_titles()
         self.para['img1'] = titles[0]
         self.para['img2'] = titles[0]
-        Match.view = [(list, titles, str, 'template', 'img1', ''),
-                       (list, titles, str, 'object', 'img2', '')]
+        Match.view = [(list, 'img1', titles, str, 'template', ''),
+                      (list, 'img2', titles, str, 'object', '')]
         return True
     
     def run(self, ips, imgs, para = None):

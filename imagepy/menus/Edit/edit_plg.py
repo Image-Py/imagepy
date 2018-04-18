@@ -96,7 +96,7 @@ class Sketch(Filter):
     title = 'Sketch'
     note = ['req_roi', 'all', 'auto_snap', 'not_channel']
     para = {'width':1}
-    view = [(int, (0,30), 0,  'width', 'width', 'pix')]
+    view = [(int, 'width', (0,30), 0,  'width', 'pix')]
 
     def run(self, ips, snap, img, para = None):
         img[ips.get_msk(para['width'])] = ColorManager.get_front(snap.ndim==2)

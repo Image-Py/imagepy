@@ -4,14 +4,14 @@ from imagepy import IPy
 class Transpose(Table):
 	title = 'Table Statistic'
 	para = {'sum':True, 'mean':True, 'max':False, 'min':False, 'std':False, 'var':False, 'only':True}
-	para = [(bool, 'only number columns', 'only', ''),
-			('lab','=========  indecate  ========='),
-			(bool, 'sum', 'sum', ''),
-			(bool, 'mean', 'mean', ''),
-			(bool, 'max', 'max', ''),
-			(bool, 'min', 'min', ''),
-			(bool, 'std', 'std', ''),
-			(bool, 'var', 'var', '')]
+	para = [(bool, 'only', 'only number columns'),
+			('lab', None, '=========  indecate  ========='),
+			(bool, 'sum', 'sum'),
+			(bool, 'mean', 'mean'),
+			(bool, 'max', 'max'),
+			(bool, 'min', 'min'),
+			(bool, 'std', 'std'),
+			(bool, 'var', 'var')]
 
 	def run(self, tps, data, para = None):
 		pass

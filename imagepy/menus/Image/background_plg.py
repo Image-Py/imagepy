@@ -14,8 +14,8 @@ class SetBackground(Simple):
     note = ['all']
     para = {'img':'None','op':'Mean', 'k':0.5, 'kill':False}
     view = [('img','background', 'img', '8-bit'),
-            (list, ['Mean', 'Clip'], str, 'mode', 'op',''),
-            (float, (0,1), 1, 'blender', 'k', ''),
+            (list, 'op', ['Mean', 'Clip'], str, 'mode', ''),
+            (float, 'k', (0,1), 1, 'blender', ''),
             (bool, 'kill', 'kill')]
     
     def run(self, ips, imgs, para = None):
@@ -35,8 +35,8 @@ class BackgroundSelf(Simple):
     title = 'Background Self'
     note = ['8-bit', 'rgb']
     para = {'op':'Mean', 'k':0.5, 'kill':False}
-    view = [(list, ['Mean', 'Clip'], str, 'mode', 'op',''),
-            (float, (0,1), 1, 'blender', 'k', ''),
+    view = [(list, 'op', ['Mean', 'Clip'], str, 'mode', ''),
+            (float, 'k', (0,1), 1, 'blender', ''),
             (bool, 'kill', 'kill')]
     
     def run(self, ips, imgs, para = None):

@@ -7,10 +7,10 @@ class Select(Table):
 
 	para = {'cn':[], 'call':False, 'r1':0, 'r2':0, 'rall':False}
 	view = [('fields', 'cn'),
-			(bool, 'all columns', 'call'),
-			('any', 'start rows', 'r1'),
-			('any', 'end rows', 'r2'),
-			(bool, 'all rows', 'rall')]
+			(bool, 'call', 'all columns'),
+			('any', 'r1', 'start rows'),
+			('any', 'r2', 'end rows'),
+			(bool, 'rall', 'all rows')]
 
 	def run(self, tps, data, snap, para=None):
 		if not para['call']:

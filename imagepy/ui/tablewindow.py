@@ -205,10 +205,10 @@ class GridBase(Grid.Grid):
             
             cur = props.iloc[:,col]
             para = {'accu':cur[0], 'tc':cur[1], 'lc':cur[2], 'ln':cur[3]}
-            view = [(int, (0, 10), 0, 'accuracy', 'accu', ''),
-                    ('color', 'text color', 'tc', ''),
-                    ('color', 'line color', 'lc', ''),
-                    (list, ['Text', 'Line', 'Both'], str, 'draw', 'ln', '')]
+            view = [(int, 'accu', (0, 10), 0, 'accuracy', ''),
+                    ('color', 'tc', 'text color', ''),
+                    ('color', 'lc', 'line color', ''),
+                    (list, 'ln', ['Text', 'Line', 'Both'], str, 'draw', '')]
             rst = IPy.get_para('Table Properties', view, para)
             if rst!=wx.ID_OK:return
             if col!=-1:

@@ -31,10 +31,10 @@ class Plugin(Free):
         files = self.getfiles(self.para['path'])
         nfs = len(files)
         self.para['end'] = nfs-1
-        self.view = [(str, 'Title','title',''), 
-                     (int, (0, nfs-1), 0, 'Start', 'start', '0~{}'.format(nfs-1)),
-                     (int, (0, nfs-1), 0, 'End', 'end', '0~{}'.format(nfs-1)),
-                     (int, (0, nfs-1), 0, 'Step', 'step', '')]
+        self.view = [(str, 'title', 'Title',''), 
+                     (int, 'start', (0, nfs-1), 0, 'Start', '0~{}'.format(nfs-1)),
+                     (int, 'end',   (0, nfs-1), 0, 'End', '0~{}'.format(nfs-1)),
+                     (int, 'step',  (0, nfs-1), 0, 'Step', '')]
         return IPy.get_para('Import sequence', self.view, self.para)
 
     def getfiles(self, name):

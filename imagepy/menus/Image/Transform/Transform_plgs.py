@@ -11,7 +11,7 @@ class Rotate(Filter):
     title = 'Rotate'
     note = ['all', 'auto_msk', 'auto_snap','preview']
     para = {'ang':0}
-    view = [(float, (0,360), 1, 'angle', 'ang', 'degree')]
+    view = [(float, 'ang', (0,360), 1, 'angle', 'degree')]
         
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
@@ -28,7 +28,7 @@ class Scale(Filter):
     title = 'Scale'
     note = ['all', 'auto_msk', 'auto_snap','preview']
     para = {'zoom':1}
-    view = [(float, (0.1,10), 1, 'fact', 'zoom', '')]
+    view = [(float, 'zoom', (0.1,10), 1, 'fact', '')]
 
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para

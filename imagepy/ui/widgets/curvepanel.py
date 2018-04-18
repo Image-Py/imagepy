@@ -6,7 +6,7 @@ from scipy import interpolate
 if sys.version_info[0]==2:memoryview=np.getbuffer
 class CurvePanel(wx.Panel):
     """ HistCanvas: diverid from wx.core.Panel """
-    def __init__(self, parent, l=255):
+    def __init__(self, parent, hist=None, l=255):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size(l+25, l+25), 
                             style = wx.TAB_TRAVERSAL )
@@ -14,16 +14,16 @@ class CurvePanel(wx.Panel):
         self.offset = (20, 5)
         self.l, self.k = l, l/255.0
         self.idx = -1
-        self.hist = None
+        self.set_hist(hist)
         self.update = False
         self.pts = [(0,0), (255, 255)]
-        self.Bind(wx.EVT_SIZE, self.on_size)  
-        self.Bind(wx.EVT_IDLE, self.on_idle)
-        self.Bind(wx.EVT_PAINT, self.on_paint)
-        self.Bind(wx.EVT_LEFT_DOWN, self.on_ld)
-        self.Bind( wx.EVT_LEFT_UP, self.on_lu )
-        self.Bind( wx.EVT_MOTION, self.on_mv )
-        self.Bind( wx.EVT_RIGHT_DOWN, self.on_rd )
+        wx.Panel.Bind(self, wx.EVT_SIZE, self.on_size)  
+        wx.Panel.Bind(self, wx.EVT_IDLE, self.on_idle)
+        wx.Panel.Bind(self, wx.EVT_PAINT, self.on_paint)
+        wx.Panel.Bind(self, wx.EVT_LEFT_DOWN, self.on_ld)
+        wx.Panel.Bind(self, wx.EVT_LEFT_UP, self.on_lu )
+        wx.Panel.Bind(self, wx.EVT_MOTION, self.on_mv )
+        wx.Panel.Bind(self, wx.EVT_RIGHT_DOWN, self.on_rd )
 
     @classmethod
     def lookup(cls, pts):
@@ -58,7 +58,7 @@ class CurvePanel(wx.Panel):
             self.pts.append((x, 255-y))
             self.idx = len(self.pts)-1
             self.update = True
-            self.handle()
+            self.handle(event)
 
     def on_lu(self, event):
         self.idx = -1
@@ -72,7 +72,7 @@ class CurvePanel(wx.Panel):
             del self.pts[self.idx]
             self.idx = -1
             self.update = True
-            self.handle()
+            self.handle(event)
 
     def on_mv(self, event):
         x = (event.GetX()-self.offset[0])/self.k 
@@ -88,7 +88,7 @@ class CurvePanel(wx.Panel):
             y = np.clip(y, 0, 255)
             self.pts[self.idx] = (x, 255-y)
             self.update = True
-            self.handle()
+            self.handle(event)
         
 
     def on_paint(self, event):
@@ -144,7 +144,7 @@ class CurvePanel(wx.Panel):
         
     def handle(self):pass
     
-    def set_handle(self, handle):self.handle = handle
+    def Bind(self, z, handle):self.handle = handle
 
     def SetValue(self, value=None):
         print('here', value)

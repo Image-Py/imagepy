@@ -9,7 +9,7 @@ class Uniform(Filter):
     
     #parameter
     para = {'size':2}
-    view = [(float, (0,30), 1,  'size', 'size', 'pix')]
+    view = [(float, 'size', (0,30), 1,  'size', 'pix')]
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -20,7 +20,7 @@ class Gaussian(Filter):
     title = 'Gaussian'
     note = ['all', 'auto_msk', 'auto_snap','preview']
     para = {'sigma':2}
-    view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
+    view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix')]
     
     def run(self, ips, snap, img, para = None):
         #l = int(para['sigma']*3)*2+1
@@ -33,7 +33,7 @@ class GaussianLaplace(Filter):
     
     #parameter
     para = {'sigma':2, 'uniform':False}
-    view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix'),
+    view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix'),
             (bool, 'uniform', 'uniform')]
 
     #process
@@ -48,8 +48,8 @@ class DOG(Filter):
 
     #parameter
     para = {'sigma1':0, 'sigma2':2, 'uniform':False}
-    view = [(float, (0,30), 1,  'sigma1', 'sigma1', 'pix'),
-            (float, (0,30), 1,  'sigma2', 'sigma2', ''),
+    view = [(float, 'sigma1', (0,30), 1,  'sigma1', 'pix'),
+            (float, 'sigma2', (0,30), 1,  'sigma2', ''),
             (bool, 'uniform', 'uniform')]
 
     #process
@@ -77,7 +77,7 @@ class Maximum(Filter):
     
     #parameter
     para = {'size':2}
-    view = [(float, (0,30), 1,  'size', 'size', 'pix')]
+    view = [(float, 'size', (0,30), 1,  'size', 'pix')]
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -89,7 +89,7 @@ class Minimum(Filter):
     
     #parameter
     para = {'size':2}
-    view = [(float, (0,30), 1,  'size', 'size', 'pix')]
+    view = [(float, 'size', (0,30), 1,  'size', 'pix')]
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -101,7 +101,7 @@ class Median(Filter):
     
     #parameter
     para = {'size':2}
-    view = [(int, (0,30), 0,  'size', 'size', 'pix')]
+    view = [(int, 'size', (0,30), 0,  'size', 'pix')]
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -113,8 +113,8 @@ class Percent(Filter):
     
     #parameter
     para = {'size':2, 'per':50}
-    view = [(int, (0,30), 0, 'size', 'size', 'pix'),
-            (int, (0,100), 0, 'percent', 'per', '')]
+    view = [(int, 'size', (0,30), 0, 'size', 'pix'),
+            (int, 'per',  (0,100), 0, 'percent', '')]
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -124,7 +124,7 @@ class Prewitt(Filter):
     title = 'Prewitt'
     note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
     para = {'axis':'both'}
-    view = [(list, ['both', 'horizontal', 'vertical'], str, 'direction', 'axis', 'aixs')]
+    view = [(list, 'axis', ['both', 'horizontal', 'vertical'], str, 'direction', 'aixs')]
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -140,7 +140,7 @@ class Sobel(Filter):
     title = 'Sobel'
     note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
     para = {'axis':'both'}
-    view = [(list, ['both', 'horizontal', 'vertical'], str, 'direction', 'axis', 'aixs')]
+    view = [(list, 'axis', ['both', 'horizontal', 'vertical'], str, 'direction', 'aixs')]
     #process
     def run(self, ips, snap, img, para = None):
         if para['axis']=='both':
@@ -156,7 +156,7 @@ class LaplaceSharp(Filter):
     note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
 
     para = {'weight':0.2}
-    view = [(float, (0,5), 1,  'weight', 'weight', 'factor')]
+    view = [(float, 'weight', (0,5), 1,  'weight', 'factor')]
     #process
     def run(self, ips, snap, img, para = None):
         nimg.laplace(snap, output=img)
@@ -169,8 +169,8 @@ class USM(Filter):
 
     #parameter
     para = {'sigma':2, 'weight':0.5}
-    view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix'),
-            (float, (0,5), 1,  'weight', 'weight', '')]
+    view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix'),
+            (float, 'weight', (0,5), 1,  'weight', '')]
 
     #process
     def run(self, ips, snap, img, para = None):

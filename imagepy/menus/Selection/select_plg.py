@@ -31,7 +31,7 @@ class Add2Manager(Simple):
     title = 'Add To Manager'
     note = ['all', 'req_roi']
     para = {'name':''}
-    view = [(str, 'Name', 'name', '')]
+    view = [(str, 'name', 'Name', '')]
 
     def run(self, ips, imgs, para = None):
         RoiManager.add(para['name'], ips.roi)
@@ -48,7 +48,7 @@ class LoadRoi(Simple):
             IPy.alert('No roi in manager!')
             return False
         self.para['name'] = titles[0]
-        LoadRoi.view = [(list, titles, str, 'Name', 'name', '')]
+        LoadRoi.view = [(list, 'name', titles, str, 'Name', '')]
         return True
 
     def run(self, ips, imgs, para = None):
@@ -59,7 +59,7 @@ class Inflate(Simple):
     title = 'Inflate'
     note = ['all', 'req_roi']
     para = {'r':5}
-    view = [(int, (1,100),0, 'radius', 'r','pix')]
+    view = [(int, 'r', (1,100),0, 'radius', 'pix')]
 
     def run(self, ips, imgs, para = None):
         ips.roi = ips.roi.buffer(para['r'])
@@ -69,7 +69,7 @@ class Shrink(Simple):
     title = 'Shrink'
     note = ['all', 'req_roi']
     para = {'r':5}
-    view = [(int, (1,100),0, 'radius', 'r','pix')]
+    view = [(int, 'r', (1,100),0, 'radius', 'pix')]
 
     def run(self, ips, imgs, para = None):
         ips.roi = ips.roi.buffer(-para['r'])

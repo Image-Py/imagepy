@@ -10,7 +10,7 @@ class Statistic(Table):
 
 	para = {'size':2}
 		
-	view = [(int, (0,30), 0, 'size', 'size', '')]
+	view = [(int, 'size', (0,30), 0, 'size', '')]
 
 	def run(self, tps, data, snap, para=None):
 		for s in snap.columns:
