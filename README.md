@@ -40,7 +40,7 @@ Selection refers to processing the image only in the the specific identification
 
 ![](http://idoc.imagepy.org/imgs/astroi.png "ROI") 
 
-**Geometric Transformation:**ImagePy supports geometric transformations.  It can carry out rotation, translation and other conventional matrix transformations. What’s more, these rotations are interactive and support selection.  
+**Geometric Transformation:** ImagePy supports geometric transformations.  It can carry out rotation, translation and other conventional matrix transformations. What’s more, these rotations are interactive and support selection.  
 
 ![](http://idoc.imagepy.org/imgs/asttransform.png "transform")
 
