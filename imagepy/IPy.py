@@ -165,7 +165,7 @@ def get_para(title, view, para):
     pd.Destroy()
     return rst
 
-def showtable(title, data):
+def showtable(data, title):
     from .ui.tablewindow import TableFrame
     from imagepy.tableplus import TablePlus
     tps = TablePlus(title, data)
@@ -175,8 +175,8 @@ def showtable(title, data):
     # MT callafter(TableLog.table, *(title, data, cols, rows))
     
 pub.subscribe(showtable, 'showtable')
-def table(title, data):
-    wx.CallAfter(pub.sendMessage, "showtable", title=title, data=data) 
+def show_table(data, title):
+    wx.CallAfter(pub.sendMessage, "showtable", data=data, title=title) 
 
 def showlog(title, cont):
     from .ui.logwindow import TextLog

@@ -19,6 +19,7 @@ from imagepy import IPy
 统计：
   平均数，最大值，最小值，方差
   频率统计
+  按id汇总
 筛选：
   ：
 图表：

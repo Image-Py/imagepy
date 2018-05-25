@@ -18,7 +18,7 @@ class OpenFile(fileio.Reader):
     title = 'Open'
 
     def load(self):
-        self.filt = sorted(ReaderManager.all())
+        self.filt = sorted(ReaderManager.get(tag=None))
         return True
 
 class OpenUrl(Free):

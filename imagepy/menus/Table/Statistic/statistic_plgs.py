@@ -10,14 +10,14 @@ class Statistic(Table):
 		'min':False,'var':False,'std':False,'skew':False,'kurt':False}
 		
 	view = [(list, 'axis', ['Row', 'Column'], str, 'axis', ''),
-			(bool, 'Sum', 'sum'),
-			(bool, 'Mean', 'mean'),
-			(bool, 'Max', 'max'),
-			(bool, 'Min', 'min'),
-			(bool, 'Var', 'var'),
-			(bool, 'Std', 'std'),
-			(bool, 'Skew', 'skew'),
-			(bool, 'Kurt', 'kurt')]
+			(bool, 'sum', 'sum'),
+			(bool, 'mean', 'mean'),
+			(bool, 'max', 'max'),
+			(bool, 'min', 'min'),
+			(bool, 'var', 'var'),
+			(bool, 'std', 'std'),
+			(bool, 'skew', 'skew'),
+			(bool, 'kurt', 'kurt')]
 
 	def run(self, tps, data, snap, para=None):
 		rst, axis = {}, (0,1)[para['axis']=='Row']

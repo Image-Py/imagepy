@@ -39,7 +39,7 @@ class TablePlus():
         if byidx: rs, cs = self.data.index[rs], self.data.columns[cs]
         self.rowmsk = pd.Index(rs).astype(self.data.index.dtype)
         self.colmsk = pd.Index(cs).astype(self.data.columns.dtype)
-        print('tps select', rs, cs)
+        print('tps select', rs, cs, self.rowmsk, self.colmsk)
 
     def get_titles(self):return self.data.columns
     def get_index(self):return self.data.index

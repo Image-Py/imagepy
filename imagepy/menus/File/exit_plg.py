@@ -7,7 +7,7 @@ from imagepy import IPy
 from imagepy.core.engine import Free
 
 class Plugin(Free):
-    title = 'Exit'
-    
-    def run(self, para = None):
-        IPy.curapp.Close()
+	title = 'Exit'
+
+	def run(self, para = None):
+		IPy.curapp.on_close(None)

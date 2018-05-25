@@ -73,17 +73,12 @@ class ParaDialog (wx.Dialog):
         self.tus.append((pre, post))
         self.lst.Add( ctrl, 0, wx.EXPAND, 0 )
 
-    def add_fields(self, key):
-        """ get TableLogManager titles """
-        tps = TableManager.get()
-        cols = [str(i) for i in tps.data.columns]
-        self.add_choices(cols, tps.title, key)
-        self.para[key] = [str(i) for i in tps.colmsk]
-
     def pack(self):
         self.Layout()
         mint, minu = [], []
+        print('t============u')
         for t,u in self.tus:
+            print(t, u)
             if not t is None: mint.append(t.GetSize()[0])
             if not u is None:minu.append(u.GetSize()[0])
         for t,u in self.tus:

@@ -19,7 +19,7 @@ class TestData(Free):
 			fp, fn = osp.split(path)
 			fn, fe = osp.splitext(fn)
 			read = ReaderManager.get(fe[1:])
-			view = ViewerManager.get(fe[1:]) or IPy.show_img
+			view = ViewerManager.get(fe[1:])
 
 			group, read = (True, read[0]) if isinstance(read, tuple) else (False, read)
 			img = read(path)
@@ -29,7 +29,7 @@ class TestData(Free):
 		else:
 			names = [i for i in os.listdir(path) if '.' in i]
 			read = ReaderManager.get(names[0].split('.')[1])
-			view = ViewerManager.get(names[0].split('.')[1]) or IPy.show_img
+			view = ViewerManager.get(names[0].split('.')[1])
 			imgs = []
 			for i in range(len(names)):
 				self.progress(i, len(names))

@@ -6,7 +6,7 @@ class Select(Table):
 	title = 'Sel By C Name R Count'
 
 	para = {'cn':[], 'call':False, 'r1':0, 'r2':0, 'rall':False}
-	view = [('fields', 'cn'),
+	view = [('fields', 'cn', 'fields'),
 			(bool, 'call', 'all columns'),
 			('any', 'r1', 'start rows'),
 			('any', 'r2', 'end rows'),

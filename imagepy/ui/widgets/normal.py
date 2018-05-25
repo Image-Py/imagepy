@@ -169,12 +169,11 @@ class Choice(wx.Panel):
         return self.tp(self.choices[self.ctrl.GetSelection()])
 
 class AnyType( wx.Panel ):
-    
     def __init__( self, parent, title, types = ['Int', 'Float', 'Str']):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(-1, -1), style = wx.TAB_TRAVERSAL )
         
         sizer = wx.BoxSizer( wx.HORIZONTAL )
-        self.prifix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
+        self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
                                    wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -235,7 +234,7 @@ class AnyType( wx.Panel ):
 
 class Choices(wx.Panel):
     def __init__( self, parent, choices, title):
-        self.choices = choices
+        self.choices = list(choices)
         wx.Panel.__init__(self, parent)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -243,7 +242,7 @@ class Choices(wx.Panel):
                                    wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALL, 5 )
-        self.ctrl = wx.CheckListBox(self, -1, (80, 50), wx.DefaultSize, choices)
+        self.ctrl = wx.CheckListBox(self, -1, (80, 50), wx.DefaultSize, [str(i) for i in choices])
         sizer.Add( self.ctrl, 1, wx.ALL|wx.EXPAND, 0 )
         self.ctrl.SetMaxSize( wx.Size( -1,100 ) )
         self.SetSizer(sizer)
@@ -259,6 +258,7 @@ class Choices(wx.Panel):
         return [self.choices[i] for i in self.ctrl.GetCheckedItems()]
         
     def SetValue(self, value):
+        print('set value', value)
         self.ctrl.SetCheckedItems([
             self.choices.index(i) for i in value if i in self.choices])
 

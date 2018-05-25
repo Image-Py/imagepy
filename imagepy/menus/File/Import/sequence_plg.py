@@ -11,9 +11,6 @@ from imagepy.core.engine import Free
 from imagepy import IPy
 from glob import glob
 import wx, os
-
-def show(data, title):
-    IPy.show_img(data, title)
     
 class Plugin(Free):
     title = 'Import Sequence'
@@ -58,7 +55,7 @@ class Plugin(Free):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
         read = ReaderManager.get(fe[1:])
-        view = ViewerManager.get(fe[1:]) or show
+        view = ViewerManager.get(fe[1:])
         
         try:
             img = read(para['path'])
