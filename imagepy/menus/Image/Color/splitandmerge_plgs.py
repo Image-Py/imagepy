@@ -5,7 +5,6 @@ Created on Sat Dec 17 10:49:15 2016
 """
 from imagepy import IPy
 import numpy as np
-from imagepy import ImagePlus
 from imagepy.ui.canvasframe import CanvasFrame
 from imagepy.core.manager import ImageManager
 from imagepy.core.engine import Simple

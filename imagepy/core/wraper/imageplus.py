@@ -1,7 +1,5 @@
-from __future__ import absolute_import
-from __future__ import print_function
 import numpy as np
-from .core.manager import ImageManager, ColorManager
+from ..manager import ImageManager, ColorManager
 
 def get_img_type(imgs):
     if imgs[0].ndim==3 and imgs[0].dtype==np.uint8:return 'rgb'

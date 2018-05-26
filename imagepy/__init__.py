@@ -7,8 +7,6 @@ root_dir = osp.abspath(osp.dirname(__file__))
 os.chdir(root_dir)
 # sys.path.append(root_dir)
 
-from .imageplus import ImagePlus
-from .tableplus import TablePlus
 from .ui.mainframe import ImagePy
 
 def show(ui = True):

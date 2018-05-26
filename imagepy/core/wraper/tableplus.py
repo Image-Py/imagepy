@@ -1,13 +1,17 @@
 import numpy as np
 import pandas as pd
+from ..manager import TableManager
 
 class TablePlus():
-    def __init__(self, title, data):
-        self.title = title
+    def __init__(self, data, title=None):
+        self.set_title(title)
         self.update, self.range = None, None
         self.default = [3, (0,0,0), (0,0,255), 'Text']
         self.set_data(data)
         self.snap = None
+
+    def set_title(self, title):
+        self.title = TableManager.name(title)
 
     def get_nbytes(self):
         return self.data.memory_usage().sum()

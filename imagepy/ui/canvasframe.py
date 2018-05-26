@@ -104,11 +104,6 @@ class CanvasPanel(wx.Panel):
         self.ips.update = 'pix'
         self.canvas.on_idle(None)
 
-    def close(self):
-        parent = self.GetParent()
-        if IPy.uimode()!='ipy': parent.Close()
-        else: parent.DeletePage(parent.GetPageIndex(self))
-
     def __del__(self):pass
 
 class CanvasFrame(wx.Frame):

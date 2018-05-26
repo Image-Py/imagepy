@@ -36,7 +36,7 @@ class ImageManager:
         cls.remove(ips)
         callback = lambda a: cls.remove(a())
         def callback(a):
-            print('removed')
+            print('image removed')
             cls.remove(a())
         print('image add!')
         cls.imgs.insert(0, weakref.ref(ips, callback))
@@ -149,7 +149,7 @@ class TableManager:
         cls.remove(tps)
         callback = lambda a: cls.remove(a())
         def callback(a):
-            print('removed')
+            print('table removed')
             cls.remove(a())
         print('table add!')
         cls.tabs.insert(0, weakref.ref(tps, callback))
@@ -174,7 +174,7 @@ class TableManager:
     @classmethod
     def name(cls, name):
         if name==None:name='Table'
-        titles = [i().title for i in cls.imgs]
+        titles = [i().title for i in cls.tabs]
         if not name in titles :
             return name
         for i in range(1, 100) : 

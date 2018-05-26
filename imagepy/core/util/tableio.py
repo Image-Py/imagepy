@@ -1,7 +1,7 @@
 import os
 from ..manager import ViewerManager, ReaderManager, WriterManager
 from ... import IPy, root_dir
-from ..engine import Free, Simple, Macros
+from ..engine import Free, Table, Macros
 import numpy as np
 
 def show(data, title):
@@ -24,7 +24,7 @@ class Reader(Free):
         table = read(para['path'])
         ViewerManager.get(fe[1:])(table, fn)
 
-class Writer(Simple):
+class Writer(Table):
     note = ['all']
     para={'path':root_dir}
 
@@ -33,9 +33,8 @@ class Writer(Simple):
         return IPy.getpath('Save..', filt, 'save', self.para)
 
     #process
-    def run(self, ips, imgs, para = None):
+    def run(self, tps, data, snap, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        write = WriterManager.get(fe[1:])
-        group, write = (True, write[0]) if isinstance(write, tuple) else (False, write)
-        write(para['path'], imgs if group else ips.img)
+        write = WriterManager.get(fe[1:], 'tab')
+        write(para['path'], data)

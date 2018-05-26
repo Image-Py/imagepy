@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from imagepy.core.engine import Simple
-from imagepy import ImagePlus
 from imagepy.ui.canvasframe import CanvasFrame
 from imagepy.core.manager import ConfigManager
 from imagepy.ui.panelconfig import ParaDialog

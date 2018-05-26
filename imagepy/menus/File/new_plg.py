@@ -6,7 +6,6 @@ Created on Mon Dec  5 02:38:04 2016
 """
 
 import wx,os
-from imagepy import ImagePlus
 from imagepy.ui.canvasframe import CanvasFrame
 import numpy as np
 from imagepy import IPy

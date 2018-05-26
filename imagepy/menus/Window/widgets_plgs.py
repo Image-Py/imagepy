@@ -26,4 +26,17 @@ class ToolBar(Free):
 		info.Show(not info.IsShown())
 		app.auimgr.Update()
 
-plgs = [Widgets, ToolBar]
+class TableWindow(Free):
+	"""ImageKiller: derived from imagepy.core.engine.Free"""
+	title = 'Tables Window'
+	asyn = False
+	
+	#process
+	def run(self, para = None):
+		if IPy.uimode() != 'ipy': return
+		app = IPy.curapp
+		info = app.auimgr.GetPane(app.tablenb)
+		info.Show(not info.IsShown())
+		app.auimgr.Update()
+
+plgs = [Widgets, ToolBar, TableWindow]

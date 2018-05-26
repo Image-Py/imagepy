@@ -76,9 +76,7 @@ class ParaDialog (wx.Dialog):
     def pack(self):
         self.Layout()
         mint, minu = [], []
-        print('t============u')
         for t,u in self.tus:
-            print(t, u)
             if not t is None: mint.append(t.GetSize()[0])
             if not u is None:minu.append(u.GetSize()[0])
         for t,u in self.tus:

@@ -8,7 +8,6 @@ from scipy.ndimage import label, generate_binary_structure
 
 from imagepy import IPy
 from imagepy.core.engine import Filter
-from imagepy.imageplus import ImagePlus
 from imagepy.ui.canvasframe import CanvasFrame
 
 class Plugin(Filter):

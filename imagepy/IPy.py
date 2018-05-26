@@ -4,8 +4,6 @@ Created on Sat Oct 15 10:03:00 2016
 
 @author: yxl
 """
-from __future__ import absolute_import
-from __future__ import print_function
 
 import wx, os.path as osp
 from wx.lib.pubsub import pub
@@ -69,15 +67,14 @@ def show_ips(ips):
 
 def showimg(imgs, title):
     print('show img')
-    from .imageplus import ImagePlus
+    from .core import ImagePlus
     ips = ImagePlus(imgs, title)
     showips(ips)
 
 pub.subscribe(showimg, 'showimg')
 def show_img(imgs, title):
     if uimode()=='no':
-        from .core import manager
-        from .imageplus import ImagePlus
+        from .core import manager, ImagePlus
         from .ui.canvasframe import VirturlCanvas
         frame = VirturlCanvas(ImagePlus(imgs, title))
     else:wx.CallAfter(pub.sendMessage, 'showimg', imgs=imgs, title=title) 
@@ -166,12 +163,23 @@ def get_para(title, view, para):
     return rst
 
 def showtable(data, title):
-    from .ui.tablewindow import TableFrame
-    from imagepy.tableplus import TablePlus
-    tps = TablePlus(title, data)
-    frame = TableFrame(curapp)
-    frame.set_tps(tps)
-    frame.Show()   
+    from .core import TablePlus
+    if uimode()=='ipy':
+        from .ui.tableframe import TablePanel
+        tps = TablePlus(data, title)
+        tablep = TablePanel(curapp.tablenb)
+        tablep.set_tps(tps)
+        curapp.tablenb.add_page( tablep, tps)
+        info = curapp.auimgr.GetPane(curapp.tablenb)
+        info.Show(True)
+        curapp.auimgr.Update()
+    elif uimode()=='ij':
+        from .ui.tableframe import TableFrame
+        tps = TablePlus(data, title)
+        frame = TableFrame(curapp)
+        frame.set_tps(tps)
+        frame.Show()   
+
     # MT callafter(TableLog.table, *(title, data, cols, rows))
     
 pub.subscribe(showtable, 'showtable')

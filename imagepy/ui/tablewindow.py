@@ -3,7 +3,6 @@
 import wx, os
 import wx.grid as Grid
 import sys
-sys.path.append('C:/Users/54631/Documents/projects/imagepy-table')
 
 from imagepy import IPy, root_dir
 import numpy as np
@@ -94,10 +93,8 @@ class TableBase(Grid.GridTableBase):
 
         for colname in self.tps.data.columns:
             attr = Grid.GridCellAttr()
-            renderer = MegaFontRenderer(self)
-
+            renderer = MegaFontRenderer(self.tps)
             attr.SetRenderer(renderer)
-
             grid.SetColAttr(col, attr)
             col += 1
 
@@ -124,12 +121,12 @@ class MegaFontRenderer(Grid.GridCellRenderer):
         self.selectedBrush = wx.Brush("blue", wx.BRUSHSTYLE_SOLID)
         self.normalBrush = wx.Brush(wx.WHITE, wx.BRUSHSTYLE_SOLID)
         self.font = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, "ARIAL")
-        self.table = tps
+        self.tps = tps
 
     def Draw(self, grid, attr, dc, rect, row, col, isSelected):
         dc.SetClippingRegion(rect)
-        cn = self.table.tps.data.columns[col]
-        rd, tc, lc, ln = self.table.tps.get_props()[cn]
+        cn = self.tps.data.columns[col]
+        rd, tc, lc, ln = self.tps.get_props()[cn]
         bcolor, tcolor = self.colors[isSelected]
         if isSelected:tc = tcolor
 
@@ -140,11 +137,11 @@ class MegaFontRenderer(Grid.GridCellRenderer):
         dc.SetPen(wx.Pen(bcolor, 1, wx.PENSTYLE_SOLID))
         dc.DrawRectangle(rect)
 
-        isnum = np.issubdtype(self.table.tps.data[cn].dtype, np.number)
+        isnum = np.issubdtype(self.tps.data[cn].dtype, np.number)
         if ln!='Line':
             if isnum:
-                text = str(round(self.table.tps.data.iat[row, col], rd))
-            else: text = str(self.table.tps.data.iat[row, col])
+                text = str(round(self.tps.data.iat[row, col], rd))
+            else: text = str(self.tps.data.iat[row, col])
             dc.SetBackgroundMode(wx.SOLID)
 
             # change the text background based on whether the grid is selected
@@ -165,10 +162,10 @@ class MegaFontRenderer(Grid.GridCellRenderer):
                 dc.DrawText("...", x, rect.y+1)
 
         if isnum and ln!='Text':
-            data = self.table.tps.data
+            data = self.tps.data
             cn = data.columns[col]
             rn = data.index[row]
-            minv, maxv = self.table.tps.range[cn]
+            minv, maxv = self.tps.range[cn]
             dc.SetPen(wx.Pen(wx.Colour(lc), 1, wx.PENSTYLE_SOLID))
             dc.SetBrush(wx.Brush(wx.Colour(lc), wx.BRUSHSTYLE_SOLID))
             v = rect.x + (data[cn][rn]-minv)/(maxv-minv)*rect.width
@@ -181,7 +178,6 @@ class MegaFontRenderer(Grid.GridCellRenderer):
                 dc.DrawLine(v, rect.y+rect.height/2, v2, rect.y+rect.height/2*3)
 
         dc.DestroyClippingRegion()
-
 
 # --------------------------------------------------------------------
 # Sample Grid using a specialized table and renderers that can
@@ -264,6 +260,9 @@ class GridBase(Grid.Grid):
             self.SelectCol(i, True)
         self.Bind(Grid.EVT_GRID_RANGE_SELECT, self.on_select)
 
+    def __del__(self):
+        print('grid deleted!!!')
+
     def on_idle(self, event):
         if not self.IsShown() or self.tps is None\
             or self.tps.update == False: return
@@ -279,108 +278,7 @@ class GridBase(Grid.Grid):
 
 #---------------------------------------------------------------------------
 
-class TablePanel ( wx.Panel ):
-    def __init__( self, parent):
-        wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 819,488 ), style = wx.TAB_TRAVERSAL )
-        self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
-        WTableManager.add(self)
 
-        bSizer = wx.BoxSizer( wx.VERTICAL )
-
-        self.lab_info = wx.StaticText( self, wx.ID_ANY, 'MyLabel asdfasfa ', wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.lab_info.Wrap( -1 )
-        bSizer.Add( self.lab_info, 0, wx.ALL|wx.EXPAND, 0 )
-        '''
-        bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
-
-        self.btn_test = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer2.Add( self.btn_test, 0, wx.ALL, 5 )
-        
-        bSizer.Add( bSizer2, 0, wx.EXPAND, 5 )
-        '''
-        self.grid = GridBase( self)
-        self.grid.set_handler(self.set_info)
-        bSizer.Add( self.grid, 1, wx.ALL|wx.EXPAND, 0 )
-        
-   
-        
-        self.SetSizer( bSizer )
-        self.Layout()
-        
-        # Connect Events
-        #self.spn_float.Bind( wx.EVT_SPINCTRL, self.on_float )
-        #self.btn_test.Bind( wx.EVT_BUTTON, self.on_test )
-        #self.col_tc.Bind( wx.EVT_COLOURPICKER_CHANGED, self.on_tc )
-        #self.col_lc.Bind( wx.EVT_COLOURPICKER_CHANGED, self.on_lc )
-
-        self.handle = None
-    
-    def set_handler(self, handle=None):
-        self.handle = handle
-
-    def set_tps(self, tps):
-        self.tps = tps
-        self.grid.set_tps(tps)
-
-    def __del__( self ):
-        print('Table Panel Del')
-    
-    def set_info(self, tps):
-        self.lab_info.SetLabel('%sx%s; %.2fK'%(tps.data.shape+(tps.get_nbytes()/1024.0,)))
-        if not self.handle is None: self.handle(tps)
-    # Virtual event handlers, overide them in your derived class
-    def on_float( self, event ):
-        event.Skip()
-    
-    def on_tc( self, event ):
-        event.Skip()
-    
-    def on_lc( self, event ):
-        event.Skip()
-
-    def on_test(self, event):
-        print(self.grid.GetSelectedCols(), self.grid.GetSelectedRows())
-        print(self.grid.GetSelectionBlockTopLeft(), self.grid.GetSelectionBlockBottomRight())
-
-    def close(self):
-        self.GetParent().Close()
-        #if IPy.uimode()!='ipy': parent.Close()
-        #else: parent.DeletePage(parent.GetPageIndex(self))
-
-class TableFrame(wx.Frame):
-    """CanvasFrame: derived from the wx.core.Frame"""
-    ## TODO: Main frame ???
-    def __init__(self, parent=None):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY,
-                            title = wx.EmptyString,
-                            pos = wx.DefaultPosition,
-                            size = wx.Size( -1,-1 ),
-                            style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-        self.tablepanel = TablePanel(self)
-        logopath = os.path.join(root_dir, 'data/logo.ico')
-        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
-        self.Bind(wx.EVT_ACTIVATE, self.on_valid)
-        #self.SetAcceleratorTable(IPy.curapp.shortcut)
-        self.Bind(wx.EVT_CLOSE, self.on_close)
-        self.tablepanel.set_handler(self.set_title)
-        #self.canvaspanel.set_handler(self.set_title)
-    
-    def set_tps(self, tps):
-        self.tablepanel.set_tps(tps)
-
-    def set_title(self, tps):
-        self.SetTitle(tps.title)
-        #if resized: self.Fit()
-
-    def on_valid(self, event):
-        if event.GetActive():
-            TableManager.add(self.tablepanel.tps)
-
-    def on_close(self, event):
-        self.tablepanel.set_handler()
-        self.tablepanel.grid.set_handler()
-        WTableManager.remove(self.tablepanel)
-        event.Skip()
 
 if __name__ == '__main__':
     dates = pd.date_range('20170220',periods=6)

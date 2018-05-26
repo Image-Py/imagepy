@@ -13,6 +13,7 @@ from . import pluginloader, toolsloader, widgetsloader
 from ..core.manager import ConfigManager, PluginsManager, TaskManager, ImageManager
 from ..core.engine import Macros
 from .canvasframe import CanvasNoteBook
+from .tableframe import TableNoteBook
 import wx.aui as aui
 
 class FileDrop(wx.FileDropTarget):
@@ -37,11 +38,7 @@ class ImagePy(wx.Frame):
         IPy.curapp = self
         self.SetSizeHints( wx.Size(900,700) if IPy.uimode() == 'ipy' else wx.Size( 600,-1 ))
         
-        # Todo:Fixed absolute/relative path!
-        # print("menuspath:{}".format( os.path.join(root_dir,"menus")))
-        # print("toolspath:{}".format(os.path.join(root_dir,"tools"))
-        # menuspath = os.path.join(root_dir, "menus")
-        # toolspath = os.path.join(root_dir,"tools")
+
         self.menubar = pluginloader.buildMenuBarByPath(self, 'menus', 'plugins', None, True)
         self.SetMenuBar( self.menubar )
         self.shortcut = pluginloader.buildShortcut(self)
@@ -50,27 +47,11 @@ class ImagePy(wx.Frame):
         self.toolbar = toolsloader.build_tools(self, 'tools', 'plugins', None, True)
 
         
-
-
-            #wx.aui.AuiPaneInfo() .Top() .PinButton( True )
-            #.CaptionVisible( False ).Dock().Resizable().FloatingSize( wx.Size( 48,600 ) ).Layer( 10 ) )
-        
-        #self.widgets = widgetsloader.build_widgets(self, 'widgets')
-        #self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
-        #    .Float().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) .Layer( 10 ) )
         print(IPy.uimode())
         if IPy.uimode()=='ipy': self.load_aui()
         else: self.load_ijui()
         self.Fit()
-        #self.load_dev()
-        
 
-
-        #sizer.Add(self.toolbar, 0, wx.EXPAND, 5 )
-        #self.line_color = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-        #self.line_color.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
-        #sizer.AddStretchSpacer(prop=1)
-        #sizer.Add(self.line_color, 0, wx.EXPAND |wx.ALL, 0 )
 
         self.stapanel = stapanel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         sizersta = wx.BoxSizer( wx.HORIZONTAL )
@@ -85,10 +66,7 @@ class ImagePy(wx.Frame):
         self.auimgr.AddPane( stapanel,  wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True )
             .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True )
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
-        
-        
-        #sizer.Add(stapanel, 0, wx.EXPAND, 5 )
-        #self.SetSizer( sizer )
+
 
         self.Centre( wx.BOTH )
         self.Layout()
@@ -121,6 +99,11 @@ class ImagePy(wx.Frame):
         self.auimgr.AddPane( self.canvasnb, wx.aui.AuiPaneInfo() .Center() .CaptionVisible( False ).PinButton( True ).Dock()
             .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ). BottomDockable( True ).TopDockable( False )
             .LeftDockable( True ).RightDockable( True ) )
+
+        self.tablenb = TableNoteBook( self)
+        self.auimgr.AddPane( self.tablenb, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock().Hide()
+            .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Tables') . 
+            BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
         #self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)        
 
     def load_ijui(self):
