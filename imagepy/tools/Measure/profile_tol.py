@@ -9,6 +9,7 @@ import wx
 from imagepy import IPy
 from imagepy.core.engine import Tool
 import numpy as np
+import pandas as pd
 from numpy.linalg import norm
 from .setting import Setting
 from math import ceil
@@ -71,7 +72,7 @@ class Profile:
             dxy[:,1][dxy[:,1]==0] = 1
             l = norm(dxy, axis=1)*-np.sign(dxy[:,1])
             rst.append(np.round(np.arccos(dxy[:,0]/l)/np.pi*180,1))
-        IPy.table(title, rst, titles)
+        IPy.show_table(pd.DataFrame(rst, columns=titles), title)
 
 class Plugin(Tool):
     """Define the profile class plugin with the event callback functions"""

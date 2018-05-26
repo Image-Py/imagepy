@@ -22,7 +22,5 @@ class Select(Table):
 		print(para)
 		print('plugins', rmsk, cmsk)
 		tps.select(rmsk, cmsk)
-			#signal.order_filter(snap[s], np.ones(para['r']*2+1), n)
-		#IPy.table(tps.title+'-statistic', pd.DataFrame(rst))
 
 plgs = [Select]

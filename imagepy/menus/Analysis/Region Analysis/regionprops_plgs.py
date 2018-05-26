@@ -9,6 +9,7 @@ from imagepy.core.engine import Simple, Filter
 from imagepy.core.manager import ImageManager
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
+import pandas as pd
 
 class Mark:
     def __init__(self, data):
@@ -112,7 +113,7 @@ class RegionCounter(Simple):
 
             data.extend(list(zip(*dt)))
         ips.mark = Mark(mark)
-        IPy.table(ips.title+'-region', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-region')
 
 # center, area, l, extent, cov
 class RegionFilter(Filter):

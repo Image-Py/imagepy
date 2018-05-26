@@ -41,7 +41,7 @@ class One(Free):
 	def run(self, para=None):
 		data = np.eye(para['size'])
 		dataframe = pd.DataFrame(data)
-		IPy.table('Eye[%s,%s]'%data.shape, dataframe)
+		IPy.show_table(dataframe, 'Eye[%s,%s]'%data.shape)
 
 class Random01(Free):
 	title = 'Uniform Random'
@@ -56,7 +56,7 @@ class Random01(Free):
 		data *= para['high']-para['low']
 		data -= para['low']
 		dataframe = pd.DataFrame(data)
-		IPy.table('Random01[%s,%s]'%data.shape, dataframe)
+		IPy.show_table(dataframe, 'Random01[%s,%s]'%data.shape)
 
 class RandomN(Free):
 	title = 'Gaussian Random'
@@ -71,7 +71,7 @@ class RandomN(Free):
 		data *= para['std']
 		data += para['mean']
 		dataframe = pd.DataFrame(data)
-		IPy.table('RandomN[%s,%s]'%data.shape, dataframe)
+		IPy.show_table(dataframe, 'RandomN[%s,%s]'%data.shape)
 
 class Calendar(Free):
 	title = 'Calendar'
@@ -89,6 +89,6 @@ class Calendar(Free):
 			a = i.replace('   ', ' None ').strip()
 			table.append(a.replace('  ', ' ').split(' '))
 		dataframe = pd.DataFrame(table, columns=titles)
-		IPy.table(ls[0].strip(), dataframe)
+		IPy.show_table(dataframe, ls[0].strip())
 
 plgs = [One, Random01, RandomN, Calendar]

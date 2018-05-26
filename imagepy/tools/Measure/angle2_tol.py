@@ -8,6 +8,7 @@ Created on Fri Feb  3 22:21:32 2017
 import wx
 from imagepy.core.engine import Tool
 import numpy as np
+import pandas as pd
 from numpy.linalg import norm
 from .setting import Setting
 from imagepy import IPy
@@ -70,7 +71,7 @@ class Angle:
             dxy[:,1][dxy[:,1]==0] = 1
             l = norm(dxy, axis=1)*-np.sign(dxy[:,1])
             rst.append(np.round(np.arccos(dxy[:,0]/l)/np.pi*180,1))
-        IPy.table(title, rst, titles)
+        IPy.show_table(pd.DataFrame(rst, titles), title)
 
 class Plugin(Tool):
     """Define a class with some events callback fucntions """

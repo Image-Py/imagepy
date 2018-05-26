@@ -24,7 +24,7 @@ class Duplicate(Table):
 
 	def run(self, tps, data, snap, para = None):
 		newdata = data.loc[tps.rowmsk, tps.colmsk]
-		IPy.table(para['name'], newdata)
+		IPy.show_table(para['name'], newdata)
 
 class DeleteRow(Table):
 	title = 'Delete Rows'

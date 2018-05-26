@@ -2,6 +2,7 @@ from imagepy.core.engine import Filter
 from skimage.measure import marching_cubes_lewiner, mesh_surface_area
 from imagepy import IPy
 import numpy as np
+import pandas as pd
 
 class Plugin(Filter):
     modal = False
@@ -41,4 +42,4 @@ class Plugin(Filter):
         area = mesh_surface_area(vts, fs) * (ds**2 * k **2)
         rst = [round(i,3) for i in [scube, sfront, sback, sfront/scube, area, area/sfront]]
         titles = ['Cube Volume', 'Volume', 'Blank', 'Volume/Cube', 'Surface', 'Volume/Surface']
-        IPy.table('Volume Measure', [rst], cols=titles)
+        IPy.show_table(pd.DataFrame([rst], columns=titles), ips.title+'-Volume Measure')

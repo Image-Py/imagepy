@@ -10,6 +10,7 @@ from imagepy.core.roi import PointRoi
 from imagepy.core.manager import ImageManager, WindowsManager
 from imagepy.ui.widgets import HistCanvas
 from wx.lib.pubsub import pub
+import pandas as pd
 
 class HistogramFrame(wx.Frame):
     def __init__(self, parent, title, hist):
@@ -108,7 +109,7 @@ class Frequence(Simple):
             dt = list(zip(*dt))
             data.extend(dt)
 
-        IPy.table(ips.title+'-histogram', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-histogram')
         
 class Statistic(Simple):
     title = 'Pixel Statistic'
@@ -143,7 +144,7 @@ class Statistic(Simple):
             img = imgs[n] if msk is None else imgs[n][msk]
             data.append(self.count(img, para))
             self.progress(n, len(imgs))
-        IPy.table(ips.title+'-statistic', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-statistic')
         
 class Mark:
     def __init__(self, data):
@@ -197,7 +198,7 @@ class PointsValue(Simple):
             data.extend(zip(*cont))
             if para['buf']:mark.append(list(zip(xs, ys, vs.round(2))))
             self.progress(n, len(imgs))
-        IPy.table(ips.title+'-points', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-points')
         if para['buf']:ips.mark = Mark(mark)
 
 plgs = [Frequence, Statistic, Histogram, PointsValue]

@@ -11,6 +11,7 @@ from imagepy import IPy
 from imagepy.core.engine import Simple, Filter
 from imagepy.core.manager import ImageManager
 from imagepy.core.roi.pointroi import PointRoi
+import pandas as pd
 
 class Mark:
     def __init__(self, data):
@@ -107,7 +108,7 @@ class RegionStatistic(Simple):
             mark.append([(center, cov) for center,cov in zip(xy.T, boxs)]) 
             data.extend(list(zip(*dt)))
 
-        IPy.table(inten.title+'-region statistic', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), inten.title+'-region statistic')
         inten.mark = Mark(mark)
         inten.update = True
 

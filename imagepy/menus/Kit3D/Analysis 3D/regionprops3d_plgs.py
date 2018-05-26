@@ -4,6 +4,7 @@ from imagepy.core.engine import Simple, Filter
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
 from numpy.linalg import norm
+import pandas as pd
 
 class RegionLabel(Simple):
     title = 'Region Label 3D'
@@ -67,7 +68,7 @@ class RegionCounter(Simple):
             dt.append([round(i.equivalent_diameter*k, 1) for i in ls])
         if para['fa']:
             dt.append([i.filled_area*k**3 for i in ls])
-        IPy.table(ips.title+'-region', list(zip(*dt)), titles)
+        IPy.show_table(pd.DataFrame(list(zip(*dt)), columns=titles), ips.title+'-region')
 
 # center, area, l, extent, cov
 class RegionFilter(Simple):

@@ -4,9 +4,6 @@ from ... import IPy, root_dir
 from ..engine import Free, Table, Macros
 import numpy as np
 
-def show(data, title):
-    IPy.table(data, title)
-
 class Reader(Free):
     para = {'path':''}
 

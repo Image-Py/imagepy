@@ -8,6 +8,7 @@ Created on Fri Feb  3 22:21:32 2017
 import wx
 from imagepy.core.engine import Tool
 import numpy as np
+import pandas as pd
 from numpy.linalg import norm
 from .setting import Setting
 from imagepy import IPy
@@ -69,7 +70,7 @@ class Distance:
         fill = [[0]*(maxlen-i) for i in lens]
         rst = [i+j for i,j in zip(rst, fill)]
         titles = ['L{}'.format(i+1) for i in range(maxlen)]
-        IPy.table(title, rst, titles)
+        IPy.show_table(pd.DataFrame(rst, columns=titles), title)
 
 class Plugin(Tool):
     """Define the diatance class plugin with the event callback functions"""

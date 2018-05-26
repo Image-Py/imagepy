@@ -29,6 +29,6 @@ class Statistic(Table):
 		if para['std']:rst['std'] = snap.std(axis=axis)
 		if para['skew']:rst['skew'] = snap.skew(axis=axis)
 		if para['kurt']:rst['kurt'] = snap.kurt(axis=axis)
-		IPy.table(tps.title+'-statistic', pd.DataFrame(rst))
+		IPy.show_table(pd.DataFrame(rst), tps.title+'-statistic')
 
 plgs = [Statistic]
