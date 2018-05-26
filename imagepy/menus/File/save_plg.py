@@ -5,7 +5,7 @@ Created on Mon Dec  5 03:19:13 2016
 """
 from imagepy.core.util import fileio
 from imagepy import IPy, root_dir
-from imagepy.core.manager import WriterManager, WindowsManager
+from imagepy.core.manager import WriterManager, ImageManager, WindowsManager
 from imagepy.core.engine import Simple
 
 class SaveImage(fileio.Writer):
@@ -21,6 +21,5 @@ class WindowCapture(fileio.Writer):
 
 	def run(self, ips, imgs, para = None):
 		WindowsManager.get().canvas.save_buffer(para['path'])
-
 
 plgs = [SaveImage, WindowCapture]

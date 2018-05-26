@@ -12,7 +12,7 @@ class Plugin(Filter):
     # parameter
     para = {'sigma':2}
     # how to interact with the para, it is in 0~30, and 1 decimal
-    view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
+    view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix')]
 
     # handle the image, img -> buf
     def run(self, ips, snap, img, para = None):

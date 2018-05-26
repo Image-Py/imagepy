@@ -4,6 +4,7 @@ from imagepy.core.engine import Simple, Filter
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
 from numpy.linalg import norm
+import pandas as pd
 
 class RegionLabel(Simple):
     title = 'Region Label 3D'
@@ -11,7 +12,7 @@ class RegionLabel(Simple):
 
     para = {'con':'8-connect'}
 
-    view = [(list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix')]
+    view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix')]
 
     #process
     def run(self, ips, imgs, para = None):
@@ -28,12 +29,12 @@ class RegionCounter(Simple):
     para = {'con':'8-connect', 'center':True, 'extent':False, 'vol':True,
             'ed':False, 'holes':False, 'fa':False}
 
-    view = [(list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix'),
-            ('lab','=========  indecate  ========='),
+    view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
+            ('lab', None, '=========  indecate  ========='),
             (bool, 'center', 'center'),
-            (bool, 'volume', 'vol'),
+            (bool, 'vol', 'volume'),
             (bool, 'extent', 'extent'),
-            (bool, 'equivalent diameter', 'ed')]
+            (bool, 'ed', 'equivalent diameter')]
 
     #process
     def run(self, ips, imgs, para = None):
@@ -67,20 +68,20 @@ class RegionCounter(Simple):
             dt.append([round(i.equivalent_diameter*k, 1) for i in ls])
         if para['fa']:
             dt.append([i.filled_area*k**3 for i in ls])
-        IPy.table(ips.title+'-region', list(zip(*dt)), titles)
+        IPy.show_table(pd.DataFrame(list(zip(*dt)), columns=titles), ips.title+'-region')
 
 # center, area, l, extent, cov
 class RegionFilter(Simple):
     title = 'Geometry Filter 3D'
     note = ['8-bit', '16-bit', 'stack3d']
     para = {'con':'4-connect', 'inv':False, 'vol':0, 'dia':0, 'front':255, 'back':100}
-    view = [(list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix'),
-            (bool, 'invert', 'inv'),
-            ('lab','Filter: "+" means >=, "-" means <'),
-            (int, (0, 255), 0, 'front color', 'front', ''),
-            (int, (0, 255), 0, 'back color', 'back', ''),
-            (float, (-1e6, 1e6), 1, 'volume', 'vol', 'unit^3'),
-            (float, (-1e6, 1e6), 1, 'diagonal', 'dia', 'unit')]
+    view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
+            (bool, 'inv', 'invert'),
+            ('lab', None, 'Filter: "+" means >=, "-" means <'),
+            (int, 'front', (0, 255), 0, 'front color', ''),
+            (int, 'back', (0, 255), 0, 'back color', ''),
+            (float, 'vol', (-1e6, 1e6), 1, 'volume', 'unit^3'),
+            (float, 'dia', (-1e6, 1e6), 1, 'diagonal', 'unit')]
 
     #process
     def run(self, ips, imgs, para = None):

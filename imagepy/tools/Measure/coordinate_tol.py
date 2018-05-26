@@ -9,6 +9,7 @@ import wx
 from imagepy.core.engine import Tool
 from .setting import Setting
 from imagepy import IPy
+import pandas as pd
 
 class Coordinate:
     """Define the coordinate class"""
@@ -51,7 +52,7 @@ class Coordinate:
         unit = 1 if self.unit is None else self.unit[0]
         rst = [(x*unit, y*unit) for x,y in self.body]
         titles = ['OX', 'OY']
-        IPy.table(title, rst, titles)
+        IPy.show_table(pd.DataFrame(rst, columns=titles), title)
 
 class Plugin(Tool):
     """Define the coordinate class plugin with the event callback functions"""

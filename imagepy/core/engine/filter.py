@@ -10,7 +10,8 @@ import numpy as np
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ...core.manager import TextLogManager, WindowsManager, TaskManager, WidgetsManager
+from ...core.manager import TextLogManager, ImageManager, \
+WindowsManager, TaskManager, WidgetsManager
 from time import time
         
 def process_channels(plg, ips, src, des, para):
@@ -90,20 +91,20 @@ class Filter:
 
     def __init__(self, ips=None):
         if ips==None:ips = IPy.get_ips()
-        self.dialog = None
+        self.dlg = None
         self.ips = ips
         
     def progress(self, i, n):
         self.prgs = (i, n)
 
-    def show(self):
-        self.dialog = ParaDialog(WindowsManager.get(), self.title)
-        self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
-        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
-        if self.modal: return self.dialog.ShowModal()
-        self.dialog.on_ok = lambda : self.ok(self.ips)
-        self.dialog.on_cancel = lambda : self.cancel(self.ips)
-        self.dialog.Show()
+    def show(self, temp=ParaDialog):
+        self.dlg = temp(WindowsManager.get(), self.title)
+        self.dlg.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
+        self.dlg.set_handle(lambda x:self.preview(self.ips, self.para))
+        if self.modal: return self.dlg.ShowModal()
+        self.dlg.on_ok = lambda : self.ok(self.ips)
+        self.dlg.on_cancel = lambda : self.cancel(self.ips)
+        self.dlg.Show()
     
     def run(self, ips, snap, img, para = None):
         return 255-img
@@ -149,7 +150,9 @@ class Filter:
         if ips.get_nslices()==1 or 'not_slice' in self.note:
             # process_one(self, ips, ips.snap, ips.img, para)
             print(111)
-            threading.Thread(target = process_one, args = 
+            if IPy.uimode() == 'no':
+                process_one(self, ips, ips.snap, ips.img, para, callafter)
+            else: threading.Thread(target = process_one, args = 
                 (self, ips, ips.snap, ips.img, para, callafter)).start()
             if win!=None: win.write('{}>{}'.format(self.title, para))
         elif ips.get_nslices()>1:
@@ -161,14 +164,18 @@ class Filter:
                 para['stack'] = True
                 #process_stack(self, ips, ips.snap, ips.imgs, para)
                 print(222)
-                threading.Thread(target = process_stack, args = 
+                if IPy.uimode() == 'no':
+                    process_stack(self, ips, ips.snap, ips.imgs, para, callafter)
+                else: threading.Thread(target = process_stack, args = 
                     (self, ips, ips.snap, ips.imgs, para, callafter)).start()
                 if win!=None: win.write('{}>{}'.format(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
                 #process_one(self, ips, ips.snap, ips.img, para)
                 print(333)
-                threading.Thread(target = process_one, args = 
+                if IPy.uimode() == 'no':
+                    process_one(self, ips, ips.snap, ips.img, para, callafter)
+                else: threading.Thread(target = process_one, args = 
                     (self, ips, ips.snap, ips.img, para, callafter)).start()
                 if win!=None: win.write('{}>{}'.format(self.title, para))
             elif rst == 'cancel': pass
@@ -181,6 +188,7 @@ class Filter:
             
     def start(self, para=None, callafter=None):
         ips = self.ips
+        print('who am i', ips)
         if not self.check(ips):return
         if not self.load(ips):return
         if 'auto_snap' in self.note:ips.snapshot()
@@ -196,5 +204,5 @@ class Filter:
             if self.show() == wx.ID_OK:
                 self.ok(ips, None, callafter)
             else:self.cancel(ips)
-            self.dialog.Destroy()
+            self.dlg.Destroy()
         else: self.show()

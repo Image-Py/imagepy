@@ -7,9 +7,10 @@ from imagepy import IPy, root_dir
 import wx, numpy as np, os
 from imagepy.core.engine import Simple
 from imagepy.core.roi import PointRoi
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager, WindowsManager
 from imagepy.ui.widgets import HistCanvas
 from wx.lib.pubsub import pub
+import pandas as pd
 
 class HistogramFrame(wx.Frame):
     def __init__(self, parent, title, hist):
@@ -85,8 +86,8 @@ class Frequence(Simple):
     note = ['8-bit', '16-bit']
     
     para = {'fre':True, 'slice':False}
-    view = [(bool, 'count frequence', 'fre'),
-            (bool, 'each slices', 'slice')]
+    view = [(bool, 'fre', 'count frequence'),
+            (bool, 'slice', 'each slices')]
         
     def run(self, ips, imgs, para = None):
         if not para['slice']: imgs = [ips.img]
@@ -108,18 +109,18 @@ class Frequence(Simple):
             dt = list(zip(*dt))
             data.extend(dt)
 
-        IPy.table(ips.title+'-histogram', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-histogram')
         
 class Statistic(Simple):
     title = 'Pixel Statistic'
     note = ['8-bit', '16-bit', 'int', 'float']
     
     para = {'max':True, 'min':True,'mean':False,'var':False,'std':False,'slice':False}
-    view = [(bool, 'Max', 'max'),
-            (bool, 'Min', 'min'),
-            (bool, 'Mean', 'mean'),
-            (bool, 'Variance', 'var'),
-            (bool, 'Standard', 'std'),
+    view = [(bool, 'max', 'max'),
+            (bool, 'min', 'min'),
+            (bool, 'mean', 'mean'),
+            (bool, 'variance', 'var'),
+            (bool, 'standard', 'std'),
             (bool, 'slice', 'slice')]
         
     def count(self, img, para):
@@ -143,7 +144,7 @@ class Statistic(Simple):
             img = imgs[n] if msk is None else imgs[n][msk]
             data.append(self.count(img, para))
             self.progress(n, len(imgs))
-        IPy.table(ips.title+'-statistic', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-statistic')
         
 class Mark:
     def __init__(self, data):
@@ -171,7 +172,7 @@ class PointsValue(Simple):
     note = ['8-bit', '16-bit', 'req_roi']
     
     para = {'buf':False, 'slice':False}
-    view = [(bool, 'buffer by the value', 'buf'),
+    view = [(bool, 'buf', 'buffer by the value'),
             (bool, 'slice', 'slice')]
         
     def load(self, ips):
@@ -197,7 +198,7 @@ class PointsValue(Simple):
             data.extend(zip(*cont))
             if para['buf']:mark.append(list(zip(xs, ys, vs.round(2))))
             self.progress(n, len(imgs))
-        IPy.table(ips.title+'-points', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-points')
         if para['buf']:ips.mark = Mark(mark)
 
 plgs = [Frequence, Statistic, Histogram, PointsValue]

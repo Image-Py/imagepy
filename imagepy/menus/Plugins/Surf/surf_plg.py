@@ -1,6 +1,6 @@
 import cv2, wx
 from imagepy.core.engine import Filter, Simple, Tool
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager
 from .matcher import Matcher
 import numpy as np
 from imagepy import IPy
@@ -20,10 +20,10 @@ class Surf(Filter):
     note = ['all', 'not-slice']
 
     para = {'upright':False, 'oct':3, 'int':4, 'thr':1000, 'ext':False}
-    view = [(int, (0,5), 0, 'octaves', 'oct', ''),
-            (int, (0,5), 0, 'intervals', 'int',''),
-            (int, (500,2000), 0, 'threshold', 'thr','1-100'),
-            (bool, 'extended', 'ext'),
+    view = [(int, 'oct', (0,5), 0, 'octaves',  ''),
+            (int, 'int', (0,5), 0, 'intervals', ''),
+            (int, 'thr', (500,2000), 0, 'threshold', '1-100'),
+            (bool, 'ext', 'extended'),
             (bool, 'upright', 'upright')]
 
     def run(self, ips, snap, img, para):
@@ -90,25 +90,25 @@ class Match(Simple):
             'trans':'None', 'std':1, 'style':'Blue/Yellow'}
 
     def load(self, ips):
-        titles = WindowsManager.get_titles()
+        titles = ImageManager.get_titles()
         self.para['img1'] = titles[0]
         self.para['img2'] = titles[0]
-        Match.view = [('lab','=========  two image in 8-bit  ========='),
-                      (list, titles, str, 'image1', 'img1', ''),
-                      (list, titles, str, 'image2', 'img2', ''),
-                      ('lab',''),
-                      ('lab','======  parameter about the surf  ======'),
-                      (int, (0,5), 0, 'octaves', 'oct', ''),
-                      (int, (0,5), 0, 'intervals', 'int',''),
-                      (int, (500,2000), 0, 'threshold', 'thr','1-100'),
-                      (bool, 'extended', 'ext'),
+        Match.view = [('lab', None, '=========  two image in 8-bit  ========='),
+                      (list, 'img1', titles, str, 'image1', ''),
+                      (list, 'img2', titles, str, 'image2', ''),
+                      ('lab', None, ''),
+                      ('lab', None, '======  parameter about the surf  ======'),
+                      (int, 'oct', (0,5), 0, 'octaves', ''),
+                      (int, 'int', (0,5), 0, 'intervals', ''),
+                      (int, 'thr', (500,2000), 0, 'threshold', '1-100'),
+                      (bool, 'ext', 'extended'),
                       (bool, 'upright', 'upright'),
-                      ('lab',''),
-                      ('lab','======  how to match and display  ======'),
-                      (list, ['None', 'Affine', 'Homo'], str, 'transform', 'trans',''),
-                      (int, (1, 5), 0, 'Std', 'std', 'torlerance'),
-                      (list, ['Blue/Yellow', 'Hide'], str, 'Aspect', 'style', 'color'),
-                      (bool, 'Show log', 'log')]
+                      ('lab', None, ''),
+                      ('lab', None, '======  how to match and display  ======'),
+                      (list, 'trans', ['None', 'Affine', 'Homo'], str, 'transform', ''),
+                      (int, 'std', (1, 5), 0, 'Std', 'torlerance'),
+                      (list, 'style', ['Blue/Yellow', 'Hide'], str, 'Aspect', 'color'),
+                      (bool, 'log', 'show log')]
         return True
 
     def filter_matches(self, kp1, kp2, matches, ratio = 0.75):
@@ -125,8 +125,8 @@ class Match(Simple):
 
     #process
     def run(self, ips, imgs, para = None):
-        ips1 = WindowsManager.get(para['img1']).ips
-        ips2 = WindowsManager.get(para['img2']).ips
+        ips1 = ImageManager.get(para['img1'])
+        ips2 = ImageManager.get(para['img2'])
 
         detector = CVSURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
             nOctaveLayers=para['int'], upright=para['upright'],extended=para['ext'])

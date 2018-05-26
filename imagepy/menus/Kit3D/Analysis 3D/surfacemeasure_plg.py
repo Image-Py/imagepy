@@ -2,15 +2,16 @@ from imagepy.core.engine import Filter
 from skimage.measure import marching_cubes_lewiner, mesh_surface_area
 from imagepy import IPy
 import numpy as np
+import pandas as pd
 
 class Plugin(Filter):
     modal = False
     title = 'Measure Surface And Volume'
     note = ['8-bit', 'not_slice', 'not_channel', 'preview']
     para = {'ds':2, 'thr':128, 'step':1}
-    view = [('slide', (0,255), 0, 'threshold', 'thr'),
-            (int, (1,20), 0, 'down scale', 'ds', 'pix'),
-            (int, (1,20), 0, 'march step', 'step', 'pix')]
+    view = [('slide', 'thr', (0,255), 0, 'threshold'),
+            (int, 'ds',   (1,20), 0, 'down scale', 'pix'),
+            (int, 'step', (1,20), 0, 'march step', 'pix')]
 
     def load(self, ips):
         if not ips.is3d:
@@ -41,4 +42,4 @@ class Plugin(Filter):
         area = mesh_surface_area(vts, fs) * (ds**2 * k **2)
         rst = [round(i,3) for i in [scube, sfront, sback, sfront/scube, area, area/sfront]]
         titles = ['Cube Volume', 'Volume', 'Blank', 'Volume/Cube', 'Surface', 'Volume/Surface']
-        IPy.table('Volume Measure', [rst], cols=titles)
+        IPy.show_table(pd.DataFrame([rst], columns=titles), ips.title+'-Volume Measure')

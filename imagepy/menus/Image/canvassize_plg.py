@@ -13,10 +13,10 @@ class Plugin(Simple):
     note = ['all']
     
     para = {'w':0, 'h':0, 'hor':'center', 'ver':'center'}
-    view = [(int, (1,2048), 0, 'Weight', 'w', 'pix'),
-            (int, (1,2048), 0, 'Height', 'h', 'pix'),
-            (list, ['left', 'center', 'right'], str, 'Horizontal', 'hor', ''),
-            (list, ['top', 'center', 'bottom'], str, 'Vertical', 'ver', '')]
+    view = [(int, 'w', (1,2048), 0, 'Weight', 'pix'),
+            (int, 'h', (1,2048), 0, 'Height', 'pix'),
+            (list, 'hor', ['left', 'center', 'right'], str, 'Horizontal', ''),
+            (list, 'ver', ['top', 'center', 'bottom'], str, 'Vertical', '')]
             
     def load(self, ips):
         sp = ips.size

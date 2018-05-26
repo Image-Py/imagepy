@@ -7,6 +7,7 @@ from imagepy.core import myvi
 from imagepy import IPy
 import networkx as nx
 import numpy as np
+import pandas as pd
 norm = np.linalg.norm
 
 
@@ -32,9 +33,9 @@ class Show3DGraph(Simple):
 	note = ['8-bit', 'stack3d']
 
 	para = {'r':1, 'ncolor':(255,0,0), 'lcolor':(0,0,255)}
-	view = [(int, (1,100), 0, 'radius', 'r', 'pix'),
-			('color', 'node', 'ncolor', 'rgb'),
-			('color', 'line', 'lcolor', 'rgb')]
+	view = [(int, 'r', (1,100), 0, 'radius', 'pix'),
+			('color', 'ncolor', 'node', 'rgb'),
+			('color', 'lcolor', 'line', 'rgb')]
 
 	def load(self, ips):
 		if not isinstance(ips.data, nx.MultiGraph):
@@ -107,8 +108,8 @@ class Statistic(Simple):
 					edges.append([comid, s, e, l, dis])
 			comid += 1
 
-		IPy.table(ips.title+'-nodes', nodes, ntitles)
-		IPy.table(ips.title+'-edges', edges, etitles)
+		IPy.show_table(pd.DataFrame(nodes, columns=ntitles), ips.title+'-nodes')
+		IPy.show_table(pd.DataFrame(edges, columns=etitles), ips.title+'-edges')
 
 class Sumerise(Simple):
 	title = 'Graph Summarise 3D'
@@ -137,7 +138,7 @@ class Sumerise(Simple):
 				round(nx.density(g), 2), round(nx.average_node_connectivity(g),2)][1-para['parts']:])
 			comid += 1
 		print(titles, datas)
-		IPy.table(ips.title+'-graph', datas, titles[1-para['parts']:])
+		IPy.show_table(pd.DataFrame(datas, columns=titles[1-para['parts']:]), ips.title+'-graph')
 
 class Angles(Simple):
 	title = 'Graph Angles Count 3D'
@@ -175,15 +176,15 @@ class Angles(Simple):
 				datas.append([rst[i1][1], rst[i1][0], rst[i2][1], round(a,4)])
 
 		print(titles, datas)
-		IPy.table(ips.title+'-graph', datas, titles)
+		IPy.show_table(pd.DataFrame(datas, columns=titles), ips.title+'-graph')
 
 class CutBranch(Simple):
 	title = 'Graph Cut Branch 3D'
 	note = ['all']
 
 	para = {'lim':10, 'rec':False}
-	view = [(int, (0,1e6), 0, 'limit', 'lim', 'uint'),
-			(bool, 'recursion', 'rec')]
+	view = [(int, 'lim', (0,1e6), 0, 'limit', 'uint'),
+			(bool, 'rec', 'recursion')]
 
 	def load(self, ips):
 		if not isinstance(ips.data, nx.MultiGraph):

@@ -5,7 +5,7 @@ Created on Tue Dec  6 19:47:34 2016
 """
 
 from imagepy.core.engine import Simple
-from imagepy import ImagePlus
+from imagepy.core import ImagePlus
 from imagepy.ui.canvasframe import CanvasFrame
 import numpy as np
 from imagepy import IPy
@@ -18,9 +18,9 @@ class Plugin(Simple):
     
     def load(self, ips):
         self.para['name'] = ips.title+'-copy'
-        self.view = [(str, 'Name', 'name','')]
+        self.view = [(str, 'name', 'Name', '')]
         if ips.get_nslices()>1:
-            self.view.append((bool, 'duplicate stack', 'stack'))
+            self.view.append((bool, 'stack', 'duplicate stack'))
         return True
     #process
     def run(self, ips, imgs, para = None):

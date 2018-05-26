@@ -32,9 +32,9 @@ class Simple:
         
     def preview(self, ips, para):pass
 
-    def show(self):
+    def show(self, temp=ParaDialog):
         if self.view==None:return wx.ID_OK
-        self.dialog = ParaDialog(IPy.get_window(), self.title)
+        self.dialog = temp(IPy.get_window(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
         self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
         if self.modal: return self.dialog.ShowModal()
@@ -48,7 +48,9 @@ class Simple:
 
     def ok(self, ips, para=None, callafter=None):
         if para == None: para = self.para
-        threading.Thread(target = self.runasyn, 
+        if IPy.uimode() == 'no':
+            self.runasyn(ips, ips.imgs, para, callafter)
+        else: threading.Thread(target = self.runasyn, 
                     args = (ips, ips.imgs, para, callafter)).start()
         win = WidgetsManager.getref('Macros Recorder')
         if win!=None: win.write('{}>{}'.format(self.title, para))

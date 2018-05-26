@@ -13,8 +13,8 @@ from imagepy.core.draw.fill import floodfill
 class Plugin(Tool):
     title = 'Flood Fill'
     para = {'tor':10, 'con':'8-connect'}
-    view = [(int, (0,1000), 0, 'torlorance', 'tor','value'),
-            (list, ['4-connect', '8-connect'], str, 'fill', 'con', 'pix')]
+    view = [(int, 'tor', (0,1000), 0, 'torlorance', 'value'),
+            (list, 'con', ['4-connect', '8-connect'], str, 'fill', 'pix')]
         
     def mouse_down(self, ips, x, y, btn, **key):
         ips.snapshot()

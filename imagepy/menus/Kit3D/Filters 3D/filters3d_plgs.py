@@ -11,7 +11,7 @@ class Gaussian3D(Simple):
 
 	#parameter
 	para = {'sigma':2}
-	view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix')]
+	view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix')]
 
 	#process
 	def run(self, ips, imgs, para = None):
@@ -23,7 +23,7 @@ class Uniform3D(Simple):
 
 	#parameter
 	para = {'size':2}
-	view = [(float, (0,30), 1,  'size', 'size', 'pix')]
+	view = [(float, 'size', (0,30), 1,  'size', 'pix')]
 
 	#process
 	def run(self, ips, imgs, para = None):
@@ -49,8 +49,8 @@ class USM3D(Simple):
 	note = ['all', 'stack3d']
 
 	para = {'sigma':2, 'weight':0.5}
-	view = [(float, (0,30), 1,  'sigma', 'sigma', 'pix'),
-			(float, (0,5), 1,  'weight', 'weight', '')]
+	view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix'),
+			(float, 'weight', (0,5), 1,  'weight', '')]
 
 	#process
 	def run(self, ips, imgs, para = None):
@@ -66,8 +66,8 @@ class UPWatershed(Filter):
 	note = ['8-bit', 'stack3d', 'not_slice', 'not_channel', 'preview']
 	modal = False
 	para = {'thr1':0, 'thr2':255}
-	view = [('slide', (0,255), 0, 'Low', 'thr1'),
-			('slide', (0,255), 0, 'High', 'thr2')]
+	view = [('slide', 'thr1', (0,255), 0, 'Low'),
+			('slide', 'thr2', (0,255), 0, 'High')]
 
 	def load(self, ips):
 		self.buflut = ips.lut

@@ -7,6 +7,7 @@ Created on Fri Feb  3 23:11:13 2017
 import wx
 from imagepy.core.engine import Tool
 import numpy as np
+import pandas as pd
 from numpy.linalg import norm
 from .setting import Setting
 from imagepy import IPy
@@ -74,7 +75,7 @@ class Angle:
         fill = [[0]*(maxlen-i) for i in lens]
         rst = [i+j for i,j in zip(rst, fill)]
         titles = ["A{}".format(i+1) for i in range(maxlen)]
-        IPy.table(title, rst, titles)
+        IPy.show_table(pd.DataFrame(rst, columns=titles), title)
                 
 class Plugin(Tool):
     """Define a class with some events callback fucntions """

@@ -9,7 +9,7 @@ class Plugin(Tool):
     title = 'pencil'
     
     # config parameter
-    cfgv = [(int, (0,30), 0,  'width', 'width', 'pix')]
+    cfgv = [(int, 'width', (0,30), 0,  'width', 'pix')]
     cfgp = {'width':1}
     
     def __init__(self):

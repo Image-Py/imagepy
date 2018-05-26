@@ -4,7 +4,7 @@ Created on Fri Jan  6 23:45:59 2017
 
 @author: yxl
 """
-import os, sys, wx
+import os, sys
 from ..engine import Macros, MkDown, Widget
 from ..manager import ToolsManager, PluginsManager, WidgetsManager
 from ... import IPy, root_dir

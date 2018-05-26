@@ -23,7 +23,7 @@ plgs.append('-')
 class NewLanguage(Free):
 	title = 'New Language'
 	para = {'name':'your language'}
-	view = [(str, 'name', 'name','')]
+	view = [(str, 'name', 'name', '')]
 
 	def run(self, para = None):
 		LanguageManager.newdic(para['name'])

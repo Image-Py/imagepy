@@ -5,9 +5,8 @@ Created on Sat Dec 17 10:49:15 2016
 """
 from imagepy import IPy
 import numpy as np
-from imagepy import ImagePlus
 from imagepy.ui.canvasframe import CanvasFrame
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager
 from imagepy.core.engine import Simple
 from skimage import color
 
@@ -16,8 +15,8 @@ class SplitRGB(Simple):
     note = ['rgb']
     
     para = {'copy':False, 'destory':True}
-    view = {(bool, 'Copy data from view', 'copy'),
-            (bool, 'Destory current image', 'destory')}
+    view = {(bool, 'copy', 'Copy data from view'),
+            (bool, 'destory', 'Destory current image')}
     #process
     def run(self, ips, imgs, para = None):
         r,g,b = [],[],[]
@@ -29,7 +28,7 @@ class SplitRGB(Simple):
         for im, tl in zip([r,g,b],['red','green','blue']):
             IPy.show_img(im, ips.title+'-'+tl)
         if self.para['destory']:
-            WindowsManager.close(ips.title)
+            ImageManager.close(ips.title)
 
 class ToRGB(Simple):
     title = 'RGB to RGB'
@@ -43,7 +42,7 @@ class ToRGB(Simple):
         self.view = [('img', r, 'red', ''),
                     ('img', g, 'green', ''),
                     ('img', b, 'blue', ''),
-                    (bool, 'Destory', 'destory')]
+                    (bool, 'destory', 'destory')]
         return True
     
     def titles(self): return 'RGB-Merge', 'Red', 'Green', 'Blue'
@@ -53,7 +52,7 @@ class ToRGB(Simple):
     
     def run(self, ips, imgs, para = None):
         idx = ['red','green','blue']
-        imr,img,imb = [WindowsManager.get(para[i]).ips for i in idx]
+        imr,img,imb = [ImageManager.get(para[i]) for i in idx]
         sr,sg,sb = [i.get_nslices() for i in [imr,img,imb]]
         
         if imr.imgtype!='8-bit' or img.imgtype!='8-bit' or imb.imgtype!='8-bit' or \
@@ -69,7 +68,7 @@ class ToRGB(Simple):
         IPy.show_img(rgbs, self.titles()[0])
         if self.para['destory']:
             for title in [para[i] for i in idx]:
-                WindowsManager.close(title)
+                ImageManager.close(title)
 
 class RGB2(Simple):
     title = 'RGB To RGB'

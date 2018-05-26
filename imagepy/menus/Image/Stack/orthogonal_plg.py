@@ -6,7 +6,7 @@ Created on Sun Jan 15 03:19:34 2017
 
 import wx
 from imagepy import IPy
-from imagepy import ImagePlus
+from imagepy.core import ImagePlus
 from imagepy.ui.canvasframe import CanvasFrame
 from imagepy.core.engine import Tool, Simple
 

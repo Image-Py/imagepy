@@ -5,7 +5,8 @@ Created on Mon Dec 26 19:41:16 2016
 @author: yxl
 """
 from imagepy.core.engine import Free
-from imagepy.core.manager import WindowsManager, TextLogManager, TableLogManager
+from imagepy.core.manager import ImageManager, TextLogManager, \
+    TableManager, WindowsManager, WTableManager
 
 class ImageKiller(Free):
     """ImageKiller: derived from imagepy.core.engine.Free"""
@@ -13,17 +14,16 @@ class ImageKiller(Free):
 
     def load(self):
         ImageKiller.para = {'name':'All'}
-        titles =['All'] + WindowsManager.get_titles()
-        ##!TODO: waht is the view ?
-        ImageKiller.view = [(list, titles, str, 'Name', 'name', 'selected')]
+        titles =['All'] + ImageManager.get_titles()
+        ImageKiller.view = [(list, 'name', titles, str, 'Name', 'selected')]
         return True
     
     #process
     def run(self, para = None):
         if para['name'] == 'All':
-            for i in WindowsManager.get_titles():
-                WindowsManager.close(i)
-        else: WindowsManager.close(para['name'])
+            for i in ImageManager.get_titles():
+                WindowsManager.get(i).close()
+        else: WindowsManager.get(para['name']).close()
         
 class TextKiller(Free):
     """TextKiller: derived from imagepy.core.engine.Free"""
@@ -32,7 +32,7 @@ class TextKiller(Free):
     def load(self):
         TextKiller.para = {'name':'All'}
         titles =['All'] + TextLogManager.get_titles()
-        TextKiller.view = [(list, titles, str, 'Name', 'name', 'selected')]
+        TextKiller.view = [(list, 'name', titles, str, 'Name', 'selected')]
         return True
     
     #process
@@ -47,17 +47,17 @@ class TableKiller(Free):
     title = 'Kill TableLog'
 
     def load(self):
-        TableKiller.para = {'name':'All'}
-        titles =['All'] + TableLogManager.get_titles()
-        TableKiller.view = [(list, titles, str, 'Name', 'name', 'selected')]
+        self.para = {'name':'All'}
+        titles = ['All'] + TableManager.get_titles()
+        self.view = [(list, 'name', titles, str, 'Name', 'selected')]
         return True
     
     #process
     def run(self, para = None):
         if para['name'] == 'All':
-            for i in TableLogManager.get_titles():
-                TableLogManager.close(i)
-        else: TableLogManager.close(para['name'])
+            for i in TableManager.get_titles():
+                WTableManager.get(i).close()
+        else: WTableManager.get(para['name']).close()
         
 #!TODO: plugins ?!
 plgs = [ImageKiller, TextKiller, TableKiller]

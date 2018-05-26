@@ -9,8 +9,9 @@ import wx
 
 from imagepy import IPy
 from imagepy.core.engine import Simple, Filter
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager
 from imagepy.core.roi.pointroi import PointRoi
+import pandas as pd
 
 class Mark:
     def __init__(self, data):
@@ -46,20 +47,20 @@ class RegionStatistic(Simple):
             'center':True, 'var':False,'std':False,'sum':False, 'extent':False}
     
     view = [('img', 'intensity', 'inten', ''),
-            (list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix'),
+            (list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             (bool, 'slice', 'slice'),
-            ('lab','=========  indecate  ========='),
+            ('lab', None, '=========  indecate  ========='),
             (bool, 'center', 'center'),
             (bool, 'extent', 'extent'),
             (bool, 'max', 'max'),
             (bool, 'min', 'min'),
             (bool, 'mean', 'mean'),
-            (bool, 'standard', 'std'),
+            (bool, 'std', 'standard'),
             (bool, 'sum', 'sum')]
             
     #process
     def run(self, ips, imgs, para = None):
-        inten = WindowsManager.get(para['inten']).ips
+        inten = ImageManager.get(para['inten'])
         if not para['slice']:
             imgs = [inten.img]
             msks = [ips.img]
@@ -107,7 +108,7 @@ class RegionStatistic(Simple):
             mark.append([(center, cov) for center,cov in zip(xy.T, boxs)]) 
             data.extend(list(zip(*dt)))
 
-        IPy.table(inten.title+'-region statistic', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), inten.title+'-region statistic')
         inten.mark = Mark(mark)
         inten.update = True
 
@@ -139,19 +140,19 @@ class IntensityFilter(Filter):
     note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap', 'not_slice', 'preview']
     para = {'con':'4-connect', 'inten':None, 'max':0, 'min':0, 'mean':0, 'std':0, 'sum':0, 'front':255, 'back':0}
     view = [('img', 'intensity', 'inten', ''),
-            (list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix'),
-            ('lab','Filter: "+" means >=, "-" means <'),
-            (int, (0, 255), 0, 'front color', 'front', ''),
-            (int, (0, 255), 0, 'back color', 'back', ''),
-            (float, (-1e4, 1e4), 1, 'mean', 'mean', ''),
-            (float, (-1e4, 1e4), 1, 'max', 'max', ''),
-            (float, (-1e4, 1e4), 1, 'min', 'min', ''),
-            (float, (-1e6, 1e6), 1, 'sum', 'sum', ''),
-            (float, (-1e4, 1e4), 1, 'std', 'std', '')]
+            (list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
+            ('lab', None, 'Filter: "+" means >=, "-" means <'),
+            (int, 'front', (0, 255), 0, 'front color', ''),
+            (int, 'back', (0, 255), 0, 'back color', ''),
+            (float, 'mean', (-1e4, 1e4), 1, 'mean', ''),
+            (float, 'max',  (-1e4, 1e4), 1, 'max', ''),
+            (float, 'min',  (-1e4, 1e4), 1, 'min', ''),
+            (float, 'sum',  (-1e6, 1e6), 1, 'sum', ''),
+            (float, 'std',  (-1e4, 1e4), 1, 'std', '')]
             
     #process
     def run(self, ips, snap, img, para = None):
-        intenimg = WindowsManager.get(para['inten']).ips.img
+        intenimg = ImageManager.get(para['inten']).img
         strc = ndimage.generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
         buf, n = ndimage.label(snap, strc, output=np.uint32)
         index = range(1, n+1)
@@ -177,7 +178,7 @@ class IntensityFilter(Filter):
         idx[0] = 0
         img[:] = idx[buf]
 
-        WindowsManager.get(para['inten']).ips.mark = RGMark((xy.T, msk))
-        WindowsManager.get(para['inten']).ips.update = True
+        ImageManager.get(para['inten']).mark = RGMark((xy.T, msk))
+        ImageManager.get(para['inten']).update = True
 
 plgs = [RegionStatistic, IntensityFilter]

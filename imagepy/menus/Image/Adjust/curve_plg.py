@@ -1,29 +1,21 @@
 from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Filter
-from imagepy.ui.panelconfig import ParaDialog
+from imagepy.ui.panelconfig import ParaDialog, widgets
 from imagepy.ui.widgets import CurvePanel
 from scipy import interpolate
 
-class ThresholdDialog(ParaDialog):
-    def init_view(self, items, para, hist):
-        self.curvep = CurvePanel(self)
-        self.curvep.set_hist(hist)
-        self.add_ctrl('curve', self.curvep)
-        ParaDialog.init_view(self, items, para, True)
+widgets['curve'] = CurvePanel
 
 class Plugin(Filter):
     title = 'Curve Adjust'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'curve': [(0,0), (255, 255)]}
-    view = []
 
-    def show(self):
-        self.dialog = ThresholdDialog(IPy.get_window(), self.title)
+    def load(self, ips):
         hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
-        self.dialog.init_view(self.view, self.para, hist)
-        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
-        return self.dialog.ShowModal()
+        self.view = [('curve', 'curve', hist)]
+        return True
 
     #process
     def run(self, ips, snap, img, para = None):

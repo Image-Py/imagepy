@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 # ConfigPanel used for parameters setting
 import wx, platform
-from ..core.manager import WindowsManager, TableLogManager
-from .widgets import NumCtrl, ColorCtrl, FloatSlider
+from ..core.manager import ImageManager, WindowsManager, TableManager
+from .widgets import *
 
+widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl,
+            float:NumCtrl, 'lab':Label, bool:Check, str:TextCtrl, 
+            list:Choice, 'img':ImageList, 'color':ColorCtrl, 
+            'any':AnyType, 'chos':Choices, 'fields':TableFields,
+            'hist':HistCanvas}
 
 class ParaDialog (wx.Dialog):
     def __init__( self, parent, title):
         wx.Dialog.__init__ (self, parent, -1, title, style = wx.DEFAULT_DIALOG_STYLE)
         self.lst = wx.BoxSizer( wx.VERTICAL )
         self.tus = []
-        self.funcs = {'ctrl':self.add_ctrl, 'slide':self.add_slide, int:self.add_num,
-                      float:self.add_num, 'lab':self.add_lab, bool:self.add_check,
-                      str:self.add_txt, list:self.add_choice, 'img':self.add_img,
-                      'tab':self.add_tab, 'color':self.add_color}
 
         self.on_ok, self.on_cancel = None, None
         self.ctrl_dic = {}
@@ -44,185 +45,36 @@ class ParaDialog (wx.Dialog):
     def init_view(self, items, para, preview=False, modal = True):
         self.para = para
         for item in items:
-            self.funcs[item[0]](*item[1:])
-        if preview:self.add_check('Preview', 'preview')
+            self.add_ctrl_(widgets[item[0]], item[1], item[2:])
+        if preview:self.add_ctrl_(Check, 'preview', ('preview',))
         self.reset(para)
         self.add_confirm(modal)
         self.pack()
 
     def parse(self, para) :
-        self.funcs[para[0]](*para[1:])
-
+        self.add_ctrl_(widgets[para[0]], *para[1:])
+        #self.funcs[para[0]](*para[1:])
+    '''
     def add_ctrl(self, key, ctrl):
         self.lst.Add( ctrl, 0, wx.EXPAND, 5 )
         if not key is None:
             self.ctrl_dic[key] = ctrl
             if hasattr(ctrl, 'set_handle'):
                 ctrl.set_handle(lambda x=None : self.para_changed(key))
+    '''
 
-
-    def add_num(self, rang, accu, title, key, unit):
-        sizer = wx.BoxSizer( wx.HORIZONTAL )
-        lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_title.Wrap( -1 )
-        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        ctrl = NumCtrl(self, rang, accu)
-        self.ctrl_dic[key] = ctrl
-        ctrl.Bind(wx.EVT_KEY_UP, lambda x : self.para_changed(key))
-        sizer.Add( ctrl, 2, wx.ALL, 5 )
-
-        lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_unit.Wrap( -1 )
-        sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        self.tus.append((lab_title, lab_unit))
-        self.lst.Add( sizer, 0, wx.EXPAND, 5 )
-
-    def add_color(self, title, key, unit):
-        sizer = wx.BoxSizer( wx.HORIZONTAL )
-        lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_title.Wrap( -1 )
-        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        ctrl = ColorCtrl(self)
-        self.ctrl_dic[key] = ctrl
-        ctrl.Bind(wx.EVT_KEY_UP, lambda x : self.para_changed(key))
-        sizer.Add( ctrl, 2, wx.ALL, 5 )
-
-        lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_unit.Wrap( -1 )
-        sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        self.tus.append((lab_title, lab_unit))
-        self.lst.Add( sizer, 0, wx.EXPAND, 5 )
-
-    def add_choice(self, choices, tp, title, key, unit):
-        sizer = wx.BoxSizer( wx.HORIZONTAL )
-        lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_title.Wrap( -1 )
-        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-
-        ctrl = wx.Choice( self, wx.ID_ANY,
-                          wx.DefaultPosition, wx.DefaultSize,
-                          [str(choice) for choice in choices], 0 )
-
-        ctrl.SetSelection(0)
-        ctrl.SetValue = lambda x:ctrl.SetSelection(choices.index(x))
-        ctrl.GetValue = lambda : tp(choices[ctrl.GetSelection()])
-        self.ctrl_dic[key] = ctrl
-        ctrl.Bind( wx.EVT_CHOICE, lambda x : self.para_changed(key))
-        sizer.Add( ctrl, 2, wx.ALL, 5 )
-
-        lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_unit.Wrap( -1 )
-        sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        self.tus.append((lab_title, lab_unit))
-        self.lst.Add( sizer, 0, wx.EXPAND, 5 )
-
-    def add_img(self, title, key, unit):
-        """ get WindowsManager titles """
-        titles = WindowsManager.get_titles()
-        self.add_choice(titles, str, title, key, unit)
-        self.para[key] = titles[0]
-        return True
-
-    def add_tab(self, title, key, unit):
-        """ get TableLogManager titles """
-        titles = TableLogManager.get_titles()
-        self.add_choice(titles, str, title, key, unit)
-        self.para[key] = titles[0]
-        return True
-
-    def add_slide(self, rang, accu, title, key):
-        '''
-        sizer = wx.BoxSizer( wx.HORIZONTAL )
-        lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_title.Wrap( -1 )
-        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        iswin = platform.system() == 'Windows'
-        lab  = wx.SL_VALUE_LABEL if iswin else wx.SL_LABELS
-
-        ctrl = wx.Slider( self, wx.ID_ANY, 50, rang[0], rang[1],
-                          wx.DefaultPosition, wx.Size( -1,-1 ), wx.SL_HORIZONTAL|lab )
-
-        self.ctrl_dic[key] = ctrl
-        ctrl.Bind(wx.EVT_SCROLL, lambda x : self.para_changed(key))
-        sizer.Add( ctrl, 2, wx.ALL, 5 )
-
-        lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_unit.Wrap( -1 )
-        sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        self.tus.append((lab_title, lab_unit))
-        self.lst.Add( sizer, 0, wx.EXPAND, 5 )
-        '''
-        sizer = wx.BoxSizer( wx.HORIZONTAL )
-        lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_title.Wrap( -1 )
-        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        iswin = platform.system() == 'Windows'
-        lab  = wx.SL_VALUE_LABEL if iswin else wx.SL_LABELS
-
-        ctrl = FloatSlider( self, rang, accu)
-
-        self.ctrl_dic[key] = ctrl
-        ctrl.Bind(None, lambda x : self.para_changed(key))
-        sizer.Add( ctrl, 2, wx.ALL, 5 )
-        self.tus.append((lab_title, None))
-        self.lst.Add( sizer, 0, wx.EXPAND, 5 )
-
-    def add_lab(self, cont):
-        sizer = wx.BoxSizer( wx.HORIZONTAL )
-        ctrl = wx.StaticText( self, wx.ID_ANY, cont, wx.DefaultPosition, wx.DefaultSize)
-        sizer.Add( ctrl, 2, wx.ALL, 5 )
-        self.lst.Add( sizer, 0, wx.EXPAND, 5)
-
-    def add_txt(self, title, key, unit):
-        sizer = wx.BoxSizer( wx.HORIZONTAL )
-        lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_title.Wrap( -1 )
-        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-
-        ctrl = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString,
-                            wx.DefaultPosition, wx.DefaultSize, 0 )
-
-        self.ctrl_dic[key] = ctrl
-        ctrl.Bind( wx.EVT_KEY_UP, lambda x : self.para_changed(key))
-        sizer.Add( ctrl, 2, wx.ALL, 5 )
-
-        lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-
-        lab_unit.Wrap( -1 )
-        sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        self.tus.append((lab_title, lab_unit))
-        self.lst.Add( sizer, 0, wx.EXPAND, 5 )
-
-    def add_check(self, title, key):
-        box = wx.BoxSizer(wx.HORIZONTAL)
-        check = wx.CheckBox(self, -1, title)
-        self.ctrl_dic[key] = check
-        check.Bind(wx.EVT_CHECKBOX, lambda x : self.para_changed(key))
-        box.Add(check, 1, wx.ALL, 5)
-        self.lst.Add(box)
+    def add_ctrl_(self, Ctrl, key, p):
+        ctrl = Ctrl(self, *p)
+        if not p[0] is None: self.ctrl_dic[key] = ctrl
+        if hasattr(ctrl, 'Bind'):
+            ctrl.Bind(None, lambda x : self.para_changed(key))
+        pre = ctrl.prefix if hasattr(ctrl, 'prefix') else None
+        post = ctrl.postfix if hasattr(ctrl, 'postfix') else None
+        self.tus.append((pre, post))
+        self.lst.Add( ctrl, 0, wx.EXPAND, 0 )
 
     def pack(self):
+        self.Layout()
         mint, minu = [], []
         for t,u in self.tus:
             if not t is None: mint.append(t.GetSize()[0])
@@ -270,10 +122,10 @@ class ParaDialog (wx.Dialog):
         pass
 
 if __name__ == '__main__':
-    view = [(float, (0,20), 1, '半径', 'r', 'mm'),
-            ('slide', (-20,20), '亮度', 'slide', 'mm'),
-            ('color', '颜色', 'color', 'rgb'),
-            (bool, 'Preview', 'preview')]
+    view = [(float, 'r', (0,20), 1, '半径', 'mm'),
+            ('slide', 'mm', (-20,20), '亮度', 'slide'),
+            ('color', 'color', '颜色', 'rgb'),
+            (bool, 'preview', 'preview')]
     data = {'r':1.2, 'slide':0,  'preview':True, 'color':(0,255,0)}
 
     app = wx.PySimpleApp()

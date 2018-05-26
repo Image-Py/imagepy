@@ -5,7 +5,7 @@ Created on Mon Oct 17 21:13:42 2016
 """
 from imagepy import IPy
 import numpy as np
-from imagepy import ImagePlus
+from imagepy.core import ImagePlus
 from imagepy.ui.canvasframe import CanvasFrame
 from imagepy.core.engine import Free
 from imagepy.core.manager import ColorManager

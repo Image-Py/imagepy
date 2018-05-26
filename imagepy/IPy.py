@@ -4,52 +4,80 @@ Created on Sat Oct 15 10:03:00 2016
 
 @author: yxl
 """
-from __future__ import absolute_import
-from __future__ import print_function
 
-import wx, os
+import wx, os.path as osp
 from wx.lib.pubsub import pub
 
-from .core import manager
-from .imageplus import ImagePlus
-from . import root_dir
+root_dir = osp.abspath(osp.dirname(__file__))
 
-aui = manager.ConfigManager.get('uistyle') != 'ij'
 curapp = None
 
+def load_plugins():
+    from imagepy.core.loader import loader
+    loader.build_plugins('menus', True)
+    from glob import glob
+    extends = glob('plugins/*/menus')
+    for i in extends: loader.build_plugins(i, True)
+
+def uimode():
+    if curapp is None: return 'no'
+    from .core import manager
+    return manager.ConfigManager.get('uistyle')
+
 def get_window():
+    from .core import manager
     return manager.WindowsManager.get()
 
+def get_twindow():
+    from .core import manager
+    return manager.WTableManager.get()
+
 def get_ips():
-    win = manager.WindowsManager.get()
-    return None if win==None else win.canvas.ips
+    from .core import manager
+    return manager.ImageManager.get()
+
+def get_tps():
+    from .core import manager
+    return manager.TableManager.get()
+    # return None if win==None else win.canvas.ips
 
 def showips(ips):
-    if aui:
+    if uimode()=='ipy':
         from .ui.canvasframe import CanvasPanel
         canvasp = CanvasPanel(curapp.canvasnb)
+        canvasp.set_ips(ips)
         curapp.canvasnb.add_page( canvasp, ips)
         #canvasp.canvas.initBuffer()
-        canvasp.set_ips(ips)
+        
         curapp.auimgr.Update()
-    else:
+    elif uimode()=='ij':
         from .ui.canvasframe import CanvasFrame
         frame = CanvasFrame(curapp)
         frame.set_ips(ips)
-        frame.Show()   
+        frame.Show()
 
 pub.subscribe(showips, 'showips')
 def show_ips(ips):
-    wx.CallAfter(pub.sendMessage, 'showips', ips=ips) 
+    if uimode()=='no':
+        from .core import manager
+        from .ui.canvasframe import VirturlCanvas
+        frame = VirturlCanvas(ips)
+        print('ImagePy New ImagePlus >>> %s'%ips.title)
+    else: wx.CallAfter(pub.sendMessage, 'showips', ips=ips) 
 
 def showimg(imgs, title):
     print('show img')
+    from .core import ImagePlus
     ips = ImagePlus(imgs, title)
     showips(ips)
 
 pub.subscribe(showimg, 'showimg')
 def show_img(imgs, title):
-    wx.CallAfter(pub.sendMessage, 'showimg', imgs=imgs, title=title) 
+    if uimode()=='no':
+        from .core import manager, ImagePlus
+        from .ui.canvasframe import VirturlCanvas
+        frame = VirturlCanvas(ImagePlus(imgs, title))
+    else:wx.CallAfter(pub.sendMessage, 'showimg', imgs=imgs, title=title) 
 
 def reloadplgs(report=False, menus=True, tools=False, widgets=False):
     print('reload........')
@@ -76,9 +104,13 @@ def step_macros(macros):
     wx.CallAfter(pub.sendMessage, "stepmacros", macros=macros)
 '''
 def alert(info, title="ImagePy Alert!"):
-    dlg=wx.MessageDialog(curapp, info, title, wx.OK)
-    dlg.ShowModal()
-    dlg.Destroy()
+    if uimode()=='no':
+        print('ImagePy Alert >>> %s'%title)
+        print(info)
+    else:
+        dlg=wx.MessageDialog(curapp, info, title, wx.OK)
+        dlg.ShowModal()
+        dlg.Destroy()
 
 # MT alert = lambda info, title='image-py':callafter(alert_, *(info, title))
 
@@ -91,6 +123,7 @@ def yes_no(info, title="ImagePy Yes-No ?!"):
 
 def getpath(title, filt, k, para=None):
     """Get the defaultpath of the ImagePy"""
+    from .core import manager
     dpath = manager.ConfigManager.get('defaultpath')
     if dpath ==None:
         dpath = root_dir # './'
@@ -100,7 +133,7 @@ def getpath(title, filt, k, para=None):
     path = None
     if rst == wx.ID_OK:
         path = dialog.GetPath()
-        dpath = os.path.split(path)[0]
+        dpath = osp.split(path)[0]
         manager.ConfigManager.set('defaultpath', dpath)
         if para!=None:para['path'] = path
     dialog.Destroy()
@@ -108,6 +141,7 @@ def getpath(title, filt, k, para=None):
     return rst if para!=None else path
 
 def getdir(title, filt, para=None):
+    from .core import manager
     dpath = manager.ConfigManager.get('defaultpath')
     if dpath ==None:
         dpath = root_dir
@@ -128,14 +162,29 @@ def get_para(title, view, para):
     pd.Destroy()
     return rst
 
-def showtable(title, data, cols=None, rows=None):
-    from .ui.tablewindow import TableLog
-    TableLog.table(title, data, cols, rows)
+def showtable(data, title):
+    from .core import TablePlus
+    if uimode()=='ipy':
+        from .ui.tableframe import TablePanel
+        tps = TablePlus(data, title)
+        tablep = TablePanel(curapp.tablenb)
+        tablep.set_tps(tps)
+        curapp.tablenb.add_page( tablep, tps)
+        info = curapp.auimgr.GetPane(curapp.tablenb)
+        info.Show(True)
+        curapp.auimgr.Update()
+    elif uimode()=='ij':
+        from .ui.tableframe import TableFrame
+        tps = TablePlus(data, title)
+        frame = TableFrame(curapp)
+        frame.set_tps(tps)
+        frame.Show()   
+
     # MT callafter(TableLog.table, *(title, data, cols, rows))
     
 pub.subscribe(showtable, 'showtable')
-def table(title, data, cols=None, rows=None):
-    wx.CallAfter(pub.sendMessage, "showtable", title=title, data=data, cols=cols, rows=rows) 
+def show_table(data, title):
+    wx.CallAfter(pub.sendMessage, "showtable", data=data, title=title) 
 
 def showlog(title, cont):
     from .ui.logwindow import TextLog
@@ -143,8 +192,12 @@ def showlog(title, cont):
 pub.subscribe(showlog, 'showlog')
 
 def write(cont, title='ImagePy'):
-    from .ui.logwindow import TextLog
-    wx.CallAfter(pub.sendMessage, 'showlog', title=title, cont=cont)
+    if curapp is None:
+        print('ImagePy Write >>> %s'%title)
+        print(cont)
+    else:
+        from .ui.logwindow import TextLog
+        wx.CallAfter(pub.sendMessage, 'showlog', title=title, cont=cont)
 
 def plot(title, gtitle='Graph', labelx='X-Unit', labely='Y-Unit'):
     from .ui.plotwindow import PlotFrame
@@ -155,9 +208,10 @@ def plot(title, gtitle='Graph', labelx='X-Unit', labely='Y-Unit'):
     # MT callafter(curapp.set_progress, i)
 
 def set_info(i):
-    wx.CallAfter(curapp.set_info, i)
+    if curapp is None: print('ImagePy Info >>> %s'%i)
+    else: wx.CallAfter(curapp.set_info, i)
     # MT callafter(curapp.set_info, i)
 
 def run(cmd):
-    title, para = cmd.split('>')
-    manager.PluginsManager.get(title)().start(eval(para), False)
+    from imagepy.core.engine import Macros
+    Macros('', cmd.replace('\r\n', '\n').split('\n')).start()

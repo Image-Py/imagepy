@@ -48,13 +48,13 @@ class Plugin(wx.Panel):
 		self.SetSizer( bSizer1 )
 		self.Layout()
 
-		self.curvepan.set_handle(self.handle)
+		self.curvepan.Bind(None, self.handle)
 		self.btn_apply.Bind( wx.EVT_BUTTON, self.on_apply )
 		self.btn_clear.Bind( wx.EVT_BUTTON, self.on_clear )
 		self.btn_reset.Bind( wx.EVT_BUTTON, self.on_reset )
 		self.btn_invert.Bind( wx.EVT_BUTTON, self.on_invert )
 
-	def handle(self):
+	def handle(self, event):
 		ips = IPy.get_ips()
 		if ips is None:return
 		lut = CurvePanel.lookup(self.curvepan.pts)

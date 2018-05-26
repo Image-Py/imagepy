@@ -6,9 +6,10 @@ Created on Tue Dec 27 01:06:59 2016
 from imagepy import IPy, wx
 import numpy as np
 from imagepy.core.engine import Simple, Filter
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
+import pandas as pd
 
 class Mark:
     def __init__(self, data):
@@ -41,18 +42,18 @@ class RegionCounter(Simple):
     note = ['8-bit', '16-bit']
     para = {'con':'8-connect', 'center':True, 'area':True, 'l':True, 'extent':False, 'cov':False, 'slice':False,
             'ed':False, 'holes':False, 'ca':False, 'fa':False, 'solid':False}
-    view = [(list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix'),
+    view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             (bool, 'slice', 'slice'),
-            ('lab','=========  indecate  ========='),
+            ('lab', None, '=========  indecate  ========='),
             (bool, 'center', 'center'),
             (bool, 'area', 'area'),
-            (bool, 'perimeter', 'l'),
+            (bool, 'l', 'perimeter'),
             (bool, 'extent', 'extent'),
-            (bool, 'equivalent diameter', 'ed'),
-            (bool, 'convex area', 'ca'),
+            (bool, 'ed', 'equivalent diameter'),
+            (bool, 'ca', 'convex area'),
             (bool, 'holes', 'holes'),
-            (bool, 'filled area', 'fa'),
-            (bool, 'solidity', 'solid'),
+            (bool, 'fa', 'filled area'),
+            (bool, 'solid', 'solidity'),
             (bool, 'cov', 'cov')]
 
     #process
@@ -112,23 +113,23 @@ class RegionCounter(Simple):
 
             data.extend(list(zip(*dt)))
         ips.mark = Mark(mark)
-        IPy.table(ips.title+'-region', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-region')
 
 # center, area, l, extent, cov
 class RegionFilter(Filter):
     title = 'Geometry Filter'
     note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap','preview']
     para = {'con':'4-connect', 'inv':False, 'area':0, 'l':0, 'holes':0, 'solid':0, 'e':0, 'front':255, 'back':100}
-    view = [(list, ['4-connect', '8-connect'], str, 'conection', 'con', 'pix'),
-            (bool, 'invert', 'inv'),
-            ('lab','Filter: "+" means >=, "-" means <'),
-            (int, (0, 255), 0, 'front color', 'front', ''),
-            (int, (0, 255), 0, 'back color', 'back', ''),
-            (float, (-1e6, 1e6), 1, 'area', 'area', 'unit^2'),
-            (float, (-1e6, 1e6), 1, 'perimeter', 'l', 'unit'),
-            (int, (-10,10), 0, 'holes', 'holes', 'num'),
-            (float, (-1, 1,), 1, 'solidity', 'solid', 'ratio'),
-            (float, (-100,100), 1, 'eccentricity', 'e', 'ratio')]
+    view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
+            (bool, 'inv', 'invert'),
+            ('lab', None, 'Filter: "+" means >=, "-" means <'),
+            (int, 'front', (0, 255), 0, 'front color', ''),
+            (int, 'back', (0, 255), 0, 'back color', ''),
+            (float, 'area', (-1e6, 1e6), 1, 'area', 'unit^2'),
+            (float, 'l', (-1e6, 1e6), 1, 'perimeter', 'unit'),
+            (int, 'holes', (-10,10), 0, 'holes', 'num'),
+            (float, 'solid', (-1, 1,), 1, 'solidity', 'ratio'),
+            (float, 'e', (-100,100), 1, 'eccentricity', 'ratio')]
 
     #process
     def run(self, ips, snap, img, para = None):

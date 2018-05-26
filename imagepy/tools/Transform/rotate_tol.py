@@ -44,11 +44,11 @@ class Plugin(Filter):
     title = 'Rotate'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'ang':0, 'ox':0, 'oy':0, 'img':True, 'msk':False}
-    view = [(int, (0,360), 0, 'angle', 'ang', 'degree'),
-            (int, (0,5000), 0, 'OX', 'ox', 'pix'),
-            (int, (0,5000), 0, 'OY', 'oy', 'pix'),
-            (bool, 'rotate image', 'img'),
-            (bool, 'rotate mask', 'msk')]
+    view = [(int, 'ang', (0,360), 0, 'angle', 'degree'),
+            (int, 'ox',  (0,5000), 0, 'OX', 'pix'),
+            (int, 'oy',  (0,5000), 0, 'OY', 'pix'),
+            (bool, 'img', 'rotate image'),
+            (bool, 'msk', 'rotate mask')]
         
     def load(self, ips):
         self.bufroi = ips.roi

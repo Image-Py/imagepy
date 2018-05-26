@@ -1,19 +1,20 @@
 from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Simple, Filter
+import pandas as pd
 
 class Statistic(Simple):
     title = 'Pixel Statistic 3D'
     note = ['8-bit', '16-bit', 'int', 'float', 'stack3d']
     
     para = {'nozero':False, 'max':True, 'min':True,'mean':False,'var':False,'std':False,'slice':False}
-    view = [(bool, 'no-zero', 'nozero'),
-            ('lab','=========  indecate  ========='),
-            (bool, 'Max', 'max'),
-            (bool, 'Min', 'min'),
-            (bool, 'Mean', 'mean'),
-            (bool, 'Variance', 'var'),
-            (bool, 'Standard', 'std'),
+    view = [(bool, 'nozero', 'no-zero'),
+            ('lab', None, '=========  indecate  ========='),
+            (bool, 'max', 'max'),
+            (bool, 'min', 'min'),
+            (bool, 'mean', 'mean'),
+            (bool, 'variance', 'var'),
+            (bool, 'standard', 'std'),
             (bool, 'slice', 'slice')]
         
     def count(self, img, para):
@@ -31,15 +32,15 @@ class Statistic(Simple):
         titles = [i for i in titles if para[key[i]]]
         if para['nozero']: imgs = imgs[imgs!=0]
         data = self.count(imgs, para)
-        IPy.table(ips.title+'-statistic', data, titles)
+        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-statistic')
 
 class Frequence(Simple):
     title = 'Frequence 3D'
     note = ['8-bit', '16-bit', 'int', 'float', 'stack3d']
     
     para = {'nozero':False, 'bins':0}
-    view = [(int, (0,1e4), 0, 'bins', 'bins', 'count'),
-            (bool, 'no-zero', 'nozero')]
+    view = [(int, 'bins', (0,1e4), 0, 'bins', 'count'),
+            (bool, 'nozero', 'no-zero')]
         
     def run(self, ips, imgs, para = None):
         if para['nozero']: imgs = imgs[imgs!=0]
@@ -51,6 +52,6 @@ class Frequence(Simple):
         dt = [bins[:-1].round(2), ct, (ct/ct.sum()).round(4)]
         dt = list(zip(*dt))
 
-        IPy.table(ips.title+'-histogram', dt, titles)
+        IPy.show_table(pd.DataFrame(dt, columns=titles), ips.title+'-histogram')
 
 plgs = [Statistic, Frequence]

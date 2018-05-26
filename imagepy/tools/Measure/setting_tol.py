@@ -6,8 +6,8 @@ from imagepy.tools.Measure.setting import Setting
 class Plugin(Tool):
     title = 'Measure Setting'
     para = Setting
-    view = [('color', 'line', 'color', 'color'),
-            ('color', 'text', 'tcolor', 'color')]
+    view = [('color', 'color', 'line', 'color'),
+            ('color', 'tcolor', 'text', 'color')]
 
     def __init__(self):
         pass

@@ -11,9 +11,6 @@ from imagepy.core.engine import Free
 from imagepy import IPy
 from glob import glob
 import wx, os
-
-def show(data, title):
-    IPy.show_img(data, title)
     
 class Plugin(Free):
     title = 'Import Sequence'
@@ -31,10 +28,10 @@ class Plugin(Free):
         files = self.getfiles(self.para['path'])
         nfs = len(files)
         self.para['end'] = nfs-1
-        self.view = [(str, 'Title','title',''), 
-                     (int, (0, nfs-1), 0, 'Start', 'start', '0~{}'.format(nfs-1)),
-                     (int, (0, nfs-1), 0, 'End', 'end', '0~{}'.format(nfs-1)),
-                     (int, (0, nfs-1), 0, 'Step', 'step', '')]
+        self.view = [(str, 'title', 'Title',''), 
+                     (int, 'start', (0, nfs-1), 0, 'Start', '0~{}'.format(nfs-1)),
+                     (int, 'end',   (0, nfs-1), 0, 'End', '0~{}'.format(nfs-1)),
+                     (int, 'step',  (0, nfs-1), 0, 'Step', '')]
         return IPy.get_para('Import sequence', self.view, self.para)
 
     def getfiles(self, name):
@@ -58,7 +55,7 @@ class Plugin(Free):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
         read = ReaderManager.get(fe[1:])
-        view = ViewerManager.get(fe[1:]) or show
+        view = ViewerManager.get(fe[1:])
         
         try:
             img = read(para['path'])

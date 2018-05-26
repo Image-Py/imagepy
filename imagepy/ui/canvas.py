@@ -135,7 +135,7 @@ class Canvas (wx.Panel):
         self.imgbox[3] = int(self.ips.size[0] * k2+0.5)
         lay(self.box, self.imgbox)
         if self.imgbox[2]<=self.scrsize[0]*0.9 and\
-        self.imgbox[3]<=self.scrsize[1]*0.9 and not IPy.aui:
+        self.imgbox[3]<=self.scrsize[1]*0.9 and IPy.uimode()=='ij':
             self.SetInitialSize((self.imgbox[2], self.imgbox[3]))
             if not self.handle is None: self.handle(self.ips, True)
 

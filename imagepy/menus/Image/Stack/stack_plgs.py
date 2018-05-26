@@ -10,7 +10,7 @@ class SetSlice(Simple):
     
     #parameter
     para = {'num':0}
-    view = [(int, (0,999), 0, 'Num', 'num', '')]
+    view = [(int, 'num', (0,999), 0, 'Num', '')]
 
     #process
     def run(self, ips, imgs, para = None):

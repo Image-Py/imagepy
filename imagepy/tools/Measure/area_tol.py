@@ -10,6 +10,7 @@ from shapely.geometry import Polygon, Point
 from imagepy.core.engine import Tool
 from .setting import Setting
 from imagepy import IPy
+import pandas as pd
     
 class Area:
     """Define the area class"""
@@ -66,7 +67,7 @@ class Area:
             unit = 1 if self.unit==None else self.unit[0]
             axy = [area*unit**2, xy.x*unit, xy.y*unit]
             rst.append([round(i,1) for i in axy])
-        IPy.table(title, rst, titles)
+        IPy.show_table(pd.DataFrame(rst, columns=titles), title)
             
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))

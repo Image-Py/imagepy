@@ -1,7 +1,5 @@
-from __future__ import absolute_import
-from __future__ import print_function
 import numpy as np
-from .core.manager import WindowsManager, ColorManager
+from ..manager import ImageManager, ColorManager
 
 def get_img_type(imgs):
     if imgs[0].ndim==3 and imgs[0].dtype==np.uint8:return 'rgb'
@@ -34,7 +32,7 @@ class ImagePlus:
         self.set_imgs(imgs)
 
     def set_title(self, title):
-        self.title = WindowsManager.name(title)
+        self.title = ImageManager.name(title)
 
     def set_imgs(self, imgs):
         self.is3d = not isinstance(imgs, list)

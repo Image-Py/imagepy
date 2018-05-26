@@ -32,7 +32,7 @@ class MedialAxis(Filter):
 	title = 'Medial Axis'
 	note = ['all', 'auto_msk', 'auto_snap', 'preview']
 	para = {'dis':False}
-	view = [(bool,'distance transform', 'dis')]
+	view = [(bool, 'dis', 'distance transform')]
 
 	#process
 	def run(self, ips, snap, img, para = None):
@@ -49,8 +49,8 @@ class Watershed(Filter):
 
 
 	para = {'tor':2, 'con':False}
-	view = [(int, (0,255), 0, 'tolerance', 'tor', 'value'),
-			(bool, 'full connectivity', 'con')]
+	view = [(int, 'tor', (0,255), 0, 'tolerance', 'value'),
+			(bool, 'con', 'full connectivity')]
 
 	## TODO: Fixme!
 	def run(self, ips, snap, img, para = None):
@@ -69,7 +69,7 @@ class Voronoi(Filter):
 	note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap', 'preview']
 
 	para = {'type':'segment with ori'}
-	view = [(list, ['segment with ori', 'segment only', 'white line', 'gray line'], str, 'output', 'type', '')]
+	view = [(list, 'type', ['segment with ori', 'segment only', 'white line', 'gray line'], str, 'output', '')]
 	## TODO: Fixme!
 	def run(self, ips, snap, img, para = None):
 		dist = ndimg.distance_transform_edt(snap)

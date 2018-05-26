@@ -3,17 +3,19 @@ import numpy as np
 
 class HistCanvas(wx.Panel):
     """ HistCanvas: diverid from wx.core.Panel """
-    def __init__(self, parent ):
+    def __init__(self, parent, hist=None):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size(256,81), 
                             style = wx.TAB_TRAVERSAL )
         self.init_buf()
         self.hist = None
+        if not hist is None: self.SetValue(hist)
         self.update = False
         self.x1, self.x2 = 0, 255
         self.Bind(wx.EVT_SIZE, self.on_size)  
         self.Bind(wx.EVT_IDLE, self.on_idle)
         self.Bind(wx.EVT_PAINT, self.on_paint)
+        self.Bind = lambda z, x:0 
 
     def init_buf(self):
         box = self.GetClientSize()
@@ -31,7 +33,7 @@ class HistCanvas(wx.Panel):
     def on_paint(self, event):
         wx.BufferedPaintDC(self, self.buffer)
         
-    def set_hist(self, hist):
+    def SetValue(self, hist):
         self.hist = (hist*80/hist.max()).astype(np.uint8)
         self.update = True
         

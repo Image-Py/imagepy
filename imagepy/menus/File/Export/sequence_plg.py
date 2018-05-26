@@ -17,8 +17,8 @@ class Plugin(Simple):
     #para = {'path':'./','name':'','format':'png'}
 
     def load(self, ips):
-        self.view = [(str, 'Name', 'name', ''),
-            (list, list(sorted(WriterManager.all())), str, 'Format', 'format','')]
+        self.view = [(str, 'name', 'Name', ''),
+            (list, 'format',list(sorted(WriterManager.all())), str, 'Format', '')]
         return True
 
     def show(self):

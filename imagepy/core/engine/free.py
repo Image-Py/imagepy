@@ -7,7 +7,7 @@ import threading, wx
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ...core.manager import TextLogManager, TaskManager, WidgetsManager
+from ...core.manager import WindowsManager, TextLogManager, TaskManager, WidgetsManager
 from time import time
 
 class Free:
@@ -35,7 +35,7 @@ class Free:
         
     def show(self):
         if self.view==None:return wx.ID_OK
-        self.dialog = ParaDialog(IPy.get_window(), self.title)
+        self.dialog = ParaDialog(WindowsManager.get(), self.title)
         self.dialog.init_view(self.view, self.para, False, True)
         return self.dialog.ShowModal()
         
@@ -47,13 +47,15 @@ class Free:
             win = WidgetsManager.getref('Macros Recorder')
             if win!=None: 
                 win.write('{}>{}'.format(self.title, para))
-            if self.asyn:
-                t = threading.Thread(target = self.runasyn, args = (para, callback))
-                t.start()
-            else:
+            if self.asyn and IPy.uimode()!='no':
+                threading.Thread(target = self.runasyn, args = (para, callback)).start()
+            else: 
+                self.runasyn(para, callback)
+                '''
                 self.run(para)
                 if not callback is None:
                     callback()
+                '''
             #if not thd:t.join()
 
             #self.run(para)

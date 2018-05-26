@@ -1,30 +1,47 @@
 import wx, platform
 import numpy as np
 
-class NumCtrl(wx.TextCtrl):
+class NumCtrl(wx.Panel):
     """NumCtrl: diverid from wx.core.TextCtrl """
-    def __init__(self, parent, rang, accury):
-        wx.TextCtrl.__init__(self, parent, wx.TE_RIGHT)
+    def __init__(self, parent, rang, accury, title, unit):
+        wx.Panel.__init__(self, parent)
+        sizer = wx.BoxSizer( wx.HORIZONTAL )
+        self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.ctrl = wx.TextCtrl(self, wx.TE_RIGHT)
+        self.ctrl.Bind(wx.EVT_KEY_UP, lambda x : self.para_changed(key))
+        sizer.Add( self.ctrl, 2, wx.ALL, 5 )
+
+        self.postfix = lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
+                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+
+        lab_unit.Wrap( -1 )
+        sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.SetSizer(sizer)
+
         self.min, self.max = rang
         self.accury = accury
-        wx.TextCtrl.Bind(self, wx.EVT_KEY_UP, self.ontext)
+        self.ctrl.Bind(wx.EVT_KEY_UP, self.ontext)
         
     #! TODO: what is this?
-    def Bind(self, z, f):
-        self.f = f
+    def Bind(self, z, f):self.f = f
         
     def ontext(self, event):
         self.f(event)
         if self.GetValue()==None:
-            self.SetBackgroundColour((255,255,0))
+            self.ctrl.SetBackgroundColour((255,255,0))
         else:
-            self.SetBackgroundColour((255,255,255))
+            self.ctrl.SetBackgroundColour((255,255,255))
+        self.Refresh()
         
     def SetValue(self, n):
-        wx.TextCtrl.SetValue(self, str(round(n,self.accury) if self.accury>0 else int(n)))
+        self.ctrl.SetValue(str(round(n,self.accury) if self.accury>0 else int(n)))
         
     def GetValue(self):
-        sval = wx.TextCtrl.GetValue(self)
+        sval = self.ctrl.GetValue()
         try:
             num = float(sval) if self.accury>0 else int(sval)
         except ValueError:
@@ -35,12 +52,59 @@ class NumCtrl(wx.TextCtrl):
             return None
         return num
         
-class ColorCtrl(wx.TextCtrl):
+class TextCtrl(wx.Panel):
+    """NumCtrl: diverid from wx.core.TextCtrl """
+    def __init__(self, parent, title, unit):
+        wx.Panel.__init__(self, parent)
+        sizer = wx.BoxSizer( wx.HORIZONTAL )
+        self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.ctrl = wx.TextCtrl(self, wx.TE_RIGHT)
+        sizer.Add( self.ctrl, 2, wx.ALL, 5 )
+
+        self.postfix = lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
+                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+
+        lab_unit.Wrap( -1 )
+        sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.SetSizer(sizer)
+
+        self.ctrl.Bind(wx.EVT_KEY_UP, self.ontext)
+        
+    #! TODO: what is this?
+    def Bind(self, z, f):self.f = f
+        
+    def ontext(self, event):
+        self.f(event)
+        
+    def SetValue(self, n):
+        self.ctrl.SetValue(n)
+        
+    def GetValue(self):
+        return self.ctrl.GetValue()
+
+class ColorCtrl(wx.Panel):
     """ColorCtrl: deverid fron wx.coreTextCtrl"""
-    def __init__(self, parent):
-        wx.TextCtrl.__init__(self, parent, wx.TE_RIGHT)
-        wx.TextCtrl.Bind(self, wx.EVT_KEY_UP, self.ontext)
-        wx.TextCtrl.Bind(self, wx.EVT_LEFT_DOWN, self.oncolor)
+    def __init__(self, parent, title, unit):
+        wx.Panel.__init__(self, parent)
+        sizer = wx.BoxSizer( wx.HORIZONTAL )
+        self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.ctrl = wx.TextCtrl(self, wx.TE_RIGHT)
+        sizer.Add( self.ctrl, 2, wx.ALL, 5 )
+        self.postfix = lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
+                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        lab_unit.Wrap( -1 )
+        sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.SetSizer(sizer)
+        
+        self.ctrl.Bind(wx.EVT_KEY_UP, self.ontext)
+        self.ctrl.Bind( wx.EVT_LEFT_DOWN, self.oncolor)
         
     def Bind(self, z, f):
         self.f = f
@@ -54,43 +118,174 @@ class ColorCtrl(wx.TextCtrl):
         dlg.GetColourData().SetChooseFull(True)
         if dlg.ShowModal() == wx.ID_OK:
             rst = dlg.GetColourData().GetColour()
-            self.SetBackgroundColour(rst)
-            self.SetValue(rst.GetAsString(wx.C2S_HTML_SYNTAX))
+            self.ctrl.SetBackgroundColour(rst)
+            self.ctrl.SetValue(rst.GetAsString(wx.C2S_HTML_SYNTAX))
             self.f(event)
         dlg.Destroy()
     
     def SetValue(self, color):
-        wx.TextCtrl.SetBackgroundColour(self, color)
-        des = self.GetBackgroundColour().GetAsString(wx.C2S_HTML_SYNTAX)
-        wx.TextCtrl.SetValue(self, des)
+        self.ctrl.SetBackgroundColour(color)
+        des = self.ctrl.GetBackgroundColour().GetAsString(wx.C2S_HTML_SYNTAX)
+        self.ctrl.SetValue(des)
         
     def GetValue(self):
-        return self.GetBackgroundColour().Get(False)
+        return self.ctrl.GetBackgroundColour().Get(False)
+
+class Choice(wx.Panel):
+    """ColorCtrl: deverid fron wx.coreTextCtrl"""
+    def __init__(self, parent, choices, tp, title, unit):
+        wx.Panel.__init__(self, parent)
+        self.tp, self.choices = tp, choices
+        sizer = wx.BoxSizer( wx.HORIZONTAL )
+        self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.ctrl = wx.Choice( self, wx.ID_ANY,
+                          wx.DefaultPosition, wx.DefaultSize,
+                          [str(choice) for choice in choices], 0 )
+
+        self.ctrl.SetSelection(0)
+        sizer.Add( self.ctrl, 2, wx.ALL, 5 )
+        self.postfix = lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
+                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        lab_unit.Wrap( -1 )
+        sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.SetSizer(sizer)
+        self.ctrl.Bind( wx.EVT_CHOICE, self.on_choice)
         
+    def Bind(self, z, f):
+        self.f = f
+        
+    def on_choice(self, event):
+        self.f(event)
+
+    def SetValue(self, x):
+        n = self.choices.index(x) if x in self.choices else 0
+        self.ctrl.SetSelection(n)
+        
+    def GetValue(self):
+        return self.tp(self.choices[self.ctrl.GetSelection()])
+
+class AnyType( wx.Panel ):
+    def __init__( self, parent, title, types = ['Int', 'Float', 'Str']):
+        wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(-1, -1), style = wx.TAB_TRAVERSAL )
+        
+        sizer = wx.BoxSizer( wx.HORIZONTAL )
+        self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+        self.txt_value = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        sizer.Add( self.txt_value, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
+        com_typeChoices = types
+        self.postfix = self.com_type = wx.ComboBox( self, wx.ID_ANY, 'Float', wx.DefaultPosition, wx.DefaultSize, com_typeChoices, 0 )
+        sizer.Add( self.com_type, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        
+        
+        self.SetSizer( sizer )
+        self.Layout()
+        
+        # Connect Events
+        self.txt_value.Bind( wx.EVT_KEY_UP, self.on_text )
+        self.com_type.Bind( wx.EVT_COMBOBOX, self.on_type )
+    
+    def Bind(self, z, f):
+        self.f = f
+    
+    def SetValue(self, v):
+        self.txt_value.SetValue(str(v))
+        if isinstance(v, int):
+            self.com_type.Select(0)
+        if isinstance(v, float):
+            self.com_type.Select(1)
+        else: self.com_type.Select(2)
+
+
+    def GetValue(self):
+        tp = self.com_type.GetValue()
+        sval = wx.TextCtrl.GetValue(self.txt_value)
+        if tp == 'Float':
+            try: num = float(sval)
+            except ValueError: return None
+        if tp == 'Int':
+            try: num = int(sval)
+            except ValueError: return None
+        if tp == 'Str':
+            try: num = str(sval)
+            except ValueError: return None
+        return num
+    
+    # Virtual event handlers, overide them in your derived class
+    def on_text( self, event ):
+        self.f(event)
+        if self.GetValue()==None:
+            self.txt_value.SetBackgroundColour((255,255,0))
+        else: self.txt_value.SetBackgroundColour((255,255,255))
+        self.Refresh()
+    
+    def on_type( self, event ):
+        if self.GetValue()==None:
+            self.txt_value.SetBackgroundColour((255,255,0))
+        else: self.txt_value.SetBackgroundColour((255,255,255))
+        self.Refresh()
+
+class Choices(wx.Panel):
+    def __init__( self, parent, choices, title):
+        self.choices = list(choices)
+        wx.Panel.__init__(self, parent)
+
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALL, 5 )
+        self.ctrl = wx.CheckListBox(self, -1, (80, 50), wx.DefaultSize, [str(i) for i in choices])
+        sizer.Add( self.ctrl, 1, wx.ALL|wx.EXPAND, 0 )
+        self.ctrl.SetMaxSize( wx.Size( -1,100 ) )
+        self.SetSizer(sizer)
+        self.ctrl.Bind(wx.EVT_CHECKLISTBOX, self.on_check)
+
+    def Bind(self, z, f):
+        self.f = f
+
+    def on_check(self, event):
+        self.f(event)
+
+    def GetValue(self):
+        return [self.choices[i] for i in self.ctrl.GetCheckedItems()]
+        
+    def SetValue(self, value):
+        print('set value', value)
+        self.ctrl.SetCheckedItems([
+            self.choices.index(i) for i in value if i in self.choices])
+
 class FloatSlider(wx.Panel):
     
-    def __init__( self, parent, rang, accury):
+    def __init__( self, parent, rang, accury, title):
         self.linux = platform.system() == 'Linux'
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(-1,-1), style = wx.TAB_TRAVERSAL )
         sizer = wx.BoxSizer( wx.VERTICAL )
         self.slider = wx.Slider( self, wx.ID_ANY, 128, 0, 255, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL)
-        sizer.Add( self.slider, 0, wx.ALL|wx.EXPAND, 0 )
+        sizer.Add( self.slider, 0, wx.TOP|wx.EXPAND, 5 )
         subsizer = wx.BoxSizer( wx.HORIZONTAL )
         self.lab_min = wx.StaticText( self, wx.ID_ANY, '0', wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lab_min.Wrap( -1 )
-        subsizer.Add( self.lab_min, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
+        subsizer.Add( self.lab_min, 0, wx.BOTTOM|wx.LEFT|wx.ALIGN_CENTER, 5 )
         subsizer.AddStretchSpacer(prop=1)
         self.text = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(50,-1), 0 )
-        subsizer.Add( self.text, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
+        subsizer.Add( self.text, 0, wx.BOTTOM|wx.ALIGN_CENTER, 5 )
         self.spin = wx.SpinButton( self, wx.ID_ANY, wx.DefaultPosition, wx.Size([20,-1][self.linux],-1),  [0, wx.SP_HORIZONTAL][self.linux])
         self.spin.SetRange(0, 255)
         self.spin.SetValue(128)
-        subsizer.Add( self.spin, 0, wx.ALIGN_CENTER|wx.ALL|wx.EXPAND, 0 )
+        subsizer.Add( self.spin, 0, wx.ALIGN_CENTER|wx.BOTTOM|wx.EXPAND, 5 )
         subsizer.AddStretchSpacer(prop=1)
         self.lab_max = wx.StaticText( self, wx.ID_ANY, '0', wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lab_max.Wrap( -1 )
-        subsizer.Add( self.lab_max, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
-        sizer.Add( subsizer, 1, wx.EXPAND, 5 )
+        subsizer.Add( self.lab_max, 0, wx.ALIGN_CENTER|wx.BOTTOM|wx.RIGHT, 5 )
+        sizer.Add( subsizer, 0, wx.EXPAND, 0 )
 
 
         self.SetSizer( sizer )
@@ -132,6 +327,7 @@ class FloatSlider(wx.Panel):
         else:
             self.text.SetBackgroundColour((255,255,255))
             self.SetValue(self.GetValue())
+        self.Refresh()
 
     def SetValue(self, n):
         if not self.text.HasFocus():
@@ -154,11 +350,37 @@ class FloatSlider(wx.Panel):
             return None
         return num
 
+class Label(wx.Panel):
+    def __init__(self, parent, title):
+        wx.Panel.__init__(self, parent)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALL, 5 )
+        self.SetSizer(sizer)
+
+    def Bind(self, z, f): pass
+    def SetValue(self, v): pass
+    def GetValue(self, v): pass
+
+class Check(wx.Panel):
+    def __init__(self, parent, title):
+        wx.Panel.__init__(self, parent)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        check = wx.CheckBox(self, -1, title)
+        sizer.Add( check, 0, wx.ALL, 5 )
+        self.SetSizer(sizer)
+
+        self.SetValue = check.SetValue
+        self.GetValue = check.GetValue
+        check.Bind(wx.EVT_CHECKBOX, self.on_check)
+
+    def on_check(self, event):self.f(event)
+    def Bind(self, z, f): self.f = f
+
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = wx.Frame(None)
-    hist = Histogram(frame)
-    frame.Fit()
-    frame.Show(True)
-    hist.set_hist(np.arange(256))
+    frame.Show()
     app.MainLoop() 

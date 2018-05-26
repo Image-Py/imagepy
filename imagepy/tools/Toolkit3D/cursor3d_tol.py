@@ -7,7 +7,7 @@ import numpy as np
 class Plugin(Tool):
     title = 'Cursor 3D'
     para = {'r':1, 'color':(255,0,0)}
-    view = [(int, (0,100), 0,  'radius', 'r', 'pix'),
+    view = [(int, 'r', (0,100), 0,  'radius', 'pix'),
             ('color', 'color', 'color', '')]
 
     def __init__(self):

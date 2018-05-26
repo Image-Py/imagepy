@@ -23,7 +23,8 @@ class Macros:
             if self.callafter!=None:
                 self.callafter()
             return
-        if self.cmds[self.cur][0] == '#':
+        if len(self.cmds[self.cur])<3 or self.cmds[self.cur][0] == '#':
+            self.cur += 1
             return self._next(callafter)
         title, para = self.cmds[self.cur].split('>')
         self.cur += 1
@@ -31,7 +32,9 @@ class Macros:
         plg.start(eval(para), self.next)
 
     def next(self):
-        wx.CallAfter(pub.sendMessage, 'stepmacros', plg=self)
+        if IPy.uimode() == 'no':
+            self._next(self)
+        else: wx.CallAfter(pub.sendMessage, 'stepmacros', plg=self)
 
     def run(self):self.next()
         #IPy.run_macros(self.cmds)

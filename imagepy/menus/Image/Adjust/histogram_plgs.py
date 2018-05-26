@@ -7,7 +7,7 @@ Created on Sun Nov 27 00:56:00 2016
 from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Filter, Simple
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager
 
 def like(hist1, hist2):
     hist1 = np.cumsum(hist1)/hist1.sum()
@@ -62,16 +62,16 @@ class Match(Simple):
     para = {'img1':'', 'img2':''}
     
     def load(self, ips):
-        titles = WindowsManager.get_titles()
+        titles = ImageManager.get_titles()
         self.para['img1'] = titles[0]
         self.para['img2'] = titles[0]
-        Match.view = [(list, titles, str, 'template', 'img1', ''),
-                       (list, titles, str, 'object', 'img2', '')]
+        Match.view = [(list, 'img1', titles, str, 'template', ''),
+                      (list, 'img2', titles, str, 'object', '')]
         return True
     
     def run(self, ips, imgs, para = None):
-        ips1 = WindowsManager.get(para['img1']).ips
-        ips2 = WindowsManager.get(para['img2']).ips
+        ips1 = ImageManager.get(para['img1'])
+        ips2 = ImageManager.get(para['img2'])
         ips2.snapshot()
 
         img = ips1.img

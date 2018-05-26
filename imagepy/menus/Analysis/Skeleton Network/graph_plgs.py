@@ -4,6 +4,7 @@ import numpy as np
 import networkx as nx, wx
 from imagepy import IPy
 from numba import jit
+import pandas as pd
 
 # build   statistic  sumerise   cut  edit
 class Mark:
@@ -60,8 +61,8 @@ class Statistic(Simple):
                     edges.append([comid, s, e, round(eds[i]['weight']*k, 2)])
             comid += 1
 
-        IPy.table(ips.title+'-nodes', nodes, ntitles)
-        IPy.table(ips.title+'-edges', edges, etitles)
+        IPy.show_table(pd.DataFrame(nodes, columns=ntitles), ips.title+'-nodes')
+        IPy.show_table(pd.DataFrame(edges, columns=etitles), ips.title+'-edges')
 
 class Sumerise(Simple):
     title = 'Graph Summarise'
@@ -89,16 +90,15 @@ class Sumerise(Simple):
             datas.append([comid, g.number_of_nodes(), g.number_of_edges(), round(sl*k, 2), 
                 round(nx.density(g), 2), round(nx.average_node_connectivity(g),2)][1-para['parts']:])
             comid += 1
-        print(titles, datas)
-        IPy.table(ips.title+'-graph', datas, titles[1-para['parts']:])
+        IPy.show_table(pd.DataFrame(datas, columns=titles[1-para['parts']:]), ips.title+'-graph')
 
 class CutBranch(Filter):
     title = 'Cut Branch'
     note = ['8-bit', 'not_slice', 'not_channel', 'auto_snap', 'preview']
 
     para = {'lim':10, 'rec':False}
-    view = [(int, (0,1e6), 0, 'limit', 'lim', 'uint'),
-            (bool, 'recursion', 'rec')]
+    view = [(int, 'lim', (0,1e6), 0, 'limit', 'uint'),
+            (bool, 'rec', 'recursion')]
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):
@@ -179,8 +179,8 @@ class ShortestPath(Simple):
     note = ['all']
 
     para = {'start':0, 'end':1}
-    view = [(int, (0,1e8), 0, 'start', 'start', 'id'),
-            (int, (0,1e8), 0, 'end', 'end', 'id')]
+    view = [(int, 'start', (0,1e8), 0, 'start', 'id'),
+            (int, 'end',   (0,1e8), 0, 'end', 'id')]
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):

@@ -30,8 +30,8 @@ def polygonize(conts, withholes = False):
 class Plugin(Tool):
     title = 'Magic Stick'
     para = {'tor':10, 'con':'8-connect'}
-    view = [(int, (0,1000), 0, 'torlorance', 'tor','value'),
-            (list, ['4-connect', '8-connect'], str, 'fill', 'con', 'pix')]
+    view = [(int, 'tor', (0,1000), 0, 'torlorance', 'value'),
+            (list, 'con', ['4-connect', '8-connect'], str, 'fill', 'pix')]
 
     def __init__(self):
         self.curobj = None

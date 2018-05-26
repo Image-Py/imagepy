@@ -3,7 +3,7 @@
 Created on Thu Dec  1 01:22:19 2016
 @author: yxl
 """
-from imagepy.core.manager import WindowsManager
+from imagepy.core.manager import ImageManager
 from imagepy import IPy
 
 from imagepy.core.engine import Simple
@@ -15,19 +15,13 @@ class Plugin(Simple):
     note = ['all']
     para = {'img1':None,'op':'add','img2':None}
     
-    def load(self, ips):
-        titles = WindowsManager.get_titles()
-        self.para['img1'] = titles[0]
-        self.para['img2'] = titles[0]
-        Plugin.view = [(list, titles, str, 'image1', 'img1', ''),
-                       (list, ['max', 'min', 'diff', 'add', 'substract'
-                               ], str, 'operator', 'op',''),
-                       (list, titles, str, 'image2', 'img2', '')]
-        return True
+    view = [('img', 'img1', 'image1', ''),
+            (list, 'op', ['max', 'min', 'diff', 'add', 'substract'], str, 'operator', ''),
+            ('img', 'img2', 'image2', '')]
     
     def run(self, ips, imgs, para = None):
-        ips1 = WindowsManager.get(para['img1']).ips
-        ips2 = WindowsManager.get(para['img2']).ips
+        ips1 = ImageManager.get(para['img1'])
+        ips2 = ImageManager.get(para['img2'])
         ips1.snapshot()
 
         sl1, sl2 = ips1.get_nslices(), ips2.get_nslices()

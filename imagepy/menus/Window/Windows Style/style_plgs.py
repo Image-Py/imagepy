@@ -5,7 +5,6 @@ from imagepy import IPy
 class ImageJStyle(Free):
     title = 'Pay Tribute To ImageJ'
     asyn = False
-    #process
     def run(self, para = None):
         ConfigManager.set('uistyle', 'ij')
         IPy.alert('Shown in ImageJ style when next setup!')

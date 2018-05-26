@@ -6,7 +6,7 @@ Created on Tue Dec 27 11:30:24 2016
 import wx
 from imagepy import IPy, root_dir
 from imagepy.core.engine import Free
-from imagepy.core.manager import TableLogManager
+from imagepy.core.manager import TableManager
 
 class Csv(Free):
     title = 'Save Table As CSV'
@@ -14,7 +14,7 @@ class Csv(Free):
     para = {'tab': None, 'path':'./'}
     
     def load(self):
-        n = len(TableLogManager.get_titles())
+        n = len(TableManager.get_titles())
         if n>0:return True
         IPy.alert('No table opened!')
         return False
@@ -27,7 +27,7 @@ class Csv(Free):
         return IPy.getpath('Import sequence', filt, self.para)
         
     def run(self, para = None):
-        table = TableLogManager.get(para['tab'])
+        table = TableManager.get(para['tab'])
         table.save_tab(para['path'], ',')
         
 class Tab(Free):
@@ -36,7 +36,7 @@ class Tab(Free):
     para = {'tab': None, 'path':'./'}
 
     def load(self):
-        n = len(TableLogManager.get_titles())
+        n = len(TableManager.get_titles())
         if n>0:return True
         IPy.alert('No table opened!')
         return False
@@ -49,7 +49,7 @@ class Tab(Free):
         return IPy.getpath('Import sequence', filt, self.para)
         
     def run(self, para = None):
-        table = TableLogManager.get(para['tab'])
+        table = TableManager.get(para['tab'])
         table.save_tab(para['path'], '\t')
         
 plgs = [Csv, Tab]

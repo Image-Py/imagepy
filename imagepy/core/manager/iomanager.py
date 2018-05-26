@@ -2,41 +2,46 @@ class ReaderManager:
     reader = {}
     
     @classmethod
-    def add(cls, ext, read):
+    def add(cls, ext, read, tag='img'):
+        if not tag in cls.reader: cls.reader[tag] = {}
         if isinstance(ext, str):
-            cls.reader[ext.lower()] = read
+            cls.reader[tag][ext.lower()] = read
             return
         for i in ext:
-            cls.reader[i.lower()] = read
+            cls.reader[tag][i.lower()] = read
         
     @classmethod
-    def get(cls, ext):
-    	if not ext.lower() in cls.reader:
-    		return None
-    	return cls.reader[ext.lower()]
-
-    @classmethod
-    def all(cls):return sorted(cls.reader.keys())
+    def get(cls, ext=None, tag='img'):
+        if ext is None and tag is None:
+            ls = [cls.reader[i].keys() for i in cls.reader.keys()]
+            return sorted([x for j in ls for x in j])
+        elif ext is None and not tag is None:
+            return sorted(cls.reader[tag].keys())
+        elif not ext is None and tag is None:
+            for i in cls.reader.values():
+                if ext.lower() in i: return i[ext.lower()]
+        elif not tag is None and not ext is None:
+            if ext.lower() in cls.reader[tag]:
+                return cls.reader[tag][ext.lower()]
 
 class WriterManager:
     writer = {}
     
     @classmethod
-    def add(cls, ext, write):
+    def add(cls, ext, write, tag='img'):
+        if not tag in cls.writer: cls.writer[tag] = {}
         if isinstance(ext, str):
-            cls.writer[ext.lower()] = write
+            cls.writer[tag][ext.lower()] = write
             return
         for i in ext:
-            cls.writer[i.lower()] = write
+            cls.writer[tag][i.lower()] = write
         
     @classmethod
-    def get(cls, ext):
-        if not ext.lower() in cls.writer:
+    def get(cls, ext, tag='img'):
+        if ext is None: return sorted(cls.writer[tag].keys())
+        if not ext.lower() in cls.writer[tag]:
             return None
-        return cls.writer[ext.lower()]
-
-    @classmethod
-    def all(cls):return sorted(cls.writer.keys())
+        return cls.writer[tag][ext.lower()]
 
 class ViewerManager:
     viewer = {}
@@ -45,10 +50,7 @@ class ViewerManager:
     def add(cls, ext, view):cls.viewer[ext.lower()] = view
         
     @classmethod
-    def get(cls, ext):
-        if not ext.lower() in cls.viewer:
-            return None
-        return cls.viewer[ext.lower()]
-
-    @classmethod
-    def all(cls):return sorted(cls.viewer.keys())
+    def get(cls, ext='img'):
+        for i in ReaderManager.reader:
+            if ext.lower() in ReaderManager.reader[i]:
+                return cls.viewer[i]
