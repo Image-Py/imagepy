@@ -82,7 +82,6 @@ class TextLogManager:
     
     @classmethod
     def name(cls, name):
-        print(list(cls.windows.keys()), name)
         if name==None:name='Log'
         if name not in cls.windows:
             return name
@@ -187,10 +186,8 @@ class PlotManager:
 
     @classmethod
     def add(cls, win):
-        print(win)
         cls.remove(win)
         callback = lambda a: cls.remove(a())
-        print('windows add!')
         cls.windows.insert(0, weakref.ref(win, callback))
         
     @classmethod

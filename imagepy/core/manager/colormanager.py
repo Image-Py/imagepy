@@ -29,11 +29,11 @@ class ColorManager:
     @classmethod
     def get_color(cls, app=None):
         rst = None
-        dlg = wx.ColourDialog(app)
-        dlg.GetColourData().SetChooseFull(True)
-        if dlg.ShowModal() == wx.ID_OK:
-            rst = dlg.GetColourData().GetColour()
-        dlg.Destroy()
+        dialog = wx.ColourDialog(app)
+        dialog.GetColourData().SetChooseFull(True)
+        if dialog.ShowModal() == wx.ID_OK:
+            rst = dialog.GetColourData().GetColour()
+        dialog.Destroy()
         return rst
 
     @classmethod

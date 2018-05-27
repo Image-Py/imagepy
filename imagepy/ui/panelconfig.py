@@ -87,12 +87,10 @@ class ParaDialog (wx.Dialog):
     def para_check(self, para, key):pass
 
     def para_changed(self, key):
-
         para = self.para
         for p in list(para.keys()):
             if p in self.ctrl_dic:
                 para[p] = self.ctrl_dic[p].GetValue()
-        
         sta = sum([i is None for i in list(para.values())])==0
         self.btn_OK.Enable(sta)
         if not sta: return

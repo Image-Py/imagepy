@@ -86,16 +86,16 @@ class CMapPanel(wx.Panel):
         x,y = event.GetX()-self.offset[0], event.GetY()-self.offset[1]
         self.idx = self.pick(x, y)
         if self.idx==-1:return
-        dlg = wx.ColourDialog(self)
-        dlg.GetColourData().SetChooseFull(True)
-        if dlg.ShowModal() == wx.ID_OK:
-            rst = dlg.GetColourData().GetColour()
+        dialog = wx.ColourDialog(self)
+        dialog.GetColourData().SetChooseFull(True)
+        if dialog.ShowModal() == wx.ID_OK:
+            rst = dialog.GetColourData().GetColour()
             x = self.pts[self.idx][0]
             self.pts[self.idx] = (x,)+rst[:-1]
             self.idx=-1
             self.cmap[:] = self.linear_color(self.pts)
             self.update = True
-        dlg.Destroy()
+        dialog.Destroy()
         self.handle()
 
 

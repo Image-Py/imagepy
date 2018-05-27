@@ -75,7 +75,7 @@ class ImagePy(wx.Frame):
         self.Centre( wx.BOTH )
         if(IPy.uimode()=='ij'):
             self.SetMaxSize((-1, self.GetSize()[1]))
-            self.SetMinSize((-1, self.GetSize()[1]))
+            self.SetMinSize(self.GetSize())
         self.update = False
 
         self.Bind(wx.EVT_CLOSE, self.on_close)

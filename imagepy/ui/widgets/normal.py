@@ -114,14 +114,14 @@ class ColorCtrl(wx.Panel):
         
     def oncolor(self, event):
         rst = None
-        dlg = wx.ColourDialog(self)
-        dlg.GetColourData().SetChooseFull(True)
-        if dlg.ShowModal() == wx.ID_OK:
-            rst = dlg.GetColourData().GetColour()
+        dialog = wx.ColourDialog(self)
+        dialog.GetColourData().SetChooseFull(True)
+        if dialog.ShowModal() == wx.ID_OK:
+            rst = dialog.GetColourData().GetColour()
             self.ctrl.SetBackgroundColour(rst)
             self.ctrl.SetValue(rst.GetAsString(wx.C2S_HTML_SYNTAX))
             self.f(event)
-        dlg.Destroy()
+        dialog.Destroy()
     
     def SetValue(self, color):
         self.ctrl.SetBackgroundColour(color)

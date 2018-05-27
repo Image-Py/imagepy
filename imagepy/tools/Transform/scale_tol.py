@@ -62,8 +62,8 @@ class Plugin(Filter):
     title = 'Scale'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'kx': 1, 'ky':1, 'ox':0, 'oy':0, 'img':True, 'msk':False}
-    view = [(float, 'KX', (-100,100), 3, ''),
-            (float, 'kx', (-100,100), 3, 'KY', 'ky', ''),
+    view = [(float, 'kx', (-100,100), 3, 'KX', ''),
+            (float, 'ky', (-100,100), 3, 'KY', ''),
             (int, 'ox', (-10000,10000), 0, 'OffX', 'pix'),
             (int, 'oy', (-10000,10000), 0, 'OffY', 'pix'),
             (bool, 'img', 'scale image'),

@@ -40,7 +40,6 @@ class Free:
         return self.dialog.ShowModal()
         
     def start(self, para=None, callback=None):
-        print('xxxxxxxxxxxxxxxxxx')
         if not self.load():return
         if para!=None or self.show() == wx.ID_OK:
             if para==None:para = self.para
@@ -51,19 +50,3 @@ class Free:
                 threading.Thread(target = self.runasyn, args = (para, callback)).start()
             else: 
                 self.runasyn(para, callback)
-                '''
-                self.run(para)
-                if not callback is None:
-                    callback()
-                '''
-            #if not thd:t.join()
-
-            #self.run(para)
-            '''
-            run = lambda p=para:self.run(p)
-            
-            print( thd, '--------------------new thread')
-            thread = threading.Thread(None, run, ())
-            thread.start()
-            if not thd: thread.join()
-            '''

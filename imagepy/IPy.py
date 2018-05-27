@@ -108,16 +108,16 @@ def alert(info, title="ImagePy Alert!"):
         print('ImagePy Alert >>> %s'%title)
         print(info)
     else:
-        dlg=wx.MessageDialog(curapp, info, title, wx.OK)
-        dlg.ShowModal()
-        dlg.Destroy()
+        dialog=wx.MessageDialog(curapp, info, title, wx.OK)
+        dialog.ShowModal()
+        dialog.Destroy()
 
 # MT alert = lambda info, title='image-py':callafter(alert_, *(info, title))
 
 def yes_no(info, title="ImagePy Yes-No ?!"):
-    dlg = wx.MessageDialog(curapp, info, title, wx.YES_NO | wx.CANCEL)
-    rst = dlg.ShowModal()
-    dlg.Destroy()
+    dialog = wx.MessageDialog(curapp, info, title, wx.YES_NO | wx.CANCEL)
+    rst = dialog.ShowModal()
+    dialog.Destroy()
     dic = {wx.ID_YES:'yes', wx.ID_NO:'no', wx.ID_CANCEL:'cancel'}
     return dic[rst]
 
