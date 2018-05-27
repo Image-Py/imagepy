@@ -12,8 +12,8 @@ class SetBackground(Simple):
     """Calculator Plugin derived from imagepy.core.engine.Simple """
     title = 'Set Background'
     note = ['all']
-    para = {'img':'None','op':'Mean', 'k':0.5, 'kill':False}
-    view = [('img','background', 'img', '8-bit'),
+    para = {'img':None,'op':'Mean', 'k':0.5, 'kill':False}
+    view = [('img','img', 'background', '8-bit'),
             (list, 'op', ['Mean', 'Clip'], str, 'mode', ''),
             (float, 'k', (0,1), 1, 'blender', ''),
             (bool, 'kill', 'kill')]
@@ -22,6 +22,7 @@ class SetBackground(Simple):
         if para['kill']:
             ips.backimg = None
         else:
+            print(ImageManager.get())
             img = ImageManager.get(para['img']).img
             if img.dtype != np.uint8 or img.shape[:2] != ips.img.shape[:2]:
                 IPy.alert('a background image must be 8-bit and with the same size')

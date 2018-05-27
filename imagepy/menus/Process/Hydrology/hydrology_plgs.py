@@ -123,7 +123,7 @@ class Watershed(Filter):
     note = ['8-bit', 'auto_snap', 'not_channel', 'preview']
     
     para = {'sigma':1.0, 'thr':0, 'con':False, 'ud':True, 'type':'white line'}
-    view = [(float, (0,5), 1, 'sigma', 'sigma', 'pix'),
+    view = [(float, 'sigma', (0,5), 1, 'sigma', 'pix'),
             ('slide', 'thr', (0,255), 0, 'Low'),
             (bool, 'con', 'full connectivity'),
             (bool, 'ud', 'ascend'),
