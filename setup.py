@@ -14,7 +14,7 @@ def get_data_files():
 
 if __name__ == '__main__':
     setup(name='imagepy',
-        version='0.16',
+        version='0.19',
         url='https://github.com/Image-Py/imagepy',
         description='interactive python image-processing plugin framework',
         long_description=descr,
@@ -27,6 +27,10 @@ if __name__ == '__main__':
             'scikit-image',
             'shapely',
             'wxpython',
+            'pandas',
+            'xlrd',
+            'xlwt',
+            'openpyxl',
             'numba'
         ],
     )

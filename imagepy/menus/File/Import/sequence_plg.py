@@ -5,7 +5,7 @@ Created on Sat Oct 15 14:42:55 2016
 """
 
 from imagepy.core.util import fileio
-from scipy.misc import imread
+from skimage.io import imread
 from imagepy.core.manager import ReaderManager, ViewerManager
 from imagepy.core.engine import Free
 from imagepy import IPy

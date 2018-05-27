@@ -139,7 +139,7 @@ class ImagePlus:
         self.snap, self.imgs[self.cur] = self.imgs[self.cur], self.snap
 
 if __name__=='__main__':
-    from scipy.misc import imread
+    from skimage.io import imread
     img = imread('results.bmp')
     ips = ImagePlus([img, 255-img])
 

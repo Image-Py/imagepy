@@ -122,7 +122,7 @@ def find_maximum(img, tor, mode = True):
     return idx
 
 if __name__ == '__main__':
-    from scipy.misc import imread
+    from skimage.io import imread
     from scipy.ndimage import gaussian_filter
     from time import time
     import matplotlib.pyplot as plt

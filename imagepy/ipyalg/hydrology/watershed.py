@@ -1,7 +1,7 @@
 import numpy as np
 from numba import jit
 from scipy.ndimage import label, generate_binary_structure
-from scipy.misc import imread, imsave
+from skimage.io import imread, imsave
 
 def neighbors(shape, conn=1):
     dim = len(shape)
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     plt.imshow(markers)
     plt.show()
     '''
-    from scipy.misc import imread
+    from skimage.io import imread
     import matplotlib.pyplot as plt
     from time import time
     

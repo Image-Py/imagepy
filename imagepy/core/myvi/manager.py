@@ -3,7 +3,7 @@ import numpy as np
 import moderngl
 from time import time
 
-from scipy.misc import imread
+from skimage.io import imread
 import numpy as np
 from math import sin, cos, tan, pi
 import scipy.ndimage as nimg

@@ -201,7 +201,7 @@ def ridge(img, mark, up=True):
         else: mark[i] = 0
 
 if __name__ == '__main__':
-    from scipy.misc import imread
+    from skimage.io import imread
     import scipy.ndimage as ndimg
     import matplotlib.pyplot as plt
     from time import time

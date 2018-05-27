@@ -1,4 +1,4 @@
-from scipy.misc import imread
+from skimage.io import imread
 import matplotlib.pyplot as plt
 from skimage.morphology import skeletonize
 from scipy.ndimage import distance_transform_edt

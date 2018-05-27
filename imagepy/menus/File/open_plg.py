@@ -1,5 +1,5 @@
 import wx,os,sys
-from scipy.misc import imread
+from skimage.io import imread
 
 if sys.version_info[0]==2:
     from urllib2 import urlopen

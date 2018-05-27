@@ -303,7 +303,7 @@ if __name__=='__main__':
     sys.path.append('../')
     import numpy as np
     from imageplus import ImagePlus
-    from scipy.misc import imread
+    from skimage.io import imread
     img = imread('../imgs/flower.jpg')
     app = wx.PySimpleApp()
     frame = wx.Frame(None)

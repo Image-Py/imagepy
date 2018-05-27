@@ -1,7 +1,7 @@
 from imagepy import IPy
 from imagepy.core.engine import Free
 from imagepy.core.manager import ReaderManager, WriterManager, ViewerManager
-from scipy.misc import imread
+from skimage.io import imread
 import os.path as osp, os
 import numpy as np
 

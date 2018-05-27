@@ -2,4 +2,8 @@ scikit-image
 shapely
 wxpython
 numba
+pandas
+xlrd
+xlwt
+openpyxl
 pydicom

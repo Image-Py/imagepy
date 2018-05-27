@@ -5,7 +5,7 @@ Created on Mon Dec  5 04:34:09 2016
 @author: yxl
 """
 import wx
-from scipy.misc import imsave
+from skimage.io import imsave
 from imagepy.core.engine import Simple
 from imagepy.core.manager import WriterManager, ViewerManager
 from imagepy import IPy, root_dir
