@@ -67,7 +67,7 @@ class Plugin(wx.Panel):
 		if ips is None:return
 		hist = ips.histogram()
 		self.curvepan.set_hist(hist)
-		self.handle()
+		self.handle(None)
 
 	def on_clear(self, event):
 		ips = IPy.get_ips()
@@ -83,7 +83,7 @@ class Plugin(wx.Panel):
 		if ips is None:return
 		hist = ips.histogram()
 		self.curvepan.set_hist(hist)
-		self.handle()
+		self.handle(None)
 
 	def on_invert(self, event):
 		self.curvepan.SetValue([(0,255),(255,0)])
@@ -91,4 +91,4 @@ class Plugin(wx.Panel):
 		if ips is None:return
 		hist = ips.histogram()
 		self.curvepan.set_hist(hist)
-		self.handle()
+		self.handle(None)

@@ -96,7 +96,9 @@ class CurvePanel(wx.Panel):
         
     def set_hist(self, hist):
         if hist is None:self.hist=None
-        else:self.hist = (hist*self.l/hist.max()).astype(np.uint8)
+        else:
+            self.hist = (hist*self.l/hist.max())
+            self.logh = (np.log(self.hist+1.0))*(self.l/(np.log(self.l+1)))
         self.update = True
         
     def set_pts(self, pts):
@@ -111,8 +113,12 @@ class CurvePanel(wx.Panel):
         # w, h = self.GetClientSize()
         
         # the main draw process 
-        dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID))
+        
         if not self.hist is None:      
+            dc.SetPen(wx.Pen((200,200,200), width=1, style=wx.SOLID))
+            for i in np.linspace(0,self.l,256).astype(np.int16):
+                dc.DrawLine(i+ox,self.l+1+oy,i+ox,self.l+1-self.logh[i]+oy)
+            dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID))
             for i in np.linspace(0,self.l,256).astype(np.int16):
                 dc.DrawLine(i+ox,self.l+1+oy,i+ox,self.l+1-self.hist[i]+oy)
         x, y = np.array(self.pts).T

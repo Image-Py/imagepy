@@ -34,7 +34,8 @@ class HistCanvas(wx.Panel):
         wx.BufferedPaintDC(self, self.buffer)
         
     def SetValue(self, hist):
-        self.hist = (hist*80/hist.max()).astype(np.uint8)
+        self.hist = (hist*80.0/hist.max())
+        self.logh = (np.log(self.hist+1.0))*(80/(np.log(81)))
         self.update = True
         
     def set_lim(self, x1, x2):
@@ -49,8 +50,12 @@ class HistCanvas(wx.Panel):
     
         # the main draw process 
         print("drawing histogram")
-        dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID))    
+           
         if not self.hist is None:
+            dc.SetPen(wx.Pen((200,200,200), width=1, style=wx.SOLID)) 
+            for i in range(256):
+                dc.DrawLine(i,80,i,80-self.logh[i])
+            dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID)) 
             for i in range(256):
                 dc.DrawLine(i,80,i,80-self.hist[i])            
         dc.SetPen(wx.Pen((0,0,0), width=1, style=wx.SOLID))

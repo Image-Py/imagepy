@@ -150,10 +150,10 @@ class Plugin( wx.Panel ):
 		ips = IPy.get_ips()
 		if ips is None: return
 		hist = ips.histogram()
-		self.histpan.set_hist(hist)
+		self.histpan.SetValue(hist)
 	
 	def on_stack( self, event ):
 		ips = IPy.get_ips()
 		if ips is None: return
 		hists = ips.histogram(stack=True)
-		self.histpan.set_hist(hists)
+		self.histpan.SetValue(hists)
