@@ -22,7 +22,7 @@ def load_plugins():
 def uimode():
     if curapp is None: return 'no'
     from .core import manager
-    return manager.ConfigManager.get('uistyle')
+    return manager.ConfigManager.get('uistyle') or 'ipy'
 
 def get_window():
     from .core import manager
