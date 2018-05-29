@@ -18,7 +18,7 @@ class Plugin(Simple):
 
     def load(self, ips):
         self.view = [(str, 'name', 'Name', ''),
-            (list, 'format',list(sorted(WriterManager.all())), str, 'Format', '')]
+            (list, 'format',list(sorted(WriterManager.get())), str, 'Format', '')]
         return True
 
     def show(self):

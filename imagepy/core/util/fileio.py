@@ -71,6 +71,7 @@ class Writer(Simple):
     def run(self, ips, imgs, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        write = WriterManager.get(fe[1:])
-        group, write = (True, write[0]) if isinstance(write, tuple) else (False, write)
-        write(para['path'], imgs if group else ips.img)
+        write = WriterManager.get(fe[1:], 'img')
+        write2 = write or WriterManager.get(fe[1:], 'imgs')
+        print(write2, write)
+        write2(para['path'], imgs if write is None else ips.img)

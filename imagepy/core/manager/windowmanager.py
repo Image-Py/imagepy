@@ -68,14 +68,6 @@ class ImageManager:
             title = "{}-{}".format(name,i)
             if not title in titles:
                 return title
-    '''       
-    @classmethod
-    def close(cls, name):
-        win = cls.get(name)
-        if win==None:return
-        cls.remove(win)
-        win.close()
-    '''
         
 class TextLogManager:
     windows = {}

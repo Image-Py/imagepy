@@ -12,7 +12,7 @@ class SaveImage(fileio.Writer):
 	title = 'Save'
 
 	def load(self, ips):
-		self.filt = sorted(WriterManager.all())
+		self.filt = sorted(WriterManager.get(tag='img'))
 		return True
 
 class WindowCapture(fileio.Writer):

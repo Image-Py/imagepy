@@ -37,11 +37,18 @@ class WriterManager:
             cls.writer[tag][i.lower()] = write
         
     @classmethod
-    def get(cls, ext, tag='img'):
-        if ext is None: return sorted(cls.writer[tag].keys())
-        if not ext.lower() in cls.writer[tag]:
-            return None
-        return cls.writer[tag][ext.lower()]
+    def get(cls, ext=None, tag='img'):
+        if ext is None and tag is None:
+            ls = [cls.writer[i].keys() for i in cls.writer.keys()]
+            return sorted([x for j in ls for x in j])
+        elif ext is None and not tag is None:
+            return sorted(cls.writer[tag].keys())
+        elif not ext is None and tag is None:
+            for i in cls.writer.values():
+                if ext.lower() in i: return i[ext.lower()]
+        elif not tag is None and not ext is None:
+            if ext.lower() in cls.writer[tag]:
+                return cls.writer[tag][ext.lower()]
 
 class ViewerManager:
     viewer = {}
