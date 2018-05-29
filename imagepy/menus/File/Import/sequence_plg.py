@@ -17,7 +17,7 @@ class Plugin(Free):
     para = {'path':'', 'start':0, 'end':0, 'step':1, 'title':'sequence'}
 
     def load(self):
-        self.filt = sorted(ReaderManager.all())
+        self.filt = sorted(ReaderManager.get())
         return True
 
     def show(self):

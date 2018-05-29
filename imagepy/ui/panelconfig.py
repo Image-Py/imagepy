@@ -3,6 +3,7 @@
 import wx, platform
 from ..core.manager import ImageManager, WindowsManager, TableManager
 from .widgets import *
+import weakref
 
 widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl,
             float:NumCtrl, 'lab':Label, bool:Check, str:TextCtrl, 
@@ -22,7 +23,7 @@ class ParaDialog (wx.Dialog):
         boxBack.Add(self.lst, 0, wx.ALL, 10)
         self.SetSizer( boxBack )
         self.Layout()
-        self.handle = self.handle_
+        #self.handle = self.handle_
 
     def commit(self, state):
         self.Destroy()
@@ -50,6 +51,13 @@ class ParaDialog (wx.Dialog):
         self.reset(para)
         self.add_confirm(modal)
         self.pack()
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        print('bind close')
+    
+    
+    def OnDestroy( self, event ):
+        self.set_handle(None)
+        del self.ctrl_dic
 
     def parse(self, para) :
         self.add_ctrl_(widgets[para[0]], *para[1:])
@@ -65,9 +73,10 @@ class ParaDialog (wx.Dialog):
 
     def add_ctrl_(self, Ctrl, key, p):
         ctrl = Ctrl(self, *p)
-        if not p[0] is None: self.ctrl_dic[key] = ctrl
+        if not p[0] is None: 
+            self.ctrl_dic[key] = ctrl
         if hasattr(ctrl, 'Bind'):
-            ctrl.Bind(None, lambda x : self.para_changed(key))
+            ctrl.Bind(None, self.para_changed)
         pre = ctrl.prefix if hasattr(ctrl, 'prefix') else None
         post = ctrl.postfix if hasattr(ctrl, 'postfix') else None
         self.tus.append((pre, post))
@@ -109,15 +118,12 @@ class ParaDialog (wx.Dialog):
     def get_para(self):
         return self.para
 
-    def set_handle(self, handle):
+    def set_handle(self, handle=None):
         self.handle = handle
-        if handle==None: self.handle = self.handle_
-
-    def handle_(self, para):
-        print(para)
+        # if handle==None: self.handle = self.handle_
 
     def __del__( self ):
-        pass
+        print('panel config deleted!')
 
 if __name__ == '__main__':
     view = [(float, 'r', (0,20), 1, '半径', 'mm'),

@@ -100,7 +100,7 @@ class Filter:
     def show(self, temp=ParaDialog):
         self.dialog = temp(WindowsManager.get(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
-        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
+        self.dialog.set_handle(lambda x:self.preview(self.ips, x))
         if self.modal: return self.dialog.ShowModal()
         self.dialog.on_ok = lambda : self.ok(self.ips)
         self.dialog.on_cancel = lambda : self.cancel(self.ips)
@@ -202,3 +202,6 @@ class Filter:
             else:self.cancel(ips)
             self.dialog.Destroy()
         else: self.show()
+
+    def __del__(self):
+        print('filter del')

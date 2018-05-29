@@ -138,6 +138,9 @@ class ImagePlus:
         if self.snap is None:return
         self.snap, self.imgs[self.cur] = self.imgs[self.cur], self.snap
 
+    def __del__(self):
+        print(self.title, '>>> deleted ips')
+
 if __name__=='__main__':
     from skimage.io import imread
     img = imread('results.bmp')

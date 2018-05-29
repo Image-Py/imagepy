@@ -35,9 +35,9 @@ class Free:
         
     def show(self):
         if self.view==None:return wx.ID_OK
-        self.dialog = ParaDialog(WindowsManager.get(), self.title)
-        self.dialog.init_view(self.view, self.para, False, True)
-        return self.dialog.ShowModal()
+        with ParaDialog(WindowsManager.get(), self.title) as dialog:
+            dialog.init_view(self.view, self.para, False, True)
+            return dialog.ShowModal()
         
     def start(self, para=None, callback=None):
         if not self.load():return

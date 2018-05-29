@@ -62,3 +62,6 @@ class TablePlus():
 
     def count_range(self):
         self.range = pd.DataFrame([self.data.min(), self.data.max()])
+
+    def __del__(self):
+        print(self.title, '>>> deleted tps')
