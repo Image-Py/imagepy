@@ -19,13 +19,13 @@ class Distance:
     def __init__(self, body=None, unit=None):
         self.body = body if body!=None else []
         self.buf, self.unit = [], unit
-        
+
     def addline(self):
         line = self.buf
         if len(line)!=2 or line[0] !=line[-1]:
             self.body.append(line)
         self.buf = []
-    
+
     def snap(self, x, y, lim):
         minl, idx = 1000, None
         for i in self.body:
@@ -33,19 +33,20 @@ class Distance:
                 d = (j[0]-x)**2+(j[1]-y)**2
                 if d < minl:minl,idx = d,(i, i.index(j))
         return idx if minl**0.5<lim else None
-        
+
     def pick(self, x, y, lim):
         return self.snap(x, y, lim)
 
     def draged(self, ox, oy, nx, ny, i):
         i[0][i[1]] = (nx, ny)
-        
+
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
         font = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         dc.SetFont(font)
-        dc.DrawLines([f(*i) for i in self.buf])
+        if self.buf:
+            dc.DrawLines([f(*i) for i in self.buf])
         for i in self.buf:dc.DrawCircle(f(*i),2)
         for line in self.body:
             dc.DrawLines([f(*i) for i in line])
@@ -79,7 +80,7 @@ class Plugin(Tool):
         self.curobj = None
         self.doing = False
         self.odx,self.ody = 0, 0
-            
+
     def mouse_down(self, ips, x, y, btn, **key):
         if key['ctrl'] and key['alt']:
             if isinstance(ips.mark, Distance):
@@ -92,7 +93,7 @@ class Plugin(Tool):
                 if isinstance(ips.mark, Distance):
                     self.curobj = ips.mark.pick(x, y, lim)
                 if self.curobj!=None:return
-                    
+
                 if not isinstance(ips.mark, Distance):
                     ips.mark = Distance(unit=ips.unit)
                     self.doing = True
@@ -103,20 +104,20 @@ class Plugin(Tool):
                 ips.mark.buf.append((x,y))
                 self.curobj = (ips.mark.buf, -1)
                 self.odx, self.ody = x,y
-            
+
         elif btn==3:
             if self.doing:
                 ips.mark.buf.append((x,y))
                 self.doing = False
                 ips.mark.addline()
         ips.update = True
-    
+
     def mouse_up(self, ips, x, y, btn, **key):
         self.curobj = None
-    
+
     def mouse_move(self, ips, x, y, btn, **key):
         if not isinstance(ips.mark, Distance):return
-        lim = 5.0/key['canvas'].get_scale()      
+        lim = 5.0/key['canvas'].get_scale()
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if ips.mark.snap(x, y, lim)!=None:
@@ -125,6 +126,6 @@ class Plugin(Tool):
             ips.mark.draged(self.odx, self.ody, x, y, self.curobj)
             ips.update = True
         self.odx, self.ody = x, y
-        
+
     def mouse_wheel(self, ips, x, y, d, **key):
         pass
