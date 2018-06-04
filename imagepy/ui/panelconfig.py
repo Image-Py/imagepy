@@ -9,7 +9,7 @@ widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl,
             float:NumCtrl, 'lab':Label, bool:Check, str:TextCtrl, 
             list:Choice, 'img':ImageList, 'color':ColorCtrl, 
             'any':AnyType, 'chos':Choices, 'fields':TableFields,
-            'hist':HistCanvas}
+            'field':TableField, 'hist':HistCanvas}
 
 class ParaDialog (wx.Dialog):
     def __init__( self, parent, title):
