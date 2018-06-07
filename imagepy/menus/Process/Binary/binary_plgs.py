@@ -12,9 +12,9 @@ from imagepy.core.engine import Filter
 from skimage.morphology import convex_hull_object, white_tophat,black_tophat
 from skimage.morphology import disk
 
-class WhiteTophat(Filter):
-    """Closing: derived from imagepy.core.engine.Filter """
-    title = 'WhiteTophat'
+class WhiteTopHat(Filter):
+    """WhiteTopHat: derived from imagepy.core.engine.Filter """
+    title = 'WhiteTopHat'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
     para = {'disk_Size':3}
     view = [(int, 'disk_Size', (1,100), 0, 'width', 'pix')]
@@ -23,7 +23,16 @@ class WhiteTophat(Filter):
         selem = disk(para['disk_Size']);
         white_tophat(snap, selem, out=img)
 
+class BlackDownHat(Filter):
+    """BlackDownHat: derived from imagepy.core.engine.Filter """
+    title = 'BlackDownHat'
+    note = ['8-bit', 'auto_msk', 'auto_snap','preview']
+    para = {'disk_Size':3}
+    view = [(int, 'disk_Size', (1,100), 0, 'width', 'pix')]
 
+    def run(self, ips, snap, img, para = None):
+        selem = disk(para['disk_Size']);
+        black_tophat(snap, selem, out=img)
 
 class Closing(Filter):
     """Closing: derived from imagepy.core.engine.Filter """
@@ -105,4 +114,4 @@ class Convex(Filter):
         img[convex_hull_object(snap)] = 255
 
 
-plgs = [Dilation, Erosion, '-', Closing, Opening, '-', WhiteTophat,Outline, FillHoles, Convex]
+plgs = [Dilation, Erosion, '-', Closing, Opening, '-', WhiteTopHat, BlackDownHat, '-',Outline, FillHoles, Convex]

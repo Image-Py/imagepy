@@ -24,8 +24,8 @@ class FileDrop(wx.FileDropTarget):
 
 class ImagePy(wx.Frame):
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', 
-                            size = wx.Size(-1,-1), pos = wx.DefaultPosition, 
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy',
+                            size = wx.Size(-1,-1), pos = wx.DefaultPosition,
                             style = wx.RESIZE_BORDER|wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
         self.auimgr = aui.AuiManager()
@@ -37,7 +37,7 @@ class ImagePy(wx.Frame):
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         IPy.curapp = self
         self.SetSizeHints( wx.Size(900,700) if IPy.uimode() == 'ipy' else wx.Size( 600,-1 ))
-        
+
 
         self.menubar = pluginloader.buildMenuBarByPath(self, 'menus', 'plugins', None, True)
         self.SetMenuBar( self.menubar )
@@ -46,7 +46,7 @@ class ImagePy(wx.Frame):
         #sizer = wx.BoxSizer(wx.VERTICAL)
         self.toolbar = toolsloader.build_tools(self, 'tools', 'plugins', None, True)
 
-        
+
         print(IPy.uimode())
         if IPy.uimode()=='ipy': self.load_aui()
         else: self.load_ijui()
@@ -94,7 +94,7 @@ class ImagePy(wx.Frame):
         self.widgets = widgetsloader.build_widgets(self, 'widgets', 'plugins')
         self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) .Layer( 10 ) )
-        
+
         self.canvasnb = CanvasNoteBook( self)
         self.auimgr.AddPane( self.canvasnb, wx.aui.AuiPaneInfo() .Center() .CaptionVisible( False ).PinButton( True ).Dock()
             .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ). BottomDockable( True ).TopDockable( False )
@@ -102,19 +102,19 @@ class ImagePy(wx.Frame):
 
         self.tablenb = TableNoteBook( self)
         self.auimgr.AddPane( self.tablenb, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock().Hide()
-            .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Tables') . 
+            .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Tables') .
             BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
-        #self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)        
+        #self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)
 
     def load_ijui(self):
         self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Top() .CaptionVisible( False ).PinButton( True )
-            .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True ) 
+            .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True )
             .BottomDockable( False ).TopDockable( False ).LeftDockable( False ).RightDockable( False )
             .MinSize(wx.Size(-1, 32)). Layer( 10 ) )
         self.widgets = widgetsloader.build_widgets(self, 'widgets', 'plugins')
         self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Float().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ).Hide() .Layer( 10 ) )
-        
+
     def load_dev(self):
         return
         self.devpan = wx.aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
@@ -157,7 +157,7 @@ class ImagePy(wx.Frame):
                 else:
                     v = max([(i[0]+1)*100.0/i[1] for i in arr])
                     wx.CallAfter(self.set_progress, v)
-            except: 
+            except:
                 pass
     def set_info(self, value):
         self.txt_info.SetLabel(value)

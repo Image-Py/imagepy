@@ -13,7 +13,8 @@ class FeatMark:
 
     def draw(self, dc, f, **key):
         for i in self.feats:
-            dc.DrawCircle(f(i.pt), 3)
+            # print('i.pt:{},{}'.format(type(f(i.pt))，i.pt))
+            dc.DrawCircle(f(i.pt[0], i.pt[1]), 3)
 
 class Surf(Filter):
     title = 'Surf Detect'
@@ -125,18 +126,24 @@ class Match(Simple):
 
     #process
     def run(self, ips, imgs, para = None):
+
         ips1 = ImageManager.get(para['img1'])
         ips2 = ImageManager.get(para['img2'])
 
         detector = CVSURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
             nOctaveLayers=para['int'], upright=para['upright'],extended=para['ext'])
+
         kps1, feats1 = detector.detectAndCompute(ips1.img, None)
         kps2, feats2 = detector.detectAndCompute(ips2.img, None)
+
         dim, std = {'None':0, 'Affine':6, 'Homo':8}[para['trans']], para['std']/100.0
+
         style = para['style']=='Blue/Yellow'
+
         idx, msk, m = Matcher(dim, std).filter(kps1,feats1,kps2,feats2)
         picker1 = Pick(kps1, kps2, idx, msk, ips1, ips2, True, style)
         picker2 = Pick(kps1, kps2, idx, msk, ips1, ips2, False, style)
+
         ips1.tool, ips1.mark = picker1, picker1
         ips2.tool, ips2.mark = picker2, picker2
         if para['log']:self.log(kps1, kps2, msk, m, dim)
@@ -153,7 +160,7 @@ class Match(Simple):
         sb.append('%15.4f%15.4f%15.4f'%tuple(v.A1[3:6]))
         row = [0,0,1] if dim==6 else list(v[-2:])+[1]
         sb.append('%15.4f%15.4f%15.4f'%tuple(row))
-        
+
         cont = '\n'.join(sb)
         IPy.write(cont, 'Surf')
 

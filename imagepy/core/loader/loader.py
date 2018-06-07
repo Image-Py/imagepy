@@ -21,9 +21,9 @@ def getpath(root, path):
 def extend_plugins(path, lst, err):
     rst = []
     for i in lst:
-        if isinstance(i, tuple) or i=='-': 
+        if isinstance(i, tuple) or i=='-':
             rst.append(i)
-            
+
         elif i[-3:] == '.mc':
             pt = os.path.join(root_dir,path)
             f = open(pt+'/'+i, 'r', 'utf-8')
@@ -46,7 +46,7 @@ def extend_plugins(path, lst, err):
                     rst.extend([j if j=='-' else Widget(j) for j in plg.wgts])
                     for p in plg.wgts:
                         if not isinstance(p, str):WidgetsManager.add(p)
-                else: 
+                else:
                     rst.append(Widget(plg.Plugin))
                     WidgetsManager.add(plg.Plugin)
             except Exception as  e:
@@ -60,14 +60,14 @@ def extend_plugins(path, lst, err):
                     rst.extend([j for j in plg.plgs])
                     for p in plg.plgs:
                         if not isinstance(p, str):PluginsManager.add(p)
-                else: 
+                else:
                     rst.append(plg.Plugin)
                     PluginsManager.add(plg.Plugin)
             except Exception as  e:
                 err.append((path, i, sys.exc_info()[1]))
 
     return rst
-            
+
 def sort_plugins(catlog, lst):
     rst = []
     for i in catlog:
@@ -78,7 +78,7 @@ def sort_plugins(catlog, lst):
                 rst.append(j)
     rst.extend(lst)
     return rst
-        
+
 def build_plugins(path, err=False):
     root = err in (True, False)
     if root: sta, err = err, []
@@ -86,6 +86,8 @@ def build_plugins(path, err=False):
     cont = os.listdir(os.path.join(root_dir, path))
     for i in cont:
         subp = os.path.join(path,i)
+        print('build_plugins in :{}'.format(subp))
+
         if os.path.isdir(os.path.join(root_dir, subp)):
             sub = build_plugins(subp, err)
             if len(sub)!=0:subtree.append(sub)
@@ -94,20 +96,23 @@ def build_plugins(path, err=False):
         elif i[-3:] in ('.mc', '.md'):
             subtree.append(i)
     if len(subtree)==0:return []
-    
+
     rpath = path.replace('/', '.').replace('\\','.')
     #rpath = rpath[rpath.index('imagepy.'):]
     pg = __import__('imagepy.'+rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
         subtree = sort_plugins(pg.catlog, subtree)
+
+    print('path:{}'.format(path))
+
     subtree = extend_plugins(path, subtree, err)
-    
+
     if root and sta and len(err)>0:
         IPy.write('some plugin may be not loaded, but not affect otheres!')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
-    return (pg, subtree)  
-    
+    return (pg, subtree)
+
 def extend_tools(path, lst, err):
     rst = []
     for i in lst:
@@ -116,23 +121,23 @@ def extend_tools(path, lst, err):
             f = open(pt+'/'+i)
             cmds = f.readlines()
             f.close()
-            rst.append((Macros(i[:-3], [getpath(pt, i) for i in cmds]),  
+            rst.append((Macros(i[:-3], [getpath(pt, i) for i in cmds]),
                 os.path.join(root_dir, path)+'/'+i[:-3]+'.gif'))
         else:
             try:
                 rpath = path.replace('/', '.').replace('\\','.')
                 #rpath = rpath[rpath.index('imagepy.'):]
-                
+
                 plg = __import__('imagepy.'+rpath+'.'+i,'','',[''])
-                if hasattr(plg, 'plgs'): 
+                if hasattr(plg, 'plgs'):
                     for i,j in plg.plgs: rst.append((i, path+'/'+j))
-                else: rst.append((plg.Plugin, 
+                else: rst.append((plg.Plugin,
                     os.path.join(root_dir, path)+'/'+i.split('_')[0]+'.gif'))
             except Exception as e:
                 err.append((path, i, sys.exc_info()[1]))
     for i in rst:ToolsManager.add(i[0])
     return rst
-            
+
 def sort_tools(catlog, lst):
     rst = []
     for i in catlog:
@@ -143,7 +148,7 @@ def sort_tools(catlog, lst):
                 rst.append(j)
     rst.extend(lst)
     return rst
-    
+
 def build_tools(path, err=False):
     root = err in (True, False)
     if root: sta, err = err, []
@@ -167,12 +172,12 @@ def build_tools(path, err=False):
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
         subtree = sort_tools(pg.catlog, subtree)
-    if not root:subtree = extend_tools(path, subtree, err)    
-    elif sta and len(err)>0: 
+    if not root:subtree = extend_tools(path, subtree, err)
+    elif sta and len(err)>0:
         IPy.write('tools not loaded:')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
     return (pg, subtree)
-    
+
 def extend_widgets(path, lst, err):
     rst = []
     for i in lst:
@@ -185,7 +190,7 @@ def extend_widgets(path, lst, err):
             err.append((path, i, sys.exc_info()[1]))
     for i in rst:WidgetsManager.add(i)
     return rst
-            
+
 def sort_widgets(catlog, lst):
     rst = []
     for i in catlog:
@@ -196,7 +201,7 @@ def sort_widgets(catlog, lst):
                 rst.append(j)
     rst.extend(lst)
     return rst
-    
+
 def build_widgets(path, err=False):
     root = err in (True, False)
     if root: sta, err = err, []
@@ -219,8 +224,8 @@ def build_widgets(path, err=False):
     if hasattr(pg, 'catlog'):
         subtree = sort_widgets(pg.catlog, subtree)
     if not root:
-        subtree = extend_widgets(path, subtree, err)  
-    elif sta and len(err)>0: 
+        subtree = extend_widgets(path, subtree, err)
+    elif sta and len(err)>0:
         IPy.write('widgets not loaded:')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
     return (pg, subtree)
