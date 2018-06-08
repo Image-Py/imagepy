@@ -1,9 +1,12 @@
+#-*- coding：utf-8 -*-
 import cv2, wx
 from imagepy.core.engine import Filter, Simple, Tool
 from imagepy.core.manager import ImageManager
 from .matcher import Matcher
 import numpy as np
 from imagepy import IPy
+from skimage.color import rgb2gray
+from skimage.feature import ( match_descriptors, corner_harris, corner_peaks, ORB, plot_matches)
 
 CVSURF = cv2.xfeatures2d.SURF_create if cv2.__version__[0] =="3" else cv2.SURF
 
@@ -21,11 +24,11 @@ class Surf(Filter):
     note = ['all', 'not-slice']
 
     para = {'upright':False, 'oct':3, 'int':4, 'thr':1000, 'ext':False}
-    view = [(int, 'oct', (0,5), 0, 'octaves',  ''),
-            (int, 'int', (0,5), 0, 'intervals', ''),
-            (int, 'thr', (500,2000), 0, 'threshold', '1-100'),
-            (bool, 'ext', 'extended'),
-            (bool, 'upright', 'upright')]
+    view = [    (int, 'oct', (0,5), 0, 'octaves',  ''),
+                (int, 'int', (0,5), 0, 'intervals', ''),
+                (int, 'thr', (500,2000), 0, 'threshold', '1-100'),
+                (bool, 'ext', 'extended'),
+                (bool, 'upright', 'upright') ]
 
     def run(self, ips, snap, img, para):
         detector = CVSURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
@@ -94,22 +97,22 @@ class Match(Simple):
         titles = ImageManager.get_titles()
         self.para['img1'] = titles[0]
         self.para['img2'] = titles[0]
-        Match.view = [('lab', None, '=========  two image in 8-bit  ========='),
-                      (list, 'img1', titles, str, 'image1', ''),
-                      (list, 'img2', titles, str, 'image2', ''),
-                      ('lab', None, ''),
-                      ('lab', None, '======  parameter about the surf  ======'),
-                      (int, 'oct', (0,5), 0, 'octaves', ''),
-                      (int, 'int', (0,5), 0, 'intervals', ''),
-                      (int, 'thr', (500,2000), 0, 'threshold', '1-100'),
-                      (bool, 'ext', 'extended'),
-                      (bool, 'upright', 'upright'),
-                      ('lab', None, ''),
-                      ('lab', None, '======  how to match and display  ======'),
-                      (list, 'trans', ['None', 'Affine', 'Homo'], str, 'transform', ''),
-                      (int, 'std', (1, 5), 0, 'Std', 'torlerance'),
-                      (list, 'style', ['Blue/Yellow', 'Hide'], str, 'Aspect', 'color'),
-                      (bool, 'log', 'show log')]
+        Match.view = [  ('lab', None, '=========  two image in 8-bit  ========='),
+                          (list, 'img1', titles, str, 'image1', ''),
+                          (list, 'img2', titles, str, 'image2', ''),
+                          ('lab', None, ''),
+                          ('lab', None, '======  parameter about the surf  ======'),
+                          (int, 'oct', (0,5), 0, 'octaves', ''),
+                          (int, 'int', (0,5), 0, 'intervals', ''),
+                          (int, 'thr', (500,2000), 0, 'threshold', '1-100'),
+                          (bool, 'ext', 'extended'),
+                          (bool, 'upright', 'upright'),
+                          ('lab', None, ''),
+                          ('lab', None, '======  how to match and display  ======'),
+                          (list, 'trans', ['None', 'Affine', 'Homo'], str, 'transform', ''),
+                          (int, 'std', (1, 5), 0, 'Std', 'torlerance'),
+                          (list, 'style', ['Blue/Yellow', 'Hide'], str, 'Aspect', 'color'),
+                          (bool, 'log', 'show log') ]
         return True
 
     def filter_matches(self, kp1, kp2, matches, ratio = 0.75):
@@ -147,8 +150,36 @@ class Match(Simple):
         ips1.tool, ips1.mark = picker1, picker1
         ips2.tool, ips2.mark = picker2, picker2
         if para['log']:self.log(kps1, kps2, msk, m, dim)
+
+        tempPnt1 = np.float32([kps1[i1].pt for i1,_ in idx])
+        tempPnt2 = np.float32([kps2[i2].pt for _,i2 in idx]) # tidx = self.pair[:,1-self.host][self.msk]
+
+        newPnt1=[]
+        newPnt2=[]
+        for i in range(len(msk)):
+            if msk[i]:
+                newPnt1.append(tempPnt1[i])
+                newPnt2.append(tempPnt2[i])
+
+        # print('newPnt1:{}'.format(len(newPnt1)))
+        # print('newPnt2:{}'.format(len(newPnt2)))
+
+        H, _ = cv2.findHomography(tempPnt1, tempPnt2, cv2.RANSAC, 5.0)
+        # print('H type:{}'.format(type(H)))
+        # print('H shape:{}'.format(H.shape))
+        # print('H :{}'.format(H))
+
+        newImg = self.combine_images( ips2.img, ips1.img, H)
+
+        title = 'SURF Stitched image'
+        IPy.show_img([newImg], title)
+
+        # cv2.imwrite('savedImg.jpg',newImg)
+
+        # 这句话是做什么用的 ？？？
         ips1.update, ips2.update = True, True
 
+    # print surf result to the Name 'Surf' Console
     def log(self, pts1, pts2, msk, v, dim):
         sb = []
         sb.append('Image1:{} points detected!'.format(len(pts1)))
@@ -164,6 +195,27 @@ class Match(Simple):
         cont = '\n'.join(sb)
         IPy.write(cont, 'Surf')
 
+    def combine_images(self,img0,img1,h_matrix):
+        print('combining images... ')
+
+        points0 = np.array(
+            [[0, 0], [0, img0.shape[0]], [img0.shape[1], img0.shape[0]], [img0.shape[1], 0]], dtype=np.float32)
+        points0 = points0.reshape((-1, 1, 2))
+        points1 = np.array(
+            [[0, 0], [0, img1.shape[0]], [img1.shape[1], img0.shape[0]], [img1.shape[1], 0]], dtype=np.float32)
+        points1 = points1.reshape((-1, 1, 2))
+
+        points2 = cv2.perspectiveTransform(points1, h_matrix)
+
+        points = np.concatenate((points0, points2), axis=0)
+        [x_min, y_min] = np.int32(points.min(axis=0).ravel() - 0.5)
+        [x_max, y_max] = np.int32(points.max(axis=0).ravel() + 0.5)
+        H_translation = np.array([[1, 0, -x_min], [0, 1, -y_min], [0, 0, 1]])
+        # logger.debug('warping previous image...')
+        output_img = cv2.warpPerspective(img1, H_translation.dot(h_matrix), (x_max - x_min, y_max - y_min))
+        output_img[-y_min:img0.shape[0] - y_min, -x_min:img0.shape[1] - x_min] = img0
+        return output_img
+
 plgs = [Surf, Match]
 
 if __name__ == '__main__':
@@ -171,7 +223,7 @@ if __name__ == '__main__':
 
     detector = CVSURF(1000, nOctaves=3, nOctaveLayers=4, upright=False,extended=False)
     #img1 = cv2.imread('/home/yxl/opencv-2.4/samples/c/box.png', 0)
-    img1 = cv2.imread('/home/auss/Pictures/faces1.png',0)
+    img1 = cv2.imread('/Users/cooperjack/Desktop/0001_o.jpg',0)
     pts, des = detector.detectAndCompute(img1, None)
 
     matcher = cv2.BFMatcher(cv2.NORM_L2)
