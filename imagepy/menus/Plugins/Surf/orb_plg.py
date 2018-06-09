@@ -13,6 +13,7 @@ from skimage.transform import SimilarityTransform
 from skimage.transform import FundamentalMatrixTransform
 from skimage.transform import ProjectiveTransform
 
+import pandas as pd
 
 CVSURF = cv2.xfeatures2d.SURF_create if cv2.__version__[0] =="3" else cv2.SURF
 
@@ -98,8 +99,7 @@ class OrbMatch(Simple):
     note = ['all']
 
     #parameter
-    para = {'img1':'','img2':'','upright':False,  'log':False,
-            'oct':3, 'int':4, 'thr':1000}
+    para = {'img1':'','img2':'','upright':False,  'log':False, 'int':4}
 
     def load(self, ips):
         titles = ImageManager.get_titles()
@@ -110,9 +110,7 @@ class OrbMatch(Simple):
                           (list, 'img2', titles, str, 'image2', ''),
                           ('lab', None, ''),
                           ('lab', None, '======  parameter about the surf  ======'),
-                          (int, 'oct', (0,5), 0, 'octaves', ''),
-                          (int, 'int', (0,5), 0, 'intervals', ''),
-                          (int, 'thr', (500,2000), 0, 'threshold', '1-100')]
+                          (int, 'int', (0,5), 0, 'order', '')]
         return True
 
     # def filter_matches(self, kp1, kp2, matches, ratio = 0.75):
@@ -181,17 +179,25 @@ class OrbMatch(Simple):
         offset = SimilarityTransform(translation=-corner_min)
 
         # Warp pano0 to pano1 using 3rd order interpolation
-        img1_ = warp(ips1.img, offset.inverse, order = 3,
+        img1_ = warp(ips1.img, offset.inverse, order = para['int'],
                        output_shape=output_shape, cval=0)
 
         img1_mask = (img1_ != 0)
         img1_[~img1_mask] = 0
 
-        img2_ = warp(ips2.img, (model + offset).inverse,
+        img2_ = warp(ips2.img, (model + offset).inverse, order = para['int'],
                        output_shape=output_shape, cval=0)
 
         img2_[img1_mask] = 0
         test = (img1_+img2_)
+
+        print('model:{}'.format(model._inv_matrix))
+        print('(model + offset):{}'.format((model + offset)._inv_matrix))
+
+        dim = 3
+        self.log(keypoints1, keypoints2, matches12, (model + offset)._inv_matrix.flatten(), dim)
+        # print('offset:{}'.format(offset))
+
 
         test *= 255
         img1_ *= 255
@@ -202,17 +208,21 @@ class OrbMatch(Simple):
 
         title = 'Orb Stitched image'
         IPy.show_img([test.astype(np.uint8)], title)
+
+        titles=['x','y','z']
+        IPy.show_table(pd.DataFrame((model + offset)._inv_matrix, columns=titles), ips.title+'-region')
+
         # cv2.imwrite('orb.jpg',test)
     # print surf result to the Name 'Surf' Console
     def log(self, pts1, pts2, msk, v, dim):
         sb = []
         sb.append('Image1:{} points detected!'.format(len(pts1)))
         sb.append('Image2:{} points detected!\r\n'.format(len(pts2)))
-        sb.append('Matched Point:{0}/{1}\r\n'.format(msk.sum(),len(msk)))
+        sb.append('Matched Point:{0}/{1}\r\n'.format(len(msk),len(pts2)))
         if dim == 0: return
         sb.append('Transformation:')
-        sb.append('%15.4f%15.4f%15.4f'%tuple(v.A1[:3]))
-        sb.append('%15.4f%15.4f%15.4f'%tuple(v.A1[3:6]))
+        sb.append('%15.4f%15.4f%15.4f'%tuple(v[:3]))
+        sb.append('%15.4f%15.4f%15.4f'%tuple(v[3:6]))
         row = [0,0,1] if dim==6 else list(v[-2:])+[1]
         sb.append('%15.4f%15.4f%15.4f'%tuple(row))
 
