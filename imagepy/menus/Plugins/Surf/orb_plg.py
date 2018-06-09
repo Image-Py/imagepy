@@ -99,7 +99,7 @@ class OrbMatch(Simple):
     note = ['all']
 
     #parameter
-    para = {'img1':'','img2':'','upright':False,  'log':False, 'int':4}
+    para = {'img1':'','img2':'',  'log':False, 'int':4, 'num':200}
 
     def load(self, ips):
         titles = ImageManager.get_titles()
@@ -109,8 +109,10 @@ class OrbMatch(Simple):
                           (list, 'img1', titles, str, 'image1', ''),
                           (list, 'img2', titles, str, 'image2', ''),
                           ('lab', None, ''),
-                          ('lab', None, '======  parameter about the surf  ======'),
-                          (int, 'int', (0,5), 0, 'order', '')]
+                          ('lab', None, '======  parameter about the Orb  ======'),
+                          (int, 'int', (0,5), 3, 'order', ''),
+                          (int, 'num', (50,1000), 200, 'Descriptor_Num', '')
+                          ]
         return True
 
     # def filter_matches(self, kp1, kp2, matches, ratio = 0.75):
@@ -134,7 +136,8 @@ class OrbMatch(Simple):
         grayImg1 = rgb2gray(ips1.img)
         grayImg2 = rgb2gray(ips2.img)
 
-        descriptor_extractor = ORB(n_keypoints=200)
+        print('desciptor num:{}'.format(para['num']))
+        descriptor_extractor = ORB(n_keypoints=int(para['num']))
 
         descriptor_extractor.detect_and_extract(grayImg1)
         keypoints1 = descriptor_extractor.keypoints
@@ -179,13 +182,13 @@ class OrbMatch(Simple):
         offset = SimilarityTransform(translation=-corner_min)
 
         # Warp pano0 to pano1 using 3rd order interpolation
-        img1_ = warp(ips1.img, offset.inverse, order = para['int'],
+        img1_ = warp(ips1.img, offset.inverse, order = int(para['int']),
                        output_shape=output_shape, cval=0)
 
         img1_mask = (img1_ != 0)
         img1_[~img1_mask] = 0
 
-        img2_ = warp(ips2.img, (model + offset).inverse, order = para['int'],
+        img2_ = warp(ips2.img, (model + offset).inverse, order = int(para['int']),
                        output_shape=output_shape, cval=0)
 
         img2_[img1_mask] = 0
@@ -223,8 +226,10 @@ class OrbMatch(Simple):
         sb.append('Transformation:')
         sb.append('%15.4f%15.4f%15.4f'%tuple(v[:3]))
         sb.append('%15.4f%15.4f%15.4f'%tuple(v[3:6]))
-        row = [0,0,1] if dim==6 else list(v[-2:])+[1]
-        sb.append('%15.4f%15.4f%15.4f'%tuple(row))
+        sb.append('%15.4f%15.4f%15.4f'%tuple(v[6:9]))
+
+        # row = [0,0,1] if dim==6 else list(v[-2:])+[1]
+        # sb.append('%15.4f%15.4f%15.4f'%tuple(row))
 
         cont = '\n'.join(sb)
         IPy.write(cont, 'Surf')
