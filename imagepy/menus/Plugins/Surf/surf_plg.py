@@ -163,8 +163,10 @@ class Match(Simple):
 
         # print('newPnt1:{}'.format(len(newPnt1)))
         # print('newPnt2:{}'.format(len(newPnt2)))
-
-        H, _ = cv2.findHomography(tempPnt1, tempPnt2, cv2.RANSAC, 5.0)
+        # 第四个参数取值范围在 1 到 10 , 绝一个点对的阈值。原图像的点经过变换后点与目标图像上对应点的误差
+        # 超过误差就认为是 outlier
+        # 返回值中 H 为变换矩阵。mask是掩模，online的点
+        H, _ = cv2.findHomography(tempPnt1, tempPnt2, cv2.RANSAC, 1.0)
         # print('H type:{}'.format(type(H)))
         # print('H shape:{}'.format(H.shape))
         # print('H :{}'.format(H))

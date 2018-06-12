@@ -43,7 +43,8 @@ class Distance:
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(Setting['color'], width=1, style=wx.SOLID))
         dc.SetTextForeground(Setting['tcolor'])
-        font = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+
+        font = wx.Font(15, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         dc.SetFont(font)
         if self.buf:
             dc.DrawLines([f(*i) for i in self.buf])
@@ -57,6 +58,10 @@ class Distance:
             dis = norm((pts[:-1]-pts[1:]), axis=1)
             unit = 1 if self.unit is None else self.unit[0]
             for i,j in zip(dis, mid):
+                if j[0]>6:
+                    j-=5
+                if i <=0:
+                    continue
                 dc.DrawText('%.2f'%(i*unit), f(*j))
 
     def report(self, title):

@@ -46,7 +46,7 @@ class Orb(Filter):
         ips.orb_descriptors = descriptors1
         ips.mark = OrbFeatMark(keypoints1)
 
-        IPy.write("Detect completed, {} ORB points found!".format(len(keypoints1)), 'Surf')
+        IPy.write("Detect completed, {} ORB points found!".format(len(keypoints1)), 'Orb')
 
 class Pick(Tool):
     title = 'Key Point Pick Tool'
@@ -152,9 +152,10 @@ class OrbMatch(Simple):
         src = keypoints2[matches12[:, 1]][:, ::-1]
         dst = keypoints1[matches12[:, 0]][:, ::-1]
 
+
         model, inliers = ransac((src, dst),
                                 ProjectiveTransform, min_samples=8,
-                                residual_threshold=1, max_trials=5000)
+                                residual_threshold=0.5, max_trials=5000)
 
         r, c = grayImg1.shape[:2]
 
@@ -200,7 +201,6 @@ class OrbMatch(Simple):
         dim = 3
         self.log(keypoints1, keypoints2, matches12, (model + offset)._inv_matrix.flatten(), dim)
         # print('offset:{}'.format(offset))
-
 
         test *= 255
         img1_ *= 255
