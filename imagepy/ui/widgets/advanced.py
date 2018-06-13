@@ -5,6 +5,10 @@ class ImageList(Choice):
 	def __init__(self, parent, title, unit):
 		Choice.__init__(self, parent, ImageManager.get_titles(), str, title, unit)
 
+class TableList(Choice):
+	def __init__(self, parent, title, unit):
+		Choice.__init__(self, parent, TableManager.get_titles(), str, title, unit)
+
 class TableField(Choice):
 	def __init__(self, parent, title, unit):
 		self.tps = TableManager.get()

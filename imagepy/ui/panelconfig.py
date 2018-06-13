@@ -7,7 +7,7 @@ import weakref
 
 widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl,
             float:NumCtrl, 'lab':Label, bool:Check, str:TextCtrl, 
-            list:Choice, 'img':ImageList, 'color':ColorCtrl, 
+            list:Choice, 'img':ImageList, 'tab':TableList, 'color':ColorCtrl, 
             'any':AnyType, 'chos':Choices, 'fields':TableFields,
             'field':TableField, 'hist':HistCanvas}
 
@@ -130,6 +130,7 @@ if __name__ == '__main__':
             ('slide', 'mm', (-20,20), '亮度', 'slide'),
             ('color', 'color', '颜色', 'rgb'),
             (bool, 'preview', 'preview')]
+
     data = {'r':1.2, 'slide':0,  'preview':True, 'color':(0,255,0)}
 
     app = wx.PySimpleApp()
