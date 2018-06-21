@@ -24,12 +24,12 @@ class Simple:
         print('simple start')
         self.ips = IPy.get_ips() if ips==None else ips
         self.dialog = None
-    
+
     def progress(self, i, n):
         self.prgs = (i, n)
 
     def load(self, ips):return True
-        
+
     def preview(self, ips, para):pass
 
     def show(self, temp=ParaDialog):
@@ -41,16 +41,16 @@ class Simple:
         self.dialog.on_ok = lambda : self.ok(self.ips)
         self.dialog.on_cancel = lambda : self.cancel(self.ips)
         self.dialog.Show()
-    
+
     def run(self, ips, imgs, para = None):pass
-        
+
     def cancel(self, ips):pass
 
     def ok(self, ips, para=None, callafter=None):
         if para == None: para = self.para
         if IPy.uimode() == 'no':
             self.runasyn(ips, ips.imgs, para, callafter)
-        else: threading.Thread(target = self.runasyn, 
+        else: threading.Thread(target = self.runasyn,
                     args = (ips, ips.imgs, para, callafter)).start()
         win = WidgetsManager.getref('Macros Recorder')
         if win!=None: win.write('{}>{}'.format(self.title, para))
@@ -99,7 +99,7 @@ class Simple:
                 IPy.alert('stack3d required!')
                 return False
         return True
-        
+
     def start(self, para=None, callback=None):
         #print self.title, para
         if not self.check(self.ips):return
