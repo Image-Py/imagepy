@@ -49,20 +49,32 @@ class Distance:
         if self.buf:
             dc.DrawLines([f(*i) for i in self.buf])
         for i in self.buf:dc.DrawCircle(f(*i),2)
+
+       
         for line in self.body:
+            tempDist = 0
+
             dc.DrawLines([f(*i) for i in line])
             for i in line:dc.DrawCircle(f(*i),2)
             pts = np.array(line)
             mid = (pts[:-1]+pts[1:])/2
-
+            
+            midPnt = np.median( pts, axis=1)
+            
             dis = norm((pts[:-1]-pts[1:]), axis=1)
             unit = 1 if self.unit is None else self.unit[0]
             for i,j in zip(dis, mid):
+                tempDist += i
                 if j[0]>6:
                     j-=5
                 if i <=0:
                     continue
-                dc.DrawText('%.2f'%(i*unit), f(*j))
+                dc.DrawText('%.2f'%(i * unit), f(*j))
+
+            font = wx.Font(20, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+            dc.SetFont(font)    
+            dc.DrawText('%.2f'%(tempDist * unit), f(midPnt[0],midPnt[1]))
+            
 
     def report(self, title):
         rst = []

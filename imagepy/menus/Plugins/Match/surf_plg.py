@@ -188,9 +188,12 @@ class Match(Simple):
 
         points0 = np.array(
             [[0, 0], [0, img0.shape[0]], [img0.shape[1], img0.shape[0]], [img0.shape[1], 0]], dtype=np.float32)
+
         points0 = points0.reshape((-1, 1, 2))
+        
         points1 = np.array(
             [[0, 0], [0, img1.shape[0]], [img1.shape[1], img0.shape[0]], [img1.shape[1], 0]], dtype=np.float32)
+            
         points1 = points1.reshape((-1, 1, 2))
 
         points2 = cv2.perspectiveTransform(points1, h_matrix)
@@ -203,6 +206,7 @@ class Match(Simple):
         output_img = cv2.warpPerspective(img1, H_translation.dot(h_matrix), (x_max - x_min, y_max - y_min))
         output_img[-y_min:img0.shape[0] - y_min, -x_min:img0.shape[1] - x_min] = img0
         return output_img
+
 plgs = [SurfDetector, Match]
 
 if __name__ == '__main__':

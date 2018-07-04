@@ -10,6 +10,7 @@ import wx,os
 from imagepy import IPy, root_dir
 from imagepy.core.loader import loader
 from wx.py.editor import EditorFrame
+from glob import glob
 
 class Plugin ( wx.Panel ):
     title = 'Tool Tree View'
@@ -74,9 +75,14 @@ class Plugin ( wx.Panel ):
                 self.tre_plugins.SetItemData(item, i[0])
                 
     def load(self):
-        data = loader.build_tools('tools')
+        datas = loader.build_tools('tools')
+        extends = glob('plugins/*/tools')
+        for i in extends:
+            tols = loader.build_tools(i)
+            if len(tols)!=0: datas[1].extend(tols[1])
+
         root = self.tre_plugins.AddRoot('Tools')
-        for i in data[1]:
+        for i in datas[1]:
             item = self.tre_plugins.AppendItem(root, i[0].title)
             self.tre_plugins.SetItemData(item, i[0])
             for j in i[1]:

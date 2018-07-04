@@ -97,6 +97,7 @@ class OrbPick(Tool):
         if self.cur!=-1:
             dc.SetBrush(wx.Brush((255,0,0)))
             # dc.DrawCircle(f(*self.pts[self.cur].pt), 3)
+            print('cur point is:{}'.format(self.pts[self.cur]))
             dc.DrawCircle(f(self.pts[self.cur][0],self.pts[self.cur][1]), 3)
 
 class OrbMatch(Simple):
@@ -121,7 +122,7 @@ class OrbMatch(Simple):
                           (list, 'style', ['Blue/Yellow', 'Hide'], str, 'Aspect', 'color'),
                           (bool, 'tab', 'show table'),
                           (bool, 'com', 'combine image')
-                          ]
+                        ]
         return True
 
     #process
@@ -161,11 +162,11 @@ class OrbMatch(Simple):
 
 
         #
-        picker1 = OrbPick(keypoints2, keypoints1, matches12, mask, ips1, ips2, True, style)
-        picker2 = OrbPick(keypoints2, keypoints1, matches12, mask, ips1, ips2, False, style)
+        picker1 = OrbPick(keypoints1, keypoints2, matches12, mask, ips1, ips2, True, style)
+        picker2 = OrbPick(keypoints1, keypoints2, matches12, mask, ips1, ips2, False, style)
 
-        ips1.tool, ips1.mark = picker2, picker2
-        ips2.tool, ips2.mark = picker1, picker1
+        ips1.tool, ips1.mark = picker1, picker1
+        ips2.tool, ips2.mark = picker2, picker2 
 
         model, inliers = ransac((src, dst),
                                 ProjectiveTransform, min_samples=8,

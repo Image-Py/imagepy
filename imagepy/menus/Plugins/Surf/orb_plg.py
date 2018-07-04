@@ -23,7 +23,7 @@ class OrbFeatMark:
 
     def draw(self, dc, f, **key):
         for i in self.feats:
-            # print('i.pt:{},{}'.format(type(f(i.pt))，i.pt))
+            
             dc.DrawCircle(f(i[1], i[0]), 3)
 
 class Orb(Filter):

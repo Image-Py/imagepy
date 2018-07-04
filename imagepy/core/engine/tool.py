@@ -30,3 +30,6 @@ class Tool:
     def mouse_up(self, ips, x, y, btn, **key): pass
     def mouse_move(self, ips, x, y, btn, **key): pass
     def mouse_wheel(self, ips, x, y, d, **key): pass
+
+
+        

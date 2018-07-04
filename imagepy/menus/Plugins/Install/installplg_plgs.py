@@ -28,7 +28,7 @@ def Schedule(a,b,c, plg):
 
 class Install(Free):
     title = 'Install Plugins'
-    para = {'pkg':''}
+    para = {'pkg':'https://github.com/Image-Py/IBook'}
     prgs = (0, 100)
     view = [('lab', None, 'input a zipfile url or github url as http://github.com/username/project'),
             (str, 'pkg', 'package', '')]
@@ -51,7 +51,7 @@ class Install(Free):
         zipf = zipfile.ZipFile(os.path.join(path_cache, domain+'_'+name+'.zip'))
         folder = zipf.namelist()[0]
         zipf.extractall(path_cache)
-        destpath = os.path.join(path_plgs, domain+'_'+folder).replace('-master','')
+        destpath = os.path.join(path_plgs, domain+'_'+folder.replace('-master',''))
         if os.path.exists(destpath): shutil.rmtree(destpath)
         os.rename(os.path.join(path_cache, folder), destpath)
         zipf.close()
