@@ -41,7 +41,7 @@ class Plugin(Tool):
         lim = 5.0/key['canvas'].get_scale() 
         if btn==1 or btn==3:
             if ips.roi!= None:
-                self.curobj = ips.roi.pick(x, y, lim)
+                self.curobj = ips.roi.pick(x, y, ips.cur, lim)
                 ips.roi.info(ips, self.curobj)
             if not self.curobj in (None,True):return
             if ips.roi == None:
@@ -79,10 +79,10 @@ class Plugin(Tool):
         lim = 5.0/key['canvas'].get_scale()
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
-            if ips.roi.snap(x, y, lim)!=None:
+            if ips.roi.snap(x, y, ips.cur, lim)!=None:
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
-            if self.curobj: ips.roi.draged(self.odx, self.ody, x, y, self.curobj)
+            if self.curobj: ips.roi.draged(self.odx, self.ody, x, y, ips.cur, self.curobj)
             ips.update = True
         self.odx, self.ody = x, y
         

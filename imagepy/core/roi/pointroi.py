@@ -8,6 +8,7 @@ from ..draw import paint
 from .roi import ROI
 from ..manager import RoiManager
 from imagepy import IPy
+import numpy as np
 
 class PointRoi(ROI):
     dtype = 'point'
@@ -20,19 +21,20 @@ class PointRoi(ROI):
         self.body.append(p)
         self.update, self.infoupdate = True, True
     
-    def snap(self, x, y, lim):
+    def snap(self, x, y, z, lim):
         cur, minl = None, 1e8
         for i in self.body:
+            if z!=i[2]:continue
             d = (i[0]-x)**2+(i[1]-y)**2
             if d < minl:cur,minl = i,d
         if minl**0.5>lim:return None
         return self.body.index(cur)
         
-    def pick(self, x, y, lim):
-        return self.snap(x, y, lim)
+    def pick(self, x, y, z, lim):
+        return self.snap(x, y, z, lim)
         
-    def draged(self, ox, oy, nx, ny, i):
-        self.body[i] = (nx, ny)
+    def draged(self, ox, oy, nx, ny, nz, i):
+        self.body[i] = (nx, ny, nz)
         self.update = False
         
     def countbox(self):
@@ -52,8 +54,8 @@ class PointRoi(ROI):
     def info(self, ips, cur):
         k, u = ips.unit
         if cur==None:return
-        x, y = self.body[cur]
-        IPy.set_info('points:%.0f x:%.1f y:%.1f'%(len(self.body), x*k, y*k))
+        x, y, z = self.body[cur]
+        IPy.set_info('points:%.0f x:%.1f y:%.1f z:%.1f'%(len(self.body), x*k, y*k, z*k))
 
     '''
     def affine(self, m, o):
@@ -64,10 +66,21 @@ class PointRoi(ROI):
         return plg
     '''
         
-    def draw(self, dc, f):
-        dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
-        for i in self.body:
-            dc.DrawCircle(f(*i), 2)
+    def draw(self, dc, f, **key):
+
+
+
+        colormap = (tuple(np.array(RoiManager.get_color())//2), RoiManager.get_color())
+        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
+                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        
+        dc.SetFont(font)
+        for c,r,z in self.body:
+            pos = f(*(c,r))
+            dc.SetPen(wx.Pen(colormap[z==key['cur']], width=RoiManager.get_lw(), style=wx.SOLID))
+            dc.SetTextForeground(colormap[z==key['cur']])
+            dc.DrawCircle(pos[0], pos[1], 2)
+            dc.DrawText('z={}'.format(z), pos[0], pos[1])
                 
     def sketch(self, img, w=1, color=None):
         pen = paint.Paint()

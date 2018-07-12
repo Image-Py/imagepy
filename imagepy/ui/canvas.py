@@ -256,7 +256,7 @@ class Canvas (wx.Panel):
         #cdc = wx.ClientDC(self)
         #cdc.BeginDrawing()
         if self.ips.roi != None:
-            self.ips.roi.draw(dc, self.to_panel_coor)
+            self.ips.roi.draw(dc, self.to_panel_coor, cur=self.ips.cur, k = self.get_scale())
         if self.ips.mark != None:
             self.ips.mark.draw(dc, self.to_panel_coor, cur=self.ips.cur, k = self.get_scale())
         #cdc.EndDrawing()

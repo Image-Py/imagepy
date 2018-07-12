@@ -18,7 +18,7 @@ class RectangleRoi(ROI):
         self.lt, self.tp, self.rt, self.bm = l, t, r, b
         self.commit()
     
-    def snap(self, x, y, lim):
+    def snap(self, x, y, z,lim):
         if abs(x-self.lt)<lim and abs(y-(self.tp+self.bm)/2)<lim:return 'l'
         if abs(x-self.rt)<lim and abs(y-(self.tp+self.bm)/2)<lim:return 'r'
         if abs(x-(self.lt+self.rt)/2)<lim and abs(y-self.tp)<lim:return 't'
@@ -47,14 +47,14 @@ class RectangleRoi(ROI):
         IPy.set_info('Rectangle : x:%.1f y:%.1f w:%.1f h:%.1f   S:%.1f'%(
             min(l,r)*k,min(t,b)*k,abs(r-l)*k,abs(b-t)*k,abs((r-l)*(b-t)*k**2)))
 
-    def pick(self, x, y, lim):
-        rst = self.snap(x,y, lim)
+    def pick(self, x, y, z, lim):
+        rst = self.snap(x, y, z,lim)
         if rst != None:return rst
         if (x-self.lt)*(x-self.rt)<0 and (y-self.tp)*(y-self.bm)<0:
             return True
         return None
 
-    def draged(self, ox, oy, nx, ny, i):
+    def draged(self, ox, oy, nx, ny, nz, i):
         if i == True:
             self.lt, self.rt = self.lt+nx-ox, self.rt+nx-ox
             self.tp, self.bm = self.tp+ny-oy, self.bm+ny-oy
@@ -79,7 +79,7 @@ class RectangleRoi(ROI):
         return self.topolygon().affine(m,o)
     '''
         
-    def draw(self, dc, f):
+    def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
         if(len(self.body)>1):
             dc.DrawLines([f(*i) for i in self.body])
