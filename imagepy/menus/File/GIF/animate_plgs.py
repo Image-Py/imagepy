@@ -14,7 +14,7 @@ class SaveAnimate(fileio.Writer):
 	#process
 	def run(self, ips, imgs, para = None):
 		imgs = [Image.fromarray(i) for i in imgs] 
-		imgs[0].save(para['path'], save_all=True, loop=0, append_images=imgs[1:])
+		imgs[0].save(para['path'], save_all=True, loop=0, duration=10, append_images=imgs[1:])
 
 class OpenAnimate(fileio.Reader):
 	title = 'GIF Animate Open'

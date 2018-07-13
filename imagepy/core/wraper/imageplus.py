@@ -135,8 +135,13 @@ class ImagePlus:
             return img
 
     def swap(self):
+        print(type(self.snap), type(self.imgs[self.cur]), self.cur)
         if self.snap is None:return
-        self.snap, self.imgs[self.cur] = self.imgs[self.cur], self.snap
+        if isinstance(self.imgs, list):
+            self.snap, self.imgs[self.cur] = self.imgs[self.cur], self.snap
+        else:
+            buf = self.img.copy()
+            self.img[:], self.snap[:] = self.snap, buf
 
     def __del__(self):
         print(self.title, '>>> deleted ips')
