@@ -227,7 +227,7 @@ def draw_rectangle(pts, dc, f, **key):
 		for x, y, w, h in pts['body']:
 			x, y = f(x, y)
 			w, h = w*key['k'], h*key['k']
-			lst.append((x-w/2, y-w/2, w, h))
+			lst.append((x-w/2, y-h/2, w, h))
 		dc.DrawRectangleList(lst)
 
 	pen.SetWidth(width)

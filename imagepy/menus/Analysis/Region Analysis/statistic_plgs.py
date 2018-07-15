@@ -12,7 +12,7 @@ from imagepy.core.engine import Simple, Filter
 from imagepy.core.manager import ImageManager
 from imagepy.core.roi.pointroi import PointRoi
 import pandas as pd
-
+from imagepy.core.mark import GeometryMark
 class Mark:
     def __init__(self, data):
         self.data = data
@@ -80,7 +80,8 @@ class RegionStatistic(Simple):
         if para['extent']: titles.extend(['Min-Y','Min-X','Max-Y','Max-X'])
         titles.extend(idct)
         k = ips.unit[0]
-        data, mark = [], []
+        data, mark = [],{'type':'layers', 'body':{}}
+        # data,mark=[],[]
         for i in range(len(imgs)):
             n = ndimage.label(msks[i], strc, output=buf)
             index = range(1, n+1)
@@ -95,7 +96,9 @@ class RegionStatistic(Simple):
             boxs = [None] * n
             if para['extent']:
                 boxs = ndimage.find_objects(buf)
-                boxs = [(i[0].start, i[1].start, i[0].stop, i[1].stop) for i in boxs]
+                print("#####",boxs)
+                boxs = [( i[1].start+(i[1].stop-i[1].start)/2, i[0].start+(i[0].stop-i[0].start)/2, i[1].stop-i[1].start,i[0].stop-i[0].start) for i in boxs]
+                print(boxs)
                 for j in (0,1,2,3):
                     dt.append([i[j]*k for i in boxs])
             if para['max']:dt.append(ndimage.maximum(imgs[i], buf, index).round(2))
@@ -104,12 +107,18 @@ class RegionStatistic(Simple):
             if para['var']:dt.append(ndimage.variance(imgs[i], buf, index).round(2)) 
             if para['std']:dt.append(ndimage.standard_deviation(imgs[i], buf, index).round(2))
             if para['sum']:dt.append(ndimage.sum(imgs[i], buf, index).round(2))      
+ 
+            layer = {'type':'layer', 'body':[]}
+            xy=np.int0(xy).T
+            texts = [(i[1],i[0])+('id=%d'%n,) for i,n in zip(xy,range(len(xy)))]
+            layer['body'].append({'type':'texts', 'body':texts})
+            if para['extent']: layer['body'].append({'type':'rectangles', 'body':boxs})
+            mark['body'][i] = layer
 
-            mark.append([(center, cov) for center,cov in zip(xy.T, boxs)]) 
             data.extend(list(zip(*dt)))
 
         IPy.show_table(pd.DataFrame(data, columns=titles), inten.title+'-region statistic')
-        inten.mark = Mark(mark)
+        inten.mark = GeometryMark(mark)
         inten.update = True
 
 class RGMark:
