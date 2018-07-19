@@ -14,6 +14,17 @@ def count_ns(vts, fs):
 	buf /= np.linalg.norm(buf, axis=1).reshape((-1,1))
 	return buf
 
+def build_twringidx(n, offset=0):
+	idx = np.array([[0,1,n+1],[n+1,n+2,1]])
+	idx = idx[np.arange(n*2)%2].T + np.arange(n*2)//2
+	return (idx.T+offset).astype(np.uint32)
+
+def build_pringidx(p, n, offset=0):
+	ridx = np.array([[0,0,1]]*n, dtype=np.uint32)
+	ridx += np.arange(n, dtype=np.uint32).reshape((-1,1))+offset
+	ridx[:,0] = p
+	return ridx
+
 def build_grididx(r, c):
 	idx = np.arange(r*c, dtype=np.uint32)
 	rs, cs = idx//c, idx%c
@@ -24,7 +35,7 @@ def build_grididx(r, c):
 def build_surf2d(img, ds=1, sigma=0, k=0.2):
 	from skimage.filters import sobel_h, sobel_v
 	from scipy.ndimage import gaussian_filter
-	start = time()
+	#start = time()
 	img = img[::-ds, ::ds]
 	img = gaussian_filter(img, sigma)
 	r, c = img.shape
@@ -42,7 +53,7 @@ def build_surf2d(img, ds=1, sigma=0, k=0.2):
 	ns = (ns.T/np.linalg.norm(ns, axis=1)).astype(np.float32).T
 	
 	#ns = count_ns(vts, fs)
-	print(time()-start)
+	#print(time()-start)
 	return vts, fs, ns, cs
 
 def build_surf3d(imgs, ds, level, step=1, c=(1,0,0)):
@@ -106,6 +117,42 @@ def build_lines(xs, ys, zs, cs):
 		vtss.append(vv)
 		nss.append(nn)
 		css.append(cc)
+	return np.vstack(vtss), np.vstack(fss), np.vstack(nss), np.vstack(css)
+
+def build_arrow(v1, v2, rs, re, ts, te, c):
+	v = (v2-v1)/np.linalg.norm(v2-v1)
+	ss, ee = v1 + v*rs*ts, v2 - v*re*te
+	vx = np.cross(v, np.random.rand(3))
+	vx /= np.linalg.norm(vx)
+	vy = np.cross(vx, v)
+	angs = np.linspace(0, np.pi*2, 17)
+	vas = np.array([np.cos(angs), np.sin(angs)])
+	vxy = np.dot(vas.T, np.array([vx, vy]))
+	vts = np.vstack((v1, ss + rs * vxy, ee + re * vxy, v2))
+	fs1 = build_pringidx(0, 16, 1)
+	fs = build_twringidx(16, 1)
+	fs2 = build_pringidx(35, 16, 18)
+	face = np.vstack((fs1, fs, fs2))
+	ns = np.vstack((-v, vxy, vxy, v)).astype(np.float32)
+	cs = (np.ones((len(vts), 3))*c).astype(np.float32)
+	return vts.astype(np.float32), face, ns, cs
+
+def build_arrows(v1s, v2s, rss, res, tss, tes, cs):
+	if not isinstance(cs, list): cs = [cs] * len(v1s)
+	if not isinstance(tss, list): tss = [tss] * len(v1s)
+	if not isinstance(tes, list): tes = [tes] * len(v1s)
+	if not isinstance(rss, list): rss = [rss] * len(v1s)
+	if not isinstance(res, list): res = [res] * len(v1s)
+	vtss, fss, nss, css = [], [], [], []
+	s = 0
+	for v1, v2, rs, re, ts, te, c in zip(v1s, v2s, rss, res, tss, tes, cs):
+		vv, ff, nn, cc = build_arrow(v1, v2, rs, re, ts, te, c)
+		fss.append(ff+s)
+		s += len(vv)
+		vtss.append(vv)
+		nss.append(nn)
+		css.append(cc)
+	print(np.vstack(vtss).shape, np.vstack(fss).shape, np.vstack(nss).shape, np.vstack(css).shape)
 	return np.vstack(vtss), np.vstack(fss), np.vstack(nss), np.vstack(css)
 
 def build_mark(cont, pos, dz, h, color):

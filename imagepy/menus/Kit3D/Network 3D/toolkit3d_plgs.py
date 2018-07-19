@@ -1,4 +1,5 @@
 from imagepy.core.engine import Filter, Simple
+from imagepy.core.manager import ImageManager
 from imagepy.ipyalg.graph import sknw
 from skimage.morphology import skeletonize_3d
 from itertools import combinations
@@ -10,14 +11,13 @@ import numpy as np
 import pandas as pd
 norm = np.linalg.norm
 
-
 class Skeleton3D(Simple):
 	title = 'Skeleton 3D'
 	note = ['8-bit', 'stack3d']
 
 	#process
 	def run(self, ips, imgs, para = None):
-		imgs[:] = skeletonize_3d(imgs>0)
+		imgs[skeletonize_3d(imgs>0)==0] = 0
 
 class BuildGraph(Simple):
 	title = 'Build Graph 3D'
@@ -77,6 +77,65 @@ class Show3DGraph(Simple):
 		self.frame.viewer.add_surf_asyn('paths', vts, fs, ns, cs, mode='grid')
 		vts, fs, ns, cs = myvi.build_lines(lxs, lys, lzs, (0,1,0))
 		self.frame.viewer.add_surf_asyn('lines', vts, fs, ns, cs, mode='grid')
+		self.frame.Raise()
+		self.frame = None
+
+class Show3DGraphR(Simple):
+	title = 'Show Graph R 3D'
+	note = ['8-bit', 'stack3d']
+
+	para = {'dis':None, 'ncolor':(255,0,0), 'lcolor':(0,0,255)}
+	view = [('img', 'dis', 'distance', 'map'),
+			('color', 'ncolor', 'node', 'rgb'),
+			('color', 'lcolor', 'line', 'rgb')]
+
+	def load(self, ips):
+		if not isinstance(ips.data, nx.MultiGraph):
+			IPy.alert("Please build graph!");
+			return False;
+		self.frame = myvi.Frame3D.figure(IPy.curapp, title='3D Canvas')
+		return True;
+
+	#process
+	def run(self, ips, imgs, para = None):
+		dis = ImageManager.get(para['dis']).imgs
+		balls, ids, rs, graph = [], [], [], ips.data
+		for idx in graph.nodes():
+			ids.append(idx)
+			balls.append(graph.node[idx]['o'])
+
+
+		xs, ys, zs = [], [], []
+		v1s, v2s = [], []
+		for (s, e) in graph.edges():
+			eds = graph[s][e]
+			st, ed = graph.node[s]['o'], graph.node[e]['o']
+			v1s.append(st)
+			v2s.append(ed)
+			for i in eds:
+				pts = eds[i]['pts']
+				xs.append(pts[:,0])
+				ys.append(pts[:,1])
+				zs.append(pts[:,2])
+		rs1 = dis[list(np.array(v1s).astype(np.int16).T)]
+		rs2 = dis[list(np.array(v2s).astype(np.int16).T)]
+		rs1 = list(np.clip(rs1, 2, 1e4)*0.5)
+		rs2 = list(np.clip(rs2, 2, 1e4)*0.5)
+		rs = dis[list(np.array(balls).astype(np.int16).T)]
+		rs = list(np.clip(rs, 2, 1e4))
+		cs = tuple(np.array(para['ncolor'])/255.0)
+		vts, fs, ns, cs = myvi.build_balls(balls, rs, cs)
+		self.frame.viewer.add_surf_asyn('balls', vts, fs, ns, cs)
+		meansize = sum(rs)/len(rs)
+		vts, fs, pos, h, color = myvi.build_marks(['ID:%s'%i for i in ids], balls, rs, meansize, (1,1,1))
+		self.frame.viewer.add_mark_asyn('txt', vts, fs, pos, h, color)
+
+		css = tuple(np.array(para['lcolor'])/255.0)
+		vts, fs, ns, cs = myvi.build_lines(xs, ys, zs, css)
+		self.frame.viewer.add_surf_asyn('paths', vts, fs, ns, cs, mode='grid')
+		#vts, fs, ns, cs = myvi.build_lines(lxs, lys, lzs, (0,1,0))
+		vts, fs, ns, cs = myvi.build_arrows(v1s, v2s, rs1, rs2, 0, 0, css)
+		self.frame.viewer.add_surf_asyn('lines', vts, fs, ns, cs)
 		self.frame.Raise()
 		self.frame = None
 
@@ -224,4 +283,4 @@ class RemoveIsolate(Simple):
 		imgs *= 0
 		sknw.draw_graph(imgs, g)
 
-plgs = [Skeleton3D, BuildGraph, '-', CutBranch, RemoveIsolate, '-', Statistic, Sumerise, '-', Show3DGraph]
+plgs = [Skeleton3D, BuildGraph, '-', CutBranch, RemoveIsolate, '-', Statistic, Sumerise, '-', Show3DGraph, Show3DGraphR]
