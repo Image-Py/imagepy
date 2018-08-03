@@ -104,6 +104,9 @@ class CanvasPanel(wx.Panel):
         self.ips.update = 'pix'
         self.canvas.on_idle(None)
 
+    def close(self):
+        self.GetParent().Close()
+
     def __del__(self):pass
 
 class CanvasFrame(wx.Frame):

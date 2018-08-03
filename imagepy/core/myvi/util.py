@@ -146,6 +146,7 @@ def build_arrows(v1s, v2s, rss, res, tss, tes, cs):
 	vtss, fss, nss, css = [], [], [], []
 	s = 0
 	for v1, v2, rs, re, ts, te, c in zip(v1s, v2s, rss, res, tss, tes, cs):
+		if np.linalg.norm(v1-v2) < 0.1: continue
 		vv, ff, nn, cc = build_arrow(v1, v2, rs, re, ts, te, c)
 		fss.append(ff+s)
 		s += len(vv)
@@ -183,6 +184,13 @@ def build_marks(conts, poss, dz, h, color):
 		pps.append((np.ones((len(vv),3))*pp).astype(np.float32))
 
 	return np.vstack(vtss), np.vstack(fss), np.vstack(pps), h, color
+
+def build_cube(p1, p2, color=(1,1,1)):
+	(x1,y1,z1),(x2,y2,z2) = p1, p2
+	xs = (x1,x2,x2,x1,x1,x1,x1,x1,x1,x2,x2,x1,x2,x2,x2,x2)
+	ys = (y1,y1,y1,y1,y1,y2,y2,y1,y2,y2,y2,y2,y2,y1,y1,y2)
+	zs = (z1,z1,z2,z2,z1,z1,z2,z2,z2,z2,z1,z1,z1,z1,z2,z2)
+	return build_line(xs, ys, zs, color)
 
 cmp = {'rainbow':[(127, 0, 255), (43, 126, 246), (42, 220, 220), (128, 254, 179), (212, 220, 127), (255, 126, 65), (255, 0, 0)],
 	'jet':[(0, 0, 127), (0, 40, 255), (0, 212, 255), (124, 255, 121), (255, 229, 0), (255, 70, 0), (127, 0, 0)],

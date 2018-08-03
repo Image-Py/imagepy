@@ -6,7 +6,7 @@ Created on Sat Dec 17 10:49:15 2016
 from imagepy import IPy
 import numpy as np
 from imagepy.ui.canvasframe import CanvasFrame
-from imagepy.core.manager import ImageManager
+from imagepy.core.manager import ImageManager, WindowsManager
 from imagepy.core.engine import Simple
 from skimage import color
 
@@ -45,13 +45,14 @@ class ToRGB(Simple):
                     (bool, 'destory', 'destory')]
         return True
     
-    def titles(self): return 'RGB-Merge', 'Red', 'Green', 'Blue'
+    def titles(self): return 'RGB-Merge', 'red', 'green', 'blue'
 
     def trans(self, img1, img2, img3):
         return np.array([img1.T, img2.T, img3.T], dtype=np.uint8).T
     
     def run(self, ips, imgs, para = None):
         idx = ['red','green','blue']
+        print(para)
         imr,img,imb = [ImageManager.get(para[i]) for i in idx]
         sr,sg,sb = [i.get_nslices() for i in [imr,img,imb]]
         
@@ -68,7 +69,7 @@ class ToRGB(Simple):
         IPy.show_img(rgbs, self.titles()[0])
         if self.para['destory']:
             for title in [para[i] for i in idx]:
-                ImageManager.close(title)
+                WindowsManager.get(title).close()
 
 class RGB2(Simple):
     title = 'RGB To RGB'

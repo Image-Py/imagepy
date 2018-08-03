@@ -43,7 +43,7 @@ class FindMax(Filter):
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'])
-        self.ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
+        self.ips.roi = PointRoi([tuple(i)+(0,) for i in pts[:,::-1]])
         self.ips.update = True
 
 class FindMin(Filter):
@@ -55,7 +55,7 @@ class FindMin(Filter):
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'], False)
-        self.ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
+        self.ips.roi = PointRoi([tuple(i)+(0,) for i in pts[:,::-1]])
         self.ips.update = True
 
 class UPRidge(Filter):

@@ -12,31 +12,6 @@ from skimage.measure import regionprops
 from imagepy.core.mark import GeometryMark
 import pandas as pd
 
-class Mark:
-    def __init__(self, data):
-        self.data = data
-
-    def draw(self, dc, f, **key):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
-        dc.SetTextForeground((255,255,0))
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
-                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        
-        dc.SetFont(font)
-        data = self.data[0 if len(self.data)==1 else key['cur']]
-        for i in range(len(data)):
-            pos = f(*(data[i][0][1], data[i][0][0]))
-            dc.DrawCircle(pos[0], pos[1], 2)
-            dc.DrawText('id={}'.format(i), pos[0], pos[1])
-            if data[i][1]==None:continue
-            k1, k2, a = data[i][1]
-            aixs = np.array([[-np.sin(a), np.cos(a)],
-                             [np.cos(a), np.sin(a)]])*[k1/2, k2/2]
-            ar = np.linspace(0, np.pi*2,25)
-            xy = np.vstack((np.cos(ar), np.sin(ar)))
-            arr = np.dot(aixs, xy).T+data[i][0]
-            dc.DrawLines([f(*i) for i in arr[:,::-1]])
-
 # center, area, l, extent, cov
 class RegionCounter(Simple):
     title = 'Geometry Analysis'

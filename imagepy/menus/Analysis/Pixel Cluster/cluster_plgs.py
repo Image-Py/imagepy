@@ -37,7 +37,7 @@ class ColorCluster(Filter):
     note = ['rgb', 'auto_snap', 'not_channel', 'not_slice', 'req_roi', 'preview']
     
     para = {'sigma':3, 'cov':True, 'new':True, 'msk':'nothing', 'within':False, 'msk':'nothing'}
-    view = [(float, 'sigma', (0,255), 1, 'sigma', ''),
+    view = [(float, 'sigma', (0,255), 1, 'torlerance', ''),
             (bool, 'cov', 'use cov instead of distance'),
             (bool, 'within', 'only points within'),
             (bool, 'new', 'result as new mask'),
@@ -76,7 +76,7 @@ class GrayCluster(Filter):
     note = ['8-bit', '16-bit', 'int', 'float', 'auto_snap', 'not_channel', 'not_slice', 'req_roi', 'preview']
     
     para = {'sigma':3, 'cov':True, 'new':True, 'within':False, 'msk':'nothing','msk':'nothing'}
-    view = [(float, 'sigma', (0,255), 1, 'sigma', 'pix'),
+    view = [(float, 'sigma', (0,255), 1, 'torlerance', 'pix'),
             (bool, 'cov', 'use cov instead of distance'),
             (bool, 'within', 'only points within'),
             (bool, 'new', 'result as new mask'),
@@ -122,7 +122,7 @@ class GrayCluster3D(Simple):
     note = ['8-bit', '16-bit', 'int', 'float', 'req_roi', 'stack3d', 'preview']
     modal = False
     para = {'sigma':3, 'cov':True, 'new':True, 'within':False, 'msk':'nothing','msk':'nothing'}
-    view = [(float, 'sigma', (0,255), 1, 'sigma', 'pix'),
+    view = [(float, 'sigma', (0,255), 1, 'torlerance', 'pix'),
             (bool, 'cov', 'use cov instead of distance'),
             (bool, 'within', 'only points within'),
             (bool, 'new', 'result as new mask'),
