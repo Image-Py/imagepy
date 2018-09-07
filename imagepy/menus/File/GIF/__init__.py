@@ -1,1 +1,1 @@
-catlog = ['gif_plgs', 'animate_plgs']
+catlog = ['gif_plgs', '-', 'animate_plgs']

@@ -206,7 +206,7 @@ class GridBase(Grid.Grid):
                     ('color', 'lc', 'line color', ''),
                     (list, 'ln', ['Text', 'Line', 'Both'], str, 'draw', '')]
             rst = IPy.get_para('Table Properties', view, para)
-            if rst!=wx.ID_OK:return
+            if not rst :return
             if col!=-1:
                 props.iloc[:,col] = [para[i] for i in ['accu', 'tc', 'lc', 'ln']]
             if col==-1:

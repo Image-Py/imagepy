@@ -218,8 +218,7 @@ class Viewer3D(wx.Panel):
         dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
         filt = 'PNG files (*.png)|*.png'
         dialog = wx.FileDialog(self, 'Save Picture', '', '', filt, wx.FD_SAVE)
-        rst = dialog.ShowModal()
-        if rst == wx.ID_OK:
+        if dialog.ShowModal() == wx.ID_OK:
             path = dialog.GetPath()
             self.canvas.save_bitmap(path)
         dialog.Destroy()

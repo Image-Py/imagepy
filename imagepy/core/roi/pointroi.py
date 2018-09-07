@@ -14,6 +14,7 @@ class PointRoi(ROI):
     dtype = 'point'
     def __init__(self, body=None):
         self.body = body if body!=None else []
+        self.body = [i if len(i)==3 else tuple(i) + (0,) for i in self.body]
         self.update = body!=[]
         self.infoupdate = body!=[]
         

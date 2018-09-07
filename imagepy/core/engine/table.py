@@ -35,11 +35,11 @@ class Table:
         tps.update = True
 
     def show(self):
-        if self.view==None:return wx.ID_OK
+        if self.view==None:return True
         self.dialog = ParaDialog(IPy.get_twindow(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
         self.dialog.set_handle(lambda x:self.preview(self.tps, self.para))
-        if self.modal: return self.dialog.ShowModal()
+        if self.modal: return self.dialog.ShowModal() == wx.ID_OK
         self.dialog.on_ok = lambda : self.ok(self.tps)
         self.dialog.on_cancel = lambda : self.cancel(self.tps)
         self.dialog.Show()
@@ -117,11 +117,11 @@ class Table:
             self.ok(self.tps, para, callback)
         elif self.view==None:
             if not self.__class__.show is Table.show:
-                if self.show() == wx.ID_OK:
+                if self.show():
                     self.ok(self.tps, para, callback)
             else: self.ok(self.tps, para, callback)
         elif self.modal:
-            if self.show() == wx.ID_OK:
+            if self.show():
                 self.ok(self.tps, para, callback)
             else:self.cancel(self.tps)
             if not self.dialog is None: self.dialog.Destroy()
