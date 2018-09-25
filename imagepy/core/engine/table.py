@@ -19,6 +19,7 @@ class Table:
     view = None
     prgs = (None, 1)
     modal = True
+    asyn = True
 
     def __init__(self, tps=None):
         print('simple start')
@@ -53,10 +54,10 @@ class Table:
 
     def ok(self, tps, para=None, callafter=None):
         if para == None: para = self.para
-        if IPy.uimode() == 'no':
-            self.runasyn(tps, tps.data, tps.snap, para, callafter)
-        else: threading.Thread(target = self.runasyn, 
+        if self.asyn and IPy.uimode() != 'no':
+            threading.Thread(target = self.runasyn, 
                     args = (tps, tps.data, tps.snap, para, callafter)).start()
+        else: self.runasyn(tps, tps.data, tps.snap, para, callafter)
         win = WidgetsManager.getref('Macros Recorder')
         if win!=None: win.write('{}>{}'.format(self.title, para))
 
