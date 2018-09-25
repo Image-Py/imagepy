@@ -5,6 +5,9 @@ import sys, os, wx
 from .IPy import *
 root_dir = osp.abspath(osp.dirname(__file__))
 os.chdir(root_dir)
+
+import matplotlib
+matplotlib.use('WxAgg')
 # sys.path.append(root_dir)
 
 from .ui.mainframe import ImagePy
