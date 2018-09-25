@@ -15,7 +15,7 @@ class Plot(Table):
 
 	def run(self, tps, data, snap, para = None):
 		data[para['cn']].plot(lw=para['lw'], grid=para['grid'], title=para['title'])
-		plt.show(block=False)
+		plt.show()
 
 class Bar(Table):
 	title = 'Bar Chart'
@@ -116,6 +116,6 @@ class Pie(Table):
 
 	def run(self, tps, data, snap, para = None):
 		data[para['cn']].plot.pie(subplots=True, title=para['title'])
-		plt.show(block=False)
+		plt.show()
 
 plgs = [Plot, Area, Bar, Box, Hist, Pie, Scatter]
