@@ -238,7 +238,7 @@ class Choices(wx.Panel):
         wx.Panel.__init__(self, parent)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
+        lab_title = wx.StaticText( self, wx.ID_ANY, title,
                                    wx.DefaultPosition, wx.DefaultSize)
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALL, 5 )

@@ -1,5 +1,6 @@
 from . normal import Choice, Choices
-from ...core.manager import ImageManager, TableManager
+from . colormap import CMapSelPanel
+from ...core.manager import ImageManager, TableManager, ColorManager
 
 class ImageList(Choice):
 	def __init__(self, parent, title, unit):
@@ -12,7 +13,7 @@ class TableList(Choice):
 class TableField(Choice):
 	def __init__(self, parent, title, unit):
 		self.tps = TableManager.get()
-		Choice.__init__(self, parent,  list(self.tps.data.columns), str, title, unit)
+		Choice.__init__(self, parent,  ['None'] + list(self.tps.data.columns), lambda x:x, title, unit)
 
 class TableFields(Choices):
 	def __init__(self, parent, title):
@@ -21,3 +22,8 @@ class TableFields(Choices):
 		
 	def SetValue(self, value):
 		Choices.SetValue(self, self.tps.colmsk)
+
+class ColorMap(CMapSelPanel):
+	def __init__(self, parent, title):
+		CMapSelPanel.__init__(self, parent, title)
+		self.SetItems(ColorManager.luts)
