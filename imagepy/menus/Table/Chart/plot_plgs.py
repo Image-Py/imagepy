@@ -15,7 +15,7 @@ class Plot(Table):
 
 	def run(self, tps, data, snap, para = None):
 		data[para['cn']].plot(lw=para['lw'], grid=para['grid'], title=para['title'])
-		plt.show()
+		plt.show(block=False)
 
 class Bar(Table):
 	title = 'Bar Chart'
@@ -107,4 +107,15 @@ class Scatter(Table):
 			cmap=cm, grid=para['grid'], title=para['title'])
 		plt.show()
 
-plgs = [Plot, Bar, Hist, Box, Area, Scatter]
+class Pie(Table):
+	title = 'Pie Chart'
+	para = {'cn':[], 'title':''}
+	asyn = False
+	view = [(str, 'title', 'title', ''),
+			('fields', 'cn', 'select fields')]
+
+	def run(self, tps, data, snap, para = None):
+		data[para['cn']].plot.pie(subplots=True, title=para['title'])
+		plt.show(block=False)
+
+plgs = [Plot, Area, Bar, Box, Hist, Pie, Scatter]
