@@ -12,7 +12,8 @@ class Sort(Table):
 			(bool, 'descend', 'descend')]
 
 	def run(self, tps, data, snap, para=None):
-		tps.data.sort_values(by=[para['major'], para['minor']], 
+		by = [para['major'], para['minor']]
+		tps.data.sort_values(by=[i for i in by if i != 'None'], 
 			axis=0, ascending=not para['descend'], inplace=True)
 
 plgs = [Sort]

@@ -31,4 +31,41 @@ class Statistic(Table):
 		if para['kurt']:rst['kurt'] = snap.kurt(axis=axis)
 		IPy.show_table(pd.DataFrame(rst), tps.title+'-statistic')
 
-plgs = [Statistic]
+class GroupStatistic(Table):
+	title = 'Group Statistic'
+
+	para = {'major':None, 'minor':None, 'sum':True, 'mean':True,'max':False, 
+		'min':False,'var':False,'std':False,'skew':False,'kurt':False, 'cn':[]}
+		
+	view = [('fields', 'cn', 'field to statistic'),
+			('field', 'major', 'group by', 'major'),
+			('field', 'minor', 'group by', 'key'),
+			
+			(bool, 'sum', 'sum'),
+			(bool, 'mean', 'mean'),
+			(bool, 'max', 'max'),
+			(bool, 'min', 'min'),
+			(bool, 'var', 'var'),
+			(bool, 'std', 'std'),
+			(bool, 'skew', 'skew')]
+
+	def run(self, tps, data, snap, para=None):
+		by = [i for i in [para['major'], para['minor']] if i!='None']
+		gp = data.groupby(by)[para['cn']]
+
+		rst = []
+		def post(a, fix): 
+			a.columns = ['%s-%s'%(i,fix) for i in a.columns]
+			return a
+
+		if para['sum']:rst.append(post(gp.sum(), 'sum'))
+		if para['mean']:rst.append(post(gp.mean(), 'mean'))
+		if para['max']:rst.append(post(gp.max(), 'max'))
+		if para['min']:rst.append(post(gp.min(), 'min'))
+		if para['var']:rst.append(post(gp.var(), 'var'))
+		if para['std']:rst.append(post(gp.std(), 'std'))
+		if para['skew']:rst.append(post(gp.skew(), 'skew'))
+
+		IPy.show_table(pd.concat(rst, axis=1), tps.title+'-statistic')
+
+plgs = [Statistic, GroupStatistic]
