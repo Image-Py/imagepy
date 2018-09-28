@@ -96,9 +96,7 @@ class RegionStatistic(Simple):
             boxs = [None] * n
             if para['extent']:
                 boxs = ndimage.find_objects(buf)
-                print("#####",boxs)
                 boxs = [( i[1].start+(i[1].stop-i[1].start)/2, i[0].start+(i[0].stop-i[0].start)/2, i[1].stop-i[1].start,i[0].stop-i[0].start) for i in boxs]
-                print(boxs)
                 for j in (0,1,2,3):
                     dt.append([i[j]*k for i in boxs])
             if para['max']:dt.append(ndimage.maximum(imgs[i], buf, index).round(2))
