@@ -48,9 +48,12 @@ class Hist(Table):
 			(bool, 'grid', 'grid')]
 
 	def run(self, tps, data, snap, para = None):
-		f = [data[para['cn']].hist, data[para['cn']].plot.hist][para['overlay']]
-		f(stacked=para['stack'], bins=para['bins'], alpha=para['alpha'],
-			orientation=para['dir'], grid=para['grid'], title=para['title'])
+		if para['overlay']:
+			data[para['cn']].plot.hist(stacked=para['stack'], bins=para['bins'], alpha=para['alpha'],
+				orientation=para['dir'], grid=para['grid'], title=para['title'])
+		else:
+			data[para['cn']].hist(stacked=para['stack'], bins=para['bins'], alpha=para['alpha'],
+				orientation=para['dir'], grid=para['grid'])
 		plt.show()
 
 class Box(Table):
