@@ -23,13 +23,8 @@ class Plugin ( wx.Panel ):
 
         self.tre_plugins = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition,
                                         wx.DefaultSize, wx.TR_DEFAULT_STYLE )
-<<<<<<< HEAD
-        self.tre_plugins.SetMinSize( wx.Size( 200,-1 ) )
-
-=======
+        # self.tre_plugins.SetMinSize( wx.Size( 200,-1 ) )
         self.tre_plugins.SetMinSize( wx.Size( 300,-1 ) )
-        
->>>>>>> Image-Py/master
         bSizer1.Add( self.tre_plugins, 0, wx.ALL|wx.EXPAND, 5 )
         bSizer3 = wx.BoxSizer( wx.VERTICAL )
         bSizer4 = wx.BoxSizer( wx.HORIZONTAL )
@@ -93,13 +88,8 @@ class Plugin ( wx.Panel ):
                     keydata[name].extend(j[1])
                 else: datas[1].append(j)
         root = self.tre_plugins.AddRoot('Plugins')
-<<<<<<< HEAD
-        self.addnode(root, data[1])
 
-=======
         self.addnode(root, datas[1])
-    
->>>>>>> Image-Py/master
     # Virtual event handlers, overide them in your derived class
     def on_run( self, event ):
         plg = self.tre_plugins.GetItemPyData(event.GetItem())

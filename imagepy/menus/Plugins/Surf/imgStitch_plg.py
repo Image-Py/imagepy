@@ -49,10 +49,6 @@ class ImgsStitch(Simple):
             'trans':'None', 'std':1, 'style':'Blue/Yellow'}
 
     def myInitialize(self):
-		# self.path = args
-		# fp = open(self.path, 'r')
-		# filenames = [each.rstrip('\r\n') for each in  fp.readlines()]
-		# print filenames
         self.images = []
         self.count = -1
         self.left_list, self.right_list, self.center_im = [], [],None
@@ -80,18 +76,6 @@ class ImgsStitch(Simple):
                           (bool, 'log', 'show log') ]
         return True
 
-    # def filter_matches(self, kp1, kp2, matches, ratio = 0.75):
-    #     mkp1, mkp2 = [], []
-    #     for m in matches:
-    #         if len(m) == 2 and m[0].distance < m[1].distance * ratio:
-    #             m = m[0]
-    #             mkp1.append( kp1[m.queryIdx] )
-    #             mkp2.append( kp2[m.trainIdx] )
-    #     p1 = np.float32([kp.pt for kp in mkp1])
-    #     p2 = np.float32([kp.pt for kp in mkp2])
-    #     kp_pairs = list(zip(mkp1, mkp2))
-    #     return p1, p2, kp_pairs
-
     def prepare_lists(self):
         print( "Number of images : %d".format(self.count))
         self.centerIdx = self.count/2
@@ -115,21 +99,6 @@ class ImgsStitch(Simple):
         # self.matcher_obj = matchers()
         self.prepare_lists()
 
-    # def rightshift(self):
-    #     for each in self.right_list:
-    #         H = self.matcher_obj.match(self.leftImage, each, 'right')
-    #         print "Homography :", H
-    #         txyz = np.dot(H, np.array([each.shape[1], each.shape[0], 1]))
-    #         txyz = txyz/txyz[-1]
-    #         dsize = (int(txyz[0])+self.leftImage.shape[1], int(txyz[1])+self.leftImage.shape[0])
-    #         tmp = cv2.warpPerspective(each, H, dsize)
-    #         cv2.imshow("tp", tmp)
-    #         cv2.waitKey()
-    #         # tmp[:self.leftImage.shape[0], :self.leftImage.shape[1]]=self.leftImage
-    #         tmp = self.mix_and_match(self.leftImage, tmp)
-    #         print "tmp shape",tmp.shape
-    #         print "self.leftimage shape=", self.leftImage.shape
-    #         self.leftImage = tmp
     def stitchAllImgs(self,para):
         # print('current img list:{}'.format(para['imgList']))
         # curImgList = ImageManager.get(para['imgList'])
@@ -192,63 +161,12 @@ class ImgsStitch(Simple):
         # 返回值中 H 为变换矩阵。mask是掩模，online的点
         H, _ = cv2.findHomography(tempPnt1, tempPnt2, cv2.RANSAC, 1.0)
 
-
         newImg = self.combine_images( ips2, ips1, H)
         return newImg
     #process
     def run(self, ips, imgs, para = None):
         self.myInitialize()
         self.stitchAllImgs(para)
-        # ips1 = ImageManager.get(para['img1'])
-        # ips2 = ImageManager.get(para['img2'])
-        #
-        # detector = CVSURF(hessianThreshold=para['thr'], nOctaves=para['oct'],
-        #     nOctaveLayers=para['int'], upright=para['upright'],extended=para['ext'])
-        #
-        # kps1, feats1 = detector.detectAndCompute(ips1.img, None)
-        # kps2, feats2 = detector.detectAndCompute(ips2.img, None)
-        #
-        # dim, std = {'None':0, 'Affine':6, 'Homo':8}[para['trans']], para['std']/100.0
-        #
-        # style = para['style']=='Blue/Yellow'
-        #
-        # idx, msk, m = Matcher(dim, std).filter(kps1,feats1,kps2,feats2)
-        # picker1 = Pick(kps1, kps2, idx, msk, ips1, ips2, True, style)
-        # picker2 = Pick(kps1, kps2, idx, msk, ips1, ips2, False, style)
-        #
-        # ips1.tool, ips1.mark = picker1, picker1
-        # ips2.tool, ips2.mark = picker2, picker2
-        # if para['log']:self.log(kps1, kps2, msk, m, dim)
-        #
-        # tempPnt1 = np.float32([kps1[i1].pt for i1,_ in idx])
-        # tempPnt2 = np.float32([kps2[i2].pt for _,i2 in idx]) # tidx = self.pair[:,1-self.host][self.msk]
-        #
-        # newPnt1=[]
-        # newPnt2=[]
-        # for i in range(len(msk)):
-        #     if msk[i]:
-        #         newPnt1.append(tempPnt1[i])
-        #         newPnt2.append(tempPnt2[i])
-        #
-        # # print('newPnt1:{}'.format(len(newPnt1)))
-        # # print('newPnt2:{}'.format(len(newPnt2)))
-        # # 第四个参数取值范围在 1 到 10 , 绝一个点对的阈值。原图像的点经过变换后点与目标图像上对应点的误差
-        # # 超过误差就认为是 outlier
-        # # 返回值中 H 为变换矩阵。mask是掩模，online的点
-        # H, _ = cv2.findHomography(tempPnt1, tempPnt2, cv2.RANSAC, 1.0)
-        # # print('H type:{}'.format(type(H)))
-        # # print('H shape:{}'.format(H.shape))
-        # # print('H :{}'.format(H))
-        #
-        # newImg = self.combine_images( ips2.img, ips1.img, H)
-        #
-        # title = 'SURF Stitched image'
-        # IPy.show_img([newImg], title)
-        #
-        # # cv2.imwrite('savedImg.jpg',newImg)
-        #
-        # # 这句话是做什么用的 ？？？
-        # ips1.update, ips2.update = True, True
 
     # print surf result to the Name 'Surf' Console
     def log(self, pts1, pts2, msk, v, dim):

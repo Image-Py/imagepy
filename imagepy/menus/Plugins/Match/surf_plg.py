@@ -137,6 +137,7 @@ class Match(Simple):
         style = para['style']=='Blue/Yellow'
 
         idx, msk, m = Matcher(dim, std).filter(kps1,feats1,kps2,feats2)
+        
         picker1 = Pick(kps1, kps2, idx, msk, ips1, ips2, True, style)
         picker2 = Pick(kps1, kps2, idx, msk, ips1, ips2, False, style)
 

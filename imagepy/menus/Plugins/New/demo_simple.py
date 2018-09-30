@@ -11,6 +11,6 @@ class Plugin(Simple):
     # increase the current
     def run(self, ips, imgs, para = None):
         if ips.cur<ips.get_nslices()-1:ips.cur+=1
-            
+
 # you can also write muti class in the current modal then:
 # plgs = [class1, class2...]
