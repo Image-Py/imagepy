@@ -27,7 +27,6 @@ class ImagePy(wx.Frame):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', 
                             size = wx.Size(-1,-1), pos = wx.DefaultPosition, 
                             style = wx.RESIZE_BORDER|wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-
         self.auimgr = aui.AuiManager()
         self.auimgr.SetManagedWindow( self )
         self.auimgr.SetFlags(aui.AUI_MGR_DEFAULT)

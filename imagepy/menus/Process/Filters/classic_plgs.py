@@ -23,8 +23,6 @@ class Gaussian(Filter):
     view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix')]
     
     def run(self, ips, snap, img, para = None):
-        #l = int(para['sigma']*3)*2+1
-        #cv2.GaussianBlur(snap, (l, l), para['sigma'], dst=img)
         nimg.gaussian_filter(snap, para['sigma'], output=img)
         
 class GaussianLaplace(Filter):

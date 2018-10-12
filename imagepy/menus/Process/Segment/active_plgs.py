@@ -19,7 +19,7 @@ class ChanVese(Filter):
             (float, 'lambda2', (0,10), 2, 'lambda2', ''),
             (float, 'tol', (0,1), 3, 'tol', ''),
             (int, 'max_iter', (0,512), 0, 'max_iter', 'times'),
-            (float, 'dt', (0,10), 2, 'tol', ''),
+            (float, 'dt', (0,10), 2, 'dt', ''),
             (list, 'init_level_set', ['checkerboard', 'disk', 'small disk'], str, 'init', ''),
             (list, 'out', ['mask', 'line on ori'], str, 'output', '')]
 
@@ -34,36 +34,53 @@ class MorphChanVese(Filter):
     title = 'Morphological Snake Fit'
     note = ['all', 'not_slice', 'auto_snap', 'preview']
     
-    para = {'iter':10, 'init':'circle', 'smooth':1, 'lambda1':1.0, 'lambda2':1.0, 'out':'mask'}
+    para = {'iter':10, 'init':'checkerboard', 'smooth':1, 'lambda1':1.0, 
+        'lambda2':1.0, 'out':'mask', 'sub':False}
 
     view = [(int, 'iter', (0,64), 0, 'iterations', 'time'),
             (list, 'init', ['checkerboard', 'circle'], str, 'init set', ''),
             (int, 'smooth', (1, 4), 0, 'smoothing', ''),
             (float, 'lambda1', (0,10), 2, 'lambda1', ''),
             (float, 'lambda2', (0,10), 2, 'lambda2', ''),
-            (list, 'out', ['mask', 'line on ori'], str, 'output', '')]
+            (list, 'out', ['mask', 'line on ori'], str, 'output', ''),
+            (bool, 'sub', 'show sub stack')]
 
-    def run(self, ips, snap, img, para = None):
+    def preview(self, ips, para):
+        snap, img = ips.snap, ips.img
         msk = morphological_chan_vese(snap, para['iter'], init_level_set=para['init'], 
             smoothing=para['smooth'], lambda1=para['lambda1'], lambda2=para['lambda2']) > 0
         (c1, c2), img[:] = ips.range, snap
         if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
         else: img[binary_dilation(msk) ^ msk] = c2
+        ips.update = 'pix'
+
+    def run(self, ips, snap, img, para = None):
+        stackimg = []
+        callback = lambda x: stackimg.append((x*255).astype(np.uint8)) if para['sub'] else 0
+        msk = morphological_chan_vese(snap, para['iter'], init_level_set=para['init'], 
+            smoothing=para['smooth'], lambda1=para['lambda1'], lambda2=para['lambda2'],
+            iter_callback=callback) > 0
+        (c1, c2), img[:] = ips.range, snap
+        if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
+        else: img[binary_dilation(msk) ^ msk] = c2
+        if para['sub']: IPy.show_img(stackimg, ips.title+'-sub')
 
 class MorphGeoChanVese(Filter):
     title = 'Bound Snake Fit'
     note = ['all', 'not_slice', 'auto_snap', 'preview']
     
-    para = {'iter':10, 'smooth':1, 'thr':128, 'auto':True, 'balloon':0, 'out':'mask'}
+    para = {'iter':10, 'smooth':1, 'thr':128, 'auto':True, 'balloon':-1, 'out':'mask', 'sub':False}
 
     view = [(int, 'iter', (0, 1024), 0, 'iterations', 'time'),
             (int, 'smooth', (1, 4), 0, 'smoothing', ''),
             (float, 'thr', (0,1e5), 2, 'threshold', ''),
             (bool, 'auto', 'auto threshold'),
             (float, 'balloon', (-5, 5), 1, 'balloon', ''),
-            (list, 'out', ['mask', 'line on ori'], str, 'output', '')]
+            (list, 'out', ['mask', 'line on ori'], str, 'output', ''),
+            (bool, 'sub', 'show sub stack')]
 
-    def run(self, ips, snap, img, para = None):
+    def preview(self, ips, para):
+        snap, img = ips.snap, ips.img
         gimage = inverse_gaussian_gradient(img_as_float(snap))
         init = np.ones(img.shape, dtype=np.bool)
         msk = morphological_geodesic_active_contour(gimage, para['iter'], 
@@ -72,21 +89,38 @@ class MorphGeoChanVese(Filter):
         (c1, c2), img[:] = ips.range, snap
         if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
         else: img[binary_dilation(msk) ^ msk] = c2
+        ips.update = 'pix'
+
+    def run(self, ips, snap, img, para = None):
+        stackimg = []
+        callback = lambda x: stackimg.append((x*255).astype(np.uint8)) if para['sub'] else 0
+        gimage = inverse_gaussian_gradient(img_as_float(snap))
+        init = np.ones(img.shape, dtype=np.bool)
+        msk = morphological_geodesic_active_contour(gimage, para['iter'], 
+            init_level_set=init, smoothing=para['smooth'], 
+            threshold='auto' if para['auto'] else para['thr'], 
+            balloon=para['balloon'], iter_callback=callback) > 0
+        (c1, c2), img[:] = ips.range, snap
+        if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
+        else: img[binary_dilation(msk) ^ msk] = c2
+        if para['sub']: IPy.show_img(stackimg, ips.title+'-sub')
 
 class MorphGeoRoi(Filter):
     title = 'ROI Snake Fit'
     note = ['all', 'not_slice', 'auto_snap', 'req_roi', 'preview']
     
-    para = {'iter':10, 'smooth':1, 'thr':128, 'auto':True, 'balloon':0, 'out':'mask'}
+    para = {'iter':10, 'smooth':1, 'thr':128, 'auto':True, 'balloon':-1, 'out':'mask', 'sub':False}
 
     view = [(int, 'iter', (0, 1024), 0, 'iterations', 'time'),
             (int, 'smooth', (1, 4), 0, 'smoothing', ''),
             (float, 'thr', (0,1e5), 2, 'threshold', ''),
             (bool, 'auto', 'auto threshold'),
             (float, 'balloon', (-5, 5), 1, 'balloon', ''),
-            (list, 'out', ['mask', 'line on ori'], str, 'output', '')]
+            (list, 'out', ['mask', 'line on ori'], str, 'output', ''),
+            (bool, 'sub', 'show sub stack')]
 
-    def run(self, ips, snap, img, para = None):
+    def preview(self, ips, para):
+        snap, img = ips.snap, ips.img
         gimage = inverse_gaussian_gradient(img_as_float(snap))
         init = ips.get_msk('out')
         msk = morphological_geodesic_active_contour(gimage, para['iter'], 
@@ -95,6 +129,21 @@ class MorphGeoRoi(Filter):
         (c1, c2), img[:] = ips.range, snap
         if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
         else: img[binary_dilation(msk) ^ msk] = c2
+        ips.update = 'pix'
+
+    def run(self, ips, snap, img, para = None):
+        stackimg = []
+        callback = lambda x: stackimg.append((x*255).astype(np.uint8)) if para['sub'] else 0
+        gimage = inverse_gaussian_gradient(img_as_float(snap))
+        init = ips.get_msk('out')
+        msk = morphological_geodesic_active_contour(gimage, para['iter'], 
+            init_level_set=init, smoothing=para['smooth'], 
+            threshold='auto' if para['auto'] else para['thr'], 
+            balloon=para['balloon'], iter_callback=callback) > 0
+        (c1, c2), img[:] = ips.range, snap
+        if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
+        else: img[binary_dilation(msk) ^ msk] = c2
+        if para['sub']: IPy.show_img(stackimg, ips.title+'-sub')
 
 class RandomWalker(Filter):
     title = 'Random Walker'
