@@ -16,7 +16,7 @@ class Uniform(Filter):
         nimg.uniform_filter(snap, para['size'], output=img)
 
 class Gaussian(Filter):
-    """Gaussian: derived from imagepy.core.engine.Filter """
+    __doc__ = nimg.gaussian_filter.__doc__
     title = 'Gaussian'
     note = ['all', 'auto_msk', 'auto_snap','preview']
     para = {'sigma':2}

@@ -37,6 +37,8 @@ class Free:
         if self.view==None:return True
         with ParaDialog(WindowsManager.get(), self.title) as dialog:
             dialog.init_view(self.view, self.para, False, True)
+            doc = self.__doc__ or '### Sorry\nNo document yet!'
+            dialog.on_help = lambda : IPy.show_md(self.title, doc)
             return dialog.ShowModal() == wx.ID_OK
         
     def start(self, para=None, callback=None):

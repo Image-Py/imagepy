@@ -146,7 +146,7 @@ class IntensityFilter(Filter):
     title = 'Intensity Filter'
     note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap', 'not_slice', 'preview']
     para = {'con':'4-connect', 'inten':None, 'max':0, 'min':0, 'mean':0, 'std':0, 'sum':0, 'front':255, 'back':0}
-    view = [('img', 'intensity', 'inten', ''),
+    view = [('img', 'inten', 'intensity', ''),
             (list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             ('lab', None, 'Filter: "+" means >=, "-" means <'),
             (int, 'front', (0, 255), 0, 'front color', ''),

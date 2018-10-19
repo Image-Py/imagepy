@@ -52,8 +52,8 @@ class Hysteresis(Filter):
 class Auto(Filter):
     title = 'Auto Threshold'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
-    para = {'method':'otus'}
-    view = [(list, 'method', ['Otus', 'Yen', 'Isodata', 'Li', 
+    para = {'method':'otsu'}
+    view = [(list, 'method', ['Otsu', 'Yen', 'Isodata', 'Li', 
         'Mini', 'Mean', 'Triangle'], str, 'Method', '')]
 
     def run(self, ips, snap, img, para = None):

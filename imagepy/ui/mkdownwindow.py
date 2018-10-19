@@ -202,4 +202,5 @@ class MkDownWindow(wx.Frame):
         wx.Frame.__init__ (self, parent, id = wx.ID_ANY, title = title, size = wx.Size(500,500))
         logopath = os.path.join(root_dir, 'data/logo.ico')
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
+        cont = '\n'.join([i.strip() for i in cont.split('\n')])
         HtmlPanel(self, md2html(cont), url)

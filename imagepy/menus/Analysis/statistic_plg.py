@@ -46,7 +46,7 @@ class HistogramFrame(wx.Frame):
         back.Add(panel, 1, wx.EXPAND)
         sizer = wx.BoxSizer( wx.VERTICAL )
         histc = HistCanvas(panel)
-        histc.set_hist(hist)
+        histc.SetValue(hist)
         txt = wx.StaticText( panel, wx.ID_ANY, 'Channel:'+'Gray', wx.DefaultPosition, wx.DefaultSize, 0 )
         sizer.Add( txt, 0, wx.LEFT|wx.RIGHT, 8 )
         sizer.Add( histc, 0, wx.LEFT|wx.RIGHT, 8 )
@@ -77,7 +77,7 @@ class Histogram(Simple):
         else:
             img = ips.lookup() if msk is None else ips.lookup()[msk]
             hist = np.histogram(img, np.arange(257))[0]
-        show_hist(WindowsManager.get(), ips.title+'-Histogram', hist)
+        show_hist(IPy.curapp, ips.title+'-Histogram', hist)
 
 
 class Frequence(Simple):
