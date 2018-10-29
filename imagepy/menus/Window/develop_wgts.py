@@ -1,4 +1,4 @@
-import wx
+import wx, wx.lib.agw.aui as aui
 from imagepy.core.manager import WidgetsManager
 from imagepy.menus.Plugins.Macros.recorder_wgt import Plugin as recorder
 from imagepy.menus.Plugins.Manager.console_wgt import Plugin as console
@@ -15,7 +15,7 @@ class DevelopToolSute ( wx.Panel ):
 		sizer = wx.BoxSizer( wx.VERTICAL )
 		
 		mrecorder = recorder(self)
-		self.notebook = wx.aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
+		self.notebook = aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, aui.AUI_NB_DEFAULT_STYLE )
 		self.notebook.AddPage( mrecorder, mrecorder.title, True, wx.NullBitmap )
 		self.notebook.AddPage( console(self), console.title, False, wx.NullBitmap )
 		self.notebook.AddPage( plglist(self), plglist.title, False, wx.NullBitmap )

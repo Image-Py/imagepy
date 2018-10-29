@@ -1,5 +1,6 @@
 from .tablewindow import *
-import wx.aui as aui
+#import aui as aui
+import wx.lib.agw.aui as aui
 
 class TablePanel ( wx.Panel ):
     def __init__( self, parent):
@@ -74,12 +75,12 @@ class TableFrame(wx.Frame):
 		WTableManager.remove(self.tablepanel)
 		event.Skip()
 
-class TableNoteBook(wx.aui.AuiNotebook):
+class TableNoteBook(aui.AuiNotebook):
 	def __init__(self, parent):
-		wx.aui.AuiNotebook.__init__( self, parent, wx.ID_ANY, 
-			wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
-		self.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid) 
-		self.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close)
+		aui.AuiNotebook.__init__( self, parent, wx.ID_ANY, 
+			wx.DefaultPosition, wx.DefaultSize, aui.AUI_NB_DEFAULT_STYLE )
+		self.Bind( aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid) 
+		self.Bind( aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close)
 
 	def add_page(self, panel, tps):
 		self.AddPage(panel, tps.title, True, wx.NullBitmap )

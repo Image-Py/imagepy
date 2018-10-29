@@ -3,7 +3,7 @@
 Created on Sat Dec  3 03:57:53 2016
 @author: yxl
 """
-import threading, wx, os
+import threading, wx, os, wx.lib.agw.aui as aui
 from imagepy import IPy, root_dir
 from ..manager import WidgetsManager
 
@@ -18,7 +18,7 @@ class Widget():
 		if not WidgetsManager.getref(self.title) is None: return
 		pan = self.pan(IPy.curapp)
 		WidgetsManager.addref(pan)
-		IPy.curapp.auimgr.AddPane(pan, wx.aui.AuiPaneInfo(). DestroyOnClose(True). Left(). Caption(self.title)  .PinButton( True )
+		IPy.curapp.auimgr.AddPane(pan, aui.AuiPaneInfo(). DestroyOnClose(True). Left(). Caption(self.title)  .PinButton( True )
 			.Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(IPy.uimode()=='ipy').Layer( 15 ) )
 		IPy.curapp.Layout()
 		IPy.curapp.auimgr.Update()

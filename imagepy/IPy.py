@@ -170,7 +170,7 @@ def showtable(data, title):
         tablep = TablePanel(curapp.tablenb)
         tablep.set_tps(tps)
         curapp.tablenb.add_page( tablep, tps)
-        info = curapp.auimgr.GetPane(curapp.tablenb)
+        info = curapp.auimgr.GetPane(curapp.tablenbwrap)
         info.Show(True)
         curapp.auimgr.Update()
     elif uimode()=='ij':
