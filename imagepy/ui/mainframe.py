@@ -115,6 +115,8 @@ class ImagePy(wx.Frame):
         self.auimgr.AddPane( self.tablenbwrap, aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock().Hide()
             .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Tables') . 
             BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
+
+        #self.auimgr.SetArtProvider(MyArtProvider())
         #self.canvasnb.Bind( aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)        
 
     def load_ijui(self):

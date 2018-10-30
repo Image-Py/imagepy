@@ -23,7 +23,7 @@ def show(ui = True):
 	shadow = wx.Colour(255,255,255)
 	# SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT, 3000, None, -1)
 	
-	asp = AS.AdvancedSplash(None, bitmap=bitmap, timeout=5000,
+	asp = AS.AdvancedSplash(None, bitmap=bitmap, timeout=1000,
 		agwStyle=AS.AS_TIMEOUT |
 		AS.AS_CENTER_ON_PARENT |
 		AS.AS_SHADOW_BITMAP,
