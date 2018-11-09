@@ -36,7 +36,7 @@ class ImagePy(wx.Frame):
         #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         IPy.curapp = self
-        self.SetSizeHints( wx.Size(900,700) if IPy.uimode() == 'ipy' else wx.Size( 600,-1 ))
+        self.SetSizeHints( wx.Size(900,700) if IPy.uimode() == 'ipy' else wx.Size( 580,-1 ))
         
 
         self.menubar = pluginloader.buildMenuBarByPath(self, 'menus', 'plugins', None, True)
