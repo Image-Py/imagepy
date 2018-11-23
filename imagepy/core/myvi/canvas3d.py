@@ -6,7 +6,7 @@ import wx.glcanvas as glcanvas
 from .manager import *
 import os.path as osp
 from wx.lib.pubsub import pub
-from .util import build_surf2d, build_surf3d, build_ball, build_balls
+from .util import *
 
 #----------------------------------------------------------------------
 from wx.glcanvas import WX_GL_DEPTH_SIZE 
@@ -254,10 +254,10 @@ class Viewer3D(wx.Panel):
             cube = mesh.Mesh.from_file(path)
             verts = cube.vectors.reshape((-1,3)).astype(np.float32)
             ids = np.arange(len(verts), dtype=np.uint32).reshape((-1,3))
-            norms = np.linalg.norm(cube.normals, axis=1)
-            norms = (cube.normals.reshape((-1,3)).T/norms).T
-            norms = np.hstack((norms, norms, norms)).reshape((-1,3))
-            self.add_surf_asyn('stl', verts, ids, norms, (1,1,1))
+            norms = count_ns(verts, ids)
+            fp, fn = osp.split(path)
+            fn, fe = osp.splitext(fn)
+            self.add_surf_asyn(fn, verts, ids, norms, (1,1,1))
         dialog.Destroy()
 
     def get_obj(self, name):

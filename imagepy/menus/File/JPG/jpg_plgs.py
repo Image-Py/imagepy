@@ -3,11 +3,12 @@ from skimage.io import imread, imsave
 from imagepy.core.manager import ReaderManager, WriterManager
 
 ReaderManager.add('jpg', imread)
+ReaderManager.add('jpeg', imread)
 WriterManager.add('jpg', imsave)
 
 class OpenFile(fileio.Reader):
 	title = 'JPG Open'
-	filt = ['JPG']
+	filt = ['JPG', 'JPEG']
 
 class SaveFile(fileio.Writer):
 	title = 'JPG Save'
