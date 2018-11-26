@@ -7,6 +7,7 @@ import wx
 from ... import IPy
 from ...core.manager import PluginsManager 
 from wx.lib.pubsub import pub
+from imagepy.core.manager import ReaderManager, ViewerManager
 from imagepy import IPy
 
 def stepmacros(plg, callafter=None): 
@@ -46,3 +47,17 @@ class Macros:
         self.callafter = callafter
         self.cur = 0
         self.run()
+
+def show_mc(data, title):
+    wx.CallAfter(Macros(title, data).start)
+
+ViewerManager.add('mc', show_mc)
+
+def read_mc(path):
+    f = open(path, encoding='utf-8')
+    cont = f.readlines()
+    f.close()
+    print(cont)
+    return cont
+
+ReaderManager.add('mc', read_mc, tag='mc')
