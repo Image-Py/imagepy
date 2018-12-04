@@ -57,7 +57,7 @@ class Auto(Filter):
         'Mini', 'Mean', 'Triangle'], str, 'Method', '')]
 
     def run(self, ips, snap, img, para = None):
-        key = {'Otus':threshold_otsu, 'Yen':threshold_yen, 
+        key = {'Otsu':threshold_otsu, 'Yen':threshold_yen, 
             'Isodata':threshold_isodata, 'Li':threshold_li,
             'Mini':threshold_minimum, 'Mean':threshold_mean,
             'Triangle':threshold_triangle}
@@ -72,7 +72,7 @@ class Local(Filter):
             (int, 'offset', (0, 50), 0, 'offset', '')]
     
     def run(self, ips, snap, img, para = None):
-        img[:] = (snap>threshold_local(snap, para['size'], para['method'], para['offset']))*ips.range[1]
+        img[:] = (snap>threshold_local(snap, para['size'], para['method'].lower(), para['offset']))*ips.range[1]
 
 class Niblack(Filter):
     title = 'Niblack Threshold'
