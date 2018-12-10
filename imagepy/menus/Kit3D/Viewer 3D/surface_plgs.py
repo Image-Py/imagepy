@@ -1,15 +1,42 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 12 00:42:18 2017
+Created on Tue Jan 10 22:33:33 2017
 
 @author: yxl
 """
-from imagepy.core.engine import Filter
 from imagepy import IPy
+from imagepy.core.engine import Simple, Filter, Free
+from scipy.ndimage.filters import gaussian_filter
 from imagepy.core import myvi
-import numpy as np
 
-class Plugin(Filter):
+class Show(Free):
+    title = 'Show Viewer 3D'
+    asyn = False
+    def run(self, para):
+        myvi.Frame3D.figure(IPy.curapp, title='3D Canvas').Raise()
+
+class Surface2D(Simple):
+    title = '2D Surface'
+    note = ['8-bit', '16-bit']
+    para = {'name':'undifine', 'scale':2, 'sigma':2,'h':1}
+    view = [(str, 'name', 'Name', ''),
+            (int, 'scale', (1,5), 0, 'down scale', 'pix'),
+            (int, 'sigma', (0,30), 0, 'sigma', ''),
+            (float, 'h', (0.1,10), 1, 'scale z', '')]
+    
+    def load(self, para):
+        self.frame = myvi.Frame3D.figure(IPy.curapp, title='3D Canvas')
+        return True
+
+    def run(self, ips, imgs, para = None):
+        ds, sigma = para['scale'], para['sigma']
+        vts, fs, ns, cs = myvi.build_surf2d(ips.img, ds=ds, sigma=para['sigma'], k=para['h'])
+        self.frame.viewer.add_surf_asyn(para['name'], vts, fs, ns, cs)
+        self.frame.Raise()
+        self.frame = None
+        #self.frame.add_surf2d('dem', ips.img, ips.lut, scale, sigma)
+
+class Surface3D(Filter):
     modal = False
     title = '3D Surface'
     note = ['8-bit', 'not_slice', 'not_channel', 'preview']
@@ -50,18 +77,4 @@ class Plugin(Filter):
         self.frame.Raise()
         self.frame = None
 
-
-    '''
-    def run(self, ips, imgs, para = None):
-        from mayavi import mlab
-        volume = mlab.pipeline.scalar_field(ips.imgs)
-        if para['sigma']!=0:
-            volume = mlab.pipeline.user_defined(volume, filter='ImageGaussianSmooth')
-            volume.filter.standard_deviations = [para['sigma']]*3
-        c = tuple([i/255.0 for i in para['color']])
-        contour = mlab.pipeline.iso_surface(volume, contours=[para['thr']], 
-                                            color=c, opacity=para['opa'])
-        mlab.show()
-    '''
-if __name__ == '__main__':
-    pass
+plgs = [Show, Surface2D, Surface3D]

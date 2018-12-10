@@ -14,7 +14,8 @@ from ..core.manager import ConfigManager, PluginsManager, TaskManager, ImageMana
 from ..core.engine import Macros
 from .canvasframe import CanvasNoteBook
 from .tableframe import TableNoteBook
-import wx.aui as aui
+#import aui as aui
+import wx.lib.agw.aui as aui
 
 class FileDrop(wx.FileDropTarget):
     def OnDropFiles(self, x, y, path):
@@ -27,16 +28,15 @@ class ImagePy(wx.Frame):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', 
                             size = wx.Size(-1,-1), pos = wx.DefaultPosition, 
                             style = wx.RESIZE_BORDER|wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-
         self.auimgr = aui.AuiManager()
         self.auimgr.SetManagedWindow( self )
-        self.auimgr.SetFlags(aui.AUI_MGR_DEFAULT)
+        #self.auimgr.SetFlags(aui.AUI_MGR_DEFAULT)
 
         logopath = os.path.join(root_dir, 'data/logo.ico')
         #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
         IPy.curapp = self
-        self.SetSizeHints( wx.Size(900,700) if IPy.uimode() == 'ipy' else wx.Size( 600,-1 ))
+        self.SetSizeHints( wx.Size(900,700) if IPy.uimode() == 'ipy' else wx.Size( 580,-1 ))
         
 
         self.menubar = pluginloader.buildMenuBarByPath(self, 'menus', 'plugins', None, True)
@@ -63,7 +63,7 @@ class ImagePy(wx.Frame):
         sizersta.Add( self.pro_bar, 0, wx.ALIGN_BOTTOM|wx.BOTTOM|wx.LEFT|wx.RIGHT, 2 )
         stapanel.SetSizer(sizersta)
         stapanel.SetDropTarget(FileDrop())
-        self.auimgr.AddPane( stapanel,  wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True )
+        self.auimgr.AddPane( stapanel,  aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True )
             .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True )
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
 
@@ -88,37 +88,50 @@ class ImagePy(wx.Frame):
         self.toolbar.GetSizer().SetOrientation(wx.VERTICAL)
         self.toolbar.GetSizer().Layout()
         self.toolbar.Fit()
-        self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Left()  .PinButton( True )
+        self.auimgr.AddPane(self.toolbar, aui.AuiPaneInfo() .Left()  .PinButton( True )
             .CaptionVisible( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ).MaxSize(wx.Size( 32,-1 ))
             . BottomDockable( True ).TopDockable( False ).Layer( 10 ) )
         self.widgets = widgetsloader.build_widgets(self, 'widgets', 'plugins')
-        self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
+        self.auimgr.AddPane( self.widgets, aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ) .Layer( 10 ) )
         
-        self.canvasnb = CanvasNoteBook( self)
-        self.auimgr.AddPane( self.canvasnb, wx.aui.AuiPaneInfo() .Center() .CaptionVisible( False ).PinButton( True ).Dock()
+        self.canvasnbwrap = wx.Panel(self)
+        sizer = wx.BoxSizer( wx.VERTICAL )
+        self.canvasnb = CanvasNoteBook( self.canvasnbwrap)
+        sizer.Add( self.canvasnb, 1, wx.EXPAND |wx.ALL, 0 )
+        self.canvasnbwrap.SetSizer( sizer )
+        self.canvasnbwrap.Layout()
+        self.auimgr.AddPane( self.canvasnbwrap, aui.AuiPaneInfo() .Center() .CaptionVisible( False ).PinButton( True ).Dock()
             .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ). BottomDockable( True ).TopDockable( False )
             .LeftDockable( True ).RightDockable( True ) )
 
-        self.tablenb = TableNoteBook( self)
-        self.auimgr.AddPane( self.tablenb, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock().Hide()
+        self.tablenbwrap = wx.Panel(self)
+        sizer = wx.BoxSizer( wx.VERTICAL )
+        self.tablenb = TableNoteBook( self.tablenbwrap)
+        sizer.Add( self.tablenb, 1, wx.EXPAND |wx.ALL, 0 )
+        self.tablenbwrap.SetSizer( sizer )
+        self.tablenbwrap.Layout()
+
+        self.auimgr.AddPane( self.tablenbwrap, aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock().Hide()
             .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Tables') . 
             BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
-        #self.canvasnb.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)        
+
+        #self.auimgr.SetArtProvider(MyArtProvider())
+        #self.canvasnb.Bind( aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)        
 
     def load_ijui(self):
-        self.auimgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo() .Top() .CaptionVisible( False ).PinButton( True )
+        self.auimgr.AddPane(self.toolbar, aui.AuiPaneInfo() .Top() .CaptionVisible( False ).PinButton( True )
             .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True ) 
             .BottomDockable( False ).TopDockable( False ).LeftDockable( False ).RightDockable( False )
             .MinSize(wx.Size(-1, 32)). Layer( 10 ) )
         self.widgets = widgetsloader.build_widgets(self, 'widgets', 'plugins')
-        self.auimgr.AddPane( self.widgets, wx.aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
+        self.auimgr.AddPane( self.widgets, aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Float().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ).Hide() .Layer( 10 ) )
         
     def load_dev(self):
         return
-        self.devpan = wx.aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
-        self.auimgr.AddPane( self.devpan, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True ).Dock()
+        self.devpan = aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, aui.AUI_NB_DEFAULT_STYLE )
+        self.auimgr.AddPane( self.devpan, waui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True ).Dock()
             .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ) )
 
     def on_pan_close(self, event):

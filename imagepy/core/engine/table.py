@@ -19,6 +19,7 @@ class Table:
     view = None
     prgs = (None, 1)
     modal = True
+    asyn = True
 
     def __init__(self, tps=None):
         print('simple start')
@@ -35,11 +36,13 @@ class Table:
         tps.update = True
 
     def show(self):
-        if self.view==None:return wx.ID_OK
+        if self.view==None:return True
         self.dialog = ParaDialog(IPy.get_twindow(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
+        doc = self.__doc__ or '### Sorry\nNo document yet!'
+        self.dialog.on_help = lambda : IPy.show_md(self.title, doc)
         self.dialog.set_handle(lambda x:self.preview(self.tps, self.para))
-        if self.modal: return self.dialog.ShowModal()
+        if self.modal: return self.dialog.ShowModal() == wx.ID_OK
         self.dialog.on_ok = lambda : self.ok(self.tps)
         self.dialog.on_cancel = lambda : self.cancel(self.tps)
         self.dialog.Show()
@@ -53,10 +56,10 @@ class Table:
 
     def ok(self, tps, para=None, callafter=None):
         if para == None: para = self.para
-        if IPy.uimode() == 'no':
-            self.runasyn(tps, tps.data, tps.snap, para, callafter)
-        else: threading.Thread(target = self.runasyn, 
+        if self.asyn and IPy.uimode() != 'no':
+            threading.Thread(target = self.runasyn, 
                     args = (tps, tps.data, tps.snap, para, callafter)).start()
+        else: self.runasyn(tps, tps.data, tps.snap, para, callafter)
         win = WidgetsManager.getref('Macros Recorder')
         if win!=None: win.write('{}>{}'.format(self.title, para))
 
@@ -117,11 +120,11 @@ class Table:
             self.ok(self.tps, para, callback)
         elif self.view==None:
             if not self.__class__.show is Table.show:
-                if self.show() == wx.ID_OK:
+                if self.show():
                     self.ok(self.tps, para, callback)
             else: self.ok(self.tps, para, callback)
         elif self.modal:
-            if self.show() == wx.ID_OK:
+            if self.show():
                 self.ok(self.tps, para, callback)
             else:self.cancel(self.tps)
             if not self.dialog is None: self.dialog.Destroy()

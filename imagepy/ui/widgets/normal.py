@@ -7,7 +7,7 @@ class NumCtrl(wx.Panel):
         wx.Panel.__init__(self, parent)
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+                                  wx.DefaultPosition, wx.DefaultSize)
 
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -16,7 +16,7 @@ class NumCtrl(wx.Panel):
         sizer.Add( self.ctrl, 2, wx.ALL, 5 )
 
         self.postfix = lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+                                  wx.DefaultPosition, wx.DefaultSize)
 
         lab_unit.Wrap( -1 )
         sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -58,7 +58,7 @@ class TextCtrl(wx.Panel):
         wx.Panel.__init__(self, parent)
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+                                  wx.DefaultPosition, wx.DefaultSize)
 
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -66,7 +66,7 @@ class TextCtrl(wx.Panel):
         sizer.Add( self.ctrl, 2, wx.ALL, 5 )
 
         self.postfix = lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+                                  wx.DefaultPosition, wx.DefaultSize)
 
         lab_unit.Wrap( -1 )
         sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -92,13 +92,13 @@ class ColorCtrl(wx.Panel):
         wx.Panel.__init__(self, parent)
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+                                   wx.DefaultPosition, wx.DefaultSize)
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
         self.ctrl = wx.TextCtrl(self, wx.TE_RIGHT)
         sizer.Add( self.ctrl, 2, wx.ALL, 5 )
         self.postfix = lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+                                  wx.DefaultPosition, wx.DefaultSize)
         lab_unit.Wrap( -1 )
         sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
         self.SetSizer(sizer)
@@ -138,7 +138,7 @@ class Choice(wx.Panel):
         self.tp, self.choices = tp, choices
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+                                   wx.DefaultPosition, wx.DefaultSize)
 
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -149,7 +149,7 @@ class Choice(wx.Panel):
         self.ctrl.SetSelection(0)
         sizer.Add( self.ctrl, 2, wx.ALL, 5 )
         self.postfix = lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+                                  wx.DefaultPosition, wx.DefaultSize)
         lab_unit.Wrap( -1 )
         sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
         self.SetSizer(sizer)
@@ -174,7 +174,7 @@ class AnyType( wx.Panel ):
         
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+                                   wx.DefaultPosition, wx.DefaultSize)
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
@@ -238,8 +238,8 @@ class Choices(wx.Panel):
         wx.Panel.__init__(self, parent)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
-                                   wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                   wx.DefaultPosition, wx.DefaultSize)
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALL, 5 )
         self.ctrl = wx.CheckListBox(self, -1, (80, 50), wx.DefaultSize, [str(i) for i in choices])

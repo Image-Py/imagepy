@@ -23,7 +23,7 @@ class Plugin(Tool):
         if btn==1:
             if not self.doing:
                 if ips.roi!= None:
-                    self.curobj = ips.roi.pick(x, y, lim)
+                    self.curobj = ips.roi.pick(x, y, ips.cur, lim)
                     ips.roi.info(ips, self.curobj)
                 if not self.curobj in (None,True):return
                 self.oper = '+'
@@ -70,13 +70,13 @@ class Plugin(Tool):
         lim = 5.0/key['canvas'].get_scale()        
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
-            if ips.roi.snap(x, y, lim)!=None:
+            if ips.roi.snap(x, y, ips.cur, lim)!=None:
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
             if ips.roi.dtype == 'polygon' and self.doing:
                 l,b,r,t = self.ox, self.oy, x, y
                 self.helper.buf = [[(l,b),(r,b),(r,t),(l,t),(l,b)],[]]
-            if self.curobj: ips.roi.draged(self.odx, self.ody, x, y, self.curobj)
+            if self.curobj: ips.roi.draged(self.odx, self.ody, x, y, ips.cur, self.curobj)
             ips.update = True
         self.odx, self.ody = x, y
 

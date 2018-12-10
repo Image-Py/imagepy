@@ -175,17 +175,7 @@ class Canvas (wx.Panel):
 
     def on_paint(self, event):
         wx.BufferedPaintDC(self, self.buffer)
-        '''
-        cdc = wx.ClientDC(self)
-        #cdc.BeginDrawing()
-        if self.ips.roi != None:
-            self.ips.roi.draw(cdc, self.to_panel_coor)
-        if self.ips.mark != None:
-            self.ips.mark.draw(cdc, self.to_panel_coor, cur=self.ips.cur, k = self.get_scale())
-        if self.ips.unit!=(1,'pix'):
-            self.draw_ruler(cdc)
-        #cdc.EndDrawing()
-        '''
+
     def merge(self, img, back, M, O, mode, shape, win, lookup):
         if img.ndim == 2:
             rstarr = np.zeros(shape, dtype=img.dtype)
@@ -256,7 +246,7 @@ class Canvas (wx.Panel):
         #cdc = wx.ClientDC(self)
         #cdc.BeginDrawing()
         if self.ips.roi != None:
-            self.ips.roi.draw(dc, self.to_panel_coor)
+            self.ips.roi.draw(dc, self.to_panel_coor, cur=self.ips.cur, k = self.get_scale())
         if self.ips.mark != None:
             self.ips.mark.draw(dc, self.to_panel_coor, cur=self.ips.cur, k = self.get_scale())
         #cdc.EndDrawing()

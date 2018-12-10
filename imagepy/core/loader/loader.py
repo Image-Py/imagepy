@@ -5,7 +5,7 @@ Created on Fri Jan  6 23:45:59 2017
 @author: yxl
 """
 import os, sys
-from ..engine import Macros, MkDown, Widget
+from ..engine import Macros, MkDown, Widget, WorkFlow
 from ..manager import ToolsManager, PluginsManager, WidgetsManager
 from ... import IPy, root_dir
 from codecs import open
@@ -30,6 +30,13 @@ def extend_plugins(path, lst, err):
             cmds = f.readlines()
             f.close()
             rst.append(Macros(i[:-3], [getpath(pt, i) for i in cmds]))
+            PluginsManager.add(rst[-1])
+        elif i[-3:] == '.wf':
+            pt = os.path.join(root_dir,path)
+            f = open(pt+'/'+i, 'r', 'utf-8')
+            cmds = f.read()
+            f.close()
+            rst.append(WorkFlow(i[:-3], cmds))
             PluginsManager.add(rst[-1])
         elif i[-3:] == '.md':
             f = open(os.path.join(root_dir,path)+'/'+i, 'r', 'utf-8')
@@ -91,7 +98,7 @@ def build_plugins(path, err=False):
             if len(sub)!=0:subtree.append(sub)
         elif i[-6:] in ('plg.py', 'lgs.py', 'wgt.py', 'gts.py'):
             subtree.append(i)
-        elif i[-3:] in ('.mc', '.md'):
+        elif i[-3:] in ('.mc', '.md', '.wf'):
             subtree.append(i)
     if len(subtree)==0:return []
     
@@ -111,7 +118,7 @@ def build_plugins(path, err=False):
 def extend_tools(path, lst, err):
     rst = []
     for i in lst:
-        if i[-3:] in ('.mc', '.md'):
+        if i[-3:] in ('.mc', '.md', '.wf'):
             pt = os.path.join(root_dir, path)
             f = open(pt+'/'+i)
             cmds = f.readlines()
@@ -158,7 +165,7 @@ def build_tools(path, err=False):
         elif not root:
             if i[len(i)-7:] in ('_tol.py', 'tols.py'):
                 subtree.append(i[:-3])
-            elif i[-3:] in ('.mc', '.md'):
+            elif i[-3:] in ('.mc', '.md', '.wf'):
                 subtree.append(i)
     if len(subtree)==0:return []
     rpath = path.replace('/', '.').replace('\\','.')

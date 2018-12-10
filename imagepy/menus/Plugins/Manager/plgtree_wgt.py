@@ -10,6 +10,7 @@ import wx,os
 from imagepy import IPy, root_dir
 from imagepy.core.loader import loader
 from wx.py.editor import EditorFrame
+from glob import glob
 
 class Plugin ( wx.Panel ):
     title = 'Plugin Tree View'
@@ -22,7 +23,7 @@ class Plugin ( wx.Panel ):
         
         self.tre_plugins = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, 
                                         wx.DefaultSize, wx.TR_DEFAULT_STYLE )
-        self.tre_plugins.SetMinSize( wx.Size( 200,-1 ) )
+        self.tre_plugins.SetMinSize( wx.Size( 300,-1 ) )
         
         bSizer1.Add( self.tre_plugins, 0, wx.ALL|wx.EXPAND, 5 )
         bSizer3 = wx.BoxSizer( wx.VERTICAL )
@@ -72,9 +73,22 @@ class Plugin ( wx.Panel ):
                 self.tre_plugins.SetItemData(item, i)
                 
     def load(self):
-        data = loader.build_plugins('menus')
+        datas = loader.build_plugins('menus')
+        keydata = {}
+        for i in datas[1]:
+            if isinstance(i, tuple): keydata[i[0].__name__.split('.')[-1]] = i[1]
+        #print(keydata)
+        extends = glob('plugins/*/menus')
+        for i in extends:
+            plgs = loader.build_plugins(i)
+            for j in plgs[1]:
+                if not isinstance(j, tuple): continue
+                name = j[0].__name__.split('.')[-1]
+                if name in keydata: 
+                    keydata[name].extend(j[1])
+                else: datas[1].append(j)
         root = self.tre_plugins.AddRoot('Plugins')
-        self.addnode(root, data[1])
+        self.addnode(root, datas[1])
     
     # Virtual event handlers, overide them in your derived class
     def on_run( self, event ):

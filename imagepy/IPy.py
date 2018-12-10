@@ -109,7 +109,7 @@ def alert(info, title="ImagePy Alert!"):
         print(info)
     else:
         dialog=wx.MessageDialog(curapp, info, title, wx.OK)
-        dialog.ShowModal()
+        dialog.ShowModal() == wx.ID_OK
         dialog.Destroy()
 
 # MT alert = lambda info, title='image-py':callafter(alert_, *(info, title))
@@ -138,7 +138,7 @@ def getpath(title, filt, k, para=None):
         if para!=None:para['path'] = path
     dialog.Destroy()
 
-    return rst if para!=None else path
+    return rst == wx.ID_OK if para!=None else path
 
 def getdir(title, filt, para=None):
     from .core import manager
@@ -152,7 +152,7 @@ def getdir(title, filt, para=None):
         path = dialog.GetPath()
         if para!=None:para['path'] = path
     dialog.Destroy()
-    return rst if para!=None else path
+    return rst == wx.ID_OK if para!=None else path
 
 def get_para(title, view, para):
     from .ui.panelconfig import ParaDialog
@@ -160,7 +160,7 @@ def get_para(title, view, para):
     pd.init_view(view, para)
     rst = pd.ShowModal()
     pd.Destroy()
-    return rst
+    return rst == wx.ID_OK
 
 def showtable(data, title):
     from .core import TablePlus
@@ -170,7 +170,7 @@ def showtable(data, title):
         tablep = TablePanel(curapp.tablenb)
         tablep.set_tps(tps)
         curapp.tablenb.add_page( tablep, tps)
-        info = curapp.auimgr.GetPane(curapp.tablenb)
+        info = curapp.auimgr.GetPane(curapp.tablenbwrap)
         info.Show(True)
         curapp.auimgr.Update()
     elif uimode()=='ij':

@@ -100,8 +100,11 @@ class Filter:
     def show(self, temp=ParaDialog):
         self.dialog = temp(WindowsManager.get(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
+
+        doc = self.__doc__ or '### Sorry\nNo document yet!'
+        self.dialog.on_help = lambda : IPy.show_md(self.title, doc)
         self.dialog.set_handle(lambda x:self.preview(self.ips, x))
-        if self.modal: return self.dialog.ShowModal()
+        if self.modal: return self.dialog.ShowModal() == wx.ID_OK
         self.dialog.on_ok = lambda : self.ok(self.ips)
         self.dialog.on_cancel = lambda : self.cancel(self.ips)
         self.dialog.Show()
@@ -193,11 +196,11 @@ class Filter:
             self.ok(self.ips, para, callafter)
         elif self.view==None:
             if not self.__class__.show is Filter.show:
-                if self.show() == wx.ID_OK:
+                if self.show():
                     self.ok(self.ips, para, callafter)
             else: self.ok(self.ips, para, callafter)
         elif self.modal:
-            if self.show() == wx.ID_OK:
+            if self.show():
                 self.ok(ips, None, callafter)
             else:self.cancel(ips)
             self.dialog.Destroy()

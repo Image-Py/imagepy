@@ -33,11 +33,13 @@ class Simple:
     def preview(self, ips, para):pass
 
     def show(self, temp=ParaDialog):
-        if self.view==None:return wx.ID_OK
+        if self.view==None:return True
         self.dialog = temp(IPy.get_window(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
+        doc = self.__doc__ or '### Sorry\nNo document yet!'
+        self.dialog.on_help = lambda : IPy.show_md(self.title, doc)
         self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
-        if self.modal: return self.dialog.ShowModal()
+        if self.modal: return self.dialog.ShowModal() == wx.ID_OK
         self.dialog.on_ok = lambda : self.ok(self.ips)
         self.dialog.on_cancel = lambda : self.cancel(self.ips)
         self.dialog.Show()
@@ -110,11 +112,11 @@ class Simple:
             self.ok(self.ips, para, callback)
         elif self.view==None:
             if not self.__class__.show is Simple.show:
-                if self.show() == wx.ID_OK:
+                if self.show():
                     self.ok(self.ips, para, callback)
             else: self.ok(self.ips, para, callback)
         elif self.modal:
-            if self.show() == wx.ID_OK:
+            if self.show():
                 self.ok(self.ips, para, callback)
             else:self.cancel(self.ips)
             if not self.dialog is None: self.dialog.Destroy()

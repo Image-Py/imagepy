@@ -37,7 +37,6 @@ def medial_axis(data, idx, branch = True):
     h, w = data.shape
     data = data.ravel()
     for id in idx:
-        
         if data[id]==0:continue
         i2=id-w;i8=id+w;i1=i2-1;i3=i2+1;
         i4=id-1;i6=id+1;i7=i8-1;i9=i8+1;
@@ -51,6 +50,7 @@ def medial_axis(data, idx, branch = True):
 
 def mid_axis(img):
     dis = ndimg.distance_transform_edt(img)
+    dis[[0,-1],:] = 0; dis[:,[0,-1]] = 0
     idx = np.argsort(dis.flat).astype(np.int32)
     medial_axis(dis, idx, lut)
     return dis

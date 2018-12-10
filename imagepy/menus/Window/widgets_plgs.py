@@ -35,7 +35,7 @@ class TableWindow(Free):
 	def run(self, para = None):
 		if IPy.uimode() != 'ipy': return
 		app = IPy.curapp
-		info = app.auimgr.GetPane(app.tablenb)
+		info = app.auimgr.GetPane(app.tablenbwrap)
 		info.Show(not info.IsShown())
 		app.auimgr.Update()
 

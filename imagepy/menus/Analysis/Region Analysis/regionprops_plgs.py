@@ -3,38 +3,14 @@
 Created on Tue Dec 27 01:06:59 2016
 @author: yxl
 """
-from imagepy import IPy, wx
+from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Simple, Filter
 from imagepy.core.manager import ImageManager
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
+from imagepy.core.mark import GeometryMark
 import pandas as pd
-
-class Mark:
-    def __init__(self, data):
-        self.data = data
-
-    def draw(self, dc, f, **key):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
-        dc.SetTextForeground((255,255,0))
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
-                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        
-        dc.SetFont(font)
-        data = self.data[0 if len(self.data)==1 else key['cur']]
-        for i in range(len(data)):
-            pos = f(*(data[i][0][1], data[i][0][0]))
-            dc.DrawCircle(pos[0], pos[1], 2)
-            dc.DrawText('id={}'.format(i), pos[0], pos[1])
-            if data[i][1]==None:continue
-            k1, k2, a = data[i][1]
-            aixs = np.array([[-np.sin(a), np.cos(a)],
-                             [np.cos(a), np.sin(a)]])*[k1/2, k2/2]
-            ar = np.linspace(0, np.pi*2,25)
-            xy = np.vstack((np.cos(ar), np.sin(ar)))
-            arr = np.dot(aixs, xy).T+data[i][0]
-            dc.DrawLines([f(*i) for i in arr[:,::-1]])
 
 # center, area, l, extent, cov
 class RegionCounter(Simple):
@@ -73,7 +49,7 @@ class RegionCounter(Simple):
         if para['solid']:titles.extend(['Solidity'])
         if para['cov']:titles.extend(['Major','Minor','Ori'])
         buf = imgs[0].astype(np.uint16)
-        data, mark = [], []
+        data, mark = [], {'type':'layers', 'body':{}}
         strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
         for i in range(len(imgs)):
             label(imgs[i], strc, output=buf)
@@ -82,10 +58,14 @@ class RegionCounter(Simple):
             dt = [[i]*len(ls), list(range(len(ls)))]
             if not para['slice']:dt = dt[1:]
 
-            if not para['cov']: cvs = [None] * len(ls)
-            else: cvs = [(i.major_axis_length, i.minor_axis_length, i.orientation) for i in ls]
-            centroids = [i.centroid for i in ls]
-            mark.append([(center, cov) for center,cov in zip(centroids, cvs)])
+            layer = {'type':'layer', 'body':[]}
+            texts = [(i.centroid[::-1])+('id=%d'%n,) for i,n in zip(ls,range(len(ls)))]
+            layer['body'].append({'type':'texts', 'body':texts})
+            if para['cov']:
+                ellips = [i.centroid[::-1] + (i.major_axis_length/2,i.minor_axis_length/2,i.orientation) for i in ls]
+                layer['body'].append({'type':'ellipses', 'body':ellips})
+            mark['body'][i] = layer
+
             if para['center']:
                 dt.append([round(i.centroid[1]*k,1) for i in ls])
                 dt.append([round(i.centroid[0]*k,1) for i in ls])
@@ -112,7 +92,7 @@ class RegionCounter(Simple):
                 dt.append([round(i.orientation*k, 1) for i in ls])
 
             data.extend(list(zip(*dt)))
-        ips.mark = Mark(mark)
+        ips.mark = GeometryMark(mark)
         IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-region')
 
 # center, area, l, extent, cov

@@ -23,7 +23,7 @@ class Plugin(Free):
     def show(self):
         filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
         rst = IPy.getpath('Import sequence', filt, 'open', self.para)
-        if rst!=wx.ID_OK:return rst
+        if not rst: return rst
 
         files = self.getfiles(self.para['path'])
         nfs = len(files)

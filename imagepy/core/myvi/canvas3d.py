@@ -6,7 +6,7 @@ import wx.glcanvas as glcanvas
 from .manager import *
 import os.path as osp
 from wx.lib.pubsub import pub
-from .util import build_surf2d, build_surf3d, build_ball, build_balls
+from .util import *
 
 #----------------------------------------------------------------------
 from wx.glcanvas import WX_GL_DEPTH_SIZE 
@@ -93,6 +93,15 @@ class Canvas3D(glcanvas.GLCanvas):
         memory.SelectObject( wx.NullBitmap)
         bitmap.SaveFile( path, wx.BITMAP_TYPE_PNG )
 
+    def save_stl(self, path):
+        from stl import mesh
+        objs = self.manager.objs.values()
+        vers = [i.vts[i.ids] for i in objs if isinstance(i, Surface)]
+        vers = np.vstack(vers)
+        model = mesh.Mesh(np.zeros(vers.shape[0], dtype=mesh.Mesh.dtype))
+        model.vectors = vers
+        model.save(path)
+
     def OnMouseWheel(self, evt):
         k = 0.9 if evt.GetWheelRotation()>0 else 1/0.9
         self.manager.set_pers(l=self.manager.l*k)
@@ -124,8 +133,10 @@ class Viewer3D(wx.Panel):
         self.btn_orth = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap( osp.join(root, 'imgs/parallel.png'), wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
         tsizer.Add( self.btn_orth, 0, wx.ALL, 1 )
         tsizer.Add(wx.StaticLine( self.toolbar, wx.ID_ANY,  wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL), 0, wx.ALL|wx.EXPAND, 2 )
-        self.btn_save = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap(osp.join(root, 'imgs/save.png'), wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
-        tsizer.Add( self.btn_save, 0, wx.ALL, 1 )
+        self.btn_open = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap(osp.join(root, 'imgs/open.png'), wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
+        tsizer.Add( self.btn_open, 0, wx.ALL, 1 )
+        self.btn_stl = wx.BitmapButton( self.toolbar, wx.ID_ANY, wx.Bitmap(osp.join(root, 'imgs/stl.png'), wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
+        tsizer.Add( self.btn_stl, 0, wx.ALL, 1 )
         
         self.btn_color = wx.ColourPickerCtrl( self.toolbar, wx.ID_ANY, wx.Colour( 128, 128, 128 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
         tsizer.Add( self.btn_color, 0, wx.ALIGN_CENTER|wx.ALL, 1 )
@@ -177,7 +188,8 @@ class Viewer3D(wx.Panel):
         self.btn_x.Bind( wx.EVT_BUTTON, self.view_x)
         self.btn_y.Bind( wx.EVT_BUTTON, self.view_y)
         self.btn_z.Bind( wx.EVT_BUTTON, self.view_z)
-        self.btn_save.Bind( wx.EVT_BUTTON, self.on_save)
+        self.btn_open.Bind( wx.EVT_BUTTON, self.on_open)
+        self.btn_stl.Bind( wx.EVT_BUTTON, self.on_stl)
         self.btn_pers.Bind( wx.EVT_BUTTON, lambda evt, f=self.on_pers:f(True))
         self.btn_orth.Bind( wx.EVT_BUTTON, lambda evt, f=self.on_pers:f(False))
         self.btn_color.Bind( wx.EVT_COLOURPICKER_CHANGED, self.on_bgcolor )
@@ -218,10 +230,34 @@ class Viewer3D(wx.Panel):
         dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
         filt = 'PNG files (*.png)|*.png'
         dialog = wx.FileDialog(self, 'Save Picture', '', '', filt, wx.FD_SAVE)
+        if dialog.ShowModal() == wx.ID_OK:
+            path = dialog.GetPath()
+            self.canvas.save_bitmap(path)
+        dialog.Destroy()
+
+    def on_stl(self, evt):
+        filt = 'STL files (*.stl)|*.stl'
+        dialog = wx.FileDialog(self, 'Save STL', '', '', filt, wx.FD_SAVE)
         rst = dialog.ShowModal()
         if rst == wx.ID_OK:
             path = dialog.GetPath()
-            self.canvas.save_bitmap(path)
+            self.canvas.save_stl(path)
+        dialog.Destroy()
+
+    def on_open(self, evt):
+        from stl import mesh
+        filt = 'STL files (*.stl)|*.stl'
+        dialog = wx.FileDialog(self, 'Open STL', '', '', filt, wx.FD_OPEN)
+        rst = dialog.ShowModal()
+        if rst == wx.ID_OK:
+            path = dialog.GetPath()
+            cube = mesh.Mesh.from_file(path)
+            verts = cube.vectors.reshape((-1,3)).astype(np.float32)
+            ids = np.arange(len(verts), dtype=np.uint32).reshape((-1,3))
+            norms = count_ns(verts, ids)
+            fp, fn = osp.split(path)
+            fn, fe = osp.splitext(fn)
+            self.add_surf_asyn(fn, verts, ids, norms, (1,1,1))
         dialog.Destroy()
 
     def get_obj(self, name):
@@ -261,6 +297,7 @@ class Viewer3D(wx.Panel):
         if obj!=None and not obj is self:return
         manager = self.canvas.manager
         surf = manager.add_surf(name, vts, fs, ns, cs)
+
         surf.set_style(mode=mode, blend=blend, color=color, visible=visible)
         if len(manager.objs)==1:
             manager.reset()

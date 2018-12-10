@@ -13,10 +13,11 @@ class Plugin(Simple):
     title = 'Resize'
     note = ['all']
     
-    para = {'kx':0.5, 'ky':0.5, 'kz':1}
-    view = [(float, 'kx', (0.1,10), 1, 'kx', '0.1~10'),
-            (float, 'ky', (0.1,10), 1, 'ky', '0.1~10'),
-            (float, 'kz', (0.1,10), 1, 'kz', '0.1~10'),
+    para = {'kx':0.5, 'ky':0.5, 'kz':1,'order':3}
+    view = [(float, 'kx', (0.1,10), 2, 'kx', '0.1~10'),
+            (float, 'ky', (0.1,10), 2, 'ky', '0.1~10'),
+            (float, 'kz', (0.1,10), 2, 'kz', '0.1~10'),
+            (int, 'order', (0,5), 0, 'accu', '0-5'),
             ('lab',  None, 'the kz only works on stack!')]
     
     def run(self, ips, imgs, para = None):
@@ -28,9 +29,9 @@ class Plugin(Simple):
                 new = np.zeros(np.multiply(imgs.shape, 
                     (kz, kx, ky, 1)).round().astype(np.uint32), dtype=imgs.dtype)
                 for i in range(ips.get_nchannels()):
-                    ndimg.zoom(imgs[:,:,:,i], (kz, kx, ky), output=new[:,:,:,i])
+                    ndimg.zoom(imgs[:,:,:,i], (kz, kx, ky), output=new[:,:,:,i], order=para['order'])
             else :
-                new = ndimg.zoom(imgs, (kz, kx, ky))
+                new = ndimg.zoom(imgs, (kz, kx, ky), order=para['order'])
         else:
             if ips.get_nchannels()>1:
                 new = []
@@ -39,13 +40,13 @@ class Plugin(Simple):
                     arr = np.zeros(np.multiply(imgs[i].shape, 
                         (kx, ky, 1)).round().astype(np.uint32),  dtype=imgs[i].dtype)
                     for n in range(ips.get_nchannels()):
-                        ndimg.zoom(imgs[i][:,:,n], (kx, ky), output=arr[:,:,n])
+                        ndimg.zoom(imgs[i][:,:,n], (kx, ky), output=arr[:,:,n], order=para['order'])
                     new.append(arr)
             else :
                 new = []
                 for i in range(len(imgs)):
                     self.progress(i, len(imgs))
-                    arr = ndimg.zoom(imgs[i], (kx, ky))
+                    arr = ndimg.zoom(imgs[i], (kx, ky), order=para['order'])
                     new.append(arr)
 
         ips.set_imgs(new)

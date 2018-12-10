@@ -5,7 +5,7 @@ Created on Fri Oct 14 01:24:41 2016
 @author: yxl
 """
 import wx, os
-import wx.aui as aui
+import wx.lib.agw.aui as aui
 from .canvas import Canvas
 from ..core.manager import ImageManager, WindowsManager
 from ..core.manager import ShotcutManager
@@ -18,7 +18,7 @@ class CanvasPanel(wx.Panel):
     def __init__(self, parent=None):
         wx.Frame.__init__ ( self, parent)
 
-        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
+        #self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         
         self.SetSizeHints( wx.Size( 560,-1 ), wx.DefaultSize )
         WindowsManager.add(self)
@@ -104,6 +104,9 @@ class CanvasPanel(wx.Panel):
         self.ips.update = 'pix'
         self.canvas.on_idle(None)
 
+    def close(self):
+        self.GetParent().Close()
+
     def __del__(self):pass
 
 class CanvasFrame(wx.Frame):
@@ -141,15 +144,36 @@ class CanvasFrame(wx.Frame):
         WindowsManager.remove(self.canvaspanel)
         event.Skip()
 
-class CanvasNoteBook(wx.aui.AuiNotebook):
+
+class MyArtProvider(aui.AuiDefaultDockArt):
+    def __init__(self):
+        aui.AuiDefaultDockArt.__init__(self)
+        self.bitmap = wx.Bitmap('data/watermark.png', wx.BITMAP_TYPE_PNG)
+
+    def DrawBackground(self, dc, window, orient, rect):
+        aui.AuiDefaultDockArt.DrawBackground(self, dc, window, orient, rect)
+        
+        
+        memDC = wx.MemoryDC()
+        memDC.SelectObject(self.bitmap)
+        w, h = self.bitmap.GetWidth(), self.bitmap.GetHeight()
+        dc.Blit((rect[2]-w)//2, (rect[3]-h)//2, w, h, memDC, 0, 0, wx.COPY, True)
+        
+        #dc.DrawBitmap(self.bitmap, 0, 0)
+        #dc.DrawRectangle(rect)
+
+class CanvasNoteBook(wx.lib.agw.aui.AuiNotebook):
     def __init__(self, parent):
-        wx.aui.AuiNotebook.__init__( self, parent, wx.ID_ANY, 
-            wx.DefaultPosition, wx.DefaultSize, wx.aui.AUI_NB_DEFAULT_STYLE )
-        self.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid) 
-        self.Bind( wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close)
+        wx.lib.agw.aui.AuiNotebook.__init__( self, parent, wx.ID_ANY, 
+            wx.DefaultPosition, wx.DefaultSize, wx.lib.agw.aui.AUI_NB_DEFAULT_STYLE )
+        self.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid) 
+        self.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close)
+        self.SetArtProvider(aui.AuiSimpleTabArt())
+        self.GetAuiManager().SetArtProvider(MyArtProvider())
 
     def add_page(self, panel, ips):
         self.AddPage(panel, ips.title, True, wx.NullBitmap )
+        self.Refresh()
         panel.set_handler(lambda ips, res, pan=panel: self.set_title(ips, pan))
 
     def set_title(self, ips, panel):

@@ -1,4 +1,4 @@
-from ...ui.widgets import HistCanvas, CMapPanel, CMapSelPanel, FloatSlider
+from ...ui.widgets import HistCanvas, CMapPanel, CMapSelCtrl, FloatSlider
 from  imagepy.core.manager import ColorManager
 from imagepy import IPy
 import numpy as np
@@ -58,9 +58,8 @@ class Plugin( wx.Panel ):
 		#bSizer1.Add( line, 0, wx.EXPAND |wx.ALL, 5 )
 		#bSizer1.Add( txtlut, 0, wx.EXPAND |wx.ALL, 5 )
 
-		self.cmapsel = CMapSelPanel(self)
-		luts = ColorManager.luts
-		self.cmapsel.SetItems(list(luts.keys()), list(luts.values()))
+		self.cmapsel = CMapSelCtrl(self)
+		self.cmapsel.SetItems(ColorManager.luts)
 		bSizer1.Add(self.cmapsel, 0, wx.ALL|wx.EXPAND, 5 )
 
 		self.cmap = CMapPanel(self)
@@ -78,8 +77,7 @@ class Plugin( wx.Panel ):
 		self.btn_slice.Bind( wx.EVT_BUTTON, self.on_slice )
 		self.btn_stack.Bind( wx.EVT_BUTTON, self.on_stack )
 		self.cmap.set_handle(self.on_cmap)
-		self.cmapsel.set_handle(self.on_cmapsel)
-
+		self.cmapsel.Bind(wx.EVT_COMBOBOX,  self.on_cmapsel)
 		self.range = (0, 255)
 	
 	def on_cmap(self):
@@ -89,7 +87,7 @@ class Plugin( wx.Panel ):
 		ips.lut = cmap
 		ips.update = 'pix'
 
-	def on_cmapsel(self):
+	def on_cmapsel(self, event):
 		ips = IPy.get_ips()
 		if ips is None: return
 		key = self.cmapsel.GetValue()

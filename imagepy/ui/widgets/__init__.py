@@ -3,5 +3,5 @@ from .histpanel import HistCanvas
 from .cmappanel import CMapPanel
 from .normal import *
 from .advanced import *
-from .cmapselect import CMapSelPanel
+from .colormap import CMapSelCtrl
 from .viewport import ViewPort

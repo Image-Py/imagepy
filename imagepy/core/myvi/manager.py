@@ -62,6 +62,7 @@ class Surface:
 		self.box = np.vstack((vts.min(axis=0), vts.max(axis=0)))
 		self.mode, self.blend, self.visible = 'mesh', 1.0, True
 		self.color = cs if isinstance(cs, tuple) else (0,0,0)
+		self.width = 1
 
 	def on_ctx(self, ctx, prog):
 		self.ctx = ctx
@@ -86,7 +87,7 @@ class Surface:
 
 	def draw(self, mvp):
 		if not self.visible: return
-		self.ctx.line_width = 1
+		self.ctx.line_width = self.width
 		mvp = np.dot(*mvp)
 		self.prog['Mvp'].write(mvp.astype(np.float32).tobytes())
 		self.prog['blend'].value = self.blend

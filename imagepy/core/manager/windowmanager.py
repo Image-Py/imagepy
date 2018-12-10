@@ -191,18 +191,18 @@ class PlotManager:
     def get(cls, title=None):
         if len(cls.windows)==0:return None
         if title==None:return cls.windows[0]()
-        titles = [i().canvas.ips.title for i in cls.windows]
+        titles = [i().title for i in cls.windows]
         if not title in titles:return None
         return cls.windows[titles.index(title)]()
           
     @classmethod
     def get_titles(cls):
-        return [i().canvas.ips.title for i in cls.windows]
+        return [i().title for i in cls.windows]
         
     @classmethod
     def name(cls, name):
         if name==None:name='Table'
-        titles = [i().canvas.ips.title for i in cls.windows]
+        titles = [i().title for i in cls.windows]
         if not name in titles :
             return name
         for i in range(1, 100) : 

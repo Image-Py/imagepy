@@ -7,9 +7,9 @@ import weakref
 
 widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl,
             float:NumCtrl, 'lab':Label, bool:Check, str:TextCtrl, 
-            list:Choice, 'img':ImageList, 'color':ColorCtrl, 
+            list:Choice, 'img':ImageList, 'tab':TableList, 'color':ColorCtrl, 
             'any':AnyType, 'chos':Choices, 'fields':TableFields,
-            'hist':HistCanvas}
+            'field':TableField, 'hist':HistCanvas, 'cmap':ColorMap}
 
 class ParaDialog (wx.Dialog):
     def __init__( self, parent, title):
@@ -17,7 +17,7 @@ class ParaDialog (wx.Dialog):
         self.lst = wx.BoxSizer( wx.VERTICAL )
         self.tus = []
 
-        self.on_ok, self.on_cancel = None, None
+        self.on_ok = self.on_cancel = self.on_help = None
         self.ctrl_dic = {}
         boxBack = wx.BoxSizer()
         boxBack.Add(self.lst, 0, wx.ALL, 10)
@@ -31,17 +31,23 @@ class ParaDialog (wx.Dialog):
         if state=='cancel' and self.on_cancel:self.on_cancel()
 
     def add_confirm(self, modal=True):
-        self.lst.AddStretchSpacer(1)
+        # self.lst.AddStretchSpacer(1)
         sizer = wx.BoxSizer( wx.HORIZONTAL )
-        self.btn_OK = wx.Button( self, wx.ID_OK, 'OK')
-        sizer.Add( self.btn_OK, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+        self.btn_ok = wx.Button( self, wx.ID_OK, 'OK', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
+        sizer.Add( self.btn_ok, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
 
-        self.btn_cancel = wx.Button( self, wx.ID_CANCEL, 'Cancel')
+        self.btn_cancel = wx.Button( self, wx.ID_CANCEL, 'Cancel', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
         sizer.Add( self.btn_cancel, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+
+        self.btn_help = wx.Button( self, wx.ID_HELP, 'Help', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
+        sizer.Add( self.btn_help, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
         self.lst.Add(sizer, 0, wx.ALIGN_RIGHT, 5 )
+        self.btn_help.Bind(wx.EVT_BUTTON, lambda e: self.on_help and self.on_help())
         if not modal:
-            self.btn_OK.Bind( wx.EVT_BUTTON, lambda e:self.commit('ok'))
+            self.btn_ok.Bind( wx.EVT_BUTTON, lambda e:self.commit('ok'))
             self.btn_cancel.Bind( wx.EVT_BUTTON, lambda e:self.commit('cancel'))
+            
+        #self.lst.Add()
 
     def init_view(self, items, para, preview=False, modal = True):
         self.para = para
@@ -101,7 +107,7 @@ class ParaDialog (wx.Dialog):
             if p in self.ctrl_dic:
                 para[p] = self.ctrl_dic[p].GetValue()
         sta = sum([i is None for i in list(para.values())])==0
-        self.btn_OK.Enable(sta)
+        self.btn_ok.Enable(sta)
         if not sta: return
         self.para_check(para, key)
         if 'preview' not in self.ctrl_dic:return
@@ -130,6 +136,7 @@ if __name__ == '__main__':
             ('slide', 'mm', (-20,20), '亮度', 'slide'),
             ('color', 'color', '颜色', 'rgb'),
             (bool, 'preview', 'preview')]
+
     data = {'r':1.2, 'slide':0,  'preview':True, 'color':(0,255,0)}
 
     app = wx.PySimpleApp()

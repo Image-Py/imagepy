@@ -106,4 +106,5 @@ class Plugin( wx.Panel ):
         #PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
         
     def __del__(self):
+        print('hahaha')
         ShotcutManager.write()

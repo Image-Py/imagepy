@@ -25,7 +25,7 @@ class LineRoi(ROI):
             self.update, self.infoupdate = True, True
             return True
     
-    def snap(self, x, y, lim):
+    def snap(self, x, y, z, lim):
         minl, idx = 1e8, None
         for i in self.body:
             for j in i:
@@ -48,10 +48,10 @@ class LineRoi(ROI):
             self.infoupdate=False
         return self.box
         
-    def pick(self, x, y, lim):
-        return self.snap(x, y, lim)
+    def pick(self, x, y, z, lim):
+        return self.snap(x, y, z, lim)
 
-    def draged(self, ox, oy, nx, ny, i):
+    def draged(self, ox, oy, nx, ny, nz, i):
         i[0][i[1]] = (nx, ny)
         self.update, self.infoupdate = True, True
         
@@ -61,7 +61,7 @@ class LineRoi(ROI):
         x, y = cur[0][cur[1]]
         IPy.set_info('Line : points:%.0f x:%.1f y:%.1f'%(len(cur[0]), x*k, y*k))
     
-    def draw(self, dc, f):
+    def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
         for line in self.body:
             if len(line)>1:

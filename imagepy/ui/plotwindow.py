@@ -135,7 +135,7 @@ class PlotFrame ( wx.Frame ):
     @classmethod
     def get_frame(cls, title, gtitle='Graph', labelx='X-Unit', labely='Y-Unit'):
         if PlotManager.get(title) == None:
-            PlotManager.add(title, cls(IPy.curapp, title))
+            PlotManager.add(cls(IPy.curapp, title))
             PlotManager.get(title).set_title_label(gtitle, labelx, labely)
         return PlotManager.get(title)
 
@@ -143,6 +143,7 @@ class PlotFrame ( wx.Frame ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, 
                             title = title, pos = wx.DefaultPosition, 
                             size = wx.Size( 500,300 ) )
+        self.title = title
         logopath = os.path.join(root_dir, 'data/logo.ico')
         self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DLIGHT ) )
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))

@@ -34,14 +34,16 @@ class Free:
     def load(self):return True
         
     def show(self):
-        if self.view==None:return wx.ID_OK
+        if self.view==None:return True
         with ParaDialog(WindowsManager.get(), self.title) as dialog:
             dialog.init_view(self.view, self.para, False, True)
-            return dialog.ShowModal()
+            doc = self.__doc__ or '### Sorry\nNo document yet!'
+            dialog.on_help = lambda : IPy.show_md(self.title, doc)
+            return dialog.ShowModal() == wx.ID_OK
         
     def start(self, para=None, callback=None):
         if not self.load():return
-        if para!=None or self.show() == wx.ID_OK:
+        if para!=None or self.show():
             if para==None:para = self.para
             win = WidgetsManager.getref('Macros Recorder')
             if win!=None: 

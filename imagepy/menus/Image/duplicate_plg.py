@@ -6,11 +6,11 @@ Created on Tue Dec  6 19:47:34 2016
 
 from imagepy.core.engine import Simple
 from imagepy.core import ImagePlus
-from imagepy.ui.canvasframe import CanvasFrame
+from imagepy.core.manager import ImageManager
 import numpy as np
 from imagepy import IPy
 
-class Plugin(Simple):
+class Duplicate(Simple):
     title = 'Duplicate'
     note = ['all']
     
@@ -56,3 +56,15 @@ class Plugin(Simple):
             if not ips.backimg is None: ipsd.backimg = backimg
         ipsd.backmode = ips.backmode
         IPy.show_ips(ipsd)
+
+class Rename(Simple):
+    title = 'Rename'
+    note = ['all']
+    
+    para = {'name':'Undefined'}
+    view = [(str, 'name', 'name', '')]
+    #process
+    def run(self, ips, imgs, para = None):
+        ips.title = ImageManager.name(para['name'])
+
+plgs = [Rename, Duplicate]

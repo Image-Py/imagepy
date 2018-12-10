@@ -39,9 +39,7 @@ class ImagePlus:
         self.scrchanged = True
         self.snap = None
         self.imgs = imgs
-
         self.height, self.width = self.size = self.imgs[0].shape[:2]
-        print(self.height, self.width)
         self.imgtype = get_img_type(self.imgs)
         self.channels = 1 if self.imgs[0].ndim==2 else self.imgs[0].shape[2]
         self.dtype = self.imgs[0].dtype
@@ -135,8 +133,13 @@ class ImagePlus:
             return img
 
     def swap(self):
+        print(type(self.snap), type(self.imgs[self.cur]), self.cur)
         if self.snap is None:return
-        self.snap, self.imgs[self.cur] = self.imgs[self.cur], self.snap
+        if isinstance(self.imgs, list):
+            self.snap, self.imgs[self.cur] = self.imgs[self.cur], self.snap
+        else:
+            buf = self.img.copy()
+            self.img[:], self.snap[:] = self.snap, buf
 
     def __del__(self):
         print(self.title, '>>> deleted ips')

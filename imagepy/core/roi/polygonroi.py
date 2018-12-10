@@ -59,7 +59,7 @@ class PolygonRoi(ROI):
         self.body = parse_mpoly(rst)
         self.update, self.infoupdate = True, True
         
-    def snap(self, x, y, lim):
+    def snap(self, x, y, z, lim):
         if not self.issimple():return None
         cur, minl = None, 1e8
         for i in self.body[0][0]:
@@ -68,8 +68,8 @@ class PolygonRoi(ROI):
         if minl**0.5>lim:return None
         return self.body[0][0], self.body[0][0].index(cur)
 
-    def pick(self, x, y, lim):
-        rst = self.snap(x, y, lim)
+    def pick(self, x, y, z, lim):
+        rst = self.snap(x, y, z, lim)
         if rst!=None:return rst
                 
         pgs = []
@@ -80,7 +80,7 @@ class PolygonRoi(ROI):
             return True
         return None
     
-    def draged(self, ox, oy, nx, ny, i):
+    def draged(self, ox, oy, nx, ny, nz, i):
         self.update, self.infoupdate = True, True
         if i==True:
             for pg in self.body:
@@ -128,7 +128,7 @@ class PolygonRoi(ROI):
         return plg
     '''
         
-    def draw(self, dc, f):
+    def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
         for pg in self.body:
             dc.DrawLines([f(*i) for i in pg[0]])
