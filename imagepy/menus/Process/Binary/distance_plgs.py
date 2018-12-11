@@ -11,7 +11,7 @@ from imagepy.core.engine import Filter
 from imagepy.ipyalg import find_maximum, watershed
 #from skimage.morphology import watershed
 import scipy.ndimage as ndimg
-from skimage.measure import label,regionprops
+
 class Skeleton(Filter):
   title = 'Skeleton'
   note = ['all', 'auto_msk', 'auto_snap','preview']
@@ -84,28 +84,5 @@ class Voronoi(Filter):
 			img[:] = (line==0) * 255
 		if para['type']=='gray line':
 			img[:] = np.where(line==0, dist, 0)
-class Unnamed(Filter):
-	title = 'Unnamed'
-	view = [(list, 'type', ['nearby', 'mean'], str, 'output', '')]
-	note = ['all', 'auto_msk', 'auto_snap','preview']
-	para = {'type':'nearby'}
-	def run(self, ips, snap, img, para = None):
-		# return ndimg.distance_transform_edt(snap)	
-		img1=snap
-		msk=ips.get_msk()
 
-		if self.para['type']=='nearby':img[:]=self.nearby(img1.copy(),msk)
-		else:	img[:]=self.mean(img1.copy(),msk)
-	def nearby(self,img,msk):
-	    rr,cc=ndimg.distance_transform_edt(msk,return_distances=False,return_indices=True)
-	    return img[rr,cc]
-	def mean(self,img,msk):
-	    msk1=ndimg.maximum_filter(msk, 5)
-	    lab=label(msk)
-	    lab1=label(msk1*msk)
-	    for i in regionprops(lab1):
-	        index=np.array(lab1==i.label)
-	        me=img[index].mean()
-	        img[lab==i.label]=me
-	    return img
-plgs = [Skeleton, MedialAxis, '-', EDT,Unnamed, Watershed, Voronoi]
+plgs = [Skeleton, MedialAxis, '-', EDT, Watershed, Voronoi]
