@@ -1,7 +1,3 @@
-<!-- 简介 -->
-
-<!-- ImagePy是基于Python开发的开源图像处理框架，采用wxpython界面基础，基于Numpy为核心图像数据结构，pandas为核心表格数据结构，并支持任何基于Numpy，pandas的插件扩展，可以方便的接入scipy.ndimage, scikit-image, simpleitk, opencv等算法库进行插件扩展。-->
-
 # Introduction
 
 ImagePy is an open source image processing framework written in Python. Its UI interface, image data structure and table data structure are wxpython-based, Numpy-based and pandas-based respectively. Furthermore, it supports any plug-in based on Numpy and pandas, which can talk easily between scipy.ndimage, scikit-image, simpleitk, opencv and other image processing libraries.  
@@ -10,7 +6,6 @@ ImagePy is an open source image processing framework written in Python. Its UI i
 	<img src="imgs/image001.png" alt="Overview" width="900"/>  
 	Overview, mouse measurement, geometric transformation, filtering, segmentation, counting, etc.
 </div>
-<!-- 总览，鼠标测量，几何变换，滤波，分割，计数等 -->
 
 <div align=center>
 	<img src="imgs/image002.png" alt="ij style" width="900"/>   
@@ -26,6 +21,7 @@ ImagePy:
 - is able to perfrom data analysis, filtering, statistical analysis and others related to the parameters extracted from the image. 
 
 Our long-term goal of this project is to be used as ImageJ + SPSS (although not achieved yet)   
+
 
 ## Citation：
 [ImagePy: an open-source, Python-based and platform-independent software package for bioimage analysis](https://academic.oup.com/bioinformatics/article/34/18/3238/4989871)
@@ -109,11 +105,12 @@ The parameters such as area, perimeter, eccentricity, and solidity shown in the 
 
 <div align=center>
 	<img src="imgs/image008.png" width="900"/>   
-	<img src="imgs/image009.png" width="900"/>   
 	Geometry Analysis	
+	<img src="imgs/image009.png" width="900"/>   
+	Generate the result table (intensity is reduced in order to emphasize the
+	ellipse)
 </div>
 
-（这里为了看清椭圆，把区域亮度降低了）
 
 ### Sort Table by area  
 
@@ -200,119 +197,96 @@ some coment for section1 ...
 
 ### Filter Plugin
 
-以上我们介绍了宏和工作流，利用宏和工作流可以串联已有的功能，但不能制造新的功能，而这里我们试图为ImagePy添加一个新功能。ImagePy可以方便的接入任何基于Numpy的函数，我们以scikit-image的Canny算子为例。
+We introduced macros and workflows in the last sections, using macros and workflows to connect existing functions is convenient. But sometimes we need to create new features. In this section, we are trying to add a new feature to ImagePy. ImagePy can easily access any Numpy-based function. Let's take the Canny operator of scikit-image as an example.
 
 ```
 from skimage import feature
-
 from imagepy.core.engine import Filter
-
 class Plugin(Filter):
-
-title = \'Canny\'
-
-note = \[\'all\', \'auto\_msk\', \'auto\_snap\', \'preview\'\]
-
-para = {\'sigma\':1.0, \'low\_threshold\':10, \'high\_threshold\':20}
-
-view = \[(float, \'sigma\', (0,10), 1, \'sigma\', \'pix\'),
-
-(\'slide\', \'low\_threshold\', (0,50), 4, \'low\_threshold\'),
-
-(\'slide\', \'high\_threshold\', (0,50), 4, \'high\_threshold\')\]
-
+    title = 'Canny'
+    note = ['all', 'auto_msk', 'auto_snap', 'preview']
+    para = {'sigma':1.0, 'low_threshold':10, 'high_threshold':20}
+    view = [(float, 'sigma', (0,10), 1, 'sigma', 'pix'),
+    	    ('slide', 'low_threshold', (0,50), 4, 'low_threshold'),
+	    ('slide', 'high_threshold', (0,50), 4, 'high_threshold')]
 def run(self, ips, snap, img, para = None):
-
-return feature.canny(snap, para\[\'sigma\'\], para\[low\_threshold\'\],
-
-para\[\'high\_threshold\'\], mask=ips.get\_msk())\*255
+    return feature.canny(snap, para['sigma'], para['low_threshold'],
+    			 para['high_threshold'], mask=ips.get_msk())*255
 ```
 <div align=center>
 	<img src="imgs/image015.png" width="900"/>   
 </div>
 
+#### Steps to create a your own filter:
 
-滤波器的作用机制:
+1. Import the package(s), often third party.
+2. Inherit the __`Filter`__ class。
+3. The __`title`__ will be used as the name of the menu and the title of the parameter dialog, also as a command for macro recording.
+4. Tell the framework what needs to do for you in __`Note`__, whether to do type checking, to support the selection, to support _UNDO_, etc.
+5. __`Para`__ is the a dictionary of parameters, including needed parameters for the
+   functions.
+6. Define the interaction method for each of the parameters in __`View`__, the framework will automatically generate the dialog for parameter tuning by reading these information.
+7. Write the core function __`run`__. `img` is the current image, `para` is the result entre by user. if `auto_snap` is set in `note`, `snap` will be a duplicate of `img`. We can process the `snap`, store the result in `img`. <span style="color:red">If the function does not support the specified output</span>, we can also return the result, and the framework will help us copy the result to img and display it.
+8. Save the file as `xxx_plg.py` and copy to the `menu` folder, restart ImagePy.
+   It will be loaded as a menu item. 
 
-1.  引入需要的库，往往是第三方的库。
+#### What did the framework do for us?
 
-2.  继承Filter。
+The framework unifies the complex tasks in a formal manner and helps us to perform:
+- type checking. If the current image type does not meet the requirements in the note, the analysis is terminated.
+- according to the `para`, generate automatically a dialog box to detect the input legality from the `view`.
+- Real-time preview
+- automatic ROI support
+- undo support
+- parallelization support
+- image stack support
+- etc.
 
-3.  Title，标题，将作为菜单的名称和参数对话框的标题，也作为宏录制的命令。
+### Table
 
-4.  Note，指明需要框架为你做什么，是否需要做类型检查，是否支持选区，是否支持撤销等。
+As mentioned earlier, the table is another very important data type other than the image. Similarly, ImagePy also supports the extension of table. Here we give an example of sorting-by-key used in the previous description.
 
-5.  Para，参数字典，核心函数需要用到的参数
-
-6.  View，参数视图，指明每个参数对应的交互方式，框架会根据这里的信息自动生成交互对话框。
-
-7.  核心函数，img是当前图像，para参数交互结果，如果note里设定了auto\_snap，则img也被复制到snap，我们可以对snap进行处理，将结果存放在img中，如果函数不支持指定输出，我们也可以return处理结果，框架会帮我们将结果拷贝给img并展示。
-
-8.  将文件存储为xxx\_plg.py，并拷贝到ImagePy \>
-    Menus目录下，重启，会被加载成一个菜单项。
-
-框架帮我们做了什么？
-
-框架将复杂的任务进行了形式上的统一，并且帮我们进行类型检查，如果当前图像类型不符合note中的要求，则终止分析，根据para，view自动生成对话框，检测输入合法性，对图像进行实时预览，自动提供ROI支持，撤销支持，并提供多通道支持，提供图像序列支持等。
-
-表格
-
-正如前面所说的，表格是图像之外另一种非常重要的数据，同样ImagePy也支基于表格的功能扩展，我们用前面用到过的按照住键排序的例子来做说明。
 ```
 from imagepy.core.engine import Table
-
 import pandas as pd
-
 class Plugin(Table):
-
-title = \'Table Sort By Key\'
-
-para = {\'major\':None, \'minor\':None, \'descend\':False}
-
-view = \[(\'field\', \'major\', \'major\', \'key\'),
-
-(\'field\', \'minor\', \'minor\', \'key\'),
-
-(bool, \'descend\', \'descend\')\]
-
+    title = 'Table Sort By Key'
+    para = {'major':None, 'minor':None, 'descend':False}
+    view = [('field', 'major', 'major', 'key'),
+    	    ('field', 'minor', 'minor', 'key'),
+    	    (bool, 'descend', 'descend')]
 def run(self, tps, data, snap, para=None):
-
-by = \[para\[\'major\'\], para\[\'minor\'\]\]
-
-data.sort\_values(by=\[i for i in by if i != \'None\'\],
-
-axis=0, ascending=not para\[\'descend\'\], inplace=True)
+    by = [para['major'], para['minor']]
+    data.sort_values(by=[i for i in by if i != 'None'],
+    	   	     axis=0, ascending = not para['descend'],
+		     inplace=True)
 ```
 <div align=center>
 	<img src="imgs/image010.png" width="900"/>   
 </div>
 
-Table的作用机制
+#### How Table works 
 
-类比Filter，Table同样有title，note，para，view参数，当插件运行是框架通过para，view解析为对话框，交互完成后，参数和当表格会一起传递给run，run中对表格进行核心处理，data是当前表格对应的pandas.DataFrame对象，tps中存储了其他信息，比如tps.rowmsk，tps.colmsk可以拿到当前表格被选中的行列掩膜。
+Same as `Filter`，`Table` also has parameters such as `title`，`note`，`para`，`view`.
+When the plugin is running, the framework will generate a dialog box according to `para`
+and `view`. After the parameters are chosen, they are passed to the `run` together with the current table and be processed. The table data is a pandas.DataFrame object in the current table, stored in `tps`. Other information, such as `tps.rowmsk`, `tps.colmsk` can also be retrieved from `tps` to get the row and column mask of the current selected table.
 
-其他插件类型
+### Other type of plugins
 
-上面介绍的Filter和Table是最重要的两种插件，但ImagePy也支持其他一些类型的插件扩展，目前有九种，他们是：
+The `Filter` and `Table` described above are the two most important plugins, but ImagePy also supports some other types of plugin extensions. There are currently nine, they are:
 
-1.  Filter：主要用来对图像进行处理
+1. `Filter`: mainly for image processing 
+2. `Simple`: similar to `Filter`, but focus on the overall characteristics of the image, such as the operation of the ROI, the operation of the false color, the area measurement, or the three-dimensional analysis of the entire image stack, visualization, and so on.
+3. `Free`: operate that are independant of image. Used to open image, close software etc. 
+4. `Tool`: use the mouse to interact on the diagram and show small icons on the toolbar, such as a brush.
+5. `Table`: operate on the table, such as statistics analysis, sorting, plotting.
+6. `Widget`: widgets that are displayed in panels, such as the navigation bar on the right, the macro recorder, and others.
+7. `Markdown`: markup language, when clicked, a separate window will pop up to display the document.
+8. `Macros`：Command sequence file for serially fixed operational procedures.
+9. `Workflow`: combination of macro and MarkDown to create an interactive guidance process.
 
-2.  Simple：类似于Filter，但侧重与图像的整体特性，比如对ROI的操作，对假彩色的操作，区域测量，或者对整个图像栈进行的三维分析，可视化等。
+## Motivation & Goal
 
-3.  Free：用于不依赖图像的操作，比如打开图像，关闭软件等。
+Python is a simple, elegant, powerful language, and has a very rich third-party library for scientific computing. Based on the universal matrix structure and the corresponding rules, numpy-based library such as scipy, scikit-image, scikit-learn and other scientific computing libraries have brought great convenience to scientific research. On the other hand, more and more problems in biology, material science and other scientific research can be efficiently and accurately solved via scientific computing, image processing. 
 
-4.  Tool：借助鼠标在图上进行交互，将以小图标的形式出现在工具栏上，例如画笔。
-
-5.  Table：对表格进行操作，例如统计，排序，出图。
-
-6.  Widget：以面板形式展现的功能部件，例如右侧的导航栏，宏录制器等。
-
-7.  Markdown：MarkDown标记语言，点击后会弹出独立窗口展示文档。
-
-8.  Macros：命令序列文件，用于串联固定的操作流程。
-
-9.  Workflow：工作流，宏和MarkDown的结合，用于制作交互式指引流程。
-
-开发意义
-
-Python是一门简单，优雅，强大的语言，并且在科学计算方面有非常丰富的第三方库，并且Numpy制定了良好的规范，建立在Numpy基础上的Scipy，scikit-image，scikit-learn等科学计算库给科研工作带来了极大的便利。另一方面，科学计算，图像处理在生物，材料等科研领域可以高效准确的解决越来越多的问题，然而依然有很多科研工作者编程能力比较薄弱，因此让Numpy系列的科学计算库造福更多科研工作者是一项非常有意义的工作。而ImagePy就是一座桥梁，尽可能的让科学计算工作者隔离自己不擅长的UI和交互设计，着重精力处理算法本身，并且可以快速形成工具甚至产品，而这些工作又可以让更多不擅长编程的科研工作者收益，推广和普及图像处理，统计等科学知识。
+However there are still many researchers lack of programming skill. Thus it is a crucial to make the Numpy-based scientific computing libraries available to more researchers. ImagePy brings the computing capacities closer to the non-programmer researchers. So that they won't need to care about the UI and interaction design, and focus exclusively on the algorithm itself, and finally, accelerate open-source tool building or even commercial products incubation. These work, on the other hand, can let more researchers, who are not good at programming, gain, promote and popularize scientific knowledge such as image processing and statistics.
