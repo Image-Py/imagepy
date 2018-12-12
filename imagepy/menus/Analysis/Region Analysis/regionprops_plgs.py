@@ -48,7 +48,7 @@ class RegionCounter(Simple):
         if para['fa']:titles.extend(['FilledArea'])
         if para['solid']:titles.extend(['Solidity'])
         if para['cov']:titles.extend(['Major','Minor','Ori'])
-        buf = imgs[0].astype(np.uint16)
+        buf = imgs[0].astype(np.uint32)
         data, mark = [], {'type':'layers', 'body':{}}
         strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
         for i in range(len(imgs)):
@@ -116,7 +116,7 @@ class RegionFilter(Filter):
         k, unit = ips.unit
         strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
 
-        lab, n = label(snap==0 if para['inv'] else snap, strc, output=np.uint16)
+        lab, n = label(snap==0 if para['inv'] else snap, strc, output=np.uint32)
         idx = (np.ones(n+1)*(0 if para['inv'] else para['front'])).astype(np.uint8)
         ls = regionprops(lab)
         

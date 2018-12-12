@@ -47,7 +47,7 @@ class RegionCounter(Simple):
         if para['ed']:titles.extend(['Diameter'])
         if para['fa']:titles.extend(['FilledArea'])
 
-        buf = imgs.astype(np.uint16)
+        buf = imgs.astype(np.uint32)
         strc = generate_binary_structure(3, 1 if para['con']=='4-connect' else 2)
         label(imgs, strc, output=buf)
         ls = regionprops(buf)
@@ -88,7 +88,7 @@ class RegionFilter(Simple):
         k, unit = ips.unit
         strc = generate_binary_structure(3, 1 if para['con']=='4-connect' else 2)
 
-        lab, n = label(imgs==0 if para['inv'] else imgs, strc, output=np.uint16)
+        lab, n = label(imgs==0 if para['inv'] else imgs, strc, output=np.uint32)
         idx = (np.ones(n+1)*(0 if para['inv'] else para['front'])).astype(np.uint8)
         ls = regionprops(lab)
 
