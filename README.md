@@ -2,13 +2,15 @@
 
 ImagePy is an open source image processing framework written in Python. Its UI interface, image data structure and table data structure are wxpython-based, Numpy-based and pandas-based respectively. Furthermore, it supports any plug-in based on Numpy and pandas, which can talk easily between scipy.ndimage, scikit-image, simpleitk, opencv and other image processing libraries.  
 
+![newdoc01](http://idoc.imagepy.org/imgs/newdoc01.png)
+
 <div align=center>
-	<img src="imgs/image001.png" alt="Overview" width="900"/>  
 	Overview, mouse measurement, geometric transformation, filtering, segmentation, counting, etc.
 </div>
 
+![newdoc02](http://idoc.imagepy.org/imgs/newdoc02.png)
+
 <div align=center>
-	<img src="imgs/image002.png" alt="ij style" width="900"/>   
 	If you are more a IJ-style user, try `Windows -> Windows Style` to switch
 </div>
 
@@ -54,8 +56,10 @@ ImagePy has a very rich set of features, and here, we use a specific example to 
 `menu: File -> Local Samples -> Coins` to open the sample image within ImagePy. 
 _PS: ImagePy supports bmp, jpg, png, gif, tif and other commonly used file format. By installing ITK plug-in，dicom，nii and other medical image format can also be read/saved. It is also possible to read/write wmv, avi and other video format by installing OpenCV._  
 
+![newdoc03](imgs\newdoc03.png)
+
 <div align=center>
-	<img src="imgs/image003.png" alt="ij style" width="900"/>   
+	<img src="http://idoc.imagepy.org/imgs/image003.png" alt="ij style" width="900"/>   
 </div>
 
 
@@ -66,13 +70,9 @@ Here, a composite filter is selected to perform sobel gradient extraction on the
 Filtering and segmentation are the crucial skills in the image processing toolkit, and are the key to the success or failure of the final measurement.  
 Segmentation methods such as adaptive thresholds, watersheds and others are also supported.
 
-<div align=center>
-	<img src="imgs/image004.png" width="900"/>   
-</div>
+![newdoc04](imgs\newdoc04.png)
 
-<div align=center>
-	<img src="imgs/image005.png" width="900"/>   
-</div>
+![newdoc05](imgs\newdoc05.png)
 
 ### Binarization
 
@@ -81,9 +81,7 @@ Segmentation methods such as adaptive thresholds, watersheds and others are also
 After the segmentation, we obtained a relatively clean mask image, but there are still some hollowing out, as well as a little impurities, which will interfere with counting and measurement.  
 _ImagePy supports binary operations such as erode, dilate, opening and closing, as well as skeletonization, central axis extraction, and distance transformation._  
 
-<div align=center>
-	<img src="imgs/image006.png" width="900"/>   
-</div>
+![newdoc06](imgs\newdoc06.png)
 
 ### Geometry filtering  
 
@@ -91,8 +89,9 @@ _ImagePy supports binary operations such as erode, dilate, opening and closing, 
 
 ImagePy can perform geometric filtering based on :__the area, the perimeter, the topology, the solidity, the eccentricity__ and other parameters. You can also use multiple conditions filtering. Each number can be positive|negative. It indicates the kept object will have the corresponding parameter greater|smaller than the value respectively. The kept objects will be set to the front color, the rejected ones will be set to the back color. In this demo, the back color is set to 100 in order to see which ones are filtered out. Once satisfied with the result, set the back color to 0 to reject them. In addition, ImagePy also supports gray density filtering, color filtering, color clustering and other functions.  
 
-<div align=center>
-	<img src="imgs/image007.png" width="900"/>   
+![newdoc07](imgs\newdoc07.png)
+
+<div align=center> 
 	Geometry filtering (the area is over-chosen to emphasize the distinction) 
 </div>
 
@@ -103,13 +102,13 @@ ImagePy can perform geometric filtering based on :__the area, the perimeter, the
 Count the area and analyze the parameters. By choosing the `cov` option, ImagePy will fit each area with an ellipse calculated via the covariance.  
 The parameters such as area, perimeter, eccentricity, and solidity shown in the previous step are calculated here. In fact, the filtering of the previous step is a downstream analysis of this one.
 
-<div align=center>
-	<img src="imgs/image008.png" width="900"/>   
-	Geometry Analysis	
-	<img src="imgs/image009.png" width="900"/>   
-	Generate the result table (intensity is reduced in order to emphasize the
-	ellipse)
-</div>
+![newdoc08](imgs\newdoc08.png)
+
+Geometry Analysis	
+
+![newdoc09](imgs\newdoc09.png)
+
+Generate the result table (intensity is reduced in order to emphasize the ellipse)
 
 
 ### Sort Table by area  
@@ -118,8 +117,9 @@ The parameters such as area, perimeter, eccentricity, and solidity shown in the 
 
 Select the major key as area, and select descend. The table will be sorted in descending order of area. A table is another important piece of data other than an image. In a sense, many times we need to get the required information on the image and then post-process the data in the form of a table. ImagePy supports table I/O (xls, xlsx, csv), filtering, slicing, statistical analysis, sorting and more.  
 
-<div align=center>
-	<img src="imgs/image010.png" width="900"/>   
+![newdoc10](imgs\newdoc10.png)
+
+<div align=center>  
 	Right click on the column header to set the text color, decimal precision, line style, etc.
 </div>
 
@@ -130,9 +130,10 @@ Select the major key as area, and select descend. The table will be sorted in de
 
 From tabular data, we often need to draw a graph. Here, we plot the histograms of the area and the perimeter columns. ImagePy's tables can be used to draw common charts such as line charts, pie charts, histograms, and scatter plots (matplotlib-based). The chart comes with zooming, moving and other functions. The table can also be saved as an image.  
 
+![newdoc11](imgs\newdoc11.png)
 
-<div align=center>
-	<img src="imgs/image011.png" width="900"/>   
+
+<div align=center> 
 	Histograms
 </div>
 
@@ -149,8 +150,9 @@ Surface reconstruction of the image. This image shows the three reconstructed re
 
 ImagePy can perform 3D filtering of images, 3D skeletons, 3D topological analysis, 2D surface reconstruction, and 3D surface visualization. The 3D view can be freely dragged, rotated, and the image results can be saved as a .stl file.
 
-<div align=center>
-	<img src="imgs/image012.png" width="900"/>   
+![newdoc12](imgs\newdoc12.png)
+
+<div align=center> 
 	3D visualisation	
 </div>
 
@@ -164,8 +166,9 @@ Macro recorder is shown in the develop tool panel. We have manually completed an
 
 Macros are saved into .mc files. drag and drop the file to the status bar at the bottom of ImagePy, the macro will be executed automatically. we can also copy the .mc file to the submenu of the menus under the ImagePy file directory. When ImagePy is started, the macro file will be parsed into a menu item at the corresponding location. By clicking the menu, the macro will also be executed.
 
-<div align=center>
-	<img src="imgs/image013.png" width="900"/>   
+![newdoc13](imgs\newdoc13.png)
+
+<div align=center>  
 	Macro Recording
 </div>
 
@@ -178,18 +181,19 @@ The chapter corresponds to a rectangular area in the flow chart, and the section
 
 The workflow is actually written in MarkDown (a markup language), but it needs to be written respecting several specifications, as follows:
 
-```
+```markdown
 Title
-===
+=====
 ## Chapter1
-1.  Section1
+1. Section1
 some coment for section1 ...
-2.  ...
+2. ...
 ## Chapter 2
 	...
 ```
-<div align=center>
-	<img src="imgs/image014.png" width="900"/>   
+![newdoc14](imgs\newdoc14.png)
+
+<div align=center> 
 	Workflow
 </div>
 
@@ -199,22 +203,27 @@ some coment for section1 ...
 
 We introduced macros and workflows in the last sections, using macros and workflows to connect existing functions is convenient. But sometimes we need to create new features. In this section, we are trying to add a new feature to ImagePy. ImagePy can easily access any Numpy-based function. Let's take the Canny operator of scikit-image as an example.
 
-```
+```python
 from skimage import feature
 from imagepy.core.engine import Filter
+
 class Plugin(Filter):
     title = 'Canny'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'sigma':1.0, 'low_threshold':10, 'high_threshold':20}
+    
     view = [(float, 'sigma', (0,10), 1, 'sigma', 'pix'),
-    	    ('slide', 'low_threshold', (0,50), 4, 'low_threshold'),
-	    ('slide', 'high_threshold', (0,50), 4, 'high_threshold')]
+            ('slide', 'low_threshold', (0,50), 4, 'low_threshold'),
+            ('slide', 'high_threshold', (0,50), 4, 'high_threshold')]
+    
 def run(self, ips, snap, img, para = None):
     return feature.canny(snap, para['sigma'], para['low_threshold'],
-    			 para['high_threshold'], mask=ips.get_msk())*255
+                         para['high_threshold'], mask=ips.get_msk())*255
 ```
+![newdoc15](imgs\newdoc15.png)
+
 <div align=center>
-	<img src="imgs/image015.png" width="900"/>   
+	<img src="http://idoc.imagepy.org/imgs/image015.png" width="900"/>   
 </div>
 
 #### Steps to create a your own filter:
@@ -261,8 +270,10 @@ def run(self, tps, data, snap, para=None):
     	   	     axis=0, ascending = not para['descend'],
 		     inplace=True)
 ```
+![newdoc16](imgs\newdoc16.png)
+
 <div align=center>
-	<img src="imgs/image010.png" width="900"/>   
+	<img src="http://idoc.imagepy.org/imgs/image010.png" width="900"/>   
 </div>
 
 #### How Table works 
