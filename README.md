@@ -3,16 +3,10 @@
 ImagePy is an open source image processing framework written in Python. Its UI interface, image data structure and table data structure are wxpython-based, Numpy-based and pandas-based respectively. Furthermore, it supports any plug-in based on Numpy and pandas, which can talk easily between scipy.ndimage, scikit-image, simpleitk, opencv and other image processing libraries.  
 
 ![newdoc01](http://idoc.imagepy.org/imgs/newdoc01.png)
-
-<div align=center>
-	Overview, mouse measurement, geometric transformation, filtering, segmentation, counting, etc.
-</div>
+<div align=center>Overview, mouse measurement, geometric transformation, filtering, segmentation, counting, etc.</div><br>
 
 ![newdoc02](http://idoc.imagepy.org/imgs/newdoc02.png)
-
-<div align=center>
-	If you are more a IJ-style user, try `Windows -> Windows Style` to switch
-</div>
+<div align=center>If you are more a IJ-style user, try `Windows -> Windows Style` to switch</div><br>
 
 ImagePy:
 - has a user-friendly  interface
