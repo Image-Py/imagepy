@@ -191,7 +191,7 @@ class Plugin(Filter):
     
 def run(self, ips, snap, img, para = None):
     return feature.canny(snap, para['sigma'], para['low_threshold'],
-                         para['high_threshold'], mask=ips.get_msk())*255
+        para['high_threshold'], mask=ips.get_msk())*255
 ```
 ![newdoc15](http://idoc.imagepy.org/imgs/newdoc15.png)
 <div align=center>Canny Filter Demo</div><br>
@@ -225,20 +225,22 @@ The framework unifies the complex tasks in a formal manner and helps us to perfo
 
 As mentioned earlier, the table is another very important data type other than the image. Similarly, ImagePy also supports the extension of table. Here we give an example of sorting-by-key used in the previous description.
 
-```
+```python
 from imagepy.core.engine import Table
 import pandas as pd
+
 class Plugin(Table):
     title = 'Table Sort By Key'
     para = {'major':None, 'minor':None, 'descend':False}
+
     view = [('field', 'major', 'major', 'key'),
     	    ('field', 'minor', 'minor', 'key'),
     	    (bool, 'descend', 'descend')]
+
 def run(self, tps, data, snap, para=None):
     by = [para['major'], para['minor']]
     data.sort_values(by=[i for i in by if i != 'None'],
-    	   	     axis=0, ascending = not para['descend'],
-		     inplace=True)
+        axis=0, ascending = not para['descend'], inplace=True)
 ```
 ![newdoc16](http://idoc.imagepy.org/imgs/newdoc16.png)
 <div align=center>Table Sort Demo</div><br>
