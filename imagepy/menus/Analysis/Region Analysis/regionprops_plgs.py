@@ -6,7 +6,7 @@ Created on Tue Dec 27 01:06:59 2016
 from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Simple, Filter
-from imagepy.core.manager import ImageManager
+from imagepy.core.manager import ImageManager, ColorManager
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
 from imagepy.core.mark import GeometryMark
@@ -159,4 +159,43 @@ class RegionFilter(Filter):
 
         idx[0] = para['front'] if para['inv'] else 0
         img[:] = idx[lab]
-plgs = [RegionCounter, RegionFilter]
+
+# center, area, l, extent, cov
+class PropertyMarker(Filter):
+    title = 'Property Marker'
+    note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap','preview']
+    para = {'con':'4-connect', 'pro':'area', 'cm':'gray'}
+    view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
+            (list, 'pro', ['area', 'perimeter', 'solid', 'eccentricity'], str, 'property', ''),
+            ('cmap', 'cm', 'color map')]
+
+    def load(self, ips): 
+        self.lut = ips.lut
+        return True
+
+    def cancel(self, ips):
+        ips.lut = self.lut
+        Filter.cancel(self, ips)
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
+
+        lab, n = label(snap, strc, output=np.uint32)
+        idx = (np.zeros(n+1)).astype(np.uint8)
+        ls = regionprops(lab)
+        
+        if para['pro'] == 'area': ps = [i.area for i in ls]
+        if para['pro'] == 'perimeter': ps = [i.perimeter for i in ls]
+        if para['pro'] == 'solid': ps = [i.solidity for i in ls]
+        if para['pro'] == 'eccentricity': ps = [i.major_axis_length/i.minor_axis_length for i in ls]
+
+        ps = np.array(ps)
+        if ps.max() != ps.min():
+            ps = (ps - ps.min()) / (ps.max() - ps.min())
+        else: ps = ps / ps.max()
+        idx[1:] = ps * 245 + 10
+        img[:] = idx[lab]
+        ips.lut = ColorManager.get_lut(para['cm'])
+
+plgs = [RegionCounter, RegionFilter, PropertyMarker]
