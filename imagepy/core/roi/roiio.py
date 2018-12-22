@@ -1,7 +1,6 @@
 from .convert import roi2shape, shape2roi
 import pickle
 from shapely import wkt
-import read_roi
 
 def roi2wkt(roi): return wkt.dumps(roi2shape(roi))
 def wkt2roi(con): return shape2roi(wkt.loads(con))
@@ -27,7 +26,3 @@ def savewkt(roi, path):
 	f = open(path, 'w')
 	f.write(roi2wkt(roi))
 	f.close()
-
-
-def read_roi_zip(path):
-	return read_roi.read_roi_zip(path)
