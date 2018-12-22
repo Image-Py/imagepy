@@ -4,7 +4,6 @@ Created on 12/21/2018
 @author: BioinfoTongLI
 """
 from imagepy.core import ImagePlus
-# from imagepy.core.manager import RoiManager
 from imagepy.core.engine import Free
 from imagepy import IPy
 from imagepy.core.roi import roiio
@@ -16,7 +15,7 @@ import numpy as np
 
 class Plugin(Free):
     """load_ij_roi: use read_roi and th pass to shapely objects"""
-    title = 'Import Rois from ImageJ'
+    title = 'Import Rois from IJ'
     para = {'path': '', 'name': 'Undefined', 'width': 2560, 'height': 2160}
     view = [(str, 'name', 'name', ''),
             (int, 'width',  (1, 3000), 0,  'width', 'pix'),
@@ -33,16 +32,15 @@ class Plugin(Free):
         n_roi = len(roi_set)
         print("Loaded %i rois" % n_roi)
 
-        mask_ips = ImagePlus([np.zeros((para['height'], para['width']), dtype=np.int16)], self.para["name"])
-        IPy.showips(mask_ips)
+        mask_ips = ImagePlus([np.zeros((para['height'], para['width']), dtype=np.int32)], self.para["name"])
 
         for one_id in roi_set:
+            # none of the roi are send to the roi manager
             one_roi = shape2roi(Polygon(list(zip(roi_set[one_id]["x"], roi_set[one_id]["y"]))))
-            # RoiManager.add(one_id, one_roi)
             one_roi.fill(mask_ips.img, color=int(one_id))
-        # seems not working here...
-        mask_ips.update = True
-        # RoiManager.rois = {}
+
+        IPy.showips(mask_ips)
+        mask_ips.update = "pix"
 
 
 if __name__ == '__main__':
