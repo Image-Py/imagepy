@@ -7,5 +7,5 @@ xlrd
 xlwt
 openpyxl
 pydicom
-read_roi
+read-roi
 numpy-stl
