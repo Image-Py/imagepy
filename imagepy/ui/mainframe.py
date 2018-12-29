@@ -115,7 +115,9 @@ class ImagePy(wx.Frame):
         self.auimgr.AddPane( self.tablenbwrap, aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock().Hide()
             .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Tables') . 
             BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
-
+        img = ConfigManager.get('watermark') or ''
+        if not os.path.exists(img): img = 'data/watermark.png'
+        self.set_background(img)
         #self.auimgr.SetArtProvider(MyArtProvider())
         #self.canvasnb.Bind( aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid)        
 
@@ -187,6 +189,10 @@ class ImagePy(wx.Frame):
 
     def set_color(self, value):
         self.line_color.SetBackgroundColour(value)
+
+    def set_background(self, img):
+        if IPy.uimode()!='ipy': return
+        self.canvasnb.set_background(img)
 
     def on_close(self, event):
         ConfigManager.write()

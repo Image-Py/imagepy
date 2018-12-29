@@ -145,10 +145,10 @@ class CanvasFrame(wx.Frame):
         event.Skip()
 
 
-class MyArtProvider(aui.AuiDefaultDockArt):
-    def __init__(self):
+class ImgArtProvider(aui.AuiDefaultDockArt):
+    def __init__(self, img):
         aui.AuiDefaultDockArt.__init__(self)
-        self.bitmap = wx.Bitmap('data/watermark.png', wx.BITMAP_TYPE_PNG)
+        self.bitmap = wx.Bitmap(img, wx.BITMAP_TYPE_PNG)
 
     def DrawBackground(self, dc, window, orient, rect):
         aui.AuiDefaultDockArt.DrawBackground(self, dc, window, orient, rect)
@@ -169,7 +169,9 @@ class CanvasNoteBook(wx.lib.agw.aui.AuiNotebook):
         self.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_pagevalid) 
         self.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close)
         self.SetArtProvider(aui.AuiSimpleTabArt())
-        self.GetAuiManager().SetArtProvider(MyArtProvider())
+        
+    def set_background(self, img):
+        self.GetAuiManager().SetArtProvider(ImgArtProvider(img))
 
     def add_page(self, panel, ips):
         self.AddPage(panel, ips.title, True, wx.NullBitmap )
