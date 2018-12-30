@@ -18,7 +18,6 @@ from .ui.mainframe import ImagePy
 def show(ui = True):
 	app = wx.App(False)
 	
-
 	bitmap = wx.Bitmap('data/logolong.png', wx.BITMAP_TYPE_PNG)
 	shadow = wx.Colour(255,255,255)
 	# SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT, 3000, None, -1)
@@ -29,8 +28,7 @@ def show(ui = True):
 		AS.AS_SHADOW_BITMAP,
 		shadowcolour=shadow)
 
-	mainFrame = ImagePy(None)
-	mainFrame.Show()
+	ImagePy(None).Show()	
 	app.MainLoop()
 	
 	

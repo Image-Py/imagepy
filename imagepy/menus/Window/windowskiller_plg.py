@@ -11,6 +11,7 @@ from imagepy.core.manager import ImageManager, TextLogManager, \
 class ImageKiller(Free):
     """ImageKiller: derived from imagepy.core.engine.Free"""
     title = 'Kill Image'
+    asyn = False
 
     def load(self):
         ImageKiller.para = {'name':'All'}
@@ -23,11 +24,14 @@ class ImageKiller(Free):
         if para['name'] == 'All':
             for i in ImageManager.get_titles():
                 WindowsManager.get(i).close()
-        else: WindowsManager.get(para['name']).close()
+        else: 
+            print(WindowsManager.get(para['name']))
+            WindowsManager.get(para['name']).close()
         
 class TextKiller(Free):
     """TextKiller: derived from imagepy.core.engine.Free"""
     title = 'Kill TextLog'
+    asyn = False
 
     def load(self):
         TextKiller.para = {'name':'All'}
@@ -45,6 +49,7 @@ class TextKiller(Free):
 class TableKiller(Free):
     """TableKiller: derived from imagepy.core.engine.Free"""
     title = 'Kill TableLog'
+    asyn = False
 
     def load(self):
         self.para = {'name':'All'}

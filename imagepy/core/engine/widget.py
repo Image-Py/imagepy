@@ -15,11 +15,12 @@ class Widget():
 	def __call__(self):return self
 
 	def start(self):
-		if not WidgetsManager.getref(self.title) is None: return
+		#if not WidgetsManager.getref(self.title) is None: return
 		pan = self.pan(IPy.curapp)
-		WidgetsManager.addref(pan)
-		IPy.curapp.auimgr.AddPane(pan, aui.AuiPaneInfo(). DestroyOnClose(True). Left(). Caption(self.title)  .PinButton( True )
-			.Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(IPy.uimode()=='ipy').Layer( 15 ) )
+		#WidgetsManager.addref(pan)
+		IPy.curapp.auimgr.AddPane(pan, aui.AuiPaneInfo().Caption(self.title).Left().Layer( 15 ).PinButton( True )
+			.Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(IPy.uimode()=='ipy').DestroyOnClose())
+
 		IPy.curapp.Layout()
 		IPy.curapp.auimgr.Update()
 		'''

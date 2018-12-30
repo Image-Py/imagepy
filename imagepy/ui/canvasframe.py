@@ -105,7 +105,15 @@ class CanvasPanel(wx.Panel):
         self.canvas.on_idle(None)
 
     def close(self):
-        self.GetParent().Close()
+        parent = self.GetParent()
+        if IPy.uimode()=='ij':
+            parent.Close()
+        if IPy.uimode()=='ipy':
+            idx = parent.GetPageIndex(self)
+            parent.DeletePage(idx)
+            self.set_handler()
+            self.canvas.set_handler()
+            WindowsManager.remove(self)
 
     def __del__(self):pass
 
@@ -186,6 +194,7 @@ class CanvasNoteBook(wx.lib.agw.aui.AuiNotebook):
         ImageManager.add(event.GetEventObject().GetPage(event.GetSelection()).ips)
 
     def on_close(self, event):
+        print('page close')
         event.GetEventObject().GetPage(event.GetSelection()).set_handler()
         event.GetEventObject().GetPage(event.GetSelection()).canvas.set_handler()
         WindowsManager.remove(event.GetEventObject().GetPage(event.GetSelection()))

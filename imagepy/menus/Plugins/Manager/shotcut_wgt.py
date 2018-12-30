@@ -30,10 +30,12 @@ class VirtualListCtrl(wx.ListCtrl):
 class Plugin( wx.Panel ):
     title = 'Shotcut Editor'
     single = None
+
     def __init__( self, parent):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY,
                             pos = wx.DefaultPosition, size = wx.Size( 500,300 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
         bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
         self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, "Search:", 
@@ -71,6 +73,7 @@ class Plugin( wx.Panel ):
         wd = self.txt_search.GetValue()
         self.buf = [i for i in self.plgs if wd.lower() in i[0].lower()]
         self.lst_plgs.set_data(self.buf)
+        self.Refresh()
         
     def ist(self, cont, txt):
         sep = cont.split('-')
@@ -105,6 +108,6 @@ class Plugin( wx.Panel ):
         ShotcutManager.set(title, txt)
         #PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
         
-    def __del__(self):
-        print('hahaha')
+    def close(self):
+        print('close')
         ShotcutManager.write()

@@ -137,11 +137,11 @@ class ImagePy(wx.Frame):
             .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ) )
 
     def on_pan_close(self, event):
-        return
         if event.GetPane().window in [self.toolbar, self.widgets]:
             event.Veto()
-            event.GetPane().Show(False)
-            self.auimgr.Update()
+        if hasattr(event.GetPane().window, 'close'):
+            event.GetPane().window.close()
+
 
     def reload_plugins(self, report=False, menus=True, tools=False, widgets=False):
         print(menus, tools, widgets)
@@ -195,6 +195,7 @@ class ImagePy(wx.Frame):
         self.canvasnb.set_background(img)
 
     def on_close(self, event):
+        print('close')
         ConfigManager.write()
         self.auimgr.UnInit()
         del self.auimgr

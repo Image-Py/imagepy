@@ -8,6 +8,7 @@ from imagepy.core.engine import Free
 
 class Plugin(Free):
 	title = 'Exit'
+	asyn = False
 
 	def run(self, para = None):
-		IPy.curapp.on_close(None)
+		IPy.curapp.Close()
