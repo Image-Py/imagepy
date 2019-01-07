@@ -9,7 +9,7 @@ from skimage.morphology import medial_axis
 from imagepy.ipyalg.graph import skel2d
 from imagepy.core.engine import Filter
 from imagepy.ipyalg import find_maximum, watershed
-#from skimage.morphology import watershed
+from skimage.filters import apply_hysteresis_threshold
 import scipy.ndimage as ndimg
 
 class Skeleton(Filter):
@@ -54,14 +54,15 @@ class Watershed(Filter):
 
 	## TODO: Fixme!
 	def run(self, ips, snap, img, para = None):
-		img[:] = snap
+		img[:] = snap>0
 		dist = -ndimg.distance_transform_edt(snap)
 		pts = find_maximum(dist, para['tor'], False)
 		buf = np.zeros(ips.size, dtype=np.uint16)
-		buf[pts[:,0], pts[:,1]] = 1
+		buf[pts[:,0], pts[:,1]] = img[pts[:,0], pts[:,1]] = 2
 		markers, n = ndimg.label(buf, np.ones((3,3)))
 		line = watershed(dist, markers, line=True, conn=para['con']+1)
-		img[line==0] = 0
+		msk = apply_hysteresis_threshold(img, 0, 1)
+		img[:] = snap * ~((line==0) & msk)
 
 class Voronoi(Filter):
 	"""Mark class plugin with events callback functions"""
