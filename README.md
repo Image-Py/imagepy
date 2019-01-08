@@ -22,9 +22,13 @@ Our long-term goal of this project is to be used as ImageJ + SPSS (although not 
 ## Citation：
 [ImagePy: an open-source, Python-based and platform-independent software package for bioimage analysis](https://academic.oup.com/bioinformatics/article/34/18/3238/4989871)
 
+## Forum
+
+ImagePy is a community partner of forum.image.sc, Anything about the usage and development of ImagePy could be discussed in https://forum.image.sc.
+
 # Installation
 
-__OS support：windows, linux, mac, with python2.7 and python3.__4+
+__OS support：windows, linux, mac, with python3.4__
 
 1.  ImagePy is a ui framework based on wxpython, which can not be installed
     with pip on Linux. You need download [the whl according to your
