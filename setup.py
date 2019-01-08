@@ -27,6 +27,9 @@ if __name__ == '__main__':
             'scikit-image',
             'shapely',
             'wxpython-installer',
+            'read_roi',
+            'numpy-stl',
+            'pydicom'
             'pandas',
             'xlrd',
             'xlwt',

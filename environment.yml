@@ -14,5 +14,6 @@ dependencies:
   - wxpython
   - xlrd
   - xlwt
+  - markdown
   - pip:
     - moderngl
