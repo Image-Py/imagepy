@@ -29,7 +29,7 @@ if __name__ == '__main__':
             'wxpython-installer',
             'read_roi',
             'numpy-stl',
-            'pydicom'
+            'pydicom',
             'pandas',
             'xlrd',
             'xlwt',
