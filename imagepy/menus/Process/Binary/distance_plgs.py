@@ -57,7 +57,7 @@ class Watershed(Filter):
 		img[:] = snap>0
 		dist = -ndimg.distance_transform_edt(snap)
 		pts = find_maximum(dist, para['tor'], False)
-		buf = np.zeros(ips.size, dtype=np.uint16)
+		buf = np.zeros(ips.size, dtype=np.uint32)
 		buf[pts[:,0], pts[:,1]] = img[pts[:,0], pts[:,1]] = 2
 		markers, n = ndimg.label(buf, np.ones((3,3)))
 		line = watershed(dist, markers, line=True, conn=para['con']+1)
