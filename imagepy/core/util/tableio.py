@@ -16,7 +16,7 @@ class Reader(Free):
 
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        read = ReaderManager.get(fe[1:])
+        read = ReaderManager.get(fe[1:], tag = 'tab')
 
         table = read(para['path'])
         ViewerManager.get(fe[1:])(table, fn)
@@ -33,5 +33,5 @@ class Writer(Table):
     def run(self, tps, data, snap, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        write = WriterManager.get(fe[1:], 'tab')
+        write = WriterManager.get(fe[1:], tag='tab')
         write(para['path'], data)
