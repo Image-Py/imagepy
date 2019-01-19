@@ -5,6 +5,7 @@ from imagepy.core.manager import ReaderManager, WriterManager, ViewerManager
 
 def show(data, title):
     IPy.show_table(data, title)
+    
 ViewerManager.add('tab', show)
 
 save_csv = lambda path, data:data.to_csv(path)

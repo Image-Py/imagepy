@@ -28,13 +28,13 @@ def Schedule(a,b,c, plg):
 
 class Install(Free):
     title = 'Install Plugins'
-    para = {'pkg':'https://github.com/Image-Py/IBook'}
+    para = {'repo':'https://github.com/Image-Py/IBook'}
     prgs = (0, 100)
     view = [('lab', None, 'input a zipfile url or github url as http://github.com/username/project'),
-            (str, 'pkg', 'package', '')]
+            (str, 'repo', 'package', '')]
 
     def run(self, para=None):
-        url = para['pkg']
+        url = para['repo']
         if 'github.com' in url:
             if url[-4:] == '.git':
                 url = url.replace('.git', '/archive/master.zip')
@@ -45,7 +45,7 @@ class Install(Free):
             domain, name = (url[:-4].replace('.','-')).split('/')[-2:]
         domain, name = domain.replace('_', '-'), name.replace('_', '-')
 
-        IPy.set_info('downloading plugin from %s'%para['pkg'])
+        IPy.set_info('downloading plugin from %s'%para['repo'])
         urlretrieve(url, os.path.join(path_cache, domain+'_'+name+'.zip'), 
             lambda a,b,c, p=self: Schedule(a,b,c,p))
         zipf = zipfile.ZipFile(os.path.join(path_cache, domain+'_'+name+'.zip'))

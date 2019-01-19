@@ -6,7 +6,7 @@ Created on Fri Jan  6 23:45:59 2017
 """
 import os, sys
 from ..engine import Macros, MkDown, Widget, WorkFlow
-from ..manager import ToolsManager, PluginsManager, WidgetsManager
+from ..manager import ToolsManager, PluginsManager, WidgetsManager, DocumentManager
 from ... import IPy, root_dir
 from codecs import open
 
@@ -231,6 +231,19 @@ def build_widgets(path, err=False):
         IPy.write('widgets not loaded:')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
     return (pg, subtree)
+
+def build_document(path):
+    docs = []
+    for dirpath,dirnames,filenames in os.walk(path):
+        for filename in filenames:
+            if filename[-3:] != '.md': continue
+            docs.append(os.path.join(dirpath, filename))
+            f = open(docs[-1])
+            cont = f.read()
+            f.close()
+            DocumentManager.add(filename[:-3], cont)
+    print(docs)
+    return docs
 
 if __name__ == "__main__":
     print (os.getcwd())

@@ -119,10 +119,6 @@ class ImagePlus:
 
     def lookup(self, img=None):
         if img is None: img = self.img
-        #print(self.channels, self.dtype, img.dtype)
-        #if img.ndim==2 and img.dtype==np.uint8:
-        #    return self.lut[img]
-        #el
         if img.ndim==2:
             k = 255.0/(max(1e-10, self.range[1]-self.range[0]))
             bf = np.clip(img, self.range[0], self.range[1])

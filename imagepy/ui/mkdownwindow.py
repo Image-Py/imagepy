@@ -4,9 +4,9 @@ from imagepy import IPy, root_dir
 import os
 
 def md2html(mdstr):
-	exts = ['markdown.extensions.extra', 'markdown.extensions.codehilite','markdown.extensions.tables','markdown.extensions.toc']
+    exts = ['markdown.extensions.extra', 'markdown.extensions.codehilite','markdown.extensions.tables','markdown.extensions.toc']
 
-	html = '''
+    html = '''
 <html lang="zh-cn">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="content-type" />
@@ -170,32 +170,35 @@ sup {
 %s
 </body>
 </html>
-	'''
+    '''
 
-	ret = markdown(mdstr,extensions=exts)
-	f = open('yn.html', 'w', encoding='utf-8')
-	f.write(html % ret);
-	f.close()
-	return html % ret
+    ret = markdown(mdstr,extensions=exts)
+    f = open('yn.html', 'w', encoding='utf-8')
+    f.write(html % ret);
+    f.close()
+    return html % ret
 
 class HtmlPanel(wx.Panel):
-	def __init__(self, parent, cont, url):
-		wx.Panel.__init__(self, parent)
-		self.frame = self.GetTopLevelParent()
-		self.titleBase = self.frame.GetTitle()
+    def __init__(self, parent, cont='', url=''):
+        wx.Panel.__init__(self, parent)
+        self.frame = self.GetTopLevelParent()
+        self.titleBase = self.frame.GetTitle()
 
-		sizer = wx.BoxSizer(wx.VERTICAL)
-		self.wv = webview.WebView.New(self)
-		self.Bind(webview.EVT_WEBVIEW_TITLE_CHANGED, self.OnWebViewTitleChanged, self.wv)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.wv = webview.WebView.New(self)
+        self.Bind(webview.EVT_WEBVIEW_TITLE_CHANGED, self.OnWebViewTitleChanged, self.wv)
 
-		sizer.Add(self.wv, 1, wx.EXPAND)
-		self.SetSizer(sizer)
-		self.wv.SetPage(cont, url)
+        sizer.Add(self.wv, 1, wx.EXPAND)
+        self.SetSizer(sizer)
+        self.wv.SetPage(cont, url)
 
-	def OnWebViewTitleChanged(self, evt):
-		if evt.GetString() == 'about:blank': return
-		if evt.GetString() == 'http:///': return
-		self.frame.SetTitle("%s -- %s" % (self.titleBase, evt.GetString()))
+    def SetValue(self, value):
+        self.wv.SetPage(*value)
+
+    def OnWebViewTitleChanged(self, evt):
+        if evt.GetString() == 'about:blank': return
+        if evt.GetString() == 'http:///': return
+        self.frame.SetTitle("%s -- %s" % (self.titleBase, evt.GetString()))
 
 class MkDownWindow(wx.Frame):
     def __init__(self, parent, title, cont, url):

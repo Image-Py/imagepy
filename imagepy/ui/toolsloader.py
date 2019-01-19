@@ -6,7 +6,7 @@ from .. import IPy
 from .. import root_dir 
 from ..core.engine import Tool, Macros
 from ..core.loader import loader
-from imagepy.core.manager import ConfigManager
+from imagepy.core.manager import ConfigManager, DocumentManager
 from glob import glob
 
 def make_bitmap(bmp):
@@ -114,6 +114,7 @@ def add_tools(bar, datas, clear=False, curids=[]):
             box.Insert(len(box.GetChildren())-2, btn)
             
         btn.Bind( wx.EVT_LEFT_DOWN, lambda x, p=data[0]:f(p(), x))
+        btn.Bind( wx.EVT_RIGHT_DOWN, lambda x, p=data[0]: IPy.show_md(p.title, DocumentManager.get(p.title)))
         btn.Bind( wx.EVT_ENTER_WINDOW, 
                   lambda x, p='"{}" Tool'.format(data[0].title): set_info(p))        
         if not isinstance(data[0], Macros) and issubclass(data[0], Tool):

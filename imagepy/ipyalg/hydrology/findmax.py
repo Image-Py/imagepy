@@ -21,8 +21,6 @@ def idx2rc(idx, acc):
             idx[i] -= rst[i,j]*acc[j]
     return rst
 
-
-
 @jit # fill a node (may be two or more points)
 
 def fill(img, msk, p, nbs, buf):

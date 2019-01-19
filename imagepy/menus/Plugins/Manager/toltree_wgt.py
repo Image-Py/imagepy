@@ -10,6 +10,8 @@ import wx,os
 from imagepy import IPy, root_dir
 from imagepy.core.loader import loader
 from wx.py.editor import EditorFrame
+from imagepy.ui.mkdownwindow import HtmlPanel, md2html
+from imagepy.core.manager import DocumentManager
 from glob import glob
 
 class Plugin ( wx.Panel ):
@@ -43,8 +45,7 @@ class Plugin ( wx.Panel ):
         bSizer4.Add( self.m_staticText3, 0, wx.ALL, 5 )
         bSizer3.Add( bSizer4, 0, wx.EXPAND, 5 )
         
-        self.txt_info = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, 
-                                     wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+        self.txt_info = HtmlPanel( self )
         bSizer3.Add( self.txt_info, 1, wx.ALL|wx.EXPAND, 5 )
         
         
@@ -96,14 +97,10 @@ class Plugin ( wx.Panel ):
     
     def on_select( self, event ):
         plg = self.tre_plugins.GetItemData(event.GetItem())
-        print(type(plg))
         if plg!=None:
             self.plg = plg
-            if plg.__doc__!=None:
-                self.txt_info.SetValue(plg.__doc__)
-            elif hasattr(plg, '__module__'): 
-                self.txt_info.SetValue('plugin at %s'%plg.__module__)
-            else: self.txt_info.SetValue('package at %s'%plg.__name__)
+            name = self.tre_plugins.GetItemText(event.GetItem())
+            self.txt_info.SetValue((md2html(DocumentManager.get(name)), ''))
     
     def on_source(self, event):
         ## TODO: should it be absolute path ?

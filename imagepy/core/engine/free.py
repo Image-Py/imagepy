@@ -7,7 +7,7 @@ import threading, wx
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ...core.manager import WindowsManager, TextLogManager, TaskManager, WidgetsManager
+from ...core.manager import WindowsManager, TextLogManager, TaskManager, WidgetsManager, DocumentManager
 from time import time
 
 class Free:
@@ -38,7 +38,7 @@ class Free:
         with ParaDialog(WindowsManager.get(), self.title) as dialog:
             dialog.init_view(self.view, self.para, False, True)
             doc = self.__doc__ or '### Sorry\nNo document yet!'
-            dialog.on_help = lambda : IPy.show_md(self.title, doc)
+            dialog.on_help = lambda : IPy.show_md(self.title, DocumentManager.get(self.title))
             return dialog.ShowModal() == wx.ID_OK
         
     def start(self, para=None, callback=None):

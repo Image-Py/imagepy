@@ -8,7 +8,7 @@ import threading
 
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
-from ..manager import TextLogManager, TaskManager, WidgetsManager
+from ..manager import TextLogManager, TaskManager, WidgetsManager, DocumentManager
 from time import time
 
 class Table:
@@ -39,8 +39,7 @@ class Table:
         if self.view==None:return True
         self.dialog = ParaDialog(IPy.get_twindow(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
-        doc = self.__doc__ or '### Sorry\nNo document yet!'
-        self.dialog.on_help = lambda : IPy.show_md(self.title, doc)
+        self.dialog.on_help = lambda : IPy.show_md(self.title, DocumentManager.get(self.title))
         self.dialog.set_handle(lambda x:self.preview(self.tps, self.para))
         if self.modal: return self.dialog.ShowModal() == wx.ID_OK
         self.dialog.on_ok = lambda : self.ok(self.tps)

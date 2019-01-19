@@ -1,1 +1,1 @@
-catlog = ['installpkg_plgs', '-', 'installplg_plgs']
+catlog = ['installpkg_plgs', '-', 'installplg_plgs', '-', 'Plugins Manager']

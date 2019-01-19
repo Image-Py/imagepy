@@ -11,6 +11,7 @@ from .. import IPy, root_dir
 #from ui import pluginloader, toolsloader
 from . import pluginloader, toolsloader, widgetsloader
 from ..core.manager import ConfigManager, PluginsManager, TaskManager, ImageManager
+from ..core.loader import loader
 from ..core.engine import Macros
 from .canvasframe import CanvasNoteBook
 from .tableframe import TableNoteBook
@@ -50,6 +51,7 @@ class ImagePy(wx.Frame):
         print(IPy.uimode())
         if IPy.uimode()=='ipy': self.load_aui()
         else: self.load_ijui()
+        self.load_document()
         self.Fit()
 
 
@@ -142,12 +144,17 @@ class ImagePy(wx.Frame):
         if hasattr(event.GetPane().window, 'close'):
             event.GetPane().window.close()
 
+    def load_document(self):
+        from glob import glob
+        extends = glob('plugins/*/doc')
+        for i in extends: loader.build_document(i)
+        loader.build_document('doc')
 
     def reload_plugins(self, report=False, menus=True, tools=False, widgets=False):
-        print(menus, tools, widgets)
         if menus: pluginloader.buildMenuBarByPath(self, 'menus', 'plugins', self.menubar, report)
         if tools: toolsloader.build_tools(self, 'tools', 'plugins', self.toolbar, report)
         if widgets: widgetsloader.build_widgets(self, 'widgets', 'plugins', self.widgets)
+        self.load_document()
         if IPy.uimode()!='ipy': self.Fit()
 
     def hold(self):

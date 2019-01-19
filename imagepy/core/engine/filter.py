@@ -11,7 +11,7 @@ import numpy as np
 from ... import IPy
 from ...ui.panelconfig import ParaDialog
 from ...core.manager import TextLogManager, ImageManager, \
-WindowsManager, TaskManager, WidgetsManager
+WindowsManager, TaskManager, WidgetsManager, DocumentManager
 from time import time
         
 def process_channels(plg, ips, src, des, para):
@@ -101,8 +101,7 @@ class Filter:
         self.dialog = temp(WindowsManager.get(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
 
-        doc = self.__doc__ or '### Sorry\nNo document yet!'
-        self.dialog.on_help = lambda : IPy.show_md(self.title, doc)
+        self.dialog.on_help = lambda : IPy.show_md(self.title, DocumentManager.get(self.title))
         self.dialog.set_handle(lambda x:self.preview(self.ips, x))
         if self.modal: return self.dialog.ShowModal() == wx.ID_OK
         self.dialog.on_ok = lambda : self.ok(self.ips)

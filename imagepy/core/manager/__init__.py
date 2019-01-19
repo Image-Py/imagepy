@@ -8,3 +8,4 @@ from .shotcutmanager import *
 from .taskmanager import *
 from .iomanager import *
 from .languagemanager import *
+from .documentmanager import *
