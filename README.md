@@ -1,4 +1,3 @@
-![ImagePy](https://github.com/Image-Py/imagepy/blob/master/imagepy/data/logolong.png)
 # Introduction
 
 ImagePy is an open source image processing framework written in Python. Its UI interface, image data structure and table data structure are wxpython-based, Numpy-based and pandas-based respectively. Furthermore, it supports any plug-in based on Numpy and pandas, which can talk easily between scipy.ndimage, scikit-image, simpleitk, opencv and other image processing libraries.
