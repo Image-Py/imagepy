@@ -13,7 +13,7 @@ class Plot(Table):
 			(int, 'lw', (1,5), 0, 'line width', ''),
 			(bool, 'grid', 'grid')]
 
-	def run(self, tps, data, snap, para = None):
+	def run(self, tps, snap, data, para = None):
 		data[para['cn']].plot(lw=para['lw'], grid=para['grid'], title=para['title'])
 		plt.show()
 
@@ -27,7 +27,7 @@ class Bar(Table):
 			(bool, 'stack', 'stacked'),
 			(bool, 'grid', 'grid')]
 
-	def run(self, tps, data, snap, para = None):
+	def run(self, tps, snap, data, para = None):
 		if para['dir']:
 			data[para['cn']].plot.barh(stacked=para['stack'], grid=para['grid'], title=para['title'])
 		else: data[para['cn']].plot.bar(stacked=para['stack'], grid=para['grid'], title=para['title'])
@@ -47,7 +47,7 @@ class Hist(Table):
 			(bool, 'overlay', 'draw every columns in one'),
 			(bool, 'grid', 'grid')]
 
-	def run(self, tps, data, snap, para = None):
+	def run(self, tps, snap, data, para = None):
 		if para['overlay']:
 			data[para['cn']].plot.hist(stacked=para['stack'], bins=para['bins'], alpha=para['alpha'],
 				orientation=para['dir'], grid=para['grid'], title=para['title'])
@@ -66,7 +66,7 @@ class Box(Table):
 			(bool, 'hor', 'horizontal'),
 			(bool, 'grid', 'grid')]
 
-	def run(self, tps, data, snap, para = None):
+	def run(self, tps, snap, data, para = None):
 		data[para['cn']].plot.box(by=None, vert=~para['hor'], grid=para['grid'], title=para['title'])
 		plt.show()
 
@@ -80,7 +80,7 @@ class Area(Table):
 			(bool, 'stack', 'stacked'),
 			(bool, 'grid', 'grid')]
 
-	def run(self, tps, data, snap, para = None):
+	def run(self, tps, snap, data, para = None):
 		data[para['cn']].plot.area(stacked=para['stack'], alpha=para['alpha'], 
 			grid=para['grid'], title=para['title'])
 		plt.show()
@@ -101,7 +101,7 @@ class Scatter(Table):
 			('cmap', 'cm', 'color map'),
 			(bool, 'grid', 'grid')]
 
-	def run(self, tps, data, snap, para = None):
+	def run(self, tps, snap, data, para = None):
 		rs = data[para['rs']] * para['s'] if para['rs'] != 'None' else para['s']
 		cs = data[para['cs']] if para['cs'] != 'None' else '#%.2x%.2x%.2x'%para['c']
 		cm = ColorManager.get_lut(para['cm'])/255.0
@@ -117,7 +117,7 @@ class Pie(Table):
 	view = [(str, 'title', 'title', ''),
 			('fields', 'cn', 'select fields')]
 
-	def run(self, tps, data, snap, para = None):
+	def run(self, tps, snap, data, para = None):
 		data[para['cn']].plot.pie(subplots=True, title=para['title'])
 		plt.show()
 

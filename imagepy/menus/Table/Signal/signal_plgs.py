@@ -12,7 +12,7 @@ class Statistic(Table):
 		
 	view = [(int, 'size', (0,30), 0, 'size', '')]
 
-	def run(self, tps, data, snap, para=None):
+	def run(self, tps, snap, data, para=None):
 		for s in snap.columns:
 			data[s] = nimg.uniform_filter(snap[s], para['size'])
 

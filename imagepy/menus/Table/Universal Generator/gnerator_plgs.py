@@ -3,36 +3,6 @@ import numpy as np
 import pandas as pd
 from imagepy import IPy
 
-'''
-生成：
-  随机数
-  正太随机
-  日历
-  单位矩阵
-基础：
-  添加字段
-  删除字段
-  字段运算
-  赋值
-  截取
-  转置
-统计：
-  平均数，最大值，最小值，方差
-  频率统计
-  按id汇总
-筛选：
-  ：
-图表：
-  折线图
-  条形图
-  饼状图
-信号：
-  高斯
-  差分
-关联：
-  聚合
-  分组
-'''
 class One(Free):
 	title = 'Unit Matrix'
 	para = {'size':3}

@@ -95,15 +95,8 @@ def showmd(title, cont, url=''):
 pub.subscribe(showmd, 'showmd')
 def show_md(title, cont, url=''):
     wx.CallAfter(pub.sendMessage, 'showmd', title=title, cont=cont, url=url)
-'''
-def stepmacros(macros):
-    macros.next()
 
-pub.subscribe(stepmacros, 'stepmacros')
-def step_macros(macros):
-    wx.CallAfter(pub.sendMessage, "stepmacros", macros=macros)
-'''
-def alert(info, title="ImagePy Alert!"):
+def _alert(info, title="ImagePy Alert!"):
     if uimode()=='no':
         print('ImagePy Alert >>> %s'%title)
         print(info)
@@ -111,6 +104,11 @@ def alert(info, title="ImagePy Alert!"):
         dialog=wx.MessageDialog(curapp, info, title, wx.OK)
         dialog.ShowModal() == wx.ID_OK
         dialog.Destroy()
+
+pub.subscribe(_alert, 'alert')
+
+def alert(info, title="ImagePy Alert!"):
+    wx.CallAfter(pub.sendMessage, 'alert', info=info, title=title)
 
 # MT alert = lambda info, title='image-py':callafter(alert_, *(info, title))
 

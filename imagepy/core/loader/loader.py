@@ -238,7 +238,7 @@ def build_document(path):
         for filename in filenames:
             if filename[-3:] != '.md': continue
             docs.append(os.path.join(dirpath, filename))
-            f = open(docs[-1])
+            f = open(docs[-1], encoding='utf-8')
             cont = f.read()
             f.close()
             DocumentManager.add(filename[:-3], cont)

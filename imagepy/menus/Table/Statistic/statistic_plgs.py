@@ -19,7 +19,7 @@ class Statistic(Table):
 			(bool, 'skew', 'skew'),
 			(bool, 'kurt', 'kurt')]
 
-	def run(self, tps, data, snap, para=None):
+	def run(self, tps, snap, data, para=None):
 		rst, axis = {}, (0,1)[para['axis']=='Row']
 		if para['sum']:rst['sum'] = snap.sum(axis=axis)
 		if para['mean']:rst['mean'] = snap.mean(axis=axis)
@@ -49,7 +49,7 @@ class GroupStatistic(Table):
 			(bool, 'std', 'std'),
 			(bool, 'skew', 'skew')]
 
-	def run(self, tps, data, snap, para=None):
+	def run(self, tps, snap, data, para=None):
 		by = [i for i in [para['major'], para['minor']] if i!='None']
 		gp = data.groupby(by)[para['cn']]
 

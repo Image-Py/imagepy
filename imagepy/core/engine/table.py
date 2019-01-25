@@ -46,7 +46,7 @@ class Table:
         self.dialog.on_cancel = lambda : self.cancel(self.tps)
         self.dialog.Show()
     
-    def run(self, tps, data, snap, para = None):pass
+    def run(self, tps, snap, data, para = None):pass
         
     def cancel(self, tps):
         if 'snap' in self.note:
@@ -62,7 +62,7 @@ class Table:
         win = WidgetsManager.getref('Macros Recorder')
         if win!=None: win.write('{}>{}'.format(self.title, para))
 
-    def runasyn(self,  tps, data, snap, para = None, callback = None):
+    def runasyn(self,  tps, snap, data, para = None, callback = None):
         TaskManager.add(self)
         start = time()
         self.run(tps, data, snap, para)
