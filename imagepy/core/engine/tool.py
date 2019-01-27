@@ -23,7 +23,7 @@ class Tool:
         ips = IPy.get_ips()
         if not ips is None and not ips.tool is None:
             ips.tool = None
-            ips.update = True
+            ips.update()
         ToolsManager.set(self)
         
     def mouse_down(self, ips, x, y, btn, **key): pass

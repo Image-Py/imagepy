@@ -24,11 +24,11 @@ class Plugin(Filter):
     def preview(self, ips, para):
         ips.lut[:] = self.buflut
         ips.lut[:para['thr']] = [255,0,0]
-        ips.update = 'pix'
+        ips.update()
 
     def cancel(self, ips):
         ips.lut = self.buflut
-        ips.update = 'pix'
+        ips.update()
 
     def run(self, ips, snap, img, para = None):
         ips.lut = self.buflut

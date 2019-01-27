@@ -232,7 +232,7 @@ class Plugin(Tool):
             ips.mark.backline.append(self.cur)
         if btn==3 and key['ctrl']:
             GrabCut().start()
-        ips.update = True
+        ips.update()
     
     def mouse_up(self, ips, x, y, btn, **key):
         if self.status==1 and len(self.cur)==1:
@@ -240,12 +240,12 @@ class Plugin(Tool):
         if self.status==0 and len(self.cur)==1:
             ips.mark.backline.remove(self.cur)
         self.status = -1
-        ips.update = True
+        ips.update()
     
     def mouse_move(self, ips, x, y, btn, **key):
         if self.status!=-1:
             self.cur.append((x, y))
-            ips.update = True
+            ips.update()
         
     def mouse_wheel(self, ips, x, y, d, **key):
         pass

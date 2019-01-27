@@ -5,11 +5,13 @@ from ..manager import TableManager
 class TablePlus():
     def __init__(self, data, title=None):
         self.set_title(title)
-        self.update, self.range = None, None
+        self.dirty, self.range = None, None
         self.default = [3, (0,0,0), (0,0,255), 'Text']
         self.set_data(data)
         self.snap = None
 
+    def update(self, value=True): self.dirty=value
+    
     def set_title(self, title):
         self.title = TableManager.name(title)
 

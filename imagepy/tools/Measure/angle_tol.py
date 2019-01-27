@@ -114,7 +114,7 @@ class Plugin(Tool):
                 ips.mark.buf.append((x,y))
                 self.doing = False
                 ips.mark.addline()
-        ips.update = True
+        ips.update()
     
     def mouse_up(self, ips, x, y, btn, **key):
         self.curobj = None
@@ -128,7 +128,7 @@ class Plugin(Tool):
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
             ips.mark.draged(self.odx, self.ody, x, y, self.curobj)
-            ips.update = True
+            ips.update()
         self.odx, self.ody = x, y
         
     def mouse_wheel(self, ips, x, y, d, **key):

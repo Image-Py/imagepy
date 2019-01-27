@@ -17,7 +17,7 @@ class ViewPort(wx.Panel):
         self.boxpan = None
         self.box = (0,0)
         self.ibox = (100,100)
-        self.update = False
+        self.dirty = False
         self.loc = (0,0)
         self.drag = False
 
@@ -28,18 +28,20 @@ class ViewPort(wx.Panel):
         self.Bind(wx.EVT_LEFT_UP, self.on_lu)
         self.Bind(wx.EVT_MOTION, self.on_mv)
 
+    def update(self): self.dirty = True
+
     def init_buf(self):
         self.box = box = self.GetClientSize()
         self.buffer = wx.Bitmap(box.width, box.height)
         
     def on_size(self, event):
         self.init_buf()
-        self.update = True
+        self.update()
         
     def on_idle(self, event):
-        if self.update == True:
+        if self.dirty == True:
             self.draw()
-            self.update = False
+            self.dirty = False
 
     def on_paint(self, event):
         wx.BufferedPaintDC(self, self.buffer)
@@ -85,7 +87,7 @@ class ViewPort(wx.Panel):
 
     def set_box(self, boximg, boxpan):
         self.boximg, self.boxpan = boximg, boxpan
-        self.update = True
+        self.update()
 
     def draw(self):
         # get client device context buffer

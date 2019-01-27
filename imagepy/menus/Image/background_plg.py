@@ -29,7 +29,7 @@ class SetBackground(Simple):
                 return
             ips.backimg = img
             ips.backmode = (para['k'], para['op'])
-        ips.update = 'pix'
+        ips.update()
         
 class BackgroundSelf(Simple):
     """Calculator Plugin derived from imagepy.core.engine.Simple """
@@ -46,6 +46,6 @@ class BackgroundSelf(Simple):
         else:
             ips.backimg = ips.img.copy()
             ips.backmode = (para['k'], para['op'])
-        ips.update = 'pix'
+        ips.update()
 
 plgs = [SetBackground, BackgroundSelf]

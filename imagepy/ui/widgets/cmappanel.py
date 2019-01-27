@@ -16,7 +16,7 @@ class CMapPanel(wx.Panel):
         self.cmap = np.vstack([np.arange(256)]*3).T.astype(np.uint8)
         self.idx = -1
         self.his = None
-        self.update = False
+        self.dirty = False
         self.pts = [(0,0,0,0), (255,255,255,255)]
         self.Bind(wx.EVT_SIZE, self.on_size)  
         self.Bind(wx.EVT_IDLE, self.on_idle)
@@ -27,6 +27,8 @@ class CMapPanel(wx.Panel):
         self.Bind( wx.EVT_RIGHT_DOWN, self.on_rd )
         self.Bind( wx.EVT_LEFT_DCLICK, self.on_rdc )
         self.handle = self.handle_
+
+    def update(self): self.dirty = True
 
     def init_buf(self):
         box = self.GetClientSize()
@@ -44,12 +46,12 @@ class CMapPanel(wx.Panel):
 
     def on_size(self, event):
         self.init_buf()
-        self.update = True
+        self.update()
         
     def on_idle(self, event):
-        if self.update == True:
+        if self.dirty == True:
             self.draw()
-            self.update = False
+            self.dirty = False
 
     def pick(self, x, y):
         if abs(y-10)>3:return -1
@@ -65,7 +67,7 @@ class CMapPanel(wx.Panel):
             self.pts.append((x,)+tuple(self.cmap[x]))
             self.idx = len(self.pts)-1
             self.cmap[:] = self.linear_color(self.pts)
-            self.update = True
+            self.update()
             self.handle()
 
     def on_lu(self, event):
@@ -79,7 +81,7 @@ class CMapPanel(wx.Panel):
             del self.pts[self.idx]
             self.idx = -1
             self.cmap[:] = self.linear_color(self.pts)
-            self.update = True
+            self.update()
             self.handle()
 
     def on_rdc(self, event):
@@ -94,7 +96,7 @@ class CMapPanel(wx.Panel):
             self.pts[self.idx] = (x,)+rst[:-1]
             self.idx=-1
             self.cmap[:] = self.linear_color(self.pts)
-            self.update = True
+            self.update()
         dialog.Destroy()
         self.handle()
 
@@ -112,7 +114,7 @@ class CMapPanel(wx.Panel):
             cl = self.pts[self.idx][1:]
             self.pts[self.idx] = (x,)+cl
             self.cmap[:] = self.linear_color(self.pts)
-            self.update = True
+            self.update()
             self.handle()
         
 
@@ -121,11 +123,11 @@ class CMapPanel(wx.Panel):
         
     def set_hist(self, hist):
         self.hist = (hist*255/hist.max()).astype(np.uint8)
-        self.update = True
+        self.update()
         
     def set_pts(self, pts):
         self.x1, self.x2 = x1, x2
-        self.update = True        
+        self.update()        
 
     def draw(self):
         ox, oy = self.offset

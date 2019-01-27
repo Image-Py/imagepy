@@ -33,10 +33,12 @@ class PolygonRoi(ROI):
     dtype = 'polygon'
     def __init__(self, body=None):
         self.body = body if body!=None else []
-        self.update = body!=None
+        self.dirty = body!=None
         self.infoupdate = body!=None
         self.box = [1000,1000,-1000,-1000]
         
+    def update(self): self.dirty = True
+
     def addpoint(self, p):
         self.buf[0].append(p)
         
@@ -123,8 +125,8 @@ class PolygonRoi(ROI):
     def affine(self, m, o):
         plg = PolygonRoi()
         plg.body = affine(self.body, m, o)
-        plg.update = True
-        plg.infoupdate = True
+        plg.update()
+        plg.infoupdate()
         return plg
     '''
         

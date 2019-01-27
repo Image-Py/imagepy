@@ -68,7 +68,7 @@ class Plugin(Tool):
                 self.helper.addpoint((x,y))
                 self.doing = False
                 ips.roi.commit(self.helper.pop(), self.oper)
-        ips.update = True
+        ips.update()
     
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
@@ -79,7 +79,7 @@ class Plugin(Tool):
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
             ips.roi.draged(self.odx, self.ody, x, y, ips.cur, self.curobj)
-            ips.update = True
+            ips.update()
         self.odx, self.ody = x, y
         
     def on_switch(self):

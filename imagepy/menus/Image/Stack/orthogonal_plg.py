@@ -41,14 +41,14 @@ class Orthogonal(Tool):
             self.ips1.mark.set_xy(x, y)
             self.ips.mark.set_xy(None, y)
             self.ips.cur = int(x)
-            self.ips1.update = True
-            self.ips.update = True
+            self.ips1.update()
+            self.ips.update()
         elif ips==self.ips2:
             self.ips2.mark.set_xy(x, y)
             self.ips.mark.set_xy(x, None)
             self.ips.cur = int(y)
-            self.ips2.update = True
-            self.ips.update = True
+            self.ips2.update()
+            self.ips.update()
         elif ips.get_nslices()==1 or not ips.is3d:
             IPy.alert('stack required!')
             return
@@ -75,7 +75,7 @@ class Orthogonal(Tool):
             self.ips2.mark = Cross(*self.ips2.size[::-1])
             self.ips1.mark.set_xy(x, ips.cur)
             self.ips2.mark.set_xy(ips.cur, y)
-            ips.update = True
+            ips.update()
             
         else:
             img1, img2 = self.getimgs(ips.imgs, x, y)
@@ -90,10 +90,10 @@ class Orthogonal(Tool):
             '''
             self.ips1.mark.set_xy(ips.cur, y)
             self.ips2.mark.set_xy(x, ips.cur)
-            self.ips1.update = True
-            self.ips2.update = True
+            self.ips1.update()
+            self.ips2.update()
             ips.mark.set_xy(x, y)
-            ips.update = True
+            ips.update()
             
         
     def mouse_up(self, ips, x, y, btn, **key):
@@ -104,9 +104,9 @@ class Orthogonal(Tool):
             img1, img2 = self.getimgs(ips.imgs, x, y)
             self.ips1.set_imgs([img1])
             self.ips2.set_imgs([img2])
-            self.ips1.update = True
-            self.ips2.update = True
-            ips.update = True
+            self.ips1.update()
+            self.ips2.update()
+            ips.update()
             ips.mark.set_xy(x, y)
         
     def mouse_wheel(self, ips, x, y, d, **key):

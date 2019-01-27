@@ -24,11 +24,13 @@ class Plugin(Tool):
         ips.snapshot()
     
     def mouse_up(self, ips, x, y, btn, **key):
+        self.paint.lineto(ips.img,x,y, self.para['width'])
+        ips.update()
         self.sta = 0
     
     def mouse_move(self, ips, x, y, btn, **key):
         if self.sta==0:return
         self.paint.lineto(ips.img,x,y, self.para['width'])
-        ips.update = 'pix'
+        ips.update()
         
     def mouse_wheel(self, ips, x, y, d, **key):pass

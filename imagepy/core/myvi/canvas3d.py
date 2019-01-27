@@ -30,7 +30,7 @@ class Canvas3D(glcanvas.GLCanvas):
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel)
         self.lastx, self.lasty = None, None
-        self.update = True
+        self.update()
         #print('init===========')
 
     def InitGL(self):
@@ -106,7 +106,7 @@ class Canvas3D(glcanvas.GLCanvas):
         k = 0.9 if evt.GetWheelRotation()>0 else 1/0.9
         self.manager.set_pers(l=self.manager.l*k)
         self.Refresh(False)
-        #self.update = True
+        #self.update()
         
 class Viewer3D(wx.Panel):
     def __init__( self, parent, manager=None):

@@ -14,13 +14,15 @@ class LineCanvas(wx.Panel):
         self.init_buf()
         self.data, self.extent = [], [0,0,1,1]
         self.set_title_label('Graph', 'X-unit', 'Y-unit')
-        self.update = False
+        self.dirty = False
         
         self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Bind(wx.EVT_PAINT, self.on_paint)
         self.Bind(wx.EVT_IDLE, self.on_idle)
         self.Bind(wx.EVT_MOTION, self.on_move )
+
+    def update(self):self.dirty = True
 
     def init_buf(self):
         box = self.GetClientSize()
@@ -52,9 +54,9 @@ class LineCanvas(wx.Panel):
     def handle_move(self, x, y):pass
 
     def on_idle(self, event):
-        if self.update == True:
+        if self.dirty == True:
             self.draw()
-            self.update = False
+            self.dirty = False
 
     def set_title_label(self, title, labelx, labely):
         self.title, self.labelx, self.labely = title, labelx, labely
@@ -67,7 +69,7 @@ class LineCanvas(wx.Panel):
         top, bot = ext[:,3].max() + 0.1 * d, ext[:,1].min() - 0.1 * d
         if top == bot: top, bot = top+1, bot-1
         self.extent = [ext[:,0].min(), bot, ext[:,2].max(), top]
-        self.update = True
+        self.update()
 
     def add_data(self, xs, ys=None, color=(0,0,255), lw=2):
         if ys is None:

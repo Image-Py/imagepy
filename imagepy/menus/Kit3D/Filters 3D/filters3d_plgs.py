@@ -76,13 +76,13 @@ class UPWatershed(Filter):
 
 	def cancel(self, ips):
 		ips.lut = self.buflut
-		ips.update = 'pix'
+		ips.update()
 
 	def preview(self, ips, para):
 		ips.lut[:] = self.buflut
 		ips.lut[:para['thr1']] = [0,255,0]
 		ips.lut[para['thr2']:] = [255,0,0]
-		ips.update = 'pix'
+		ips.update()
 
 	#process
 	def run(self, ips, snap, img, para = None):

@@ -242,7 +242,6 @@ def build_document(path):
             cont = f.read()
             f.close()
             DocumentManager.add(filename[:-3], cont)
-    print(docs)
     return docs
 
 if __name__ == "__main__":

@@ -35,7 +35,7 @@ class Plugin(Tool):
     def mouse_move(self, ips, x, y, btn, **key):
         if self.sta==1:
             self.paint.lineto(ips.img,x,y, self.cfgp['width'])
-            ips.update = True
+            ips.update()
         
     # do it when mouse wheel
     def mouse_wheel(self, ips, x, y, d, **key):

@@ -10,12 +10,14 @@ class HistCanvas(wx.Panel):
         self.init_buf()
         self.hist = None
         if not hist is None: self.SetValue(hist)
-        self.update = False
+        self.dirty = False
         self.x1, self.x2 = 0, 255
         self.Bind(wx.EVT_SIZE, self.on_size)  
         self.Bind(wx.EVT_IDLE, self.on_idle)
         self.Bind(wx.EVT_PAINT, self.on_paint)
         self.Bind = lambda z, x:0 
+
+    def update(self): self.dirty = True
 
     def init_buf(self):
         box = self.GetClientSize()
@@ -23,12 +25,12 @@ class HistCanvas(wx.Panel):
         
     def on_size(self, event):
         self.init_buf()
-        self.update = True
+        self.update()
         
     def on_idle(self, event):
-        if self.update == True:
+        if self.dirty == True:
             self.draw()
-            self.update = False
+            self.dirty = False
             
     def on_paint(self, event):
         wx.BufferedPaintDC(self, self.buffer)
@@ -36,11 +38,11 @@ class HistCanvas(wx.Panel):
     def SetValue(self, hist):
         self.hist = (hist*80.0/hist.max())
         self.logh = (np.log(self.hist+1.0))*(80/(np.log(81)))
-        self.update = True
+        self.update()
         
     def set_lim(self, x1, x2):
         self.x1, self.x2 = x1, x2
-        self.update = True
+        self.update()
         
     def draw(self):        
         # get client device context buffer

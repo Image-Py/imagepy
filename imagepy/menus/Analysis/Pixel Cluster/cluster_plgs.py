@@ -50,7 +50,7 @@ class ColorCluster(Filter):
         msk = colorselect(img, pts, para['sigma'], para['cov'])
         if para['within']:msk = within(msk, pts)
         img[msk] = (255,0,0)
-        ips.update = 'pix'
+        ips.update()
 
     def run(self, ips, snap, img, para = None):
         img[:] = snap
@@ -101,11 +101,11 @@ class GrayCluster(Filter):
         l2 = min(255, int((v2-lim1)*255/(lim2-lim1)))
         ips.lut[:] = self.buflut
         ips.lut[l1:l2] = (255,0,0)
-        ips.update = 'pix'
+        ips.update()
 
     def cancel(self, ips):
         ips.lut = self.buflut
-        ips.update = 'pix'
+        ips.update()
 
     def run(self, ips, snap, img, para = None):
         ips.lut = self.buflut
@@ -149,11 +149,11 @@ class GrayCluster3D(Simple):
         l2 = min(255, int((v2-lim1)*255/(lim2-lim1)))
         ips.lut[:] = self.buflut
         ips.lut[l1:l2] = (255,0,0)
-        ips.update = 'pix'
+        ips.update()
 
     def cancel(self, ips):
         ips.lut = self.buflut
-        ips.update = 'pix'
+        ips.update()
 
     def run(self, ips, imgs, para = None):
         ips.lut = self.buflut

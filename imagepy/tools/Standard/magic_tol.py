@@ -69,10 +69,10 @@ class Plugin(Tool):
 
             else: ips.roi = None
 
-        ips.update = True
+        ips.update()
         
     def mouse_up(self, ips, x, y, btn, **key):
-        ips.update = True
+        ips.update()
     
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
@@ -83,7 +83,7 @@ class Plugin(Tool):
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
             if self.curobj: ips.roi.draged(self.odx, self.ody, x, y, ips.cur, self.curobj)
-            ips.update = True
+            ips.update()
         self.odx, self.ody = x, y
         
     def mouse_wheel(self, ips, x, y, d, **key):

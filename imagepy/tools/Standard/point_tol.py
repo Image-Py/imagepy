@@ -26,7 +26,7 @@ class Plugin(Tool):
             if not key['shift']:del ips.roi.body[:]
             ips.roi.add((x,y,ips.cur))
             self.curobj = ips.roi.pick(x, y, ips.cur, lim)
-            ips.update = True
+            ips.update()
             self.odx, self.ody = x, y
     
     def mouse_up(self, ips, x, y, btn, **key):
@@ -42,7 +42,7 @@ class Plugin(Tool):
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
             ips.roi.draged(self.odx, self.ody, x, y, ips.cur, self.curobj)
-            ips.update = True
+            ips.update()
         self.odx, self.ody = x, y
         
     def mouse_wheel(self, ips, x, y, d, **key):
@@ -51,4 +51,4 @@ class Plugin(Tool):
         if not self.onobj is None:
             cur = ips.roi.body[self.onobj][2]
             ips.roi.draged(self.odx, self.ody, x, y, cur+d, self.onobj)
-            ips.update = True
+            ips.update()

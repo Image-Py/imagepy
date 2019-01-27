@@ -44,7 +44,7 @@ class FindMax(Filter):
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'])
         self.ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
-        self.ips.update = True
+        self.ips.update()
 
 class FindMin(Filter):
     title = 'Find Minimum'
@@ -56,7 +56,7 @@ class FindMin(Filter):
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'], False)
         self.ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
-        self.ips.update = True
+        self.ips.update()
 
 class UPRidge(Filter):
     title = 'Find Riedge'
@@ -79,7 +79,7 @@ class UPRidge(Filter):
             ips.lut[:para['thr']] = [0,255,0]
         else:
             ips.lut[para['thr']:] = [255,0,0]
-        ips.update = 'pix'
+        ips.update()
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -140,7 +140,7 @@ class Watershed(Filter):
             ips.lut[:para['thr']] = [0,255,0]
         else:
             ips.lut[para['thr']:] = [255,0,0]
-        ips.update = 'pix'
+        ips.update()
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -178,11 +178,11 @@ class UPWatershed(Filter):
         ips.lut[:] = self.buflut
         ips.lut[:para['thr1']] = [0,255,0]
         ips.lut[para['thr2']:] = [255,0,0]
-        ips.update = 'pix'
+        ips.update()
 
     def cancel(self, ips):
         ips.lut = self.buflut
-        ips.update = 'pix'
+        ips.update()
 
     #process
     def run(self, ips, snap, img, para = None):

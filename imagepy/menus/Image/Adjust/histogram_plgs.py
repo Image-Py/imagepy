@@ -86,6 +86,6 @@ class Match(Simple):
         for i in range(sl2):
             self.progress(i, sl2)
             match(img, imgs[i])
-        ips2.update = 'pix'
+        ips2.update()
 
 plgs = [Normalize, Match]

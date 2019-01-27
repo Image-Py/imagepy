@@ -106,14 +106,14 @@ class Plugin(Tool):
                 self.curobj = (ips.mark.buf, -1)
                 self.odx, self.ody = x,y
 
-        ips.update = True
+        ips.update()
     
     def mouse_up(self, ips, x, y, btn, **key):
         self.curobj = None
         if self.doing:
             ips.mark.addline()
         self.doing = False
-        ips.update = True
+        ips.update()
     
     def mouse_move(self, ips, x, y, btn, **key):
         if not isinstance(ips.mark, Angle):return
@@ -124,7 +124,7 @@ class Plugin(Tool):
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
             ips.mark.draged(self.odx, self.ody, x, y, self.curobj)
-            ips.update = True
+            ips.update()
         self.odx, self.ody = x, y
         
     def mouse_wheel(self, ips, x, y, d, **key):

@@ -31,7 +31,7 @@ class Plugin(Free):
     def run(self, para = None):
         plus = IPy.get_ips()
         plus.lut = ColorManager.get_lut(self.title)
-        plus.update = 'pix'
+        plus.update()
     
     def __call__(self):
         return self

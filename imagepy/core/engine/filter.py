@@ -45,7 +45,7 @@ def process_one(plg, ips, src, img, para, callafter=None):
         msk = True ^ ips.get_msk()
         img[msk] = src[msk]
     IPy.set_info('%s: cost %.3fs'%(ips.title, time()-start))
-    ips.update = 'pix'
+    ips.update()
     TaskManager.remove(plg)
     if not callafter is None:callafter()
     
@@ -75,7 +75,7 @@ def process_stack(plg, ips, src, imgs, para, callafter=None):
             msk = True ^ ips.get_msk()
             i[msk] = src[msk]
     IPy.set_info('%s: cost %.3fs'%(ips.title, time()-start))
-    ips.update = 'pix'
+    ips.update()
     TaskManager.remove(plg)
     if not callafter is None:callafter()
     
@@ -178,12 +178,12 @@ class Filter:
                     (self, ips, ips.snap, ips.img, para, callafter)).start()
                 if win!=None: win.write('{}>{}'.format(self.title, para))
             elif rst == 'cancel': pass
-        #ips.update = 'pix'
+        #ips.update()
         
     def cancel(self, ips):
         if 'auto_snap' in self.note:
             ips.swap()
-            ips.update = 'pix'
+            ips.update()
             
     def start(self, para=None, callafter=None):
         ips = self.ips

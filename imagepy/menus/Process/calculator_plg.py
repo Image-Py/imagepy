@@ -51,5 +51,5 @@ class Plugin(Simple):
                 ss1, se1 = ips1.get_rect()
                 ss2, se2 = ips2.get_rect()
                 bliter.blit(ips1.imgs[i][ss1, se1], ips2.imgs[i][ss2, se2], mode=para['op'])
-        ips1.update = 'pix'
+        ips1.update()
         

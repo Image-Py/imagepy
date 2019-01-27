@@ -4,6 +4,7 @@ from numpy.linalg import norm
 from scipy import interpolate
 
 if sys.version_info[0]==2:memoryview=np.getbuffer
+
 class CurvePanel(wx.Panel):
     """ HistCanvas: diverid from wx.core.Panel """
     def __init__(self, parent, hist=None, l=255):
@@ -15,7 +16,7 @@ class CurvePanel(wx.Panel):
         self.l, self.k = l, l/255.0
         self.idx = -1
         self.set_hist(hist)
-        self.update = False
+        self.dirty = False
         self.pts = [(0,0), (255, 255)]
         wx.Panel.Bind(self, wx.EVT_SIZE, self.on_size)  
         wx.Panel.Bind(self, wx.EVT_IDLE, self.on_idle)
@@ -25,6 +26,8 @@ class CurvePanel(wx.Panel):
         wx.Panel.Bind(self, wx.EVT_MOTION, self.on_mv )
         wx.Panel.Bind(self, wx.EVT_RIGHT_DOWN, self.on_rd )
 
+    def update(self): self.dirty = True
+    
     @classmethod
     def lookup(cls, pts):
         x, y = np.array(pts).T
@@ -38,12 +41,12 @@ class CurvePanel(wx.Panel):
         
     def on_size(self, event):
         self.init_buf()
-        self.update = True
+        self.update()
         
     def on_idle(self, event):
-        if self.update == True:
+        if self.dirty == True:
             self.draw()
-            self.update = False
+            self.dirty = False
 
     def pick(self, x, y):
         dis = norm(np.array(self.pts)-(x,y), axis=1)
@@ -57,7 +60,7 @@ class CurvePanel(wx.Panel):
         if self.idx==-1: 
             self.pts.append((x, 255-y))
             self.idx = len(self.pts)-1
-            self.update = True
+            self.update()
             self.handle(event)
 
     def on_lu(self, event):
@@ -71,7 +74,7 @@ class CurvePanel(wx.Panel):
         if not self.pts[self.idx][0] in (0, 255):
             del self.pts[self.idx]
             self.idx = -1
-            self.update = True
+            self.update()
             self.handle(event)
 
     def on_mv(self, event):
@@ -87,7 +90,7 @@ class CurvePanel(wx.Panel):
             else: x = np.clip(x, 1, 254)
             y = np.clip(y, 0, 255)
             self.pts[self.idx] = (x, 255-y)
-            self.update = True
+            self.update()
             self.handle(event)
         
 
@@ -99,11 +102,11 @@ class CurvePanel(wx.Panel):
         else:
             self.hist = (hist*self.l/hist.max())
             self.logh = (np.log(self.hist+1.0))*(self.l/(np.log(self.l+1)))
-        self.update = True
+        self.update()
         
     def set_pts(self, pts):
         self.x1, self.x2 = x1, x2
-        self.update = True        
+        self.update()        
 
     def draw(self):
         ox, oy = self.offset
@@ -157,7 +160,7 @@ class CurvePanel(wx.Panel):
         if not value is None:
             self.pts = value
         else: self.pts = [(0,0), (255, 255)]
-        self.update = True
+        self.update()
 
     def GetValue(self): return sorted(self.pts)
 

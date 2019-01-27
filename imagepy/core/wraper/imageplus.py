@@ -15,7 +15,7 @@ class ImagePlus:
         self.set_title(title)
         self.snap = None
         self.cur = 0
-        self.update = False
+        self.dirty = False
         self.scrchanged = False
         self.roi = None
         self.mark = None
@@ -31,6 +31,8 @@ class ImagePlus:
         self.range = (0, 255)
         self.set_imgs(imgs)
 
+    def update(self): self.dirty = True
+    
     def set_title(self, title):
         self.title = ImageManager.name(title)
 

@@ -117,7 +117,7 @@ class RegionStatistic(Simple):
             data.extend(list(zip(*dt)))
         IPy.show_table(pd.DataFrame(data, columns=titles), inten.title+'-region statistic')
         inten.mark = GeometryMark(mark)
-        inten.update = True
+        inten.update()
 
 class RGMark:
     def __init__(self, data):
@@ -186,6 +186,6 @@ class IntensityFilter(Filter):
         img[:] = idx[buf]
 
         ImageManager.get(para['inten']).mark = RGMark((xy.T, msk))
-        ImageManager.get(para['inten']).update = True
+        ImageManager.get(para['inten']).update()
 
 plgs = [RegionStatistic, IntensityFilter]

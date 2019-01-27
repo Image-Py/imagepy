@@ -70,7 +70,7 @@ class CanvasPanel(wx.Panel):
         label='{}/{}; {}  {}x{} pixels; {}; {} M'.format(ips.cur+1, ips.get_nslices(),
             stk if ips.get_nslices()>1 else '',ips.size[0], ips.size[1],
             ips.imgtype, round(ips.get_nbytes()/1024.0/1024.0, 2))
-        self.txt_info.SetLabel(label)
+        if label != self.txt_info.GetLabel(): self.txt_info.SetLabel(label)
         
         
 
@@ -101,7 +101,7 @@ class CanvasPanel(wx.Panel):
 
     def on_scroll(self, event):
         self.ips.cur = self.page.GetThumbPosition()
-        self.ips.update = 'pix'
+        self.ips.update()
         self.canvas.on_idle(None)
 
     def close(self):

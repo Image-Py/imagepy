@@ -219,7 +219,7 @@ class GridBase(Grid.Grid):
             cn = self.tps.data.columns[col]
             props.ix['ln'] = (props.ix['ln'].min()+1)%3
         '''
-        self.tps.update = True
+        self.tps.update()
 
 
     def set_handler(self, handle=None):
@@ -265,14 +265,14 @@ class GridBase(Grid.Grid):
 
     def on_idle(self, event):
         if not self.IsShown() or self.tps is None\
-            or self.tps.update == False: return
-        if self.tps.update == 'shp':
+            or self.tps.dirty == False: return
+        if self.tps.dirty == 'shp':
             self.select()
             self.Reset()
-        if self.tps.update == True:
+        if self.tps.dirty == True:
             self.select()
             self.ForceRefresh()
-        self.tps.update = False
+        self.tps.dirty = False
         print('update')
 
 

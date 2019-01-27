@@ -57,15 +57,6 @@ class PointRoi(ROI):
         if cur==None:return
         x, y, z = self.body[cur]
         IPy.set_info('points:%.0f x:%.1f y:%.1f z:%.1f'%(len(self.body), x*k, y*k, z*k))
-
-    '''
-    def affine(self, m, o):
-        plg = PointRoi()
-        plg.body = affine(self.body, m, o)
-        plg.update = True
-        plg.infoupdate = True
-        return plg
-    '''
         
     def draw(self, dc, f, **key):
 

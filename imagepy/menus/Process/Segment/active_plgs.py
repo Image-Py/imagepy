@@ -39,7 +39,7 @@ class MorphChanVese(Filter):
 
     view = [(int, 'iter', (0,64), 0, 'iterations', 'time'),
             (list, 'init', ['checkerboard', 'circle'], str, 'init set', ''),
-            (int, 'smooth', (1, 4), 0, 'smoothing', ''),
+            (int, 'smooth', (1, 10), 0, 'smoothing', ''),
             (float, 'lambda1', (0,10), 2, 'lambda1', ''),
             (float, 'lambda2', (0,10), 2, 'lambda2', ''),
             (list, 'out', ['mask', 'line on ori'], str, 'output', ''),
@@ -52,7 +52,7 @@ class MorphChanVese(Filter):
         (c1, c2), img[:] = ips.range, snap
         if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
         else: img[binary_dilation(msk) ^ msk] = c2
-        ips.update = 'pix'
+        ips.update()
 
     def run(self, ips, snap, img, para = None):
         stackimg = []
@@ -72,7 +72,7 @@ class MorphGeoChanVese(Filter):
     para = {'iter':10, 'smooth':1, 'thr':128, 'auto':True, 'balloon':-1, 'out':'mask', 'sub':False}
 
     view = [(int, 'iter', (0, 1024), 0, 'iterations', 'time'),
-            (int, 'smooth', (1, 4), 0, 'smoothing', ''),
+            (int, 'smooth', (1, 10), 0, 'smoothing', ''),
             (float, 'thr', (0,1e5), 2, 'threshold', ''),
             (bool, 'auto', 'auto threshold'),
             (float, 'balloon', (-5, 5), 1, 'balloon', ''),
@@ -89,7 +89,7 @@ class MorphGeoChanVese(Filter):
         (c1, c2), img[:] = ips.range, snap
         if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
         else: img[binary_dilation(msk) ^ msk] = c2
-        ips.update = 'pix'
+        ips.update()
 
     def run(self, ips, snap, img, para = None):
         stackimg = []
@@ -112,7 +112,7 @@ class MorphGeoRoi(Filter):
     para = {'iter':10, 'smooth':1, 'thr':128, 'auto':True, 'balloon':-1, 'out':'mask', 'sub':False}
 
     view = [(int, 'iter', (0, 1024), 0, 'iterations', 'time'),
-            (int, 'smooth', (1, 4), 0, 'smoothing', ''),
+            (int, 'smooth', (1, 10), 0, 'smoothing', ''),
             (float, 'thr', (0,1e5), 2, 'threshold', ''),
             (bool, 'auto', 'auto threshold'),
             (float, 'balloon', (-5, 5), 1, 'balloon', ''),
@@ -129,7 +129,7 @@ class MorphGeoRoi(Filter):
         (c1, c2), img[:] = ips.range, snap
         if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
         else: img[binary_dilation(msk) ^ msk] = c2
-        ips.update = 'pix'
+        ips.update()
 
     def run(self, ips, snap, img, para = None):
         stackimg = []
@@ -166,7 +166,7 @@ class RandomWalker(Filter):
 
     def cancel(self, ips):
         ips.lut = self.buflut
-        ips.update = 'pix'
+        ips.update()
 
     def preview(self, ips, para):
         ips.lut[:] = self.buflut
@@ -175,7 +175,7 @@ class RandomWalker(Filter):
         lim2 = (para['thr2']-minv)*255/(maxv-minv)
         ips.lut[:int(lim1)] = [0,255,0]
         ips.lut[int(lim2):] = [255,0,0]
-        ips.update = 'pix'
+        ips.update()
 
     #process
     def run(self, ips, snap, img, para = None):

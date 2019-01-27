@@ -14,7 +14,7 @@ class RectangleRoi(ROI):
     dtype = 'rect'
     def __init__(self, l=0, t=0, r=0, b=0):
         self.body = []
-        self.update = False
+        self.dirty = False
         self.lt, self.tp, self.rt, self.bm = l, t, r, b
         self.commit()
     
@@ -29,12 +29,14 @@ class RectangleRoi(ROI):
         if abs(x-self.lt)<lim and abs(y-self.bm)<lim:return 'lb'
         return None
     
+    def update(self): self.dirty = True
+    
     def commit(self):
         box = self.lt, self.rt, self.tp, self.bm
         self.lt, self.rt, self.tp, self.bm = [int(round(i)) for i in box]
         l,r,t,b = self.lt, self.rt, self.tp, self.bm
         
-        self.update = True
+        self.update()
         if l==r or t==b: 
             self.body = [];return False
         else: 

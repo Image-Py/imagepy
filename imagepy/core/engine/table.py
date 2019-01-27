@@ -33,7 +33,7 @@ class Table:
         
     def preview(self, tps, para):
         self.run(tps, tps.data, tps.snap, para)
-        tps.update = True
+        tps.update()
 
     def show(self):
         if self.view==None:return True
@@ -51,7 +51,7 @@ class Table:
     def cancel(self, tps):
         if 'snap' in self.note:
             tps.data[tps.snap.columns] = tps.snap
-            tps.update = True
+            tps.update()
 
     def ok(self, tps, para=None, callafter=None):
         if para == None: para = self.para
@@ -67,7 +67,7 @@ class Table:
         start = time()
         self.run(tps, data, snap, para)
         IPy.set_info('%s: cost %.3fs'%(tps.title, time()-start))
-        tps.update = 'shp'
+        tps.update('shp')
         TaskManager.remove(self)
         if callback!=None:callback()
 

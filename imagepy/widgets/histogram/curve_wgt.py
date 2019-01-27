@@ -60,7 +60,7 @@ class Plugin(wx.Panel):
 		lut = CurvePanel.lookup(self.curvepan.pts)
 		lut = np.vstack((lut,lut,lut)).T
 		ips.lut = lut
-		ips.update = 'pix'
+		ips.update()
 
 	def on_apply(self, event):
 		ips = IPy.get_ips()
@@ -75,7 +75,7 @@ class Plugin(wx.Panel):
 		hist = ips.histogram()
 		self.curvepan.set_hist(hist)
 		ips.lut = ColorManager.get_lut()
-		ips.update = 'pix'
+		ips.update()
 
 	def on_reset(self, event):
 		self.curvepan.SetValue()

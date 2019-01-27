@@ -78,14 +78,14 @@ class Plugin ( wx.Panel ):
 		x, y = win.canvas.to_data_coor(c/2, d/2)
 		win.canvas.scaleidx = self.slider.GetValue()
 		win.canvas.zoom(k, x, y)
-		win.canvas.ips.update = 'pix'
+		win.canvas.ips.update()
 		self.viewport.set_box(win.canvas.imgbox, win.canvas.box)
 
 	def on_fit(self, event):
 		win = IPy.get_window()
 		if win is None: return
 		win.canvas.self_fit()
-		win.canvas.ips.update = 'pix'
+		win.canvas.ips.update()
 		self.slider.SetValue(win.canvas.scaleidx)
 		k = self.scales[self.slider.GetValue()]
 		self.label.SetLabel('%.2f%%'%(k*100))
@@ -98,7 +98,7 @@ class Plugin ( wx.Panel ):
 		x, y = win.canvas.to_data_coor(c/2, d/2)
 		win.canvas.scaleidx = self.scales.index(1)
 		win.canvas.zoom(1, x, y)
-		win.canvas.ips.update = 'pix'
+		win.canvas.ips.update()
 		self.slider.SetValue(win.canvas.scaleidx)
 		self.label.SetLabel('%.2f%%'%100)
 		self.viewport.set_box(win.canvas.imgbox, win.canvas.box)
@@ -109,5 +109,5 @@ class Plugin ( wx.Panel ):
 		x, y = self.viewport.GetValue()
 		print(x, y)
 		win.canvas.center(x, y)
-		win.canvas.ips.update = 'pix'
+		win.canvas.ips.update()
 		self.viewport.set_box(win.canvas.imgbox, win.canvas.box)

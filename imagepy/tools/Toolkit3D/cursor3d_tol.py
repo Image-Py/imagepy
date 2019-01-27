@@ -56,6 +56,6 @@ class Plugin(Tool):
                 ips.cur+=1
         if d<0:
             if ips.cur>0:ips.cur-=1
-        ips.update = 'pix'
+        ips.update()
         if not self.pressed: return
         self.set_cursor(y, ips.cur, x)

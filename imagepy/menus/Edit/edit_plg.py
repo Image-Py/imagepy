@@ -34,7 +34,7 @@ class PasteMove(Tool):
             bliter.blit(img, ci, y, x)
                         
             ips.reset(True)
-            ips.update = 'pix'
+            ips.update()
         
     def mouse_move(self, ips, x, y, btn, **key):
         if self.moving==True and btn!=None:
@@ -42,7 +42,7 @@ class PasteMove(Tool):
             self.cx += x-self.ox
             self.cy += y-self.oy
             self.ox, self.oy = x, y
-            ips.update = True
+            ips.update()
     
 class Paste(Simple):
     title = 'Paste'

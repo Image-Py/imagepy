@@ -103,7 +103,7 @@ class Plugin(Tool):
                 ips.mark.buf.append((x,y))
                 self.curobj = (ips.mark.buf, -1)
                 self.odx, self.ody = x,y
-        ips.update = True
+        ips.update()
 
     def mouse_up(self, ips, x, y, btn, **key):
         self.curobj = None
@@ -112,7 +112,7 @@ class Plugin(Tool):
         self.doing = False
         if ips.mark!=None and len(ips.mark.body)==1:
             self.profile(ips.mark.body, ips.img)
-        ips.update = True
+        ips.update()
 
     def mouse_move(self, ips, x, y, btn, **key):
         if not isinstance(ips.mark, Profile):return
@@ -123,7 +123,7 @@ class Plugin(Tool):
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
             ips.mark.draged(self.odx, self.ody, x, y, self.curobj)
-            ips.update = True
+            ips.update()
             #PlotFrame.plot(np.random.rand(100))
         self.odx, self.ody = x, y
 

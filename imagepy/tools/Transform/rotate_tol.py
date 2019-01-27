@@ -28,7 +28,7 @@ class RotateTool(Tool):
         elif self.moving:
             self.para['ox'], self.para['oy'] = x, y
             self.plg.dialog.reset()
-            ips.update = True
+            ips.update()
         else:
             dx, dy = x-self.para['ox'], y-self.para['oy']
             ang = np.arccos(dx/np.sqrt(dx**2+dy**2))
@@ -36,7 +36,7 @@ class RotateTool(Tool):
             ang = int(ang/np.pi*180)
             self.para['ang'] = ang
             self.plg.dialog.reset()
-            ips.update = True
+            ips.update()
 
 class Plugin(Filter):
     """RotateTool class plugin derived from imagepy.core.engine.Filter"""
@@ -59,7 +59,7 @@ class Plugin(Filter):
                 self.para['oy'] = int((box[1]+box[3])/2)
                 self.para['ox'] = int((box[0]+box[2])/2)
         ips.mark = self
-        ips.update = True
+        ips.update()
         ips.tool = RotateTool(self)
         return True
         
@@ -68,7 +68,7 @@ class Plugin(Filter):
         ips.roi = self.bufroi
         ips.mark = None
         ips.tool = None
-        ips.update = 'pix'
+        ips.update()
         
     def ok(self, ips, para=None):
         Filter.ok(self, ips, para)

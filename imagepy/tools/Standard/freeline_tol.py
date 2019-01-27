@@ -61,7 +61,7 @@ class Plugin(Tool):
             self.doing = False
             self.curobj = None
             ips.roi.addline(self.helper.pop())
-        ips.update = True
+        ips.update()
     
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
@@ -74,7 +74,7 @@ class Plugin(Tool):
             if self.doing:
                 self.helper.addpoint((x,y))
             elif self.curobj: ips.roi.draged(self.odx, self.ody, x, y, ips.cur, self.curobj)
-            ips.update = True
+            ips.update()
         self.odx, self.ody = x, y
         
     def mouse_wheel(self, ips, x, y, d, **key):

@@ -15,7 +15,7 @@ class LineRoi(ROI):
     dtype = 'line'
     def __init__(self, body=None):
         self.body = body if body!=None else []
-        self.update = body!=None
+        self.dirty = body!=None
         self.infoupdate = body!=None
         self.box = [1000,1000,-1000,-1000]
         
@@ -67,15 +67,6 @@ class LineRoi(ROI):
             if len(line)>1:
                 dc.DrawLines([f(*i) for i in line])
                 for i in line:dc.DrawCircle(f(*i),2)
-        
-    '''
-    def affine(self, m, o):
-        plg = LineRoi()
-        plg.body = affine(self.body, m, o)
-        plg.update = True
-        plg.infoupdate = True
-        return plg
-    '''
         
     def sketch(self, img, w=1, color=None):
         pen = paint.Paint()

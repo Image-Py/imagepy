@@ -62,7 +62,7 @@ class Simple:
         start = time()
         self.run(ips, imgs, para)
         IPy.set_info('%s: cost %.3fs'%(ips.title, time()-start))
-        ips.update = 'pix'
+        ips.update()
         TaskManager.remove(self)
         if callback!=None:callback()
 

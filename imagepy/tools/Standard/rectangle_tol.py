@@ -53,7 +53,7 @@ class Plugin(Tool):
                         self.odx, self.ody = x,y
                 else: ips.roi = None
 
-        ips.update = True
+        ips.update()
 
     def mouse_up(self, ips, x, y, btn, **key):
         if self.doing:
@@ -63,7 +63,7 @@ class Plugin(Tool):
                 if not ips.roi.commit():ips.roi = None
             elif ips.roi.dtype == 'polygon':
                 ips.roi.commit(self.helper.pop(), self.oper)
-        ips.update = True
+        ips.update()
         
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
@@ -77,7 +77,7 @@ class Plugin(Tool):
                 l,b,r,t = self.ox, self.oy, x, y
                 self.helper.buf = [[(l,b),(r,b),(r,t),(l,t),(l,b)],[]]
             if self.curobj: ips.roi.draged(self.odx, self.ody, x, y, ips.cur, self.curobj)
-            ips.update = True
+            ips.update()
         self.odx, self.ody = x, y
 
     def mouse_wheel(self, ips, x, y, d, **key):

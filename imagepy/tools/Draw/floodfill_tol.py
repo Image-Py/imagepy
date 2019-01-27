@@ -24,7 +24,7 @@ class Plugin(Tool):
         color = ColorManager.get_front()
         if ips.get_nchannels()==1:color = np.mean(color)
         ips.img[msk] = color
-        ips.update = 'pix'
+        ips.update()
     
     def mouse_up(self, ips, x, y, btn, **key):
         pass

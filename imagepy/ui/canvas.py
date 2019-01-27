@@ -161,16 +161,16 @@ class Canvas (wx.Panel):
             #print 'resized update'
             self.update(True)
             self.reInitBuffer = False
-            self.ips.update = False
+            self.ips.dirty = False
             print('resize')
         if self.ips.scrchanged:
             self.set_ips(self.ips)
             self.ips.scrchanged = False
             print('scr changed')
-        if self.ips.update != False:
+        if self.ips.dirty != False:
             #print 'normal update'
-            self.update(self.ips.update == 'pix')
-            self.ips.update = False
+            self.update(True)
+            self.ips.dirty = False
             print('update')
 
     def on_paint(self, event):
@@ -260,14 +260,14 @@ class Canvas (wx.Panel):
         #x,y = self.to_data_coor(x, y)
         self.scaleidx += 1
         self.zoom(self.scales[self.scaleidx],x,y)
-        self.ips.update = 'pix'
+        self.ips.update()
 
     def zoomin(self, x, y):
         if self.scaleidx == 0:return
         #x,y = self.to_data_coor(x, y)
         self.scaleidx -= 1
         self.zoom(self.scales[self.scaleidx], x,y)
-        self.ips.update = 'pix'
+        self.ips.update()
 
     def get_scale(self):
         return self.scales[self.scaleidx]

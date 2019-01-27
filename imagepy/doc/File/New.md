@@ -3,7 +3,6 @@
 **Description:** create a new Image
 
 
-
 ## Parameter
 
 **name:** the new image's title
