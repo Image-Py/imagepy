@@ -14,6 +14,12 @@
 
 
 
+## 安装
+
+ImagePy菜单：**Plugins > Manager > Plugins Manager** 在输入框内输入demo进行查询，选中Demo Plugin，点击Install，完成后菜单栏出现Demo菜单，工具栏会加入Demo工具，组件栏也会加入Demo组件。
+
+
+
 ## 基础预备
 
 1. 什么是插件
@@ -65,13 +71,13 @@
 
 **Free: 没有任何依赖的插件**
 
-1. Parameter Demo: 参数对话框生成演示
-2. New Image Demo: 新建图像
+1. New Image Demo: 新建图像
+2. About Demo：关于对话框
+3. Close Demo：退出程序
 
 **Tool: 鼠标交互工具**
 
 1. Painter Demo：画笔工具
-2. Pixel Inspector：像素查看器
 
 **Widget: 桌面小部件**
 
@@ -110,11 +116,3 @@
 1. 用户友好性
 2. 开发者友好性
 3. 及时沟通
-
-
-
-## 如何贡献
-
-1. 宣传推广
-2. 编写插件
-3. 完善文档

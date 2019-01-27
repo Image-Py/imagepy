@@ -33,7 +33,7 @@ class VirtualListCtrl(wx.ListCtrl):
         self.SetItemCount(len(self.data))
         
 def parse(path):
-    f = open(path)
+    f = open(path, encoding='utf-8')
     body = {'file':path}
     try:
         for i in range(13):
@@ -131,7 +131,7 @@ class Plugin( wx.Panel ):
         self.lst_plgs.Refresh()
         
     def on_run(self, event):
-        f = open(self.buf[event.GetIndex()][-1]['file'])
+        f = open(self.buf[event.GetIndex()][-1]['file'], encoding='utf-8')
         cont = f.read()
         f.close()
         cont = '\n'.join([i.strip() for i in cont.split('\n')])

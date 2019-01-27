@@ -17,7 +17,7 @@ class Widget():
 	def start(self):
 		#if not WidgetsManager.getref(self.title) is None: return
 		pan = self.pan(IPy.curapp)
-		#WidgetsManager.addref(pan)
+		WidgetsManager.addref(pan)
 		IPy.curapp.auimgr.AddPane(pan, aui.AuiPaneInfo().Caption(self.title).Left().Layer( 15 ).PinButton( True )
 			.Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(IPy.uimode()=='ipy').DestroyOnClose())
 
