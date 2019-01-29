@@ -30,7 +30,7 @@ class Writer(Table):
         return IPy.getpath('Save..', filt, 'save', self.para)
 
     #process
-    def run(self, tps, data, snap, para = None):
+    def run(self, tps, snap, data, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
         write = WriterManager.get(fe[1:], tag='tab')

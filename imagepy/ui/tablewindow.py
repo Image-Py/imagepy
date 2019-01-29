@@ -251,7 +251,6 @@ class GridBase(Grid.Grid):
         self.Bind(Grid.EVT_GRID_RANGE_SELECT, None)
         self.ClearSelection()
         print('select grid')
-        print(self.tps.rowmsk, self.tps.colmsk)
         for i in self.tps.data.index.get_indexer(self.tps.rowmsk):
             print(i)
             self.SelectRow(i, True)
