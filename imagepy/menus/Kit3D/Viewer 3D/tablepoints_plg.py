@@ -34,7 +34,7 @@ class Plugin(Table):
 		if para['cs'] == 'None': cs = [np.array(para['c'])/255.0]*len(pts)
 		else: cs = cm[clip(data[para['cs']]).astype(np.uint8)]
 		vts, fs, ns, cs = myvi.build_balls(pts.astype(np.float32), list(rs), cs)
-		self.frame.viewer.add_surf_asyn(para['ball'], vts, fs, ns, cs)
+		self.frame.viewer.add_surf_asyn('ball', vts, fs, ns, cs)
 		if para['cube']:
 			p1 = data[[para['x'], para['y'], para['z']]].min(axis=0)
 			p2 = data[[para['x'], para['y'], para['z']]].max(axis=0)
