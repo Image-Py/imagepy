@@ -2,7 +2,7 @@
 
 **Path:** https://github.com/Image-Py/opencv-plgs
 
-**Version:** 0.11
+**Version:** 0.1
 
 **Author:** YXDragon
 
