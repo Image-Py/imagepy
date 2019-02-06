@@ -11,16 +11,29 @@ if not '.rpt' in pyxl.reader.excel.SUPPORTED_FORMATS:
     pyxl.reader.excel.SUPPORTED_FORMATS += ('.rpt',)
 
 def parse(wb):
-    rst = []
+    rst, key = [], {}
     for ws in wb.worksheets:
         rst.append((ws.title, []))
         for row in ws.rows:
             for cell in row:
                 if not isinstance(cell.value, str):continue
                 if cell.value[0]+cell.value[-1] != '{}': continue
+                cont = cell.value[1:-1].strip()
+                tp = cont.split(' ')[0]
+                cont = cont[len(tp):].strip()
+                note, value = 'no description', None
+                if '#' in cont:
+                    note = cont.split('#')[-1].strip()
+                    cont = cont[:cont.index('#')].strip()
+                if '=' in cont:
+                    value = cont.split('=')[1].strip()
+                    name = cont[:cont.index('=')].strip()
+                else: name = cont
+                    
                 rst[-1][-1].append(((cell.row, cell.col_idx),
-                            cell.value[1:-1].split(' ')))
-    return rst
+                            [tp, name, value, note]))
+                key[name] = [tp, name, value, note]
+    return rst, key
 
 def trans(img, W, H, margin, scale):
     h, w = img.shape[:2]
@@ -35,8 +48,7 @@ def trans(img, W, H, margin, scale):
 
 def add_image(wb, ws, pos, key, img):
     if img is None: return
-    w, h = [float(i) for i in key[2].split(':')]
-    margin, scale = [float(i) for i in key[3].split(':')]
+    w, h, margin, scale = eval(key[2])
     img = trans(img, w, h, margin, scale==0)
     
     img = PImage.fromarray(img)
@@ -53,8 +65,8 @@ def add_table(wb, ws, pos, key, data):
     if data is None: return
     vs = data.values
     idx, cols = data.index, data.columns
-    dr, dc = [int(i) for i in key[2].split(':')] if len(key)>2 else (1,1)
-    ir, ic = [int(i) for i in key[3].split(':')] if len(key)>3 else (0,0)
+    dr, dc, ir, ic = 1, 1, 0, 0
+    if key[2] != None: dr, dc, ir, ic = eval(key[2])
     for r in range(vs.shape[0]):
         if ir!=0: wb[ws].cell(pos[0]+r*dr, pos[1]+ir, idx[r])
     for c in range(vs.shape[1]):
@@ -91,15 +103,16 @@ def repair(wb):
 if __name__ == '__main__':
     rst = pd.read_csv('rst.csv')
     img = np.arange(10000, dtype=np.uint8).reshape((100,100))
-    data = {'id':'Coins-0001', 'name':'YX Dragon', 'date':'2019-02-05',
-            'data':rst, 'ori':img, 'msk':img}
+    data = {'Sample_ID':'Coins-0001', 'Operator_Name':'YX Dragon', 'Date':'2019-02-05',
+            'Record':rst, 'Original_Image':img, 'Mask_Image':img}
         
-    wb = pyxl.load_workbook('temp.xlsx',)
+    wb = pyxl.load_workbook('Coins Report.xlsx',)
     repair(wb)
     ws = wb.active
     
     
     infos = parse(wb)
+    print(infos)
     fill_value(wb, infos, data)
     wb.save('new.xlsx')
     

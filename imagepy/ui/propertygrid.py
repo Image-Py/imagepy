@@ -10,14 +10,12 @@ _ = wx.GetTranslation
 
 from imagepy.core.manager import ImageManager, TableManager
 
-data = [('Sheet1', [((2, 2), ['img', 'me']), ((2, 7), ['str', 'name']), ((3, 7), 
-        ['int', 'age']), ((4, 7), ['float', 'weight']), ((5, 7), ['bool', 'married']), ((6, 7), 
-        ['date', 'birth']), ((7, 7), ['list', 'sex', 'male,female']), ((8, 7), ['txt', 'info']), ((11, 2), 
-        ['tab', 'score'])]), ('Sheet2', [((2, 2), ['txt', 'xyz'])]), ('Sheet3', [])]
+data = [('Sheet1', [((4, 5), ['str', 'Sample_ID', '5', "image's name"]), ((4, 17), ['str', 'Operator_Name', None, 'your name']), ((4, 30), ['date', 'Date', None, 'today']), ((10, 1), ['img', 'Original_Image', '[8.16,5.76,0.9,0]', 'the original image']), ((10, 20), ['img', 'Mask_Image', '[8.16,5.76,0.9,0]', '']), ((28, 1), ['tab', 'Record', '[1,3,0,0]', 'records'])]), ('Sheet2', [((0,0), ['list', 'a', '[1,2,345]', 'nothing'])]), ('Sheet3', [])]
+key = {'Sample_ID': ['str', 'Sample_ID', '5', "image's name"], 'Operator_Name': ['str', 'Operator_Name', None, 'your name'], 'Date': ['date', 'Date', None, 'today'], 'Original_Image': ['img', 'Original_Image', '[8.16,5.76,0.9,0]', 'the original image'], 'Mask_Image': ['img', 'Mask_Image', '[8.16,5.76,0.9,0]', ''], 'Record': ['tab', 'Record', '[1,3,0,0]', 'records']}
 
 class GridDialog( wx.Dialog ):
 
-    def __init__( self, parent, title, data):
+    def __init__( self, parent, title, tree, key):
         wx.Dialog.__init__ (self, parent, -1, title, style = wx.DEFAULT_DIALOG_STYLE, size = wx.Size((300, 480)))
         # wx.Panel.__init__(self, parent, wx.ID_ANY)
 
@@ -36,17 +34,18 @@ class GridDialog( wx.Dialog ):
         pg.Bind( wxpg.EVT_PG_SELECTED, self.OnPropGridSelect )
 
         pg.AddPage('Page 1')
-        for page in data:
+        self.key = key
+        for page in tree:
             pg.Append(wxpg.PropertyCategory(page[0]))
             for item in page[1]:
                 v = item[1]
-                if v[0] == 'int': pg.Append( wxpg.IntProperty(v[1]))
-                if v[0] == 'float': pg.Append( wxpg.FloatProperty(v[1]))
-                if v[0] == 'str': pg.Append( wxpg.StringProperty(v[1]))
-                if v[0] == 'txt': pg.Append( wxpg.LongStringProperty(v[1]))
+                if v[0] == 'int': pg.Append( wxpg.IntProperty(v[1], value=int(v[2]) or 0))
+                if v[0] == 'float': pg.Append( wxpg.FloatProperty(v[1], value=float(v[2]) or 0))
+                if v[0] == 'str': pg.Append( wxpg.StringProperty(v[1], value=v[2] or ''))
+                if v[0] == 'txt': pg.Append( wxpg.LongStringProperty(v[1], value=v[2] or ''))
                 if v[0] == 'bool': pg.Append( wxpg.BoolProperty(v[1]))
                 if v[0] == 'date': pg.Append( wxpg.DateProperty(v[1], value=wx.DateTime.Now()))
-                if v[0] == 'list': pg.Append( wxpg.EnumProperty(v[1], v[1], v[2].split(',')))
+                if v[0] == 'list': pg.Append( wxpg.EnumProperty(v[1], v[1], [i.strip() for i in v[2][1:-1].split(',')]))
                 if v[0] == 'img': pg.Append( wxpg.EnumProperty(v[1], v[1], ImageManager.get_titles()))
                 if v[0] == 'tab': pg.Append( wxpg.EnumProperty(v[1], v[1], TableManager.get_titles()))
 
@@ -81,11 +80,10 @@ class GridDialog( wx.Dialog ):
 
     def OnPropGridSelect(self, event):
         p = event.GetProperty()
-        if p: self.txt_info.SetValue('%s selected\n' % (p.GetName()))
+        if p: self.txt_info.SetValue('%s: %s'%(p.GetName(), self.key[p.GetName()][3]))
 
 if __name__ == '__main__':
     app = wx.App(False)
-    frame = GridDialog(None, 'Property Grid', data)
+    frame = GridDialog(None, 'Property Grid', data, key)
     rst = frame.ShowModal() == wx.ID_OK
-    print(rst)
     app.MainLoop()

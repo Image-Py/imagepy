@@ -29,7 +29,7 @@ def extend_plugins(path, lst, err):
             rst.append(Report(i[:-4], pt+'/'+i))
             PluginsManager.add(rst[-1])
         elif i[-3:] == '.mc':
-            pt = os.path.join(root_dir,path)
+            pt = os.path.join(root_dir, path)
             f = open(pt+'/'+i, 'r', 'utf-8')
             cmds = f.readlines()
             f.close()
@@ -84,7 +84,7 @@ def sort_plugins(catlog, lst):
     for i in catlog:
         if i=='-':rst.append('-')
         for j in lst:
-            if j[:-3]==i or j[0].title==i:
+            if j[:-3]==i or j[:-4]==i or j[0].title==i:
                 lst.remove(j)
                 rst.append(j)
     rst.extend(lst)
@@ -111,6 +111,8 @@ def build_plugins(path, err=False):
     pg = __import__('imagepy.'+rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
+        if 'Personal Information' in pg.catlog:
+            print(subtree)
         subtree = sort_plugins(pg.catlog, subtree)
     subtree = extend_plugins(path, subtree, err)
     
@@ -124,7 +126,7 @@ def extend_tools(path, lst, err):
     for i in lst:
         if i[-3:] in ('.mc', '.md', '.wf', 'rpt'):
             pt = os.path.join(root_dir, path)
-            if i[-3:] == '.md':print(pt)
+            # if i[-3:] == '.md':print(pt)
             f = open(pt+'/'+i)
             cmds = f.readlines()
             f.close()
@@ -170,7 +172,7 @@ def build_tools(path, err=False):
         elif not root:
             if i[len(i)-7:] in ('_tol.py', 'tols.py'):
                 subtree.append(i[:-3])
-            elif i[-3:] in ('.mc', '.md', '.wf', 'ltx'):
+            elif i[-3:] in ('.mc', '.md', '.wf', 'rpt'):
                 subtree.append(i)
     if len(subtree)==0:return []
     rpath = path.replace('/', '.').replace('\\','.')

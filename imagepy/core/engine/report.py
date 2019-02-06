@@ -19,17 +19,14 @@ class Report:
         
     def __call__(self): return self
 
-    def runasyn(self,  wb, info, para = None, callback = None):
+    def runasyn(self,  wb, info, key, para = None, callback = None):
         TaskManager.add(self)
-        key = {}
-        for ws in info:
-            for i in ws[1]: key[i[1][1]] = i[1][0]
         for i in para: 
-            if i in key and key[i] == 'img':
+            if i in key and key[i][0] == 'img':
                 ips = ImageManager.get(para[i])
                 para[i] = ips if ips is None else ips.img
 
-            if i in key and key[i] == 'tab':
+            if i in key and key[i][0] == 'tab':
                 tps = TableManager.get(para[i])
                 para[i] = tps if tps is None else tps.data
 
@@ -43,10 +40,10 @@ class Report:
     def start(self, para=None, callafter=None):
         wb = pyxl.load_workbook(self.cont)
         xlreport.repair(wb)
-        info = xlreport.parse(wb)
+        info, key = xlreport.parse(wb)
         if para is not None: 
             return self.runasyn(wb, info, para, callafter)
-        dialog = GridDialog(IPy.curapp, self.title, info)
+        dialog = GridDialog(IPy.curapp, self.title, info, key)
         rst = dialog.ShowModal()
         para = dialog.GetValue()
         dialog.Destroy()
@@ -55,7 +52,7 @@ class Report:
         if not IPy.getpath('Save..', filt, 'save', para): return
         win = WidgetsManager.getref('Macros Recorder')
         if win!=None: win.write('{}>{}'.format(self.title, para))
-        self.runasyn(wb, info, para, callafter)
+        self.runasyn(wb, info, key, para, callafter)
 
 def show_rpt(data, title):
     wx.CallAfter(Report(title, data).start)
