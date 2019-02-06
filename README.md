@@ -74,8 +74,6 @@ Segmentation methods such as adaptive thresholds, watersheds and others are also
 ![newdoc04](http://idoc.imagepy.org/imgs/newdoc04.png)
 <div align=center>Up And Down Watershed</div><br>
 
-
-
 ![newdoc05](http://idoc.imagepy.org/imgs/newdoc05.png)
 <div align=center>Mask</div><br>
 

@@ -7,3 +7,4 @@ from .mkdown import MkDown
 from .widget import Widget
 from .table import Table
 from .workflow import WorkFlow
+from .report import Report
