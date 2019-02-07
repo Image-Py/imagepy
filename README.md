@@ -166,6 +166,14 @@ some coment for section1 ...
 ![newdoc14](http://idoc.imagepy.org/imgs/newdoc14.png)
 <div align=center>Workflow</div><br>
 
+### Report Plugin
+
+Sometimes we need to make a report to print or generate a PDF document. ImagePy can generate report from a xlsx template. We just need put specific mark in some cells, ImagePy will parse the template and generate a parameter dialog, then we can input some information, or give image/table in, the report will be generated! more about how to make template please see [here](https://github.com/Image-Py/demoplugin/blob/master/doc/report.md).
+
+![newdoc14](http://idoc.imagepy.org/demoplugin/38.png)
+
+<div align=center>generate report</div><br>
+
 ### Filter Plugin
 
 We introduced macros and workflows in the last sections, using macros and workflows to connect existing functions is convenient. But sometimes we need to create new features. In this section, we are trying to add a new feature to ImagePy. ImagePy can easily access any Numpy-based function. Let's take the Canny operator of scikit-image as an example.
@@ -247,7 +255,7 @@ and `view`. After the parameters are chosen, they are passed to the `run` togeth
 
 ### Other type of plugins
 
-The `Filter` and `Table` described above are the two most important plugins, but ImagePy also supports some other types of plugin extensions. There are currently nine, they are:
+The `Filter` and `Table` described above are the two most important plugins, but ImagePy also supports some other types of plugin extensions. There are currently ten, they are:
 
 1. `Filter`: mainly for image processing
 2. `Simple`: similar to `Filter`, but focus on the overall characteristics of the image, such as the operation of the ROI, the operation of the false color, the area measurement, or the three-dimensional analysis of the entire image stack, visualization, and so on.
@@ -256,8 +264,9 @@ The `Filter` and `Table` described above are the two most important plugins, but
 5. `Table`: operate on the table, such as statistics analysis, sorting, plotting.
 6. `Widget`: widgets that are displayed in panels, such as the navigation bar on the right, the macro recorder, and others.
 7. `Markdown`: markup language, when clicked, a separate window will pop up to display the document.
-8. `Macros`：Command sequence file for serially fixed operational procedures.
+8. `Macros`：command sequence file for serially fixed operational procedures.
 9. `Workflow`: combination of macro and MarkDown to create an interactive guidance process.
+10. `Report`: a xlsx template with specific mark, rename as `.rpt`, used to auto generate report.
 
 ## Motivation & Goal
 
