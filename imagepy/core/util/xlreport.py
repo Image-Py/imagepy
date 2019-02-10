@@ -50,7 +50,6 @@ def add_image(wb, ws, pos, key, img):
     if img is None: return
     w, h, margin, scale = eval(key[2])
     img = trans(img, w, h, margin, scale==0)
-    
     img = PImage.fromarray(img)
     image_file = BytesIO()
     img.save(image_file, 'png')
@@ -87,7 +86,6 @@ def fill_value(wb, infos, para):
             if key[0] == 'tab':
                 add_table(wb, ws, pos, key, para[key[1]])
                 
-
 def repair(wb):
     for ws in wb.worksheets:
         for cr in ws.merged_cells:
