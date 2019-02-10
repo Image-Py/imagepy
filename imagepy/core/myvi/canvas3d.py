@@ -30,7 +30,7 @@ class Canvas3D(glcanvas.GLCanvas):
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel)
         self.lastx, self.lasty = None, None
-        self.update()
+        #self.update()
         #print('init===========')
 
     def InitGL(self):

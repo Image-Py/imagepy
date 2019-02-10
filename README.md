@@ -18,6 +18,22 @@ ImagePy:
 
 Our long-term goal of this project is to be used as ImageJ + SPSS (although not achieved yet)
 
+## Installation
+
+__OS support：windows, linux, mac, with python3.x__
+
+1.  ImagePy is a ui framework based on wxpython, which can not be installed
+    with pip on Linux. You need download [the whl according to your
+    Linux system](https://wxpython.org/pages/downloads/).
+2.  On Linux and Mac, there may be permission denied promblem, for
+    ImagePy will write some config information, so please start with
+    sudo. If you install with pip, please add \--user parameter like
+    this: pip install --user imagepy
+3.  If you install ImagePy in an Anaconda virtual environment, you may
+    get a error when starting like this: This program needs access to the
+    screen. Please run with a Framework build of python, and only when
+    you are logged in on the main display, if so, please start with
+    pythonw -m imagepy.
 
 ## Citation：
 [ImagePy: an open-source, Python-based and platform-independent software package for bioimage analysis](https://academic.oup.com/bioinformatics/article/34/18/3238/4989871)
@@ -26,24 +42,15 @@ Our long-term goal of this project is to be used as ImageJ + SPSS (although not 
 
 ImagePy is a community partner of forum.image.sc, Anything about the usage and development of ImagePy could be discussed in https://forum.image.sc.
 
-# Installation
 
-__OS support：windows, linux, mac, with python3.4__
 
-1.  ImagePy is a ui framework based on wxpython, which can not be installed
-    with pip on Linux. You need download [the whl according to your
-    Linux system](https://wxpython.org/pages/downloads/).
+## Contribute
 
-2.  On Linux and Mac, there may be permission denied promblem, for
-    ImagePy will write some config information, so please start with
-    sudo. If you install with pip, please add \--user parameter like
-    this: pip install --user imagepy
+**Contribute Manual:** All markdown file under [doc folder](https://github.com/Image-Py/imagepy/tree/master/imagepy/doc) be parsed as manual. Plugins and manual are paired by plugins's title and manual's file name. We can browse document from the parameter dialog's Help button. We need more manual contributors, just pull request markdown file [here](https://github.com/Image-Py/imagepy/tree/master/imagepy/doc).
 
-3.  If you install ImagePy in an Anaconda virtual environment, you may
-    get a error when starting like this: This program needs access to the
-    screen. Please run with a Framework build of python, and only when
-    you are logged in on the main display, if so, please start with
-    pythonw -m imagepy.
+**Contribute Plugins:** Here is a [demo plugin](https://github.com/Image-Py/demoplugin) repositories with document to show how to write plugins and publish on ImagePy. You are wellcom and feel free to contact with us if you need help.
+
+**Improve Main Framework:** Just fork ImagePy, then give Pull Request. But if you want to add some new feature, Please have a issue with us firstly.
 
 ## Basic operations：
 
@@ -60,24 +67,19 @@ _PS: ImagePy supports bmp, jpg, png, gif, tif and other commonly used file forma
 
 ### Filtering & Segmentation
 
-`menu：Process -> Hydrology -> Up And Down Watershed`
-Here, a composite filter is selected to perform sobel gradient extraction on the image, and then the upper and lower thresholds are used as the mark, and finally we watershed on the gradient map.
+`menu：Process -> Hydrology -> Up And Down Watershed` Here, a composite filter is selected to perform sobel gradient extraction on the image, and then the upper and lower thresholds are used as the mark, and finally we watershed on the gradient map.
 Filtering and segmentation are the crucial skills in the image processing toolkit, and are the key to the success or failure of the final measurement.
 Segmentation methods such as adaptive thresholds, watersheds and others are also supported.
 
 ![newdoc04](http://idoc.imagepy.org/imgs/newdoc04.png)
 <div align=center>Up And Down Watershed</div><br>
 
-
-
 ![newdoc05](http://idoc.imagepy.org/imgs/newdoc05.png)
 <div align=center>Mask</div><br>
 
 ### Binarization
 
-`menu：Process -> Binary -> Binary Fill Holes`
-
-After the segmentation, we obtained a relatively clean mask image, but there is still some hollowing out, as well as some impurities, which will interfere with counting and measurement.
+`menu：Process -> Binary -> Binary Fill Holes` After the segmentation, we obtained a relatively clean mask image, but there is still some hollowing out, as well as some impurities, which will interfere with counting and measurement.
 _ImagePy supports binary operations such as erode, dilate, opening and closing, as well as skeletonization, central axis extraction, and distance transformation._
 
 ![newdoc06](http://idoc.imagepy.org/imgs/newdoc06.png)
@@ -85,9 +87,7 @@ _ImagePy supports binary operations such as erode, dilate, opening and closing, 
 
 ### Geometry filtering
 
-`menu：Analysis -> Region Analysis -> Geometry Filter`
-
-ImagePy can perform geometric filtering based on :__the area, the perimeter, the topology, the solidity, the eccentricity__ and other parameters. You can also use multiple conditions for filtering. Each number can be positive|negative, which indicates the kept object will have the corresponding parameter greater|smaller than the value respectively. The kept objects will be set to the front color, the rejected ones will be set to the back color. In this demo, the back color is set to 100 in order to see which ones are filtered out. Once satisfied with the result, set the back color to 0 to reject them. In addition, ImagePy also supports gray density filtering, color filtering, color clustering and other functions.
+`menu：Analysis -> Region Analysis -> Geometry Filter` ImagePy can perform geometric filtering based on :__the area, the perimeter, the topology, the solidity, the eccentricity__ and other parameters. You can also use multiple conditions for filtering. Each number can be positive|negative, which indicates the kept object will have the corresponding parameter greater|smaller than the value respectively. The kept objects will be set to the front color, the rejected ones will be set to the back color. In this demo, the back color is set to 100 in order to see which ones are filtered out. Once satisfied with the result, set the back color to 0 to reject them. In addition, ImagePy also supports gray density filtering, color filtering, color clustering and other functions.
 
 ![newdoc07](http://idoc.imagepy.org/imgs/newdoc07.png)
 <div align=center>Geometry filtering (the area is over-chosen to emphasize the distinction)</div><br>
@@ -95,8 +95,7 @@ ImagePy can perform geometric filtering based on :__the area, the perimeter, the
 
 ### Geometry Analysis
 
-`menu：Process -> Region Analysis -> Geometry Analysis`
-Count the area and analyze the parameters. By choosing the `cov` option, ImagePy will fit each area with an ellipse calculated via the covariance.
+`menu：Process -> Region Analysis -> Geometry Analysis` Count the area and analyze the parameters. By choosing the `cov` option, ImagePy will fit each area with an ellipse calculated via the covariance.
 The parameters such as area, perimeter, eccentricity, and solidity shown in the previous step are calculated here. In fact, the filtering of the previous step is a downstream analysis of this one.
 
 ![newdoc08](http://idoc.imagepy.org/imgs/newdoc08.png)
@@ -108,9 +107,7 @@ The parameters such as area, perimeter, eccentricity, and solidity shown in the 
 
 ### Sort Table by area
 
-`menu：Table -> Statistic -> Table Sort By Key`
-
-Select the major key as area, and select descend. The table will be sorted in descending order of area. A table is another important piece of data other than an image. In a sense, many times we need to get the required information on the image and then post-process the data in the form of a table. ImagePy supports table I/O (xls, xlsx, csv), filtering, slicing, statistical analysis, sorting and more.  (Right click on the column header to set the text color, decimal precision, line style, etc.)
+`menu：Table -> Statistic -> Table Sort By Key` Select the major key as area, and select descend. The table will be sorted in descending order of area. A table is another important piece of data other than an image. In a sense, many times we need to get the required information on the image and then post-process the data in the form of a table. ImagePy supports table I/O (xls, xlsx, csv), filtering, slicing, statistical analysis, sorting and more.  (Right click on the column header to set the text color, decimal precision, line style, etc.)
 
 ![newdoc10](http://idoc.imagepy.org/imgs/newdoc10.png)
 <div align=center>Table</div><br>
@@ -118,9 +115,7 @@ Select the major key as area, and select descend. The table will be sorted in de
 
 ### Charts
 
-`menu：Table -> Chart -> Hist Chart`
-
-From tabular data, we often need to draw a graph. Here, we plot the histograms of the area and the perimeter columns. ImagePy's tables can be used to draw common charts such as line charts, pie charts, histograms, and scatter plots (matplotlib-based). The chart comes with zooming, moving and other functions. The table can also be saved as an image.
+`menu：Table -> Chart -> Hist Chart` From tabular data, we often need to draw a graph. Here, we plot the histograms of the area and the perimeter columns. ImagePy's tables can be used to draw common charts such as line charts, pie charts, histograms, and scatter plots (matplotlib-based). The chart comes with zooming, moving and other functions. The table can also be saved as an image.
 
 ![newdoc11](http://idoc.imagepy.org/imgs/newdoc11.png)
 <div align=center>Histograms</div><br>
@@ -128,10 +123,7 @@ From tabular data, we often need to draw a graph. Here, we plot the histograms o
 
 ### 3D chart
 
-`menu：Kit3D -> Viewer 3D -> 2D Surface`
-
-
-Surface reconstruction of the image. This image shows the three reconstructed results including, sobel gradient map, high threshold and low threshold. It shows how the Up And Down Watershed works:
+`menu：Kit3D -> Viewer 3D -> 2D Surface` Surface reconstruction of the image. This image shows the three reconstructed results including, sobel gradient map, high threshold and low threshold. It shows how the Up And Down Watershed works:
 - calculate the gradient.
 - mark the coin and background through the high and low thresholds,
 - simulate the rising water on the dem diagram to form the segmentation.
@@ -145,9 +137,7 @@ ImagePy can perform 3D filtering of images, 3D skeletons, 3D topological analysi
 
 ### Macro recording and execution
 
-`menu：Window -> Develop Tool Suite`
-
-Macro recorder is shown in the develop tool panel. We have manually completed an image segmentation. However, batch processing more than 10 images can be tedious. So, assuming that these steps are highly repeatable and robust for dealing with such problems, we can record a macro to combine several processes into a one-click program. The macro recorder is similar to a radio recorder. When it is turned on, each step of the operation will be recorded. We can click the pause button to stop recording, then click the play button to execute. When the macro is running, the recorded commands will be executed sequentially, therefore achieving simplicity and reproducibility.
+`menu：Window -> Develop Tool Suite` Macro recorder is shown in the develop tool panel. We have manually completed an image segmentation. However, batch processing more than 10 images can be tedious. So, assuming that these steps are highly repeatable and robust for dealing with such problems, we can record a macro to combine several processes into a one-click program. The macro recorder is similar to a radio recorder. When it is turned on, each step of the operation will be recorded. We can click the pause button to stop recording, then click the play button to execute. When the macro is running, the recorded commands will be executed sequentially, therefore achieving simplicity and reproducibility.
 
 Macros are saved into .mc files. drag and drop the file to the status bar at the bottom of ImagePy, the macro will be executed automatically. we can also copy the .mc file to the submenu of the menus under the ImagePy file directory. When ImagePy is started, the macro file will be parsed into a menu item at the corresponding location. By clicking the menu, the macro will also be executed.
 
@@ -175,6 +165,14 @@ some coment for section1 ...
 ```
 ![newdoc14](http://idoc.imagepy.org/imgs/newdoc14.png)
 <div align=center>Workflow</div><br>
+
+### Report Plugin
+
+Sometimes we need to make a report to print or generate a PDF document. ImagePy can generate report from a xlsx template. We just need put specific mark in some cells, ImagePy will parse the template and generate a parameter dialog, then we can input some information, or give image/table in, the report will be generated! more about how to make template please see [here](https://github.com/Image-Py/demoplugin/blob/master/doc/report.md).
+
+![newdoc14](http://idoc.imagepy.org/demoplugin/38.png)
+
+<div align=center>generate report</div><br>
 
 ### Filter Plugin
 
@@ -257,7 +255,7 @@ and `view`. After the parameters are chosen, they are passed to the `run` togeth
 
 ### Other type of plugins
 
-The `Filter` and `Table` described above are the two most important plugins, but ImagePy also supports some other types of plugin extensions. There are currently nine, they are:
+The `Filter` and `Table` described above are the two most important plugins, but ImagePy also supports some other types of plugin extensions. There are currently ten, they are:
 
 1. `Filter`: mainly for image processing
 2. `Simple`: similar to `Filter`, but focus on the overall characteristics of the image, such as the operation of the ROI, the operation of the false color, the area measurement, or the three-dimensional analysis of the entire image stack, visualization, and so on.
@@ -266,8 +264,9 @@ The `Filter` and `Table` described above are the two most important plugins, but
 5. `Table`: operate on the table, such as statistics analysis, sorting, plotting.
 6. `Widget`: widgets that are displayed in panels, such as the navigation bar on the right, the macro recorder, and others.
 7. `Markdown`: markup language, when clicked, a separate window will pop up to display the document.
-8. `Macros`：Command sequence file for serially fixed operational procedures.
+8. `Macros`：command sequence file for serially fixed operational procedures.
 9. `Workflow`: combination of macro and MarkDown to create an interactive guidance process.
+10. `Report`: a xlsx template with specific mark, rename as `.rpt`, used to auto generate report.
 
 ## Motivation & Goal
 
