@@ -39,7 +39,7 @@ def process_one(plg, ips, src, img, para, callafter=None):
         src = src.astype(np.float32)
     rst = process_channels(plg, ips, src, buf if transint or transfloat else img, para)
     if not img is rst and not rst is None:
-        imgrange = {np.uint8:(0,255), np.uint16:(0,65535)}[img.dtype.type]
+        imgrange = {np.uint8:(0,255), np.uint16:(0, 65535)}[img.dtype.type]
         np.clip(rst, imgrange[0], imgrange[1], out=img)
     if 'auto_msk' in plg.note and not ips.get_msk() is None:
         msk = True ^ ips.get_msk()

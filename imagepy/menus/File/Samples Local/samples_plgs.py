@@ -21,6 +21,6 @@ class Data(Free):
         return self
 
 datas = ['face', 'ascent', '-', 'page', 'astronaut', 'horse', 'camera', 
-    'hubble_deep_field', 'coins', 'immunohistochemistry', 'moon']
+    'coffee', 'hubble_deep_field', 'coins', 'immunohistochemistry', 'moon']
 
 plgs = [i if i=='-' else Data(i) for i in datas]
