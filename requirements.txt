@@ -1,4 +1,6 @@
+matplotlib
 scikit-image
+scipy
 shapely
 wxpython
 numba
