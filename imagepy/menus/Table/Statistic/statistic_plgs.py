@@ -29,7 +29,9 @@ class Statistic(Table):
 		if para['std']:rst['std'] = snap.std(axis=axis)
 		if para['skew']:rst['skew'] = snap.skew(axis=axis)
 		if para['kurt']:rst['kurt'] = snap.kurt(axis=axis)
-		IPy.show_table(pd.DataFrame(rst), tps.title+'-statistic')
+		cols = ['sum', 'mean', 'min', 'max', 'var', 'std', 'skew', 'kurt']
+		cols = [i for i in cols if i in rst]
+		IPy.show_table(pd.DataFrame(rst, columns=cols).T, tps.title+'-statistic')
 
 class GroupStatistic(Table):
 	title = 'Group Statistic'

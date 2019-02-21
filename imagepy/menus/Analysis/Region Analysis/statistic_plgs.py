@@ -13,6 +13,7 @@ from imagepy.core.manager import ImageManager
 from imagepy.core.roi.pointroi import PointRoi
 import pandas as pd
 from imagepy.core.mark import GeometryMark
+
 class Mark:
     def __init__(self, data):
         self.data = data
@@ -115,7 +116,7 @@ class RegionStatistic(Simple):
             mark['body'][i] = layer
 
             data.extend(list(zip(*dt)))
-        IPy.show_table(pd.DataFrame(data, columns=titles), inten.title+'-region statistic')
+        IPy.show_table(pd.DataFrame(data, columns=titles), inten.title+'-pixels')
         inten.mark = GeometryMark(mark)
         inten.update()
 
