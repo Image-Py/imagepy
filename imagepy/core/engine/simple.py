@@ -38,10 +38,10 @@ class Simple:
         self.dialog = temp(IPy.get_window(), self.title)
         self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
         self.dialog.on_help = lambda : IPy.show_md(self.title, DocumentManager.get(self.title))
-        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para))
+        self.dialog.set_handle(lambda x:self.preview(self.ips, self.para) is self.ips.update())
         if self.modal: return self.dialog.ShowModal() == wx.ID_OK
         self.dialog.on_ok = lambda : self.ok(self.ips)
-        self.dialog.on_cancel = lambda : self.cancel(self.ips)
+        self.dialog.on_cancel = lambda : self.cancel(self.ips) is self.ips.update()
         self.dialog.Show()
     
     def run(self, ips, imgs, para = None):pass
@@ -118,6 +118,8 @@ class Simple:
         elif self.modal:
             if self.show():
                 self.ok(self.ips, para, callback)
-            else:self.cancel(self.ips)
+            else:
+                self.cancel(self.ips)
+                self.ips.update()
             if not self.dialog is None: self.dialog.Destroy()
         else: self.show()
