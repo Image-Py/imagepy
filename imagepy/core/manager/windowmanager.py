@@ -10,7 +10,8 @@ class WindowsManager:
 
     @classmethod
     def add(cls, win):
-        if not win in cls.wins:cls.wins.append(win)
+        if win in cls.wins: cls.remove(win)
+        cls.wins.insert(0, win)
 
     @classmethod
     def get(cls, title=None):

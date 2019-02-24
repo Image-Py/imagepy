@@ -145,6 +145,7 @@ class CanvasFrame(wx.Frame):
     def on_valid(self, event):
         if event.GetActive():
             ImageManager.add(self.canvaspanel.ips)
+            WindowsManager.add(self.canvaspanel)
 
     def on_close(self, event):
         self.canvaspanel.set_handler()
@@ -192,6 +193,7 @@ class CanvasNoteBook(wx.lib.agw.aui.AuiNotebook):
 
     def on_pagevalid(self, event):
         ImageManager.add(event.GetEventObject().GetPage(event.GetSelection()).ips)
+        WindowsManager.add(event.GetEventObject().GetPage(event.GetSelection()))
 
     def on_close(self, event):
         print('page close')
