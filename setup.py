@@ -30,6 +30,7 @@ if __name__ == '__main__':
             'read_roi',
             'numpy-stl',
             'pydicom',
+            'pystackreg',
             'pandas',
             'xlrd',
             'xlwt',

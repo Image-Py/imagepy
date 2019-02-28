@@ -170,7 +170,6 @@ class Variance(Filter):
 
     #process
     def run(self, ips, snap, img, para = None):
-        print(snap.dtype, img.dtype)
         nimg.uniform_filter(snap**2, para['size'], output=img)
         img -= nimg.uniform_filter(snap, para['size'])**2
 
