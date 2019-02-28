@@ -12,8 +12,8 @@ class Register(Simple):
 
 	para = {'trans':'RIGID_BODY', 'ref':'previous', 'tab':False, 'new':'Inplace'}
 	view = [(list, 'trans', ['TRANSLATION', 'RIGID_BODY', 'SCALED_ROTATION', 'AFFINE', 'BILINEAR'], str,  'transform', ''),
-			(list, 'ref', ['previous', 'first', 'mean'], str, 'image', ''),
-			(list, 'new', ['Inplace', 'New', 'None'], str, 'reference', ''),
+			(list, 'ref', ['previous', 'first', 'mean'], str, 'reference', ''),
+			(list, 'new', ['Inplace', 'New', 'None'], str, 'image', ''),
 			(bool, 'tab', 'show table')]
 
 	def run(self, ips, imgs, para = None):
