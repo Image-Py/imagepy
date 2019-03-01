@@ -45,10 +45,10 @@ class Register(Simple):
 		IPy.set_info('transform...')
 		for i in range(sr._tmats.shape[0]):
 			tform = tf.ProjectiveTransform(matrix=sr._tmats[i])
-			if para['new'] == 'Inplace':
-				imgs[i] = tf.warp(imgs[i], tform)*imgs[i].max()
-			if para['new'] == 'New':
-				news[i] = tf.warp(imgs[i], tform)*imgs[i].max()
+			img =  tf.warp(imgs[i], tform)
+			img -= imgs[i].min(); img *= imgs[i].max() - imgs[i].min()
+			if para['new'] == 'Inplace': imgs[i] = imgs
+			if para['new'] == 'New': news[i] = img.astype(ips.img.dtype)
 			self.progress(i, len(imgs))
 		if para['new'] == 'New': IPy.show_img(news, '%s-reg'%ips.title)
 
