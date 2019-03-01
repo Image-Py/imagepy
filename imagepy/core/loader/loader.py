@@ -117,7 +117,7 @@ def build_plugins(path, err=False):
     subtree = extend_plugins(path, subtree, err)
     
     if root and sta and len(err)>0:
-        IPy.write('some plugin may be not loaded, but not affect otheres!')
+        IPy.write('Some plugin may be not loaded, but not affect others!')
         for i in err: IPy.write('>>> %-50s%-20s%s'%i)
     return (pg, subtree)  
     
