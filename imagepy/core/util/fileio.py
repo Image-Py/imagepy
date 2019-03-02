@@ -8,6 +8,8 @@ import numpy as np
 def show_img(img, title):
     if isinstance(img, list):
         return IPy.show_img(img, title)
+    if img.dtype!=np.uint8 and img.ndim>2 and img.shape[2]!=3:
+        return IPy.show_img(img, title)
     if img.dtype==np.uint8 and img.ndim==3 and img.shape[2]==4:
         img = img[:,:,:3].copy()
     IPy.show_img([img], title)
