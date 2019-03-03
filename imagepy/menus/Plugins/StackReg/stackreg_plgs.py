@@ -47,7 +47,7 @@ class Register(Simple):
 			tform = tf.ProjectiveTransform(matrix=sr._tmats[i])
 			img =  tf.warp(imgs[i], tform)
 			img -= imgs[i].min(); img *= imgs[i].max() - imgs[i].min()
-			if para['new'] == 'Inplace': imgs[i] = imgs
+			if para['new'] == 'Inplace': imgs[i][:] = img
 			if para['new'] == 'New': news[i] = img.astype(ips.img.dtype)
 			self.progress(i, len(imgs))
 		if para['new'] == 'New': IPy.show_img(news, '%s-reg'%ips.title)

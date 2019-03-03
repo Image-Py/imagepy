@@ -21,6 +21,7 @@ class RagThreshold(Simple):
     def cancel(self, ips): ips.swap()
 
     def preview(self, ips, para):
+        print(para)
         lab = ImageManager.get(para['lab']).img
         connect = ['4-connected', '8-connected'].index(para['connect']) + 1
         g = graph.rag_mean_color(ips.snap, lab, connect, para['mode'], para['sigma'])

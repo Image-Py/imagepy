@@ -6,7 +6,7 @@ import os
 class Save(fileio.Writer):
 	title = 'TIF 3D Save'
 	filt = ['TIF']
-	note = ['8-bit', 'rgb', 'stack']
+	note = ['all', 'stack3d']
 
 	#process
 	def run(self, ips, imgs, para = None):
