@@ -114,26 +114,26 @@ class Filter:
     def check(self, ips):
         note = self.note
         if ips == None:
-            IPy.alert('no image opened!')
+            IPy.alert('No image opened!')
             return False
         elif 'req_roi' in note and ips.roi == None:
-            IPy.alert('no Roi found!')
+            IPy.alert('No Roi found!')
             return False
         elif not 'all' in note:
             if ips.get_imgtype()=='rgb' and not 'rgb' in note:
-                IPy.alert('do not surport rgb image')
+                IPy.alert('Do not surport rgb image')
                 return False
             elif ips.get_imgtype()=='8-bit' and not '8-bit' in note:
-                IPy.alert('do not surport 8-bit image')
+                IPy.alert('Do not surport 8-bit image')
                 return False
             elif ips.get_imgtype()=='16-bit' and not '16-bit' in note:
-                IPy.alert('do not surport 16-bit uint image')
+                IPy.alert('Do not surport 16-bit uint image')
                 return False
             elif ips.get_imgtype()=='32-int' and not 'int' in note:
-                IPy.alert('do not surport 32-bit int uint image')
+                IPy.alert('Do not surport 32-bit int uint image')
                 return False
             elif 'float' in ips.get_imgtype() and not 'float' in note:
-                IPy.alert('do not surport float image')
+                IPy.alert('Do not surport float image')
                 return False
         return True
         
@@ -159,7 +159,7 @@ class Filter:
         elif ips.get_nslices()>1:
             has, rst = 'stack' in para, None
             if not has:
-                rst = IPy.yes_no('run every slice in current stacks?')
+                rst = IPy.yes_no('Run every slice in current stacks?')
             if 'auto_snap' in self.note and self.modal:ips.reset()
             if has and para['stack'] or rst == 'yes':
                 para['stack'] = True

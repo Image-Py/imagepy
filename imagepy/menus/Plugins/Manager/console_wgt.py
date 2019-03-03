@@ -14,7 +14,7 @@ from imagepy.core.manager import PluginsManager
 def get_ips():
     ips = IPy.get_ips()
     if ips is None:
-        print('no image opened!')
+        print('No image opened!')
     return ips
 
 def update():
