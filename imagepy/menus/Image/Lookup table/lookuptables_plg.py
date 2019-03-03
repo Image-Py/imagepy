@@ -3,12 +3,13 @@
 Created on Mon Oct 17 21:13:42 2016
 @author: yxl
 """
-from imagepy import IPy
+from imagepy import IPy, root_dir
 import numpy as np
 from imagepy.core import ImagePlus
 from imagepy.ui.canvasframe import CanvasFrame
 from imagepy.core.engine import Free
 from imagepy.core.manager import ColorManager
+import os, glob
 
 class Plugin(Free):
     def __init__(self, key):
@@ -36,7 +37,9 @@ class Plugin(Free):
     def __call__(self):
         return self
           
-plgs = [Plugin(i) for i in list(ColorManager.luts.keys())]
+fs = glob.glob(os.path.join(root_dir,'data/luts/*.lut'))
+plgs = [Plugin(i) for i in [os.path.split(f)[-1][:-4] for f in fs]]
+
 for i in range(len(plgs)):
     if plgs[i].title == 'Grays':
         plgs.insert(0, plgs.pop(i))

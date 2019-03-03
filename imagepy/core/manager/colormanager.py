@@ -11,22 +11,13 @@ import os, wx
 import sys
 from glob import glob
 
-
-
-
-# read from the lut binarycode
-# glob: return a list ot paths matching a pathname pattern.
 filenames = glob(os.path.join(root_dir,'data/luts/*.lut'))
+filenames.extend(glob(os.path.join(root_dir,'data/luts/*/*.lut')))
 keys = [os.path.split(filename)[-1][:-4] for filename in filenames]
 values = [np.fromfile(filename, dtype=np.uint8).reshape((3,256)).T.copy() for filename in filenames]
 
-filenames_others = glob(os.path.join(root_dir,'data/luts/Others/*.lut'))
-keys_others = [os.path.split(filename)[-1][:-4] for filename in filenames_others]
-values_others = [np.fromfile(filename, dtype=np.uint8).reshape((3,256)).T.copy() for filename in filenames_others]
-
 class ColorManager:
     luts = dict(zip(keys, values))
-    luts_others = dict(zip(keys_others, values_others))
     frontcolor = (255,255,0)
     backcolor = (0,0,0)
     wr, wg, wb = 1.0/3, 1.0/3, 1.0/3
@@ -64,14 +55,8 @@ class ColorManager:
         return np.dot((cls.wr,cls.wg,cls.wb), cls.backcolor)
 
     @classmethod
-    def get_lut(cls, name='grays'):
+    def get_lut(cls, name='grays', set='all'):
         if name=='grays':
             lut = np.arange(256).reshape((-1,1))
             return (lut*np.ones((1,3))).astype(np.uint8)
         else: return cls.luts[name].copy()
-    @classmethod
-    def get_lut_others(cls, name='grays'):
-        if name=='grays':
-            lut = np.arange(256).reshape((-1,1))
-            return (lut*np.ones((1,3))).astype(np.uint8)
-        else: return cls.luts_others[name].copy()
