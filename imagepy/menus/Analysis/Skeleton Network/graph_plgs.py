@@ -1,6 +1,7 @@
 from imagepy.core.engine import Filter, Simple
 from imagepy.ipyalg.graph import sknw
 import numpy as np
+from numpy.linalg import norm
 import networkx as nx, wx
 from imagepy import IPy
 from numba import jit
@@ -104,10 +105,11 @@ class CutBranch(Filter):
         if not isinstance(ips.data, nx.MultiGraph):
             IPy.alert("Please build graph!");
             return False;
+        self.buf = ips.data
         return True;
 
     def run(self, ips, snap, img, para = None):
-        g = ips.data.copy()
+        g = ips.data = self.buf.copy()
         k, unit = ips.unit
         while True:
             rm = []
@@ -121,9 +123,15 @@ class CutBranch(Filter):
         img *= 0
         sknw.draw_graph(img, g)
 
+    def cancel(self, ips):
+        if 'auto_snap' in self.note:
+            ips.swap()
+            ips.update()
+        ips.data = self.buf
+
 class RemoveIsolate(Filter):
     title = 'Remove Isolate Node'
-    note = ['all']
+    note = ['all', 'not_slice', 'not_channel', 'auto_snap']
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):
@@ -137,6 +145,36 @@ class RemoveIsolate(Filter):
             if len(g[n])==0: g.remove_node(n)
         img *= 0
         sknw.draw_graph(img, g)
+        ips.mark = Mark(ips.data)
+
+class Remove2Node(Simple):
+    title = 'Remove 2Path Node'
+    note = ['all']
+
+    def load(self, ips):
+        if not isinstance(ips.data, nx.MultiGraph):
+            IPy.alert("Please build graph!");
+            return False;
+        return True;
+
+    def run(self, ips, imgs, para = None):
+        g = ips.data
+        for n in g.nodes():
+            if len(g[n])!=2 or n in g[n]: continue 
+            (k1, e1), (k2, e2) = g[n].items()
+            if isinstance(g, nx.MultiGraph):
+                if len(e1)!=1 or len(e2)!=1: continue
+                e1, e2 = e1[0], e2[0]
+            l1, l2 = e1['pts'], e2['pts']
+            d1 = norm(l1[0]-g.node[n]['o']) > norm(l1[-1]-g.node[n]['o'])
+            d2 = norm(l2[0]-g.node[n]['o']) < norm(l2[-1]-g.node[n]['o'])
+            pts = np.vstack((l1[::[-1,1][d1]], l2[::[-1,1][d2]]))
+            l = np.linalg.norm(pts[1:]-pts[:-1], axis=1).sum()
+            g.remove_node(n)
+            g.add_edge(k1, k2, pts=pts, weight=l)
+        ips.img[:] = 0
+        sknw.draw_graph(ips.img, g)
+        ips.mark = Mark(ips.data)
 
 @jit
 def floodfill(img, x, y):
@@ -204,4 +242,4 @@ class ShortestPath(Simple):
 
 
 
-plgs = [BuildGraph, Statistic, Sumerise, '-', RemoveIsolate, CutBranch, CutROI, '-', ShortestPath]
+plgs = [BuildGraph, Statistic, Sumerise, '-', RemoveIsolate, Remove2Node, CutBranch, CutROI, '-', ShortestPath]

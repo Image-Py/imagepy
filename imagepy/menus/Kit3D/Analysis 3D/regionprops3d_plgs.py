@@ -16,7 +16,7 @@ class RegionLabel(Simple):
 
     #process
     def run(self, ips, imgs, para = None):
-        buf = imgs.astype(np.uint16)
+        buf = imgs.astype(np.int32)
         strc = generate_binary_structure(3, 1 if para['con']=='4-connect' else 2)
         label(imgs, strc, output=buf)
         IPy.show_img(buf, ips.title+'-label')
@@ -27,14 +27,15 @@ class RegionCounter(Simple):
     note = ['8-bit', '16-bit', 'stack3d']
 
     para = {'con':'8-connect', 'center':True, 'extent':False, 'vol':True,
-            'ed':False, 'holes':False, 'fa':False}
+            'ed':False, 'holes':False, 'fa':False, 'cov':False}
 
     view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             ('lab', None, '=========  indecate  ========='),
             (bool, 'center', 'center'),
             (bool, 'vol', 'volume'),
             (bool, 'extent', 'extent'),
-            (bool, 'ed', 'equivalent diameter')]
+            (bool, 'ed', 'equivalent diameter'),
+            (bool, 'cov', 'eigen values')]
 
     #process
     def run(self, ips, imgs, para = None):
@@ -46,10 +47,10 @@ class RegionCounter(Simple):
         if para['extent']:titles.extend(['Min-Z','Min-Y','Min-X','Max-Z','Max-Y','Max-X'])
         if para['ed']:titles.extend(['Diameter'])
         if para['fa']:titles.extend(['FilledArea'])
+        if para['cov']:titles.extend(['Axis1', 'Axis2', 'Axis3'])
 
-        buf = imgs.astype(np.uint32)
         strc = generate_binary_structure(3, 1 if para['con']=='4-connect' else 2)
-        label(imgs, strc, output=buf)
+        buf, n = label(imgs, strc, output=np.uint32)
         ls = regionprops(buf)
 
         dt = [range(len(ls))]
@@ -68,6 +69,10 @@ class RegionCounter(Simple):
             dt.append([round(i.equivalent_diameter*k, 1) for i in ls])
         if para['fa']:
             dt.append([i.filled_area*k**3 for i in ls])
+        if para['cov']:
+            ites = np.array([i.inertia_tensor_eigvals for i in ls])
+            rst = np.sqrt(np.clip(ites.sum(axis=1)//2-ites.T, 0, 1e10)) * 4
+            for i in rst[::-1]: dt.append(np.abs(i))
         IPy.show_table(pd.DataFrame(list(zip(*dt)), columns=titles), ips.title+'-region')
 
 # center, area, l, extent, cov

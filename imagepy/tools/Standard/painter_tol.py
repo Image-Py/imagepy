@@ -20,17 +20,17 @@ class Plugin(Tool):
         
     def mouse_down(self, ips, x, y, btn, **key):
         self.sta = 1
-        self.paint.set_curpt(x,y)
+        self.paint.set_curpt(int(x), int(y))
         ips.snapshot()
     
     def mouse_up(self, ips, x, y, btn, **key):
-        self.paint.lineto(ips.img,x,y, self.para['width'])
+        self.paint.lineto(ips.img, int(x), int(y), self.para['width'])
         ips.update()
         self.sta = 0
     
     def mouse_move(self, ips, x, y, btn, **key):
         if self.sta==0:return
-        self.paint.lineto(ips.img,x,y, self.para['width'])
+        self.paint.lineto(ips.img, int(x), int(y), self.para['width'])
         ips.update()
         
     def mouse_wheel(self, ips, x, y, d, **key):pass
