@@ -24,6 +24,8 @@ class Canvas3D(glcanvas.GLCanvas):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseDown)
         self.Bind(wx.EVT_LEFT_UP, self.OnMouseUp)
+        self.Bind(wx.EVT_RIGHT_DOWN, self.OnMouseDown)
+        self.Bind(wx.EVT_RIGHT_UP, self.OnMouseUp)
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel)
         self.lastx, self.lasty = None, None
@@ -73,11 +75,23 @@ class Canvas3D(glcanvas.GLCanvas):
             x, y = evt.GetPosition()
             dx, dy = x-self.lastx, y-self.lasty
             self.lastx, self.lasty = x, y
-            #self.manager.h -= dx/200
             angx = self.manager.angx - dx/200
             angy = self.manager.angy + dy/200
-            #print('ang', angx, angy)
             self.manager.set_pers(angx=angx, angy=angy)
+            self.Refresh(False)
+        if evt.Dragging() and evt.RightIsDown():
+            light = self.manager.light
+            x, y = evt.GetPosition()
+            dx, dy = x-self.lastx, y-self.lasty
+            self.lastx, self.lasty = x, y
+            angx, angy = dx/200, dy/200
+            vx, vy, vz = self.manager.light
+            ay = math.asin(vz/math.sqrt(vx**2+vy**2+vz**2))-angy
+            xx = math.cos(angx)*vx - math.sin(angx)*vy
+            yy = math.sin(angx)*vx + math.cos(angx)*vy
+            ay = max(min(math.pi/2-1e-4, ay), -math.pi/2+1e-4)
+            zz, k = math.sin(ay), math.cos(ay)/math.sqrt(vx**2+vy**2)
+            self.manager.set_light((xx*k, yy*k, zz))
             self.Refresh(False)
 
     def save_bitmap(self, path):
@@ -142,6 +156,14 @@ class Viewer3D(wx.Panel):
         #pan = wx.Panel(self.toolbar, size=(50, 50))
         self.btn_color = wx.ColourPickerCtrl( self.toolbar, wx.ID_ANY, wx.Colour( 128, 128, 128 ), wx.DefaultPosition, [(33, 38), (-1, -1)][platform.system() in ['Windows', 'Linux']], wx.CLRP_DEFAULT_STYLE )
         tsizer.Add( self.btn_color, 0, wx.ALIGN_CENTER|wx.ALL|(0, wx.EXPAND)[platform.system() in ['Windows', 'Linux']], 0 )
+        tsizer.Add(wx.StaticLine( self.toolbar, wx.ID_ANY,  wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL), 0, wx.ALL|wx.EXPAND, 2 )
+        self.cho_light = wx.Choice( self.toolbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, ['force light', 'normal light', 'weak light', 'off light'], 0 )
+        self.cho_light.SetSelection( 1 )
+        tsizer.Add( self.cho_light, 0, wx.ALIGN_CENTER|wx.ALL, 1 )
+        self.cho_bg = wx.Choice( self.toolbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, ['force scatter', 'normal scatter', 'weak scatter', 'off scatter'], 0 )
+        self.cho_bg.SetSelection( 1 )
+        tsizer.Add( self.cho_bg, 0, wx.ALIGN_CENTER|wx.ALL, 1 )
+
         self.toolbar.SetSizer( tsizer )
         tsizer.Layout()
 
@@ -199,6 +221,8 @@ class Viewer3D(wx.Panel):
 
         self.cho_obj.Bind( wx.EVT_CHOICE, self.on_select )
         self.cho_mode.Bind( wx.EVT_CHOICE, self.on_mode )
+        self.cho_light.Bind( wx.EVT_CHOICE, self.on_light )
+        self.cho_bg.Bind( wx.EVT_CHOICE, self.on_bg )
         self.chk_visible.Bind( wx.EVT_CHECKBOX, self.on_visible)
         self.sli_blend.Bind( wx.EVT_SCROLL, self.on_blend )
         self.col_color.Bind( wx.EVT_COLOURPICKER_CHANGED, self.on_color )
@@ -227,6 +251,16 @@ class Viewer3D(wx.Panel):
     def on_bgcolor(self, event):
         c = tuple(np.array(event.GetColour()[:3])/255)
         self.canvas.manager.set_background(c)
+        self.canvas.Refresh(False)
+
+    def on_bg(self, event):
+        scatter = 3 - self.cho_bg.GetSelection()
+        self.canvas.manager.set_bright_scatter(scatter=scatter/3)
+        self.canvas.Refresh(False)
+
+    def on_light(self, event):
+        bright = 3 - self.cho_light.GetSelection()
+        self.canvas.manager.set_bright_scatter(bright=bright/3)
         self.canvas.Refresh(False)
 
     def on_save(self, evt):

@@ -2,6 +2,8 @@ from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Simple, Filter
 from scipy.ndimage import label, generate_binary_structure
+from skimage.measure import marching_cubes_lewiner, mesh_surface_area
+from skimage.segmentation import find_boundaries
 from skimage.measure import regionprops
 from numpy.linalg import norm
 import pandas as pd
@@ -27,12 +29,13 @@ class RegionCounter(Simple):
     note = ['8-bit', '16-bit', 'stack3d']
 
     para = {'con':'8-connect', 'center':True, 'extent':False, 'vol':True,
-            'ed':False, 'holes':False, 'fa':False, 'cov':False}
+            'ed':False, 'holes':False, 'fa':False, 'cov':False, 'surf':True}
 
     view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             ('lab', None, '=========  indecate  ========='),
             (bool, 'center', 'center'),
             (bool, 'vol', 'volume'),
+            (bool, 'surf', 'surface area'),
             (bool, 'extent', 'extent'),
             (bool, 'ed', 'equivalent diameter'),
             (bool, 'cov', 'eigen values')]
@@ -43,6 +46,7 @@ class RegionCounter(Simple):
 
         titles = ['ID']
         if para['center']:titles.extend(['Center-X','Center-Y','Center-Z'])
+        if para['surf']:titles.append('Surface')
         if para['vol']:titles.append('Volume')
         if para['extent']:titles.extend(['Min-Z','Min-Y','Min-X','Max-Z','Max-Y','Max-X'])
         if para['ed']:titles.extend(['Diameter'])
@@ -60,6 +64,12 @@ class RegionCounter(Simple):
             dt.append([round(i.centroid[1]*k,1) for i in ls])
             dt.append([round(i.centroid[0]*k,1) for i in ls])
             dt.append([round(i.centroid[2]*k,1) for i in ls])
+        if para['surf']:
+            buf[find_boundaries(buf, mode='outer')] = 0
+            vts, fs, ns, cs = marching_cubes_lewiner(buf, level=0)
+            lst = [[] for i in range(n+1)]
+            for i in fs: lst[int(cs[i[0]])].append(i)
+            dt.append([0 if len(i)==0 else mesh_surface_area(vts, np.array(i))*k**2 for i in lst][1:])
         if para['vol']:
             dt.append([i.area*k**3 for i in ls])
         if para['extent']:

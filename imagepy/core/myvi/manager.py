@@ -85,13 +85,15 @@ class Surface:
 			self.vbo.write(self.buf.tobytes())
 			self.color = color if isinstance(color, tuple) else (0,0,0)
 
-	def draw(self, mvp):
+	def draw(self, mvp, light, bright, scatter):
 		if not self.visible: return
 		self.ctx.line_width = self.width
 		mvp = np.dot(*mvp)
 		self.prog['Mvp'].write(mvp.astype(np.float32).tobytes())
 		self.prog['blend'].value = self.blend
-
+		self.prog['scatter'].value = scatter
+		self.prog['light'].value = tuple(light)
+		self.prog['bright'].value = bright
 		self.vao.render({'mesh':moderngl.TRIANGLES, 'grid':moderngl.LINES}[self.mode])
 
 class MarkText:
@@ -114,7 +116,7 @@ class MarkText:
 		if not visible is None: self.visible = visible
 		if not color is None: self.color = color
 
-	def draw(self, mvp):
+	def draw(self, mvp, light, bright, scatter):
 		if not self.visible: return
 		self.ctx.line_width = 2
 		self.prog['mv'].write(mvp[0].astype(np.float32).tobytes())
@@ -129,6 +131,8 @@ class Manager:
 		self.ratio, self.dial = 1.0, 1.0
 		self.pers, self.center = True, (0,0,0)
 		self.background = 0.4, 0.4, 0.4
+		self.light = (1,0,0)
+		self.bright, self.scatter = 0.66, 0.66
 		self.objs = {}
 		self.ctx = None
 
@@ -151,13 +155,15 @@ class Manager:
             ''',
             fragment_shader='''
                 #version 330
-                uniform vec3 light = vec3(1,1,0.8);
-                uniform float blend = 0.1;
+                uniform vec3 light;
+                uniform float blend;
+                uniform float scatter;
+                uniform float bright;
                 in vec3 f_norm;
                 in vec3 f_color;
                 out vec4 color;
                 void main() {
-                    float d = clamp((dot(light, f_norm)+1)*0.5, 0, 1);
+                    float d = clamp(dot(light, f_norm)*bright+scatter, 0, 1);
            			color = vec4(f_color*d, blend);
                 }
 			'''
@@ -215,7 +221,7 @@ class Manager:
 		self.ctx.enable(moderngl.DEPTH_TEST)
 		#self.ctx.enable(ModernGL.CULL_FACE)
 		self.ctx.enable(moderngl.BLEND)
-		for i in self.objs.values(): i.draw(self.mvp)
+		for i in self.objs.values(): i.draw(self.mvp, self.light, self.bright, self.scatter)
 
 	def count_box(self):
 		minb = np.array([i.box[0] for i in self.objs.values() if not i.box is None]).min(axis=0)
@@ -237,8 +243,13 @@ class Manager:
 		self.ctx.viewport = (x, y, width, height)
 		self.ratio = width*1.0/height
 
-	def set_background(self, rgb):
-		self.background = rgb
+	def set_background(self, rgb): self.background = rgb
+
+	def set_light(self, light): self.light = light
+
+	def set_bright_scatter(self, bright=None, scatter=None):
+		if not bright is None: self.bright = bright
+		if not scatter is None: self.scatter = scatter
 
 	def reset(self, fovy=45, angx=0, angy=0):
 		self.fovy, self.angx, self.angy = fovy, angx, angy
