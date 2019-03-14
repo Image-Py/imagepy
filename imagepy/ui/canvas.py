@@ -180,8 +180,8 @@ class Canvas (wx.Panel):
         if img.ndim == 2:
             rstarr = np.zeros(shape, dtype=img.dtype)
             my_transform(img, M, offset=O, output=rstarr, k=1, clip=False)
+            if rstarr.dtype == np.complex128: rstarr = np.abs(rstarr)
             rstarr = lookup(rstarr)
-        
         if img.ndim == 3:
             rstarr = np.zeros((win[3], win[2], 3), dtype=img.dtype)
             for i in range(3):

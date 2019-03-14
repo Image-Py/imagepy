@@ -8,6 +8,7 @@ def get_img_type(imgs):
     if imgs[0].dtype == np.int32:return '32-int'
     if imgs[0].dtype == np.float32:return '32-float'
     if imgs[0].dtype == np.float64:return '64-float'
+    if imgs[0].dtype == np.complex128:return 'complex'
 
 class ImagePlus:
     """ImagePlus: a class to make operation more flexible """

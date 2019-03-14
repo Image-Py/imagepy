@@ -99,11 +99,11 @@ class UPRidge(Filter):
 
 class ARidge(Filter):
     title = 'Active Ridge'
-    note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel']
+    note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'req_roi']
     
     para = {'sigma':1.0, 'ud':True, 'type':'white line'}
-    view = [(float, (0,5), 1, 'sigma', 'sigma', 'pix'),
-    (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', ''),
+    view = [(float, 'sigma', (0,5), 1, 'sigma', 'pix'),
+            (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', ''),
             (bool, 'ud', 'ascend')]
     
     def run(self, ips, snap, img, para = None):

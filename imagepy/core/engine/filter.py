@@ -30,7 +30,7 @@ def process_one(plg, ips, src, img, para, callafter=None):
     TaskManager.add(plg)
     start = time()
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
-    transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
+    transfloat = '2float' in plg.note and not ips.dtype in (np.complex128, np.float32, np.float64)
     if transint: 
         buf = img.astype(np.int32)
         src = src.astype(np.int32)
@@ -53,7 +53,7 @@ def process_stack(plg, ips, src, imgs, para, callafter=None):
     TaskManager.add(plg)
     start = time()
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
-    transfloat = '2float' in plg.note and not ips.dtype in (np.float32, np.float64)
+    transfloat = '2float' in plg.note and not ips.dtype in (np.complex128, np.float32, np.float64)
     if transint: 
         buf =  imgs[0].astype(np.int32)
         src = src.astype(np.int32)

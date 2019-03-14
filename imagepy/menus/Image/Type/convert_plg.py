@@ -163,5 +163,5 @@ class ToFloat64(Simple):
                     k = 255.0/(max(1e-10, maxv-minv))
                     img64.append(imgs[i].astype(np.float64))
         ips.set_imgs(img64)
-        
+
 plgs = [To8bit, ToRGB, '-', ToUint16, ToInt32, ToFloat32, ToFloat64]
