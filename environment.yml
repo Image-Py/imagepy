@@ -7,7 +7,6 @@ dependencies:
   - openpyxl
   - pandas
   - pydicom
-  - pystackreg
   - pypubsub
   - read-roi
   - scikit-image
@@ -18,3 +17,4 @@ dependencies:
   - markdown
   - pip:
     - moderngl
+    - pystackreg
