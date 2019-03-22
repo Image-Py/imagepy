@@ -10,8 +10,8 @@ from .util import *
 
 class Canvas3D(glcanvas.GLCanvas):
     def __init__(self, parent, manager=None):
-        attribList = attribs = (glcanvas.WX_GL_CORE_PROFILE, glcanvas.WX_GL_RGBA, glcanvas.WX_GL_DOUBLEBUFFER, glcanvas.WX_GL_DEPTH_SIZE, 24)
-        glcanvas.GLCanvas.__init__(self, parent, -1, attribList=attribList)
+        attribList = (glcanvas.WX_GL_CORE_PROFILE, glcanvas.WX_GL_RGBA, glcanvas.WX_GL_DOUBLEBUFFER, glcanvas.WX_GL_DEPTH_SIZE, 24)
+        glcanvas.GLCanvas.__init__(self, parent, -1, attribList=attribList[platform.system() == 'Windows':])
         self.init = False
         self.context = glcanvas.GLContext(self)
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)

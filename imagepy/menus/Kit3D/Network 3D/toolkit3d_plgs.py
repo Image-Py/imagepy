@@ -258,7 +258,7 @@ class CutBranch(Simple):
 			rm = []
 			for i in g.nodes():
 				if g.degree(i)!=1:continue
-				s,e = g.edges(i)[0]
+				s,e = list(g.edges(i))[0]
 				if g[s][e][0]['weight']*k<=para['lim']:
 					rm.append(i)
 			g.remove_nodes_from(rm)
@@ -278,7 +278,7 @@ class RemoveIsolate(Simple):
 
 	def run(self, ips, imgs, para = None):
 		g = ips.data
-		for n in g.nodes():
+		for n in list(g.nodes()):
 			if len(g[n])==0: g.remove_node(n)
 		imgs *= 0
 		sknw.draw_graph(imgs, g)
@@ -295,7 +295,7 @@ class Remove2Node(Simple):
 
     def run(self, ips, imgs, para = None):
         g = ips.data
-        for n in g.nodes():
+        for n in list(g.nodes()):
             if len(g[n])!=2 or n in g[n]: continue 
             (k1, e1), (k2, e2) = g[n].items()
             if isinstance(g, nx.MultiGraph):
