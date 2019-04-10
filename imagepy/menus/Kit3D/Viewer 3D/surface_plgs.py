@@ -17,7 +17,7 @@ class Show(Free):
 
 class Surface2D(Simple):
     title = '2D Surface'
-    note = ['8-bit', '16-bit']
+    note = ['8-bit', '16-bit', 'float']
     para = {'name':'undifine', 'scale':2, 'sigma':2,'h':1}
     view = [(str, 'name', 'Name', ''),
             (int, 'scale', (1,5), 0, 'down scale', 'pix'),

@@ -26,8 +26,7 @@ class ImagePlus:
         self.backimg = None
         self.backmode = (0.5, 'Mean')
         self.tool = None
-        self.data = None
-        self.info = {}
+        self.data = {}
         self.unit = (1, 'pix')
         self.range = (0, 255)
         self.set_imgs(imgs)
