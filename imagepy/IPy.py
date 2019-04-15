@@ -119,14 +119,14 @@ def yes_no(info, title="ImagePy Yes-No ?!"):
     dic = {wx.ID_YES:'yes', wx.ID_NO:'no', wx.ID_CANCEL:'cancel'}
     return dic[rst]
 
-def getpath(title, filt, k, para=None):
+def getpath(title, filt, k, para=None, name=''):
     """Get the defaultpath of the ImagePy"""
     from .core import manager
     dpath = manager.ConfigManager.get('defaultpath')
     if dpath ==None:
         dpath = root_dir # './'
     dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
-    dialog = wx.FileDialog(curapp, title, dpath, '', filt, dic[k])
+    dialog = wx.FileDialog(curapp, title, dpath, name, filt, dic[k])
     rst = dialog.ShowModal()
     path = None
     if rst == wx.ID_OK:
