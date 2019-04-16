@@ -35,6 +35,19 @@ __OS support：windows, linux, mac, with python3.x__
     you are logged in on the main display, if so, please start with
     pythonw -m imagepy.
 
+### - Pre-compiled package
+This is the simplest option to run ImagePy.  
+A precompiled archive can be downloaded from the [release tab](https://github.com/Image-Py/imagepy/releases) of the repository.  
+Simply unzip the archive and run the ImagePy.bat file.  
+This will open a command line window and open the GUI of ImagePy.
+
+### - Using pip
+In a command-prompt type `pip install imagepy`.  
+On Windows you currently need to first install shapely using conda.   
+Once installed, ImagePy can be run by typing `python -m imagepy` in a command prompt.
+
+
+
 ## Citation：
 [ImagePy: an open-source, Python-based and platform-independent software package for bioimage analysis](https://academic.oup.com/bioinformatics/article/34/18/3238/4989871)
 
