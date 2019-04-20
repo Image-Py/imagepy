@@ -4,6 +4,7 @@ from imagepy.core.engine import Simple
 from skimage.morphology import skeletonize_3d
 from imagepy.ipyalg import find_maximum, watershed
 from skimage.filters import apply_hysteresis_threshold
+from imagepy.ipyalg import distance_transform_edt
 import numpy as np
 
 class Dilation(Simple):
@@ -78,7 +79,7 @@ class Distance3D(Simple):
 
     #process
     def run(self, ips, imgs, para = None):
-        dismap = ndimg.distance_transform_edt(imgs>0)
+        dismap = distance_transform_edt(imgs>0)
         imgs[:] = np.clip(dismap, ips.range[0], ips.range[1])
 
 class Watershed(Simple):
@@ -94,7 +95,7 @@ class Watershed(Simple):
     ## TODO: Fixme!
     def run(self, ips, imgs, para = None):
         imgs[:] = imgs > 0
-        dist = -ndimg.distance_transform_edt(imgs)
+        dist = -distance_transform_edt(imgs)
         pts = find_maximum(dist, para['tor'], False)
         buf = np.zeros(imgs.shape, dtype=np.uint32)
         buf[pts[:,0], pts[:,1], pts[:,2]] = 2

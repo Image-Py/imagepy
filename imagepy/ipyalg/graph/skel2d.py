@@ -3,6 +3,7 @@ import scipy.ndimage as ndimg
 from numba import jit
 
 from scipy.ndimage import label, generate_binary_structure
+from ..hydrology.edt import distance_transform_edt
 strc = np.ones((3,3), dtype=np.bool)
     
 # check whether this pixcel can be removed
@@ -49,7 +50,7 @@ def medial_axis(data, idx, branch = True):
     return 0;
 
 def mid_axis(img):
-    dis = ndimg.distance_transform_edt(img)
+    dis = distance_transform_edt(img)
     dis[[0,-1],:] = 0; dis[:,[0,-1]] = 0
     idx = np.argsort(dis.flat).astype(np.int32)
     medial_axis(dis, idx, lut)

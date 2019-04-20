@@ -8,7 +8,7 @@ from skimage.morphology import skeletonize
 from skimage.morphology import medial_axis
 from imagepy.ipyalg.graph import skel2d
 from imagepy.core.engine import Filter
-from imagepy.ipyalg import find_maximum, watershed
+from imagepy.ipyalg import find_maximum, watershed, distance_transform_edt
 from skimage.filters import apply_hysteresis_threshold
 import scipy.ndimage as ndimg
 
@@ -26,7 +26,7 @@ class EDT(Filter):
 	note = ['all', 'auto_msk', 'auto_snap','preview']
 
 	def run(self, ips, snap, img, para = None):
-		return ndimg.distance_transform_edt(snap)
+		return distance_transform_edt(snap)
 
 class MedialAxis(Filter):
 	title = 'Medial Axis'
@@ -55,7 +55,7 @@ class Watershed(Filter):
 	## TODO: Fixme!
 	def run(self, ips, snap, img, para = None):
 		img[:] = snap>0
-		dist = -ndimg.distance_transform_edt(snap)
+		dist = -distance_transform_edt(snap)
 		pts = find_maximum(dist, para['tor'], False)
 		buf = np.zeros(ips.size, dtype=np.uint32)
 		buf[pts[:,0], pts[:,1]] = img[pts[:,0], pts[:,1]] = 2
@@ -73,7 +73,7 @@ class Voronoi(Filter):
 	view = [(list, 'type', ['segment with ori', 'segment only', 'white line', 'gray line'], str, 'output', '')]
 	## TODO: Fixme!
 	def run(self, ips, snap, img, para = None):
-		dist = ndimg.distance_transform_edt(snap)
+		dist = distance_transform_edt(snap)
 		markers, n = ndimg.label(snap==0, np.ones((3,3)))
 
 		line = watershed(dist, markers, line=True)
