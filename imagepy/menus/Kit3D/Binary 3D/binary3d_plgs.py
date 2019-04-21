@@ -97,13 +97,13 @@ class Watershed(Simple):
     ## TODO: Fixme!
     def run(self, ips, imgs, para = None):
         imgs[:] = imgs > 0
-        dist = -distance_transform_edt(imgs, output=np.uint16)
-        pts = find_maximum(dist, para['tor'], False)
+        dist = distance_transform_edt(imgs, output=np.uint16)
+        pts = find_maximum(dist, para['tor'], True)
         buf = np.zeros(imgs.shape, dtype=np.uint32)
         buf[pts[:,0], pts[:,1], pts[:,2]] = 2
         imgs[pts[:,0], pts[:,1], pts[:,2]] = 2
         markers, n = ndimg.label(buf, np.ones((3, 3, 3)))
-        line = watershed(dist, markers, line=True, conn=para['con']+1)
+        line = watershed(dist, markers, line=True, conn=para['con']+1, up=False)
         msk = apply_hysteresis_threshold(imgs, 0, 1)
         imgs[:] = imgs>0; imgs *= 255; imgs *= ~((line==0) & msk)
 

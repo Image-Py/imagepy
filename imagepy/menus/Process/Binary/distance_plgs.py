@@ -55,12 +55,12 @@ class Watershed(Filter):
 	## TODO: Fixme!
 	def run(self, ips, snap, img, para = None):
 		img[:] = snap>0
-		dist = -distance_transform_edt(snap, output=np.uint16)
-		pts = find_maximum(dist, para['tor'], False)
+		dist = distance_transform_edt(snap, output=np.uint16)
+		pts = find_maximum(dist, para['tor'], True)
 		buf = np.zeros(ips.size, dtype=np.uint32)
 		buf[pts[:,0], pts[:,1]] = img[pts[:,0], pts[:,1]] = 2
 		markers, n = ndimg.label(buf, np.ones((3,3)))
-		line = watershed(dist, markers, line=True, conn=para['con']+1)
+		line = watershed(dist, markers, line=True, conn=para['con']+1, up=False)
 		msk = apply_hysteresis_threshold(img, 0, 1)
 		img[:] = snap * ~((line==0) & msk)
 
