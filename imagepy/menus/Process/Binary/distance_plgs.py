@@ -55,7 +55,7 @@ class Watershed(Filter):
 	## TODO: Fixme!
 	def run(self, ips, snap, img, para = None):
 		img[:] = snap>0
-		dist = -distance_transform_edt(snap)
+		dist = -distance_transform_edt(snap, output=np.uint16)
 		pts = find_maximum(dist, para['tor'], False)
 		buf = np.zeros(ips.size, dtype=np.uint32)
 		buf[pts[:,0], pts[:,1]] = img[pts[:,0], pts[:,1]] = 2
@@ -73,7 +73,7 @@ class Voronoi(Filter):
 	view = [(list, 'type', ['segment with ori', 'segment only', 'white line', 'gray line'], str, 'output', '')]
 	## TODO: Fixme!
 	def run(self, ips, snap, img, para = None):
-		dist = distance_transform_edt(snap)
+		dist = distance_transform_edt(snap, output=np.uint16)
 		markers, n = ndimg.label(snap==0, np.ones((3,3)))
 
 		line = watershed(dist, markers, line=True)

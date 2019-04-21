@@ -24,7 +24,7 @@ def dist(idx1, idx2, acc):
     return dis
 
 @jit
-def step(dis, pts, roots, s, level, nbs, acc):
+def step(dis, pts, roots, s, level, nbs, acc, scale):
     cur = 0
     while cur<s:
         p = pts[cur]
@@ -34,11 +34,11 @@ def step(dis, pts, roots, s, level, nbs, acc):
             continue
         for dp in nbs:
             cp = p+dp
-            if dis[cp]<level+2e-10:continue
+            if dis[cp]<level*scale+2e-10:continue
             if dis[cp]==0xffff:continue
             tdist = dist(cp, rp, acc)
             if tdist<dis[cp]**2-1e-10:
-                dis[cp] = tdist**0.5
+                dis[cp] = (tdist**0.5)*scale
                 pts[s] = cp
                 roots[s] = rp
                 if s == len(pts):
@@ -72,25 +72,28 @@ def collect(dis, nbs, pts, root):
                 break
     return cur
 
+@jit
 def buffer(img, dtype):
     buf = np.ones(tuple(np.array(img.shape)+2), dtype=dtype)
-    buf *= 0xffff
-    buf[tuple([slice(1,-1)]*buf.ndim)] = (img>0)*(0xffff-1)
+    buf[tuple([slice(1,-1)]*buf.ndim)] = img
+    line = buf.ravel()
+    for i in range(len(line)):
+        line[i] = 1 if line[i]==0 else 0xffff
+    buf[tuple([slice(1,-1)]*buf.ndim)] -= 1
     return buf
 
 @jit
-def distance_transform_edt(img, output=np.float32):
+def distance_transform_edt(img, output=np.float32, scale=1):
     dis = buffer(img, output)
     nbs = neighbors(dis.shape)
     acc = np.cumprod((1,)+dis.shape[::-1][:-1])[::-1]
-
     line = dis.ravel()
-    pts = np.zeros(line.size//2, dtype=np.int64)
-    roots = np.zeros(line.size//2, dtype=np.int64)
+    pts = np.zeros(max(line.size//8, 1024**2), dtype=np.int64)
+    roots = np.zeros(max(line.size//8, 1024**2), dtype=np.int64)
     s = collect(line, nbs, pts, roots)
     for level in range(10000):
         s, c = clear(pts, roots, s, 0)
-        s = step(line, pts, roots, s, level, nbs, acc)
+        s = step(line, pts, roots, s, level, nbs, acc, scale)
         if s==0:break
     return dis[(slice(1,-1),)*img.ndim]
     
@@ -100,18 +103,17 @@ if __name__ == '__main__':
     from scipy.ndimage import distance_transform_edt as scipyedt
     from time import time
 
-    img = np.ones((2048,2048))
+    img = np.ones((2048,2048), dtype=np.uint8)
     img[1024,1024] = 0
 
     start = time()
-    for i in range(1):
-        dis1 = scipyedt(img)
+    dis1 = scipyedt(img)
     print('scipy', time()-start)
     #start = time()
-    dis = distance_transform_edt(img, np.uint16)
+    dis = distance_transform_edt(img, np.float32, 2)
     #print('my', time()-start)
     start = time()
-    for i in range(1):
-        dis2 = distance_transform_edt(img, np.uint16)
+    dis2 = distance_transform_edt(img, np.float32, 2)
     print('my', time()-start)
-
+    plt.imshow(dis2, cmap='gray')
+    plt.show()
