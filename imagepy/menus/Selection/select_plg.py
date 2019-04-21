@@ -5,7 +5,7 @@ Created on Sun Dec 18 22:31:12 2016
 @author: yxl
 """
 from imagepy.core.manager import RoiManager
-from imagepy.core.engine import Simple
+from imagepy.core.engine import Simple, Free
 from imagepy.core.roi import RectangleRoi
 from imagepy.core.roi import roiio
 from imagepy import IPy
@@ -28,7 +28,7 @@ class SelectNone(Simple):
         
 class Add2Manager(Simple):
     """Add2Manager: derived from imagepy.core.engine.Simple """
-    title = 'Add To Manager'
+    title = 'ROI Add'
     note = ['all', 'req_roi']
     para = {'name':''}
     view = [(str, 'name', 'Name', '')]
@@ -36,9 +36,27 @@ class Add2Manager(Simple):
     def run(self, ips, imgs, para = None):
         RoiManager.add(para['name'], ips.roi)
         
+class RemoveFManager(Simple):
+    """Add2Manager: derived from imagepy.core.engine.Simple """
+    title = 'ROI Remove'
+    note = ['all']
+    para = {'name':''}
+
+    def load(self, ips):
+        titles = list(RoiManager.rois.keys())
+        if len(titles)==0: 
+            IPy.alert('No roi in manager!')
+            return False
+        self.para['name'] = titles[0]
+        RemoveFManager.view = [(list, 'name', titles, str, 'Name', '')]
+        return True
+
+    def run(self, ips, imgs, para = None):
+        RoiManager.remove(para['name'])
+
 class LoadRoi(Simple):
     """LoadRoi: derived from imagepy.core.engine.Simple """
-    title = 'Load Roi'
+    title = 'ROI Load'
     note = ['all']
     para = {'name':''}
     
@@ -56,7 +74,7 @@ class LoadRoi(Simple):
         
 class Inflate(Simple):
     """Inflate: derived from imagepy.core.engine.Simple """
-    title = 'Inflate'
+    title = 'ROI Inflate'
     note = ['all', 'req_roi']
     para = {'r':5}
     view = [(int, 'r', (1,100),0, 'radius', 'pix')]
@@ -66,7 +84,7 @@ class Inflate(Simple):
         
 class Shrink(Simple):
     """Shrink: derived from imagepy.core.engine.Simple """
-    title = 'Shrink'
+    title = 'ROI Shrink'
     note = ['all', 'req_roi']
     para = {'r':5}
     view = [(int, 'r', (1,100),0, 'radius', 'pix')]
@@ -76,7 +94,7 @@ class Shrink(Simple):
         
 class Convex(Simple):
     """Convex: derived from imagepy.core.engine.Simple """
-    title = 'Convex Hull'
+    title = 'ROI Convex Hull'
     note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
@@ -84,7 +102,7 @@ class Convex(Simple):
         
 class Box(Simple):
     """Box: derived from imagepy.core.engine.Simple """
-    title = 'Bound Box'
+    title = 'ROI Bound Box'
     note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
@@ -92,7 +110,7 @@ class Box(Simple):
         
 class Clip(Simple):
     """Clip: derived from imagepy.core.engine.Simple """
-    title = 'Clip Roi'
+    title = 'ROI Clip'
     note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
@@ -101,7 +119,7 @@ class Clip(Simple):
         
 class Invert(Simple):
     """Invert: derived from imagepy.core.engine.Simple """
-    title = 'Invert Roi'
+    title = 'ROI Invert'
     note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
@@ -110,7 +128,7 @@ class Invert(Simple):
         
 class Save(Simple):
     """Save: save roi as a wkt file """
-    title = 'Save ROI'
+    title = 'ROI Save'
     note = ['all', 'req_roi']
     para={'path':''}
 
@@ -125,7 +143,7 @@ class Save(Simple):
 
 class Open(Simple):
     """Save: save roi as a wkt file """
-    title = 'Open ROI'
+    title = 'ROI Open'
     note = ['all']
     para={'path':''}
 
@@ -138,7 +156,94 @@ class Open(Simple):
 
         if file[-3:] == 'wkt':ips.roi = roiio.readwkt(file)
         if file[-3:] == 'roi':ips.roi = roiio.readroi(file)
+       
+class Intersect(Simple):
+    """Union: derived from imagepy.core.engine.Simple """
+    title = 'ROI Intersect'
+    note = ['all', 'req_roi']
+    para = {'name':''}
+    
+    def load(self, ips):
+        titles = list(RoiManager.rois.keys())
+        if len(titles)==0: 
+            IPy.alert('No roi in manager!')
+            return False
+        self.para['name'] = titles[0]
+        self.view = [(list, 'name', titles, str, 'Name', '')]
+        return True
+
+    def run(self, ips, imgs, para = None):
+        ips.roi = ips.roi.intersect(RoiManager.get(para['name']))
+
+class Union(Simple):
+    """Union: derived from imagepy.core.engine.Simple """
+    title = 'ROI Union'
+    note = ['all', 'req_roi']
+    para = {'name':''}
+    
+    def load(self, ips):
+        titles = list(RoiManager.rois.keys())
+        if len(titles)==0: 
+            IPy.alert('No roi in manager!')
+            return False
+        self.para['name'] = titles[0]
+        self.view = [(list, 'name', titles, str, 'Name', '')]
+        return True
+
+    def run(self, ips, imgs, para = None):
+        ips.roi = ips.roi.union(RoiManager.get(para['name']))
+
+class Diff(Simple):
+    """Diff: derived from imagepy.core.engine.Simple """
+    title = 'ROI Difference'
+    note = ['all', 'req_roi']
+    para = {'name':''}
+    
+    def load(self, ips):
+        titles = list(RoiManager.rois.keys())
+        if len(titles)==0: 
+            IPy.alert('No roi in manager!')
+            return False
+        self.para['name'] = titles[0]
+        self.view = [(list, 'name', titles, str, 'Name', '')]
+        return True
+
+    def run(self, ips, imgs, para = None):
+        ips.roi = ips.roi.diff(RoiManager.get(para['name']))
+
+class SymDiff(Simple):
+    """Diff: derived from imagepy.core.engine.Simple """
+    title = 'ROI Symmetric Diff'
+    note = ['all', 'req_roi']
+    para = {'name':''}
+    
+    def load(self, ips):
+        titles = list(RoiManager.rois.keys())
+        if len(titles)==0: 
+            IPy.alert('No roi in manager!')
+            return False
+        self.para['name'] = titles[0]
+        self.view = [(list, 'name', titles, str, 'Name', '')]
+        return True
+
+    def run(self, ips, imgs, para = None):
+        ips.roi = ips.roi.symmetric_diff(RoiManager.get(para['name']))
+
+class Setting(Free):
+    title = 'ROI Setting'
+
+    def load(self):
+        Setting.para = {'color':RoiManager.get_color(),
+                     'lw':RoiManager.get_lw()}
+        Setting.view = [('color', 'color', 'roi', 'color'),
+                     (int, 'lw', (1,5), 0, 'line width', 'pix')]
+        return True
+
+    def run(self, para=None):
+        RoiManager.set_color(para['color'])
+        RoiManager.set_lw(para['lw'])
 
 plgs = [SelectAll, SelectNone, 
         '-', Inflate, Shrink, Convex, Box, Clip, Invert, 
-        '-', Open, Save, Add2Manager, LoadRoi]
+        '-', Open, Save, Add2Manager, LoadRoi, RemoveFManager,
+        '-', Intersect, Union, Diff, SymDiff, '-', Setting]

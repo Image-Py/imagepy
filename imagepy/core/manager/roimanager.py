@@ -12,11 +12,19 @@ class RoiManager:
         cls.rois[name] = roi
         
     @classmethod
+    def remove(cls, name):
+        if name in cls.rois: del cls.rois[name]
+
+    @classmethod
     def get(cls, name):
         if name not in cls.rois:
             return None
         return cls.rois[name]
         
+    @classmethod
+    def get_titles(cls):
+        return sorted(list(cls.rois.keys()))
+
     @classmethod
     def get_color(cls):
         color = ConfigManager.get('roicolor')

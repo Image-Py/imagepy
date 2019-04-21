@@ -1,1 +1,1 @@
-catlog = ['select_plg', 'Relation', '-', 'setting_plg']
+catlog = ['select_plg', 'roiwindow_wgt']

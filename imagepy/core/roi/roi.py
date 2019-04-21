@@ -30,6 +30,12 @@ class ROI:
     def union(self, roi):
         return shape2roi(roi2shape(roi).union(roi2shape(self)))
         
+    def intersect(self, roi):
+        return shape2roi(roi2shape(roi).intersection(roi2shape(self)))
+
+    def symmetric_diff(self, roi):
+        return shape2roi(roi2shape(roi).symmetric_difference(roi2shape(self)))
+
     def diff(self, roi):
         return shape2roi(roi2shape(self).difference(roi2shape(roi)))
 
