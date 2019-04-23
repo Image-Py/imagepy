@@ -4,6 +4,8 @@ Created on Sat Nov 19 11:26:12 2016
 @author: yxl
 """
 from imagepy.core.engine import Simple
+from imagepy import IPy
+
 class SetSlice(Simple):
     title = 'Set Slice'
     note = ['all']
@@ -53,4 +55,19 @@ class Add(Simple):
     def run(self, ips, imgs, para = None):
         ips.imgs.insert(ips.cur, ips.img*0)
             
-plgs = [SetSlice, Next, Pre, Add, Delete]
+class Sub(Simple):
+    title = 'Sub Stack'
+    modal = False
+    note = ['all']
+
+    para = {'start':0, 'end':10}
+    view = [(int, 'start', (0,1e8), 0, 'start', 'slice'),
+            (int, 'end', (0,1e8), 0, 'end', 'slice')]
+
+    def run(self, ips, imgs, para = None):
+        (sc, sr), sz = ips.get_rect(), slice(para['start'], para['end'])
+        if ips.is3d: imgs = imgs[sz, sc, sr].copy()
+        else: imgs = [i[sc,sr].copy() for i in imgs[sz]]
+        IPy.show_img(imgs, ips.title+'-substack')
+
+plgs = [SetSlice, Next, Pre, Add, Delete, '-', Sub]

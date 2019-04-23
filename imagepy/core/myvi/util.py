@@ -51,9 +51,6 @@ def build_surf2d(img, ds=1, sigma=0, k=0.2):
 	cy[:,1], cy[:,2] = 1, dy.ravel()
 	ns = np.cross(cx, cy)
 	ns = (ns.T/np.linalg.norm(ns, axis=1)).astype(np.float32).T
-	
-	#ns = count_ns(vts, fs)
-	#print(time()-start)
 	return vts, fs, ns, cs
 
 def build_surf3d(imgs, ds, level, step=1, c=(1,0,0)):
@@ -191,6 +188,33 @@ def build_cube(p1, p2, color=(1,1,1)):
 	ys = (y1,y1,y1,y1,y1,y2,y2,y1,y2,y2,y2,y2,y2,y1,y1,y2)
 	zs = (z1,z1,z2,z2,z1,z1,z2,z2,z2,z2,z1,z1,z1,z1,z2,z2)
 	return build_line(xs, ys, zs, color)
+
+def build_img_cube(imgs, ds=1):
+	imgs = imgs[::ds,::ds,::ds]
+	(h, r, c), total = imgs.shape[:3], 0
+	print(h, r, c)
+	vtss, fss, nss, css = [], [], [], []
+	shp = [(h,r,c,h*r), (h,c,r,h*c), (r,c,h,r*c)]
+	nn = [[(0,0,-1),(0,0,1)], [(0,1,0),(0,-1,0)], [(1,0,0),(-1,0,0)]]
+	for i in (0,1,2):
+		rs, cs, fs12 = build_grididx(*shp[i][:2])
+		idx1, idx2 = [rs*ds, cs*ds], [rs*ds, cs*ds]
+		rcs1, rcs2 = [rs, cs], [rs, cs]
+		rcs1.insert(2-i, 0); rcs2.insert(2-i, -1)
+		vs1, vs2 = imgs[tuple(rcs1)]/255, imgs[tuple(rcs2)]/255
+		idx1.insert(2-i, rs*0); idx2.insert(2-i, cs*0+shp[i][2]*ds-1)
+		vtss.append(np.array(idx1, dtype=np.float32).T)
+		vtss.append(np.array(idx2, dtype=np.float32).T)
+		css.append((np.ones((1, 3))*vs1.reshape((len(vs1),-1))).astype(np.float32))
+		css.append((np.ones((1, 3))*vs2.reshape((len(vs1),-1))).astype(np.float32))
+		nss.append((np.ones((shp[i][3],1))*[nn[i][0]]).astype(np.float32))
+		nss.append((np.ones((shp[i][3],1))*[nn[i][1]]).astype(np.float32))
+		fss.extend([fs12+total, fs12+(total+shp[i][0]*shp[i][1])])
+		total += shp[i][3] * 2
+	return np.vstack(vtss), np.vstack(fss), np.vstack(nss), np.vstack(css)
+	
+def build_img_box(imgs, color=(1,1,1)):
+	return build_cube((-1,-1,-1), imgs.shape[:3], color)
 
 cmp = {'rainbow':[(127, 0, 255), (43, 126, 246), (42, 220, 220), (128, 254, 179), (212, 220, 127), (255, 126, 65), (255, 0, 0)],
 	'jet':[(0, 0, 127), (0, 40, 255), (0, 212, 255), (124, 255, 121), (255, 229, 0), (255, 70, 0), (127, 0, 0)],
