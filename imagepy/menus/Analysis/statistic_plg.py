@@ -73,7 +73,7 @@ class Histogram(Simple):
         msk = ips.get_msk('in')
         if ips.imgtype == 'rgb':
             img = ips.img if msk is None else ips.img[msk]
-            hist = [np.histogram(img[:,:,i], np.arange(257))[0] for i in (0,1,2)]
+            hist = [np.histogram(img.ravel()[i::3], np.arange(257))[0] for i in (0,1,2)]
         else:
             img = ips.lookup() if msk is None else ips.lookup()[msk]
             hist = np.histogram(img, np.arange(257))[0]
