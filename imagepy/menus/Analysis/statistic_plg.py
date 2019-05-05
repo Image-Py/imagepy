@@ -112,7 +112,7 @@ class Frequence(Simple):
         
 class Statistic(Simple):
     title = 'Pixel Statistic'
-    note = ['8-bit', '16-bit', 'int', 'float']
+    note = ['all']
     
     para = {'max':True, 'min':True,'mean':False,'var':False,'std':False,'slice':False}
     view = [(bool, 'max', 'max'),
@@ -126,9 +126,9 @@ class Statistic(Simple):
         rst = []
         if para['max']: rst.append(img.max())
         if para['min']: rst.append(img.min())
-        if para['mean']: rst.append(img.mean().round(2))
-        if para['var']: rst.append(img.var().round(2))
-        if para['std']: rst.append(img.std().round(2))
+        if para['mean']: rst.append(img.mean())
+        if para['var']: rst.append(img.var())
+        if para['std']: rst.append(img.std())
         return rst
         
     def run(self, ips, imgs, para = None):

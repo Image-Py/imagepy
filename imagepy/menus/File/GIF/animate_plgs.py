@@ -27,12 +27,7 @@ class OpenAnimate(fileio.Reader):
 	def run(self, para = None):
 		#imgs = readGif(para['path'])
 
-		imgs = Image.open(para['path'])
-		imgs = ImageSequence.Iterator(imgs)
-		imgs = [np.array(i.convert('RGB')) for i in imgs]
-		for i in range(len(imgs)):
-			if imgs[i].ndim==3 and imgs[i].shape[2]>3:
-				imgs[i] = imgs[i][:,:,:3].copy()
+		imgs = imageio.mimread(para['path'])
 		fp, fn = os.path.split(para['path'])
 		fn, fe = os.path.splitext(fn) 
 		IPy.show_img(imgs, fn)

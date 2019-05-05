@@ -8,7 +8,7 @@ import numpy as np
 from imagepy.core.engine import Filter
 import scipy.ndimage as ndimg
 from skimage.filters import\
-    threshold_adaptive, threshold_otsu, threshold_yen,\
+    threshold_otsu, threshold_yen,\
     threshold_isodata, threshold_li, threshold_local,\
     threshold_minimum, threshold_mean, threshold_niblack,\
     threshold_sauvola, threshold_triangle, apply_hysteresis_threshold
