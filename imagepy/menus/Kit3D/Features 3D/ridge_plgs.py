@@ -15,8 +15,10 @@ class Frangi(Simple):
 			(bool, 'bridges', 'black ridges')]
 
 	def run(self, ips, imgs, para = None):
-		imgs[:] = frangi(imgs, range(para['start'], para['end'], para['step']), 
+		rst = frangi(imgs, range(para['start'], para['end'], para['step']), 
 			alpha=para['alpha'], beta=para['beta'], gamma=para['gamma'], black_ridges=para['bridges'])
+		rst -= rst.min(); rst *= 255/rst.max(); imgs[:] = rst
+		ips.range = (0, 255)
 
 
 class Meijering(Simple):

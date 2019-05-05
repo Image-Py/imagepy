@@ -1,11 +1,11 @@
 import wx
-from imagepy.core.manager import RoiManager
+from imagepy.core.manager import RoiManager, ImageManager
 from imagepy.core.engine import Macros
 from imagepy import IPy
 
 class VirtualListCtrl(wx.ListCtrl):
 	def __init__(self, parent, title, data=[]):
-		wx.ListCtrl.__init__(self, parent, style=wx.LC_REPORT|wx.LC_SINGLE_SEL|wx.LC_VIRTUAL)
+		wx.ListCtrl.__init__(self, parent, style=wx.LC_REPORT|wx.LC_SINGLE_SEL|wx.LC_VIRTUAL|wx.LC_EDIT_LABELS)
 		self.title, self.data = title, data
 		#self.Bind(wx.EVT_LIST_CACHE_HINT, self.DoCacheItems)
 		for col, text in enumerate(title):
@@ -42,7 +42,7 @@ class Plugin(wx.Panel):
 		sizer_manage = wx.BoxSizer( wx.VERTICAL )
 		
 		self.btn_add = wx.Button( self.pan_manage, wx.ID_ANY, u"Add", wx.DefaultPosition, wx.DefaultSize, 0 )
-		sizer_manage.Add( self.btn_add, 0, wx.ALL, 5 )
+		sizer_manage.Add( self.btn_add, 0, wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 		
 		self.btn_load = wx.Button( self.pan_manage, wx.ID_ANY, u"Load", wx.DefaultPosition, wx.DefaultSize, 0 )
 		sizer_manage.Add( self.btn_load, 0, wx.ALL, 5 )
@@ -133,10 +133,16 @@ class Plugin(wx.Panel):
 		
 		sizer.Add( self.note_book, 0, wx.EXPAND |wx.ALL, 5 )
 		
+		sizer_lst = wx.BoxSizer(wx.VERTICAL)
+
 		self.lst_rois = VirtualListCtrl(self, ['name', 'type'], [])
+		self.lst_rois.SetColumnWidth(0, 100)
+		sizer_lst.Add( self.lst_rois, 1, wx.ALL|wx.EXPAND, 5 )
 		self.UpdateData()
 
-		sizer.Add( self.lst_rois, 1, wx.ALL|wx.EXPAND, 5 )
+		self.info = wx.StaticText( self, wx.ID_ANY, 'Information', wx.DefaultPosition, wx.DefaultSize )
+		sizer_lst.Add( self.info, 0, wx.ALL|wx.EXPAND, 5 )
+		sizer.Add(sizer_lst, 1, wx.ALL|wx.EXPAND, 5 )
 		self.SetSizer( sizer )
 		self.Fit()
 		self.Layout()
@@ -144,29 +150,91 @@ class Plugin(wx.Panel):
 		
 	def AddEvent(self):
 		self.btn_add.Bind(wx.EVT_BUTTON, self.on_add)
+		self.btn_add.Bind(wx.EVT_RIGHT_DOWN, self.on_add_nameless)
+		self.btn_add.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('right click to add nameless') )
 		self.btn_load.Bind(wx.EVT_BUTTON, self.on_load)
+		self.btn_load.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('load selected roi to image') )
 		self.btn_update.Bind(wx.EVT_BUTTON, self.on_update)
+		self.btn_update.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('update and refresh the list') )
 		self.btn_remove.Bind(wx.EVT_BUTTON, self.on_remove)
+		self.btn_remove.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('remove selected roi from list') )
 		self.btn_open.Bind(wx.EVT_BUTTON, self.on_open)
+		self.btn_open.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('open a roi file and load it') )
 		self.btn_save.Bind(wx.EVT_BUTTON, self.on_save)
+		self.btn_save.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('save current image roi to file') )
 		self.btn_inflate.Bind(wx.EVT_BUTTON, self.on_inflate)
+		self.btn_inflate.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('inflate the current roi') )
 		self.btn_shrink.Bind(wx.EVT_BUTTON, self.on_shrink)
+		self.btn_shrink.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('shrink the current roi') )
 		self.btn_convex.Bind(wx.EVT_BUTTON, self.on_convex)
+		self.btn_convex.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('make convex hull of current roi') )
 		self.btn_bound.Bind(wx.EVT_BUTTON, self.on_box)
+		self.btn_bound.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('make bounding of current roi') )
 		self.btn_clip.Bind(wx.EVT_BUTTON, self.on_clip)
+		self.btn_clip.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('clip the region out of image') )
 		self.btn_invert.Bind(wx.EVT_BUTTON, self.on_invert)
+		self.btn_invert.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('select invert region on image') )
 		self.btn_intersect.Bind(wx.EVT_BUTTON, self.on_intersect)
+		self.btn_intersect.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('intersect selected roi with current') )
 		self.btn_union.Bind(wx.EVT_BUTTON, self.on_union)
+		self.btn_union.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('union selected roi with current') )
 		self.btn_difference.Bind(wx.EVT_BUTTON, self.on_difference)
+		self.btn_difference.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('clip selected roi with current') )
 		self.btn_symdiff.Bind(wx.EVT_BUTTON, self.on_symdiff)
+		self.btn_symdiff.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('symdiff of selected roi and current') )
 		self.btn_sketch.Bind(wx.EVT_BUTTON, self.on_sketch)
+		self.btn_sketch.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('sketch current roi') )
 		self.btn_clear.Bind(wx.EVT_BUTTON, self.on_clear)
+		self.btn_clear.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('clear pixels in current roi') )
 		self.btn_clearout.Bind(wx.EVT_BUTTON, self.on_clearout)
+		self.btn_clearout.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('clear pixels out current roi') )
 		self.btn_setting.Bind(wx.EVT_BUTTON, self.on_setting)
+		self.btn_setting.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('set roi color and line width') )
 		self.lst_rois.Bind( wx.EVT_LIST_ITEM_ACTIVATED, self.on_load)
+		self.lst_rois.Bind( wx.EVT_ENTER_WINDOW, 
+			lambda e: self.info.SetLabel('double click to load roi') )
+
+		self.lst_rois.Bind(wx.EVT_LIST_BEGIN_LABEL_EDIT, self.on_begin_edit)
+		self.lst_rois.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.on_end_edit)
+
+	def on_begin_edit(self, event):
+		self.begin = event.GetText()
+
+	def on_end_edit(self, event):
+		end = event.GetText()
+		if end == self.begin or end == '': return
+		RoiManager.add(end, RoiManager.get(self.begin))
+		RoiManager.remove(self.begin)
+		self.UpdateData()
 
 	def on_add(self, event):
 		Macros('', ['ROI Add>None']).start(callafter=self.UpdateData)
+
+	def on_add_nameless(self, event):
+		ips = ImageManager.get()
+		if ips is None: return IPy.alert('No image opened!')
+		if ips.roi is None: return IPy.alert('No Roi found!')
+		Macros('', ['ROI Add>{"name":"%s-roi"}'%ips.title]).start(callafter=self.UpdateData)
 
 	def on_load(self, event):
 		idx = self.lst_rois.GetFirstSelected()
