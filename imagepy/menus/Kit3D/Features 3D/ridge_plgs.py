@@ -15,9 +15,21 @@ class Frangi(Simple):
 			(bool, 'bridges', 'black ridges')]
 
 	def run(self, ips, imgs, para = None):
-		rst = frangi(imgs, range(para['start'], para['end'], para['step']), 
+		imgs[:] = frangi(imgs, range(para['start'], para['end'], para['step']), 
 			alpha=para['alpha'], beta=para['beta'], gamma=para['gamma'], black_ridges=para['bridges'])
+class Meijering(Simple):
+	title = 'Meijering 3D'
+	note = ['float', 'auto_msk', 'auto_snap']
+	para = {'start':1, 'end':10, 'step':2, 'bridges':True}
 
+	view = [(int, 'start', (1,10), 0,  'sigma start', ''),
+			(int, 'end', (1,20), 0,  'sigma start', ''),
+			(int, 'step', (1,5), 0,  'sigma step', ''),
+			(bool, 'bridges', 'black ridges')]
+
+	def run(self, ips, imgs, para=None):
+		imgs[:] = meijering(imgs, range(para['start'], para['end'], para['step']),
+			black_ridges=para['bridges'])
 
 class Sato(Simple):
 	title = 'Sato 3D'
