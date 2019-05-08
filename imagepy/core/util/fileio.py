@@ -54,6 +54,12 @@ class Reader(Free):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
         read = ReaderManager.get(fe[1:], None)
+        if read is None:
+            a, b = os.path.splitext(fn)
+            fn, fe = a, b+fe
+            read = ReaderManager.get(fe[1:], None)
+        if read is None: 
+            return IPy.alert('No reader found for %s'%fe[1:])
         view = ViewerManager.get(fe[1:])
 
         #group, read = (True, read[0]) if isinstance(read, tuple) else (False, read)
