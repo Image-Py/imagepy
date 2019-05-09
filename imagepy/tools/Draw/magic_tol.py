@@ -8,7 +8,7 @@ import wx
 from imagepy.core.engine import Tool
 import numpy as np
 from imagepy.core.manager import ColorManager
-from imagepy.core.draw.fill import floodfill
+from skimage.morphology import flood_fill, flood
 from skimage.measure import find_contours
 from imagepy.core.roi.convert import shape2roi, roi2shape
 from shapely.geometry import Polygon, Point
@@ -41,11 +41,16 @@ class Plugin(Tool):
         lim = 5.0/key['canvas'].get_scale() 
         if btn==1 or btn==3:
             if ips.roi!= None:
-                self.curobj = ips.roi.pick(x, y, lim)
+                self.curobj = ips.roi.pick(x, y, ips.cur, lim)
+                ips.roi.info(ips, self.curobj)
             if not self.curobj in (None,True):return
             if ips.roi == None:
-                msk = floodfill(ips.img, x, y, 
-                    self.para['tor'], self.para['con']=='8-connect')
+                connectivity=(self.para['con']=='8-connect')+1
+                img = ips.img.reshape((ips.img.shape+(1,))[:3])
+                msk = np.ones(img.shape[:2], dtype=np.bool)
+                for i in range(img.shape[2]):
+                    msk &= flood(img[:,:,i], (int(y),int(x)), 
+                        connectivity=connectivity, tolerance=self.para['tor'])
                 conts = find_contours(msk, 0, 'high')
                 ips.roi = shape2roi(polygonize(conts, btn==3))
             elif hasattr(ips.roi, 'topolygon'):
@@ -56,8 +61,12 @@ class Plugin(Tool):
                 elif self.curobj: return
                 else: ips.roi=None
 
-                msk = floodfill(ips.img, x, y, 
-                    self.para['tor'], self.para['con']=='8-connect')
+                connectivity=(self.para['con']=='8-connect')+1
+                img = ips.img.reshape((ips.img.shape+(1,))[:3])
+                msk = np.ones(img.shape[:2], dtype=np.bool)
+                for i in range(img.shape[2]):
+                    msk &= flood(img[:,:,i], (int(y),int(x)), 
+                        connectivity=connectivity, tolerance=self.para['tor'])
                 conts = find_contours(msk, 0, 'high')
                 cur = polygonize(conts, btn==3)
                 if oper == '+':
@@ -78,10 +87,10 @@ class Plugin(Tool):
         lim = 5.0/key['canvas'].get_scale()
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
-            if ips.roi.snap(x, y, lim)!=None:
+            if ips.roi.snap(x, y, ips.cur, lim)!=None:
                 self.cursor = wx.CURSOR_HAND
         elif btn==1:
-            if self.curobj: ips.roi.draged(self.odx, self.ody, x, y, self.curobj)
+            if self.curobj: ips.roi.draged(self.odx, self.ody, x, y, ips.cur, self.curobj)
             ips.update()
         self.odx, self.ody = x, y
         

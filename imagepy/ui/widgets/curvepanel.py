@@ -106,7 +106,7 @@ class CurvePanel(wx.Panel):
         
     def set_pts(self, pts):
         self.x1, self.x2 = x1, x2
-        self.update()        
+        self.update()
 
     def draw(self):
         ox, oy = self.offset

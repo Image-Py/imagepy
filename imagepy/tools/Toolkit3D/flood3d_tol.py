@@ -8,26 +8,25 @@ Created on Wed Oct 19 17:35:09 2016
 from imagepy.core.engine import Tool
 import numpy as np
 from imagepy.core.manager import ColorManager
-# from imagepy.core.draw.fill import floodfill
 from skimage.morphology import flood_fill, flood
+from imagepy.core.engine import Filter, Simple
+
+class FloodFill3D(Simple):
+    title = 'Flood Fill 3D'
+    note = ['all', 'stack3d']
+
+    def run(self, ips, imgs, para = None):
+        flood_fill(imgs, para['seed'], para['color'], connectivity=para['conn'], tolerance=para['tor'], inplace=True)
 
 class Plugin(Tool):
-    title = 'Flood Fill'
+    title = 'Flood Fill 3D'
     para = {'tor':10, 'con':'8-connect'}
     view = [(int, 'tor', (0,1000), 0, 'torlorance', 'value'),
             (list, 'con', ['4-connect', '8-connect'], str, 'fill', 'pix')]
         
     def mouse_down(self, ips, x, y, btn, **key):
-        ips.snapshot()
-        img, color = ips.img, ColorManager.get_front()
-        connectivity=(self.para['con']=='8-connect')+1
-        img = ips.img.reshape((ips.img.shape+(1,))[:3])
-        msk = np.ones(img.shape[:2], dtype=np.bool)
-        for i in range(img.shape[2]):
-            msk &= flood(img[:,:,i], (int(y),int(x)), 
-                connectivity=connectivity, tolerance=self.para['tor'])
-        img[msk] = np.mean(color) if img.shape[2]==1 else color
-        ips.update()
+        FloodFill3D().start({'seed':(ips.cur, int(y), int(x)), 'color':np.mean(ColorManager.get_front()),
+            'conn':(self.para['con']=='8-connect')+1, 'tor':self.para['tor']})
     
     def mouse_up(self, ips, x, y, btn, **key):
         pass

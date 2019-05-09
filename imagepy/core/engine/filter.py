@@ -13,7 +13,7 @@ from ...ui.panelconfig import ParaDialog
 from ...core.manager import TextLogManager, ImageManager, \
 WindowsManager, TaskManager, WidgetsManager, DocumentManager
 from time import time
-        
+
 def process_channels(plg, ips, src, des, para):
     if ips.channels>1 and not 'not_channel' in plg.note:
         for i in range(ips.channels):
@@ -39,8 +39,10 @@ def process_one(plg, ips, src, img, para, callafter=None):
         src = src.astype(np.float32)
     rst = process_channels(plg, ips, src, buf if transint or transfloat else img, para)
     if not img is rst and not rst is None:
-        imgrange = {np.uint8:(0,255), np.uint16:(0, 65535)}[img.dtype.type]
-        np.clip(rst, imgrange[0], imgrange[1], out=img)
+        imgrange = {np.uint8:(0,255), np.uint16:(0, 65535)}
+        if img.dtype.type in imgrange:
+            np.clip(rst, imgrange[0], imgrange[1], out=img)
+        else: img[:] = rst
     if 'auto_msk' in plg.note and not ips.get_msk() is None:
         msk = True ^ ips.get_msk()
         img[msk] = src[msk]
