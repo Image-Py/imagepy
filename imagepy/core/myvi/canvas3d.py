@@ -5,7 +5,7 @@ import wx, math
 import wx.glcanvas as glcanvas
 from .manager import *
 import os.path as osp
-from wx.lib.pubsub import pub
+from pubsub import pub
 from .util import *
 
 class Canvas3D(glcanvas.GLCanvas):

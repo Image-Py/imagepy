@@ -29,6 +29,7 @@ def process_channels(plg, ips, src, des, para):
 def process_one(plg, ips, src, img, para, callafter=None):
     TaskManager.add(plg)
     start = time()
+    
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.complex128, np.float32, np.float64)
     if transint: 
@@ -39,10 +40,8 @@ def process_one(plg, ips, src, img, para, callafter=None):
         src = src.astype(np.float32)
     rst = process_channels(plg, ips, src, buf if transint or transfloat else img, para)
     if not img is rst and not rst is None:
-        imgrange = {np.uint8:(0,255), np.uint16:(0, 65535)}
-        if img.dtype.type in imgrange:
-            np.clip(rst, imgrange[0], imgrange[1], out=img)
-        else: img[:] = rst
+        imgrange = {np.uint8:(0,255), np.uint16:(0, 65535)}[img.dtype.type]
+        np.clip(rst, imgrange[0], imgrange[1], out=img)
     if 'auto_msk' in plg.note and not ips.get_msk() is None:
         msk = True ^ ips.get_msk()
         img[msk] = src[msk]
@@ -54,6 +53,7 @@ def process_one(plg, ips, src, img, para, callafter=None):
 def process_stack(plg, ips, src, imgs, para, callafter=None):
     TaskManager.add(plg)
     start = time()
+
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.complex128, np.float32, np.float64)
     if transint: 

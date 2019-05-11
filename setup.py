@@ -26,7 +26,8 @@ if __name__ == '__main__':
         install_requires=[
             'scikit-image',
             'shapely',
-            'wxpython-installer',
+            'pypubsub',
+            'wxpython',
             'read_roi',
             'numpy-stl',
             'pydicom',

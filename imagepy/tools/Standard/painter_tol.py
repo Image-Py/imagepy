@@ -1,36 +1,38 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Oct 19 17:35:09 2016
-
-@author: yxl
-"""
-from imagepy.core.draw import paint
 from imagepy.core.engine import Tool
-import wx
+from skimage.draw import line, circle
+
+def drawline(img, oldp, newp, w, value):
+    if img.ndim == 2: value = sum(value)/3
+    oy, ox = line(*[int(round(i)) for i in oldp+newp])
+    cy, cx = circle(0, 0, w/2+1e-6)
+    ys = (oy.reshape((-1,1))+cy).clip(0, img.shape[0]-1)
+    xs = (ox.reshape((-1,1))+cx).clip(0, img.shape[1]-1)
+    img[ys.ravel(), xs.ravel()] = value
 
 class Plugin(Tool):
     title = 'Pencil'
-    view = [(int, 'width', (0,30), 0,  'width', 'pix')]
-    para = {'width':1}
+    
+    para = {'width':1, 'value':(255, 255, 255)}
+    view = [(int, 'width', (0,30), 0,  'width', 'pix'),
+            ('color', 'value', 'color', '')]
     
     def __init__(self):
-        self.sta = 0
-        self.paint = paint.Paint()
-        self.cursor = wx.CURSOR_CROSS
+        self.status = False
+        self.oldp = (0,0)
         
     def mouse_down(self, ips, x, y, btn, **key):
-        self.sta = 1
-        self.paint.set_curpt(int(x), int(y))
+        self.status = True
+        self.oldp = (y, x)
         ips.snapshot()
     
     def mouse_up(self, ips, x, y, btn, **key):
-        self.paint.lineto(ips.img, int(x), int(y), self.para['width'])
-        ips.update()
-        self.sta = 0
+        self.status = False
     
     def mouse_move(self, ips, x, y, btn, **key):
-        if self.sta==0:return
-        self.paint.lineto(ips.img, int(x), int(y), self.para['width'])
+        if not self.status:return
+        w, value = self.para['width'], self.para['value']
+        drawline(ips.img, self.oldp, (y, x), w, value)
+        self.oldp = (y, x)
         ips.update()
         
     def mouse_wheel(self, ips, x, y, d, **key):pass

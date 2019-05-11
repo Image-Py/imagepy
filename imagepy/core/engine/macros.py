@@ -6,7 +6,7 @@ Created on Thu Dec 29 01:48:23 2016
 import wx
 from ... import IPy
 from ...core.manager import PluginsManager 
-from wx.lib.pubsub import pub
+from pubsub import pub
 from imagepy.core.manager import ReaderManager, ViewerManager
 from imagepy import IPy
 

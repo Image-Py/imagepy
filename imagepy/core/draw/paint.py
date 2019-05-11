@@ -48,7 +48,7 @@ class Paint:
         n = max(abs(dx), abs(dy)) + 1
         xs = np.linspace(x1, x2, n).round().astype(np.int16)
         ys = np.linspace(y1, y2, n).round().astype(np.int16)
-        for x,y in zip(xs, ys):
+        for x, y in zip(xs, ys):
             self.draw_point(img, x, y, w, color)
 
     def lineto(self, img, x, y, w=None, color=None):

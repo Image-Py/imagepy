@@ -76,11 +76,6 @@ class RectangleRoi(ROI):
         pg.body.append([self.body, []])
         return pg
         
-    '''
-    def affine(self, m, o):
-        return self.topolygon().affine(m,o)
-    '''
-        
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen(RoiManager.get_color(), width=RoiManager.get_lw(), style=wx.SOLID))
         if(len(self.body)>1):

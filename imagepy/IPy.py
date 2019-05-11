@@ -6,7 +6,7 @@ Created on Sat Oct 15 10:03:00 2016
 """
 
 import wx, os.path as osp
-from wx.lib.pubsub import pub
+from pubsub import pub
 
 root_dir = osp.abspath(osp.dirname(__file__))
 
