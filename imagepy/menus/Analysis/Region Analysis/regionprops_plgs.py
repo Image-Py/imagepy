@@ -15,7 +15,7 @@ import pandas as pd
 # center, area, l, extent, cov
 class RegionCounter(Simple):
     title = 'Geometry Analysis'
-    note = ['8-bit', '16-bit']
+    note = ['8-bit', '16-bit', 'int']
     para = {'con':'8-connect', 'center':True, 'area':True, 'l':True, 'extent':False, 'cov':False, 'slice':False,
             'ed':False, 'holes':False, 'ca':False, 'fa':False, 'solid':False}
     view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
@@ -98,7 +98,7 @@ class RegionCounter(Simple):
 # center, area, l, extent, cov
 class RegionFilter(Filter):
     title = 'Geometry Filter'
-    note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap','preview']
+    note = ['8-bit', '16-bit', 'int', 'auto_msk', 'auto_snap','preview']
     para = {'con':'4-connect', 'inv':False, 'area':0, 'l':0, 'holes':0, 'solid':0, 'e':0, 'front':255, 'back':100}
     view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             (bool, 'inv', 'invert'),

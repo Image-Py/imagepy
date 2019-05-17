@@ -42,14 +42,15 @@ class Mark:
 
 class RegionStatistic(Simple):
     title = 'Intensity Analysis'
-    note = ['8-bit', '16-bit']
+    note = ['8-bit', '16-bit', 'int']
     
     para = {'con':'8-connect','inten':None, 'slice':False, 'max':True, 'min':True,'mean':False,
-            'center':True, 'var':False,'std':False,'sum':False, 'extent':False}
+            'center':True, 'var':False,'std':False,'sum':False, 'extent':False, 'labeled':False}
     
     view = [('img', 'inten', 'intensity', ''),
             (list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             (bool, 'slice', 'slice'),
+            (bool, 'labeled', 'has labeled'),
             ('lab', None, '=========  indecate  ========='),
             (bool, 'center', 'center'),
             (bool, 'extent', 'extent'),
@@ -70,7 +71,7 @@ class RegionStatistic(Simple):
             imgs = inten.imgs
             if len(msks)==1:
                 msks *= len(imgs)
-        buf = imgs[0].astype(np.uint16)
+        buf = imgs[0].astype(np.uint32)
         strc = ndimage.generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
         idct = ['Max','Min','Mean','Variance','Standard','Sum']
         key = {'Max':'max','Min':'min','Mean':'mean',
@@ -84,7 +85,9 @@ class RegionStatistic(Simple):
         data, mark = [],{'type':'layers', 'body':{}}
         # data,mark=[],[]
         for i in range(len(imgs)):
-            n = ndimage.label(msks[i], strc, output=buf)
+            if para['labeled']:
+                n, buf[:] = msks[i].max(), msks[i]
+            else: n = ndimage.label(msks[i], strc, output=buf)
             index = range(1, n+1)
             dt = []
             if para['slice']:dt.append([i]*n)
@@ -97,7 +100,8 @@ class RegionStatistic(Simple):
             boxs = [None] * n
             if para['extent']:
                 boxs = ndimage.find_objects(buf)
-                boxs = [( i[1].start+(i[1].stop-i[1].start)/2, i[0].start+(i[0].stop-i[0].start)/2, i[1].stop-i[1].start,i[0].stop-i[0].start) for i in boxs]
+                boxs = [( i[1].start+(i[1].stop-i[1].start)/2, i[0].start+(i[0].stop-i[0].start)/2, 
+                    i[1].stop-i[1].start,i[0].stop-i[0].start) for i in boxs]
                 for j in (0,1,2,3):
                     dt.append([i[j]*k for i in boxs])
             if para['max']:dt.append(ndimage.maximum(imgs[i], buf, index).round(2))
@@ -145,7 +149,7 @@ class RGMark:
 
 class IntensityFilter(Filter):
     title = 'Intensity Filter'
-    note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap', 'not_slice', 'preview']
+    note = ['8-bit', '16-bit', 'int', 'auto_msk', 'auto_snap', 'not_slice', 'preview']
     para = {'con':'4-connect', 'inten':None, 'max':0, 'min':0, 'mean':0, 'std':0, 'sum':0, 'front':255, 'back':0}
     view = [('img', 'inten', 'intensity', ''),
             (list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),

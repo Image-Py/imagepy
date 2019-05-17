@@ -71,6 +71,7 @@ class SLICLab(Simple):
         for i in range(len(imgs)):
             rst.append(segmentation.slic(imgs[i], para['n_segments'], 
                 para['compactness'], para['max_iter'], para['sigma']).astype('int32'))
+            rst[-1] += 1
             self.progress(i, len(imgs))
         IPy.show_img(rst, ips.title+'-sliclab')
 
@@ -100,6 +101,7 @@ class QuickshiftLab(Simple):
         for i in range(len(imgs)):
             rst.append(segmentation.quickshift(imgs[i], para['ratio'], para['kernel_size'],
                 para['max_dist'], para['sigma']).astype('int32'))
+            rst[-1] += 1
             self.progress(i, len(imgs))
         IPy.show_img(rst, ips.title+'-quickshiftlab')
 
@@ -127,6 +129,7 @@ class FelzenszwalbLab(Simple):
         for i in range(len(imgs)):
             rst.append(segmentation.felzenszwalb(imgs[i], para['scale'], 
                 para['sigma'], para['min_size']).astype('int32'))
+            rst[-1] += 1
             self.progress(i, len(imgs))
         IPy.show_img(rst, ips.title+'-felzenszwalblab')
         
