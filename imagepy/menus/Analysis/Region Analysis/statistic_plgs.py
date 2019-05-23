@@ -93,7 +93,7 @@ class RegionStatistic(Simple):
             if para['slice']:dt.append([i]*n)
             dt.append(range(n))
             
-            xy = ndimage.center_of_mass(imgs[i], buf, index)
+            xy = ndimage.center_of_mass(buf, buf, index)
             xy = np.array(xy).round(2).T
             if para['center']:dt.extend([xy[1]*k, xy[0]*k])
 
