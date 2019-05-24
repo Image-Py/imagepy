@@ -27,11 +27,10 @@ class Subtract(Filter):
     title = 'Subtract'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
     para = {'num':0}
-    view = [(float, 'num', (-255,255), 2, '-255', '+100')]
+    view = [(float, 'num', (-255,255), 2, '-255', '+255')]
     
     def run(self, ips, snap, img, para = None):
         np.subtract(snap, para['num'], out=img, casting='unsafe')
-        img[img<0]=0        
         
 class Max(Filter):
     """Max_plg: derived from imagepy.core.engine.Filter """
