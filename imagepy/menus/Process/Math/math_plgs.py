@@ -21,6 +21,17 @@ class Multiply(Filter):
     
     def run(self, ips, snap, img, para = None):
         np.multiply(snap, para['num'], out=img, casting='unsafe')
+
+class Subtract(Filter):
+    """Subtract_plg: derived from imagepy.core.engine.Filter """
+    title = 'Subtract'
+    note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
+    para = {'num':0}
+    view = [(float, 'num', (-255,255), 2, '-100', '+100')]
+    
+    def run(self, ips, snap, img, para = None):
+        np.subtract(snap, para['num'], out=img, casting='unsafe')
+        img[img<0]=0        
         
 class Max(Filter):
     """Max_plg: derived from imagepy.core.engine.Filter """
@@ -43,7 +54,8 @@ class Min(Filter):
     def run(self, ips, snap, img, para = None):
         img[:] = snap
         img[img>para['num']] = para['num']
-        
+         
+
 class Sqrt(Filter):
     """Sqrt_plg: derived from imagepy.core.engine.Filter """
     title = 'Squre Root'
@@ -54,7 +66,7 @@ class Sqrt(Filter):
         
 class Garmma(Filter):
     """Garmma_plg: derived from imagepy.core.engine.Filter """
-    title = 'Garmma'
+    title = 'Gamma'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2float']
     para = {'num':0}
     view = [(float, 'num', (-255,255), 2, '0.1', '10')]
@@ -64,4 +76,4 @@ class Garmma(Filter):
         img[:] = snap
         img[:] = (img/(x2-x1))**para['num']*(x2-x1)
     
-plgs = [Add, Multiply, '-', Max, Min, '-', Sqrt, Garmma]
+plgs = [Add, Multiply, Subtract, '-', Max, Min, '-', Sqrt, Garmma]
