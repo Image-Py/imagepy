@@ -27,7 +27,7 @@ class Subtract(Filter):
     title = 'Subtract'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
     para = {'num':0}
-    view = [(float, 'num', (-255,255), 2, '-100', '+100')]
+    view = [(float, 'num', (-255,255), 2, '-255', '+100')]
     
     def run(self, ips, snap, img, para = None):
         np.subtract(snap, para['num'], out=img, casting='unsafe')
@@ -76,4 +76,4 @@ class Garmma(Filter):
         img[:] = snap
         img[:] = (img/(x2-x1))**para['num']*(x2-x1)
     
-plgs = [Add, Multiply, Subtract, '-', Max, Min, '-', Sqrt, Garmma]
+plgs = [Add, Multiply, Subtract, '-', Max, Min, '-', Sqrt, Gamma]
