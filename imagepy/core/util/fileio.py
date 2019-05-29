@@ -30,7 +30,7 @@ def add_recent(path):
         idx = recent.index(path)
         recent.insert(0, recent.pop(idx))
         rlist.insert(0, rlist.pop(idx))
-    else: 
+    else:
         recent.insert(0, path)
         rlist.insert(0, f(path))
     if len(recent)>=5:
@@ -40,11 +40,18 @@ def add_recent(path):
     ConfigManager.set('recent', recent)
     IPy.curapp.reload_plugins()
 
+def make_wildcard(file_pattern):
+    if isinstance(file_pattern, str):
+        return '%s files (*.%s)|*.%s'%(file_pattern.upper(), file_pattern, file_pattern)
+    else:
+        extensions = ";".join(["*." + x for x in file_pattern[1]])
+        return '%s files (*.%s)|*.%s'%(file_pattern[0].upper(), extensions, extensions)
+
 class Reader(Free):
     para = {'path':''}
 
     def show(self):
-        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
+        filt = '|'.join([make_wildcard(i) for i in self.filt])
         return IPy.getpath('Open..', filt, 'open', self.para)
 
     #process
@@ -58,7 +65,7 @@ class Reader(Free):
             a, b = os.path.splitext(fn)
             fn, fe = a, b+fe
             read = ReaderManager.get(fe[1:], None)
-        if read is None: 
+        if read is None:
             return IPy.alert('No reader found for %s'%fe[1:])
         view = ViewerManager.get(fe[1:])
 
@@ -72,7 +79,7 @@ class Writer(Simple):
     para={'path':root_dir}
 
     def show(self):
-        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
+        filt = '|'.join([make_wildcard(i) for i in self.filt])
         return IPy.getpath('Save..', filt, 'save', self.para)
 
     #process

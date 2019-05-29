@@ -5,7 +5,7 @@ import os
 
 class Save(fileio.Writer):
 	title = 'TIF 3D Save'
-	filt = ['TIF']
+	filt = [('TIF', ('TIF','TIFF', 'tif', 'tiff'))]
 	note = ['all', 'stack3d']
 
 	#process
@@ -14,13 +14,13 @@ class Save(fileio.Writer):
 
 class Open(fileio.Reader):
 	title = 'TIF 3D Open'
-	filt = ['TIF']
+	filt = [('TIF', ('TIF','TIFF', 'tif', 'tiff'))]
 
 	#process
 	def run(self, para = None):
 		imgs = imread(para['path']).transpose(2,0,1)
 		fp, fn = os.path.split(para['path'])
-		fn, fe = os.path.splitext(fn) 
+		fn, fe = os.path.splitext(fn)
 		IPy.show_img(imgs, fn)
 
 plgs = [Open, Save]
