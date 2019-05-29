@@ -22,6 +22,11 @@ if __name__ == '__main__':
         author_email='yxdragon@imagepy.org',
         license='BSD 3-clause',
         packages=setuptools.find_packages(),
+        entry_points={
+        'console_scripts': [
+            'imagepy = imagepy:show',
+        ],
+    },
         package_data=get_data_files(),
         install_requires=[
             'scikit-image',
