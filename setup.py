@@ -14,7 +14,7 @@ def get_data_files():
 
 if __name__ == '__main__':
     setup(name='imagepy',
-        version='0.20',
+        version='0.22',
         url='https://github.com/Image-Py/imagepy',
         description='interactive python image-processing plugin framework',
         long_description=descr,

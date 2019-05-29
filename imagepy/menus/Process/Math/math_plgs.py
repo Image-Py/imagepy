@@ -11,16 +11,6 @@ class Add(Filter):
     
     def run(self, ips, snap, img, para = None):
         np.add(snap, para['num'], out=img, casting='unsafe')
-        
-class Multiply(Filter):
-    """Multiply_plg: derived from imagepy.core.engine.Filter """
-    title = 'Multiply'
-    note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
-    para = {'num':0}
-    view = [(float, 'num', (-255,255), 2, '-100', '+100')]
-    
-    def run(self, ips, snap, img, para = None):
-        np.multiply(snap, para['num'], out=img, casting='unsafe')
 
 class Subtract(Filter):
     """Subtract_plg: derived from imagepy.core.engine.Filter """
@@ -31,6 +21,16 @@ class Subtract(Filter):
     
     def run(self, ips, snap, img, para = None):
         np.subtract(snap, para['num'], out=img, casting='unsafe')
+
+class Multiply(Filter):
+    """Multiply_plg: derived from imagepy.core.engine.Filter """
+    title = 'Multiply'
+    note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
+    para = {'num':0}
+    view = [(float, 'num', (-255,255), 2, '-100', '+100')]
+    
+    def run(self, ips, snap, img, para = None):
+        np.multiply(snap, para['num'], out=img, casting='unsafe')
         
 class Max(Filter):
     """Max_plg: derived from imagepy.core.engine.Filter """
@@ -75,4 +75,4 @@ class Gamma(Filter):
         img[:] = snap
         img[:] = (img/(x2-x1))**para['num']*(x2-x1)
     
-plgs = [Add, Multiply, Subtract, '-', Max, Min, '-', Sqrt, Gamma]
+plgs = [Add, Subtract, Multiply, '-', Max, Min, '-', Sqrt, Gamma]
