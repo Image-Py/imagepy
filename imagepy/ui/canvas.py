@@ -10,7 +10,7 @@ from ..core.manager import ToolsManager
 from scipy.ndimage import affine_transform
 from imagepy import IPy
 from time import time
-from numba import jit
+#from numba import jit
 
 #import sys
 #get_npbuffer = np.getbuffer if sys.version[0]=="2" else memoryview
@@ -39,7 +39,7 @@ def lay(r1, r2):
 
 def trans(r1, r2):
     return [r2[0]-r1[0], r2[1]-r1[1], r2[2], r2[3]]
-
+'''
 @jit
 def my_transform(img, m, offset=(0,0), output=None, k=0.5, clip=False):
     kr=m[0]; kc=m[1]; ofr=offset[0]; ofc=offset[1];
@@ -49,7 +49,7 @@ def my_transform(img, m, offset=(0,0), output=None, k=0.5, clip=False):
             cc = int(c*kc+ofc)
             if output[r,c]==0 or not clip:
                 output[r,c] = output[r,c]*(1-k)+img[rr,cc]*k
-
+'''
 class Canvas (wx.Panel):
     scales = [0.03125, 0.0625, 0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 8, 10]
     def __init__(self, parent ):
@@ -179,19 +179,32 @@ class Canvas (wx.Panel):
     def merge(self, img, back, M, O, mode, shape, win, lookup):
         if img.ndim == 2:
             rstarr = np.zeros(shape, dtype=img.dtype)
-            my_transform(img, M, offset=O, output=rstarr, k=1, clip=False)
+            #my_transform(img, M, offset=O, output=rstarr, k=1, clip=False)
+            affine_transform(img, M, offset=O, output_shape=shape,
+                    output = rstarr, order=0, prefilter=False)
             if rstarr.dtype == np.complex128: rstarr = np.abs(rstarr)
             rstarr = lookup(rstarr)
+
         if img.ndim == 3:
             rstarr = np.zeros((win[3], win[2], 3), dtype=img.dtype)
             for i in range(3):
-                my_transform(img[:,:,i], M, offset=O, 
-                    output=rstarr[:,:,i], k=1, clip=False)
+                affine_transform(img[:,:,i], M, offset=O, output_shape=shape,
+                    output = rstarr[:,:,i], order=0, prefilter=False)
         
         if not back is None:
-            for i in range(3):
-                my_transform(back[:,:,i] if back.ndim==3 else back, M, offset=O, 
-                    output=rstarr[:,:,i], k=mode[0], clip = mode[1]=='Clip')
+            if back.ndim == 2:
+                rstback = np.zeros(shape, dtype=back.dtype)
+                #my_transform(img, M, offset=O, output=rstarr, k=1, clip=False)
+                affine_transform(back, M, offset=O, output_shape=shape,
+                        output = rstback, order=0, prefilter=False)
+            if back.ndim == 3:
+                rstback = np.zeros((win[3], win[2], 3), dtype=back.dtype)
+                for i in range(3):
+                    affine_transform(back[:,:,i], M, offset=O, output_shape=shape,
+                        output = rstback[:,:,i], order=0, prefilter=False)
+
+            np.multiply(rstarr, 1-mode[0], out=rstarr, casting='unsafe')
+            np.add(rstarr.T, rstback.T*0.5, out=rstarr.T, casting='unsafe')
         
         return rstarr
 
