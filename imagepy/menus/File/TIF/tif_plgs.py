@@ -7,10 +7,10 @@ WriterManager.add('tif', imsave)
 
 class OpenFile(fileio.Reader):
 	title = 'TIF Open'
-	filt = ['TIF']
+	filt = [('TIF', ('TIF','TIFF', 'tif', 'tiff'))]
 
 class SaveFile(fileio.Writer):
 	title = 'TIF Save'
-	filt = ['TIF']
+	filt = [('TIF', ('TIF','TIFF', 'tif', 'tiff'))]
 
 plgs = [OpenFile, SaveFile]
