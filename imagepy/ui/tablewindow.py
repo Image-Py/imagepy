@@ -21,7 +21,6 @@ class TableBase(Grid.GridTableBase):
         self.tps = tps
         self._rows = tps.data.shape[0]
         self._cols = tps.data.shape[1]
-        print('haha')
 
     def GetNumberCols(self):
         if self.tps is None: return 0
