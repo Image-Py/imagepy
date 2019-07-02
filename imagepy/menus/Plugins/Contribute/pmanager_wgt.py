@@ -109,7 +109,7 @@ class Plugin( wx.Panel ):
         has = [p for p in [parse(i) for i in has] if not p is None]
         keys = set([i['path'] for i in prjs])
         for i in has:
-            if not i['path'] in keys: prjs.append(has)
+            if not i['path'] in keys: prjs.append(i)
         prjs = sorted([(i['name'], i) for i in prjs])
         self.prjs = [i[1] for i in prjs]
 
