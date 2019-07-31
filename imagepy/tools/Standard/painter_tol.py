@@ -1,4 +1,5 @@
 from imagepy.core.engine import Tool
+from imagepy.core.manager import ColorManager
 from skimage.draw import line, circle
 
 def drawline(img, oldp, newp, w, value):
@@ -12,9 +13,8 @@ def drawline(img, oldp, newp, w, value):
 class Plugin(Tool):
     title = 'Pencil'
     
-    para = {'width':1, 'value':(255, 255, 255)}
-    view = [(int, 'width', (0,30), 0,  'width', 'pix'),
-            ('color', 'value', 'color', '')]
+    para = {'width':1}
+    view = [(int, 'width', (0,30), 0,  'width', 'pix')]
     
     def __init__(self):
         self.status = False
@@ -30,7 +30,8 @@ class Plugin(Tool):
     
     def mouse_move(self, ips, x, y, btn, **key):
         if not self.status:return
-        w, value = self.para['width'], self.para['value']
+        w = self.para['width']
+        value = ColorManager.get_front()
         drawline(ips.img, self.oldp, (y, x), w, value)
         self.oldp = (y, x)
         ips.update()

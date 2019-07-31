@@ -40,8 +40,9 @@ def lay(r1, r2):
 def trans(r1, r2):
     return [r2[0]-r1[0], r2[1]-r1[1], r2[2], r2[3]]
 '''
+from numba import jit
 @jit
-def my_transform(img, m, offset=(0,0), output=None, k=0.5, clip=False):
+def affine_transform(img, m, offset=(0,0), output=None, k=1, clip=False, output_shape=0, order=0, prefilter=0):
     kr=m[0]; kc=m[1]; ofr=offset[0]; ofc=offset[1];
     for r in range(output.shape[0]):
         for c in range(output.shape[1]):
@@ -50,6 +51,7 @@ def my_transform(img, m, offset=(0,0), output=None, k=0.5, clip=False):
             if output[r,c]==0 or not clip:
                 output[r,c] = output[r,c]*(1-k)+img[rr,cc]*k
 '''
+
 class Canvas (wx.Panel):
     scales = [0.03125, 0.0625, 0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 8, 10]
     def __init__(self, parent ):

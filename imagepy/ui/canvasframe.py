@@ -40,7 +40,6 @@ class CanvasPanel(wx.Panel):
 
         self.page = wx.ScrollBar( self, wx.ID_ANY,
                                   wx.DefaultPosition, wx.DefaultSize, wx.SB_HORIZONTAL)
-
         self.page.SetScrollbar(0,0,0,0, refresh=True)
         sizer.Add( self.page, 0, wx.ALL|wx.EXPAND, 0 )
         self.page.Hide()
