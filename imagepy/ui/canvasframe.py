@@ -38,17 +38,24 @@ class CanvasPanel(wx.Panel):
         self.handle = None
         sizer.Add( self.canvas, 1, wx.EXPAND |wx.ALL, 0 )
 
+        self.chan = wx.Slider( self, wx.ID_ANY, 50, 0, 100, wx.DefaultPosition, wx.DefaultSize, 
+            wx.SL_HORIZONTAL| wx.SL_SELRANGE| wx.SL_TOP)
+        sizer.Add( self.chan, 0, wx.ALL|wx.EXPAND, 0 )
+        self.chan.SetMaxSize( wx.Size( -1,18 ) )
+        self.chan.Hide()
+
         self.page = wx.ScrollBar( self, wx.ID_ANY,
                                   wx.DefaultPosition, wx.DefaultSize, wx.SB_HORIZONTAL)
         self.page.SetScrollbar(0,0,0,0, refresh=True)
         sizer.Add( self.page, 0, wx.ALL|wx.EXPAND, 0 )
         self.page.Hide()
+
         self.SetSizer(sizer)
         self.Layout()
-        self.Bind(wx.EVT_SCROLL, self.on_scroll)
-
+        self.page.Bind(wx.EVT_SCROLL, self.on_scroll)
+        self.chan.Bind(wx.EVT_SCROLL, self.on_scroll)
         # panel.Bind(wx.EVT_CHAR, self.OnKeyDown)
-        self.opage = 0
+        self.opage = self.ochan = 0
         #self.Fit()
 
         #self.SetAcceleratorTable(IPy.curapp.shortcut)
@@ -82,7 +89,15 @@ class CanvasPanel(wx.Panel):
                 self.page.Show()
                 resize = True
             self.page.SetScrollbar(0, 0, ips.get_nslices()-1, 0, refresh=True)
-
+        if ips.get_nchannels() != self.ochan:
+            self.ochan = ips.get_nchannels()
+            if ips.get_nchannels()==1 and self.chan.Shown:
+                self.chan.Hide()
+                resize = True
+            if ips.get_nchannels()>1 and not self.chan.Shown:
+                self.chan.Show()
+                resize = True
+            self.chan.SetMax(ips.get_nchannels()-1)
         if resize: 
             if IPy.uimode()!='ipy': self.Fit()
             else: 
@@ -100,6 +115,7 @@ class CanvasPanel(wx.Panel):
 
     def on_scroll(self, event):
         self.ips.cur = self.page.GetThumbPosition()
+        self.ips.chan = self.chan.GetValue()
         self.ips.update()
         self.canvas.on_idle(None)
 

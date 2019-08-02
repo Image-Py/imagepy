@@ -188,10 +188,18 @@ class Canvas (wx.Panel):
             rstarr = lookup(rstarr)
 
         if img.ndim == 3:
+            rstarr = np.zeros(shape[:2], dtype=img.dtype)
+            affine_transform(img[:,:,self.ips.chan], M, offset=O, output_shape=shape,
+                    output = rstarr, order=0, prefilter=False)
+            if rstarr.dtype == np.complex128: rstarr = np.abs(rstarr)
+            rstarr = lookup(rstarr)
+
+            '''
             rstarr = np.zeros((win[3], win[2], 3), dtype=img.dtype)
             for i in range(3):
                 affine_transform(img[:,:,i], M, offset=O, output_shape=shape,
                     output = rstarr[:,:,i], order=0, prefilter=False)
+            '''
         
         if not back is None:
             if back.ndim == 2:

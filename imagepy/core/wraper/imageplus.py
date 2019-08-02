@@ -15,7 +15,7 @@ class ImagePlus:
     def __init__(self, imgs, title=None, is3d=False):
         self.set_title(title)
         self.snap = None
-        self.cur = 0
+        self.cur = self.chan = 0
         self.dirty = False
         self.scrchanged = False
         self.roi = None

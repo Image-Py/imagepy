@@ -165,7 +165,7 @@ class TableManager:
         
     @classmethod
     def name(cls, name):
-        if name==None:name='Table'
+        if name is None: name='Table'
         titles = [i().title for i in cls.tabs]
         if not name in titles :
             return name
