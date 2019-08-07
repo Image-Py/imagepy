@@ -38,7 +38,7 @@ class CanvasPanel(wx.Panel):
         self.handle = None
         sizer.Add( self.canvas, 1, wx.EXPAND |wx.ALL, 0 )
 
-        self.chan = wx.Slider( self, wx.ID_ANY, 50, 0, 100, wx.DefaultPosition, wx.DefaultSize, 
+        self.chan = wx.Slider( self, wx.ID_ANY, 0, 0, 100, wx.DefaultPosition, wx.DefaultSize, 
             wx.SL_HORIZONTAL| wx.SL_SELRANGE| wx.SL_TOP)
         sizer.Add( self.chan, 0, wx.ALL|wx.EXPAND, 0 )
         self.chan.SetMaxSize( wx.Size( -1,18 ) )
@@ -73,9 +73,9 @@ class CanvasPanel(wx.Panel):
 
     def set_info(self, ips, resize=False):
         stk = 'stack' if ips.is3d else 'list'
-        label='{}/{}; {}  {}x{} pixels; {}; {} M'.format(ips.cur+1, ips.get_nslices(),
-            stk if ips.get_nslices()>1 else '',ips.size[0], ips.size[1],
-            ips.imgtype, round(ips.get_nbytes()/1024.0/1024.0, 2))
+        label='S:{}/{};  C:{}/{}; {}  {}x{} pixels; {}; {} M'.format(ips.cur+1, ips.get_nslices(),
+            ips.chan+1, ips.get_nchannels(), stk if ips.get_nslices()>1 else '',
+            ips.size[0], ips.size[1], ips.imgtype, round(ips.get_nbytes()/1024.0/1024.0, 2))
         if label != self.txt_info.GetLabel(): self.txt_info.SetLabel(label)
         
         
@@ -91,10 +91,11 @@ class CanvasPanel(wx.Panel):
             self.page.SetScrollbar(0, 0, ips.get_nslices()-1, 0, refresh=True)
         if ips.get_nchannels() != self.ochan:
             self.ochan = ips.get_nchannels()
-            if ips.get_nchannels()==1 and self.chan.Shown:
+            isrgb = ips.get_imgtype()=='rgb'
+            if (ips.get_nchannels()==1 or isrgb) and self.chan.Shown:
                 self.chan.Hide()
                 resize = True
-            if ips.get_nchannels()>1 and not self.chan.Shown:
+            if ips.get_nchannels()>1 and not isrgb and not self.chan.Shown:
                 self.chan.Show()
                 resize = True
             self.chan.SetMax(ips.get_nchannels()-1)
