@@ -187,7 +187,10 @@ def show_table(data, title):
 def showlog(title, cont):
     from .ui.logwindow import TextLog
     TextLog.write(cont, title)
+
 pub.subscribe(showlog, 'showlog')
+def show_log(title, cont):
+    wx.CallAfter(pub.sendMessage, 'showlog', cont=cont, title=title)
 
 def write(cont, title='ImagePy'):
     if curapp is None:

@@ -37,10 +37,6 @@ class TablePanel ( wx.Panel ):
         self.lab_info.SetLabel('%sx%s; %.2fK'%(tps.data.shape+(tps.get_nbytes()/1024.0,)))
         if not self.handle is None: self.handle(tps)
 
-    def on_test(self, event):
-        print(self.grid.GetSelectedCols(), self.grid.GetSelectedRows())
-        print(self.grid.GetSelectionBlockTopLeft(), self.grid.GetSelectionBlockBottomRight())
-
 class TableFrame(wx.Frame):
 	"""CanvasFrame: derived from the wx.core.Frame"""
 	## TODO: Main frame ???

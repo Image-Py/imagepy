@@ -5,7 +5,7 @@ from ..core.manager import ImageManager, WindowsManager, TableManager
 from .widgets import *
 import weakref
 
-widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl,
+widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl, 'path':PathCtrl,
             float:NumCtrl, 'lab':Label, bool:Check, str:TextCtrl, 
             list:Choice, 'img':ImageList, 'tab':TableList, 'color':ColorCtrl, 
             'any':AnyType, 'chos':Choices, 'fields':TableFields,

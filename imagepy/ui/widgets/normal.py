@@ -131,6 +131,46 @@ class ColorCtrl(wx.Panel):
     def GetValue(self):
         return self.ctrl.GetBackgroundColour().Get(False)
 
+class PathCtrl(wx.Panel):
+    """ColorCtrl: deverid fron wx.coreTextCtrl"""
+    def __init__(self, parent, title, filt):
+        wx.Panel.__init__(self, parent)
+        sizer = wx.BoxSizer( wx.HORIZONTAL )
+        self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
+                                   wx.DefaultPosition, wx.DefaultSize)
+        self.filt = filt
+        lab_title.Wrap( -1 )
+        sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.ctrl = wx.TextCtrl(self, wx.TE_RIGHT)
+        sizer.Add( self.ctrl, 2, wx.ALL, 5 )
+        self.SetSizer(sizer)
+        
+        self.ctrl.Bind(wx.EVT_KEY_UP, self.ontext)
+        self.ctrl.Bind( wx.EVT_LEFT_DOWN, self.onselect)
+        
+    def Bind(self, z, f): self.f = f
+        
+    def ontext(self, event): print('ColorCtrl')
+        
+    def onselect(self, event):
+        from ...core.manager import ConfigManager
+        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
+        dpath = ConfigManager.get('defaultpath') or '.'
+        #if dpath==None: dpath = root_dir # './'
+        dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
+        dialog = wx.FileDialog(self, 'Path Select', dpath, '', filt, wx.FD_OPEN)
+        rst = dialog.ShowModal()
+        if rst == wx.ID_OK:
+            path = dialog.GetPath()
+            self.ctrl.SetValue(path)
+        dialog.Destroy()
+        
+    def SetValue(self, value):
+        self.ctrl.SetValue(value)
+        
+    def GetValue(self):
+        return self.ctrl.GetValue()
+
 class Choice(wx.Panel):
     """ColorCtrl: deverid fron wx.coreTextCtrl"""
     def __init__(self, parent, choices, tp, title, unit):

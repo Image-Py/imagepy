@@ -26,7 +26,7 @@ class TablePlus():
         self.rowmsk, self.colmsk = [],[]
         self.count_range()
 
-    def snapshot(self, mskr=None, mskc=None, num=False):
+    def get_subtab(self, mskr=True, mskc=True, num=False):
         if mskr==None:rmsk = slice(None)
         rowmsk = self.rowmsk if len(self.rowmsk)>0 else self.data.index
         if mskr==True:rmsk = rowmsk
@@ -37,17 +37,21 @@ class TablePlus():
         if mskc==True:cmsk = colmsk
         if mskc==False:cmsk = self.data.columns.difference(colmsk)
 
-        self.snap = self.data.loc[rmsk, cmsk].copy()
-        if num: self.snap = self.snap.select_dtypes(
-            include=[np.number])
+        subtab = self.data.loc[rmsk, cmsk]
+        if num: subtab = subtab.select_dtypes(include=[np.number])
+        return subtab
+
+    def snapshot(self, mskr=None, mskc=None, num=False):
+        self.snap = self.get_subtab(mskr, mskc, num).copy()
 
     def select(self, rs=[], cs=[], byidx=False):
         if byidx: rs, cs = self.data.index[rs], self.data.columns[cs]
         self.rowmsk = pd.Index(rs).astype(self.data.index.dtype)
         self.colmsk = pd.Index(cs).astype(self.data.columns.dtype)
-        print('tps select', rs, cs, self.rowmsk, self.colmsk)
+        # print('tps select', rs, cs, self.rowmsk, self.colmsk)
 
     def get_titles(self):return self.data.columns
+
     def get_index(self):return self.data.index
 
     def get_props(self):
