@@ -11,7 +11,6 @@ from imagepy.ui.panelconfig import ParaDialog
 from imagepy.ui.widgets import HistCanvas
 
 class StairsDialog(ParaDialog): 
-        
     def para_check(self, para, key):
         self.ctrl_dic['red'].set_lim(para['t1_red'], para['t2_red'])
         self.ctrl_dic['green'].set_lim(para['t1_green'], para['t2_green'])

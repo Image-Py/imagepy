@@ -99,10 +99,11 @@ class ViewPort(wx.Panel):
             dc.DrawRectangle(0, 0, self.box[0], self.box[1])
             return
         # w, h = self.GetClientSize()
-        l = 1.0*max(self.boxpan[0]-self.boximg[0], 0)/self.boximg[2]
-        r = 1.0*min((self.boxpan[2]-self.boximg[0])/self.boximg[2],1)
-        t = 1.0*max(self.boxpan[1]-self.boximg[1], 0)/self.boximg[3]
-        b = 1.0*min((self.boxpan[3]-self.boximg[1])/self.boximg[3],1)
+        (pa,pb,pc,pd), (ia,ib,ic,id) = self.boxpan, self.boximg
+        l = 1.0*max(pa-ia, 0)/(ic-ia)
+        r = 1.0*min((pc-pa-ia)/(ic-ia),1)
+        t = 1.0*max(pb-ib, 0)/(id-ib)
+        b = 1.0*min((pd-pb-ib)/(id-ib),1)
         # the main draw process 
         
         

@@ -11,7 +11,7 @@ class RotateTool(Tool):
         self.moving = False
         
     def mouse_down(self, ips, x, y, btn, **key):  
-        lim = 5.0/key['canvas'].get_scale() 
+        lim = 5.0/key['canvas'].scale 
         if abs(x-self.para['ox'])<lim and abs(y-self.para['oy'])<lim:
             self.moving = True
         
@@ -20,7 +20,7 @@ class RotateTool(Tool):
         else : self.plg.preview(ips, self.para)
         
     def mouse_move(self, ips, x, y, btn, **key):
-        lim = 5.0/key['canvas'].get_scale()
+        lim = 5.0/key['canvas'].scale
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if abs(x-self.para['ox'])<lim and abs(y-self.para['oy']<lim):

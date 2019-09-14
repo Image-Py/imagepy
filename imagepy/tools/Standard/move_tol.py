@@ -24,7 +24,9 @@ class Plugin(Tool):
         x,y = key['canvas'].to_panel_coor(x,y)
         key['canvas'].move(x-self.ox, y-self.oy)
         self.ox, self.oy = x,y
+        ips.update()
         
     def mouse_wheel(self, ips, x, y, d, **key):
-        if d>0:key['canvas'].zoomout(x,y)
-        if d<0:key['canvas'].zoomin(x,y)
+        if d>0:key['canvas'].zoomout(x, y, 'data')
+        if d<0:key['canvas'].zoomin(x, y, 'data')
+        ips.update()

@@ -210,7 +210,7 @@ def plot(title, gtitle='Graph', labelx='X-Unit', labely='Y-Unit'):
 
 def set_info(i):
     if curapp is None: print('ImagePy Info >>> %s'%i)
-    else: wx.CallAfter(curapp.set_info, i)
+    else: wx.CallAfter(curapp.set_info, str(i))
     # MT callafter(curapp.set_info, i)
 
 def run(cmd):

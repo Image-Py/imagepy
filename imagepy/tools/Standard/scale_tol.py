@@ -16,8 +16,9 @@ class Plugin(Tool):
             self.ox, self.oy = key['canvas'].to_panel_coor(x,y)
             print(self.ox, self.oy)
         #print 'down', self.ox, self.oy
-        if btn==1: key['canvas'].zoomout(x,y)
-        if btn==3: key['canvas'].zoomin(x,y)
+        if btn==1: key['canvas'].zoomout(x, y, 'data')
+        if btn==3: key['canvas'].zoomin(x, y, 'data')
+        ips.update()
     
     def mouse_up(self, ips, x, y, btn, **key):
         pass
@@ -28,8 +29,10 @@ class Plugin(Tool):
             #print 'x,y',x,y
             #print 'dx,dy:', x-self.ox, y-self.oy
             key['canvas'].move(x-self.ox, y-self.oy)
+            ips.update()
         self.ox, self.oy = x,y
         
     def mouse_wheel(self, ips, x, y, d, **key):
-        if d>0:key['canvas'].zoomout(x,y)
-        if d<0:key['canvas'].zoomin(x,y)
+        if d>0:key['canvas'].zoomout(x, y, 'data')
+        if d<0:key['canvas'].zoomin(x, y, 'data')
+        ips.update()

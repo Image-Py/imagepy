@@ -335,7 +335,7 @@ class FloatSlider(wx.Panel):
         self.slider.Bind( wx.EVT_SCROLL, self.on_scroll )
         self.text.Bind( wx.EVT_KEY_UP, self.on_text )
         #if not self.linux:
-        self.spin.Bind( wx.EVT_SPIN, self.on_spin )
+        self.spin.Bind( wx.EVT_SPIN, self.on_spin)
         self.set_para(rang, accury)
 
     def Bind(self, z, f):

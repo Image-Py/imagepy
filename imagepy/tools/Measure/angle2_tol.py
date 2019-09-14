@@ -86,7 +86,7 @@ class Plugin(Tool):
             if isinstance(ips.mark, Angle):
                 ips.mark.report(ips.title)
             return
-        lim = 5.0/key['canvas'].get_scale()
+        lim = 5.0/key['canvas'].scale
         if btn==1:
             # If not painting and exists roi, then try to select roi?
             if not self.doing:
@@ -117,7 +117,7 @@ class Plugin(Tool):
     
     def mouse_move(self, ips, x, y, btn, **key):
         if not isinstance(ips.mark, Angle):return
-        lim = 5.0/key['canvas'].get_scale()      
+        lim = 5.0/key['canvas'].scale      
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if ips.mark.snap(x, y, lim)!=None:

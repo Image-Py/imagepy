@@ -22,7 +22,6 @@ def idx2rc(idx, acc):
     return rst
 
 @jit # fill a node (may be two or more points)
-
 def fill(img, msk, p, nbs, buf):
     buf[0] = p
     back = img[p]
@@ -77,7 +76,7 @@ def filter(img, msk, idx, bur, tor, mode):
     msk = msk.ravel()
 
     arg = np.argsort(img[idx])[::-1 if mode else 1]
-
+    
     for i in arg:
         if msk[idx[i]]!=3:
             idx[i] = 0

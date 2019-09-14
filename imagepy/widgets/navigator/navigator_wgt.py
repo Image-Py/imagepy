@@ -5,7 +5,7 @@ import wx
 
 class Plugin ( wx.Panel ):
 	title = 'Navigator'
-	scales = [0.03125, 0.0625, 0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 8, 10]
+	scales = [0.03125, 0.0625, 0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 8, 10][::-1]
 	def __init__( self, parent ):
 		
 
@@ -64,50 +64,47 @@ class Plugin ( wx.Panel ):
 	def on_apply(self, event):
 		win = IPy.get_window()
 		if win is None: return
-		img = win.canvas.ips.img
+		img = win.ips.img
 		step = max(max(img.shape[:2])//300,1)
-		self.viewport.set_img(win.canvas.ips.lookup(img[::step,::step]), img.shape)
-		self.viewport.set_box(win.canvas.imgbox, win.canvas.box)
+		self.viewport.set_img(win.ips.lookup(img[::step,::step]), img.shape)
+		self.viewport.set_box(win.canvas.conbox, win.canvas.winbox)
 
 	def on_zoom(self, event):
 		k = self.scales[self.slider.GetValue()]
 		self.label.SetLabel('%.2f%%'%(k*100))
 		win = IPy.get_window()
 		if win is None: return
-		a,b,c,d = win.canvas.box
-		x, y = win.canvas.to_data_coor(c/2, d/2)
+		a,b,c,d = win.canvas.winbox
 		win.canvas.scaleidx = self.slider.GetValue()
-		win.canvas.zoom(k, x, y)
-		win.canvas.ips.update()
-		self.viewport.set_box(win.canvas.imgbox, win.canvas.box)
+		win.canvas.zoom(k, (a+c)/2, (b+d)/2)
+		win.ips.update()
+		self.viewport.set_box(win.canvas.conbox, win.canvas.winbox)
 
 	def on_fit(self, event):
 		win = IPy.get_window()
 		if win is None: return
-		win.canvas.self_fit()
-		win.canvas.ips.update()
+		win.canvas.fit()
+		win.ips.update()
 		self.slider.SetValue(win.canvas.scaleidx)
 		k = self.scales[self.slider.GetValue()]
 		self.label.SetLabel('%.2f%%'%(k*100))
-		self.viewport.set_box(win.canvas.imgbox, win.canvas.box)
+		self.viewport.set_box(win.canvas.conbox, win.canvas.winbox)
 
 	def on_one(self, event):
 		win = IPy.get_window()
 		if win is None: return
-		a,b,c,d = win.canvas.box
-		x, y = win.canvas.to_data_coor(c/2, d/2)
+		a,b,c,d = win.canvas.winbox
 		win.canvas.scaleidx = self.scales.index(1)
-		win.canvas.zoom(1, x, y)
-		win.canvas.ips.update()
+		win.canvas.zoom(1, (a+c)/2, (b+d)/2)
+		win.ips.update()
 		self.slider.SetValue(win.canvas.scaleidx)
 		self.label.SetLabel('%.2f%%'%100)
-		self.viewport.set_box(win.canvas.imgbox, win.canvas.box)
+		self.viewport.set_box(win.canvas.conbox, win.canvas.winbox)
 
 	def on_handle(self):
 		win = IPy.get_window()
 		if win is None: return
 		x, y = self.viewport.GetValue()
-		print(x, y)
-		win.canvas.center(x, y)
-		win.canvas.ips.update()
-		self.viewport.set_box(win.canvas.imgbox, win.canvas.box)
+		win.canvas.center(x, y, 'data')
+		win.ips.update()
+		self.viewport.set_box(win.canvas.conbox, win.canvas.winbox)

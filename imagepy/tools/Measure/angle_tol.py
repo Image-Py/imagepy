@@ -90,7 +90,7 @@ class Plugin(Tool):
             if isinstance(ips.mark, Angle):
                 ips.mark.report(ips.title)
             return
-        lim = 5.0/key['canvas'].get_scale() 
+        lim = 5.0/key['canvas'].scale 
         if btn==1:
             # 如果有没有在绘制中，且已经有roi，则试图选取
             if not self.doing:
@@ -121,7 +121,7 @@ class Plugin(Tool):
     
     def mouse_move(self, ips, x, y, btn, **key):
         if not isinstance(ips.mark, Angle):return
-        lim = 5.0/key['canvas'].get_scale()      
+        lim = 5.0/key['canvas'].scale      
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if ips.mark.snap(x, y, lim)!=None:

@@ -25,7 +25,7 @@ class ScaleTool(Tool):
         return False
         
     def mouse_down(self, ips, x, y, btn, **key):  
-        lim = 5.0/key['canvas'].get_scale()  
+        lim = 5.0/key['canvas'].scale  
         self.moving = self.snap(x, y, lim)
         print(self.moving)
         
@@ -33,7 +33,7 @@ class ScaleTool(Tool):
         if self.moving : self.plg.preview(ips, self.para)
         
     def mouse_move(self, ips, x, y, btn, **key):
-        lim = 5.0/key['canvas'].get_scale()
+        lim = 5.0/key['canvas'].scale
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if isinstance(self.snap(x, y, lim), str):

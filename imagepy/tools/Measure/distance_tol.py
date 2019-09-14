@@ -86,7 +86,7 @@ class Plugin(Tool):
                 ips.mark.report(ips.title)
             return
 
-        lim = 5.0/key['canvas'].get_scale()
+        lim = 5.0/key['canvas'].scale
         if btn==1:
             if not self.doing:
                 if isinstance(ips.mark, Distance):
@@ -116,7 +116,7 @@ class Plugin(Tool):
     
     def mouse_move(self, ips, x, y, btn, **key):
         if not isinstance(ips.mark, Distance):return
-        lim = 5.0/key['canvas'].get_scale()      
+        lim = 5.0/key['canvas'].scale      
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if ips.mark.snap(x, y, lim)!=None:

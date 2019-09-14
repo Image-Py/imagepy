@@ -37,7 +37,7 @@ class Plugin(Tool):
         self.odx,self.ody = 0, 0
             
     def mouse_down(self, ips, x, y, btn, **key):
-        lim = 5.0/key['canvas'].get_scale()
+        lim = 5.0/key['canvas'].scale
         ips.mark = self.helper
         if btn==1:
             if not self.doing:
@@ -65,7 +65,7 @@ class Plugin(Tool):
     
     def mouse_move(self, ips, x, y, btn, **key):
         if ips.roi==None:return
-        lim = 5.0/key['canvas'].get_scale()       
+        lim = 5.0/key['canvas'].scale       
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if ips.roi.snap(x, y, ips.cur, lim)!=None:

@@ -7,9 +7,10 @@ Created on Fri Oct 14 01:24:41 2016
 import wx, os
 import wx.lib.agw.aui as aui
 from .canvas import Canvas
-from ..core.manager import ImageManager, WindowsManager
+from ..core.manager import ImageManager, WindowsManager, ToolsManager
 from ..core.manager import ShotcutManager
 from .. import IPy, root_dir
+import numpy as np
 import weakref
 
 class CanvasPanel(wx.Panel):
@@ -32,9 +33,11 @@ class CanvasPanel(wx.Panel):
                                        wx.DefaultPosition, wx.DefaultSize, 0 )
         self.txt_info.Wrap( -1 )
         sizer.Add( self.txt_info, 0, wx.ALL, 0 )
-
-        self.canvas = Canvas(self)
-        self.canvas.set_handler(self.set_info)
+        
+        self.canvas = Canvas(self, autofit = IPy.uimode()=='ij')
+        self.canvas.Bind(wx.EVT_MOUSE_EVENTS, self.on_mouse)
+        self.Bind(wx.EVT_IDLE, self.on_idle)
+        #self.canvas.set_handler(self.set_info)
         self.handle = None
         sizer.Add( self.canvas, 1, wx.EXPAND |wx.ALL, 0 )
 
@@ -56,10 +59,13 @@ class CanvasPanel(wx.Panel):
         self.chan.Bind(wx.EVT_SCROLL, self.on_scroll)
         # panel.Bind(wx.EVT_CHAR, self.OnKeyDown)
         self.opage = self.ochan = 0
+        self.chantype = None
+        self.ips = self.back = None
+        self.olddia = 0
         #self.Fit()
 
         #self.SetAcceleratorTable(IPy.curapp.shortcut)
-
+        
     '''
     def SetTitle(self, title):
         parent = self.GetParent()
@@ -67,19 +73,108 @@ class CanvasPanel(wx.Panel):
         else: parent.SetPageText(parent.GetPageIndex(self), title)
         #print(dir(parent)) #parent.DeletePage(parent.GetPageIndex(self))
     '''
+    
+    def on_mouse(self, me):
+        tool = self.ips.tool
+        if tool == None : tool = ToolsManager.curtool
+        x,y = self.canvas.to_data_coor(me.GetX(), me.GetY())
+        if me.Moving() and not me.LeftIsDown() and not me.RightIsDown() and not me.MiddleIsDown():
+            xx,yy = int(round(x)), int(round(y))
+            k, unit = self.ips.unit
+            if xx>=0 and xx<self.ips.img.shape[1] and yy>=0 and yy<self.ips.img.shape[0]:
+                IPy.set_info('Location:%.1f %.1f  Value:%s'%(x*k, y*k, self.ips.img[yy,xx]))
+        if tool==None:return
+        
+        sta = [me.AltDown(), me.ControlDown(), me.ShiftDown()]
+        if me.ButtonDown():tool.mouse_down(self.ips, x, y, me.GetButton(), 
+            alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self.canvas)
+        if me.ButtonUp():tool.mouse_up(self.ips, x, y, me.GetButton(), 
+            alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self.canvas)
+        if me.Moving():tool.mouse_move(self.ips, x, y, None, 
+            alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self.canvas)
+        btn = [me.LeftIsDown(), me.MiddleIsDown(), me.RightIsDown(),True].index(True)
+        if me.Dragging():tool.mouse_move(self.ips, x, y, 0 if btn==3 else btn+1, 
+            alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self.canvas)
+        wheel = np.sign(me.GetWheelRotation())
+        if wheel!=0:tool.mouse_wheel(self.ips, x, y, wheel, 
+            alt=sta[0], ctrl=sta[1], shift=sta[2], canvas=self.canvas)
+        if hasattr(tool, 'cursor'):
+            self.canvas.SetCursor(wx.Cursor(tool.cursor))
+        else : self.canvas.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+
+    def on_idle(self, event):
+        if not self.IsShown() or self.ips==None:return
+        if self.ips.scrchanged:
+            self.set_ips(self.ips)
+            self.ips.scrchanged = False
+            self.canvas.fit()
+            self.set_info(self.ips)
+            self.set_fit(self.ips)
+            print('scr changed =====')
+        if self.ips.dirty != False:
+            if self.ips.roi is None: self.canvas.marks['roi'] = None
+            else: 
+                draw = lambda dc, f, **key: self.ips.roi.draw(dc, f, cur=self.ips.cur, **key)
+                self.canvas.marks['roi'] = draw
+            if self.ips.mark is None: self.canvas.marks['mark'] = None
+            else:
+                draw = lambda dc, f, **key: self.ips.mark.draw(dc, f, cur=self.ips.cur, **key)
+                self.canvas.marks['mark'] = draw
+            if self.ips.unit == (1, 'pix'): self.canvas.marks['unit'] = None
+            else:
+                self.canvas.marks['unit'] = lambda dc, f, **key:self.draw_ruler(dc)
+
+            self.canvas.set_img(self.ips.imgs[self.ips.cur])
+            self.canvas.set_cn(self.ips.chan)
+            self.canvas.set_rg(self.ips.chan_range)
+
+            if self.back != None:
+                self.canvas.set_back(self.back.imgs[self.ips.cur])
+                self.canvas.set_cn(self.back.chan, True)
+                self.canvas.set_rg(self.back.chan_range, True)
+                self.canvas.set_lut(self.back.lut, True)
+                self.canvas.set_mode(self.ips.chan_mode)
+            else: 
+                self.canvas.set_back(None)
+                self.canvas.set_mode('set')
+
+            self.canvas.lut = self.ips.lut
+            #self.canvas.marks['roi'] = self.ips.roi
+            # self.canvas.marks['mark'] = self.ips.mark.body[ips.cursor]
+            self.set_fit(self.ips)
+            self.canvas.update()
+            self.ips.dirty = False
+        if not self.handle is None: self.handle(self.ips)
+    
+    def draw_ruler(self, dc):
+        dc.SetPen(wx.Pen((255,255,255), width=2, style=wx.SOLID))
+        conbox, winbox = self.canvas.conbox, self.canvas.winbox
+        x1 = max(conbox[0], winbox[0])+5
+        x2 = min(conbox[2], winbox[2])+x1-10
+        pixs = (x2-x1+10)*self.ips.size[1]/10.0/conbox[2]
+        h = min(conbox[1]+conbox[3],winbox[3])-5
+        dc.DrawLineList([(x1,h,x2,h)])
+        dc.DrawLineList([(i,h,i,h-8) for i in np.linspace(x1, x2, 3)])
+        dc.DrawLineList([(i,h,i,h-5) for i in np.linspace(x1, x2, 11)])
+
+        dc.SetTextForeground((255,255,255))
+        k, unit = self.ips.unit
+        text = 'Unit = %.1f %s'%(k*pixs, unit)
+        dw,dh = dc.GetTextExtent(text)
+        dc.DrawText(text, (x2-dw, h-10-dh))
 
     def set_handler(self, handle=None):
         self.handle = handle
 
-    def set_info(self, ips, resize=False):
+    def set_info(self, ips):
         stk = 'stack' if ips.is3d else 'list'
         label='S:{}/{};  C:{}/{}; {}  {}x{} pixels; {}; {} M'.format(ips.cur+1, ips.get_nslices(),
-            ips.chan+1, ips.get_nchannels(), stk if ips.get_nslices()>1 else '',
-            ips.size[0], ips.size[1], ips.imgtype, round(ips.get_nbytes()/1024.0/1024.0, 2))
+            ips.chan+1 if isinstance(ips.chan, int) else tuple(ips.chan), ips.get_nchannels(), 
+            stk if ips.get_nslices()>1 else '', ips.size[0], ips.size[1], ips.imgtype, round(ips.get_nbytes()/1024.0/1024.0, 2))
         if label != self.txt_info.GetLabel(): self.txt_info.SetLabel(label)
-        
-        
 
+    def set_fit(self, ips):
+        resize = False
         if ips.get_nslices() != self.opage:
             self.opage = ips.get_nslices()
             if ips.get_nslices()==1 and self.page.Shown:
@@ -87,38 +182,62 @@ class CanvasPanel(wx.Panel):
                 resize = True
             if ips.get_nslices()>1 and not self.page.Shown:
                 self.page.Show()
+                print('Show ......')
                 resize = True
             self.page.SetScrollbar(0, 0, ips.get_nslices()-1, 0, refresh=True)
-        if ips.get_nchannels() != self.ochan:
+        if ips.get_nchannels() != self.ochan or type(ips.chan) != self.chantype:
             self.ochan = ips.get_nchannels()
-            isrgb = ips.get_imgtype()=='rgb'
-            if (ips.get_nchannels()==1 or isrgb) and self.chan.Shown:
+            self.chantype = type(ips.chan)
+            isrgb = not isinstance(ips.chan, int)
+            if not isinstance(ips.chan, int) and self.chan.Shown:
                 self.chan.Hide()
                 resize = True
-            if ips.get_nchannels()>1 and not isrgb and not self.chan.Shown:
+            if isinstance(ips.chan, int) and ips.get_nchannels()>1 and not self.chan.Shown:
                 self.chan.Show()
                 resize = True
             self.chan.SetMax(ips.get_nchannels()-1)
-        if resize: 
-            if IPy.uimode()!='ipy': self.Fit()
-            else: 
-                #self.SetSizer(self.GetSizer())
-                self.Layout() 
+        a,b,c,d = self.canvas.conbox
+        l = ((c-a)**2+(d-b)**2)**0.5
+        if resize or abs(self.olddia-l)>1: 
+            self.olddia = l
+            if IPy.uimode()!='ipy': 
+                w = self.canvas.scrbox[0]*0.9
+                h = self.canvas.scrbox[1]*0.9
+                if c-a<w and d-b<h:
+                    self.Fit()
+                    self.GetParent().Fit()
+                    self.Layout()
+            else: self.Layout()
+
                 #self.GetSizer().Layout()
-        if not self.handle is None: self.handle(ips, resize)
+
+        #if not self.handle is None: self.handle(ips, resize)
         
         #print('CanvasFrame:set_info')
         #self.page.Show()
 
     def set_ips(self, ips):
         self.ips = ips
-        self.canvas.set_ips(ips)
+        self.canvas.set_img(ips.img)
+        self.canvas.set_cn(ips.chan)
+        self.canvas.set_rg(ips.chan_range)
+        self.canvas.set_lut(ips.lut)
+
+    def set_back(self, ips):
+        self.back = ips
+        if ips is None:
+            return self.canvas.set_back(None)
+        self.canvas.set_back(ips.img)
+        self.canvas.set_cn(ips.chan, True)
+        self.canvas.set_rg(ips.chan_range, True)
+        self.canvas.set_lut(ips.lut, True)
 
     def on_scroll(self, event):
         self.ips.cur = self.page.GetThumbPosition()
-        self.ips.chan = self.chan.GetValue()
+        if isinstance(self.ips.chan, int):
+            self.ips.chan = self.chan.GetValue()
         self.ips.update()
-        self.canvas.on_idle(None)
+        self.on_idle(None)
 
     def close(self):
         parent = self.GetParent()
@@ -130,8 +249,9 @@ class CanvasPanel(wx.Panel):
             self.set_handler()
             self.canvas.set_handler()
             WindowsManager.remove(self)
-
-    def __del__(self):pass
+    
+    def __del__(self):
+        print('canvas panel del')
 
 class CanvasFrame(wx.Frame):
     """CanvasFrame: derived from the wx.core.Frame"""
@@ -153,10 +273,9 @@ class CanvasFrame(wx.Frame):
     def set_ips(self, ips):
         self.canvaspanel.set_ips(ips)
 
-    def set_title(self, ips, resized):
+    def set_title(self, ips):
         title = ips.title + '' if ips.tool==None else ' [%s]'%ips.tool.title
         self.SetTitle(ips.title)
-        if resized: self.Fit()
 
     def on_valid(self, event):
         if event.GetActive():
@@ -164,9 +283,12 @@ class CanvasFrame(wx.Frame):
             WindowsManager.add(self.canvaspanel)
 
     def on_close(self, event):
-        self.canvaspanel.set_handler()
-        self.canvaspanel.canvas.set_handler()
+        #self.canvaspanel.set_handler()
+        #self.canvaspanel.canvas.set_handler()
         WindowsManager.remove(self.canvaspanel)
+        ImageManager.remove(self.canvaspanel.ips)
+        self.canvaspanel.ips = None
+        self.canvaspanel.back = None
         event.Skip()
 
 
@@ -200,8 +322,8 @@ class CanvasNoteBook(wx.lib.agw.aui.AuiNotebook):
 
     def add_page(self, panel, ips):
         self.AddPage(panel, ips.title, True, wx.NullBitmap )
+        panel.set_handler(lambda ips, pan=panel: self.set_title(ips, pan))
         self.Refresh()
-        panel.set_handler(lambda ips, res, pan=panel: self.set_title(ips, pan))
 
     def set_title(self, ips, panel):
         title = ips.title + '' if ips.tool==None else ' [%s]'%ips.tool.title
@@ -212,10 +334,10 @@ class CanvasNoteBook(wx.lib.agw.aui.AuiNotebook):
         WindowsManager.add(event.GetEventObject().GetPage(event.GetSelection()))
 
     def on_close(self, event):
-        print('page close')
-        event.GetEventObject().GetPage(event.GetSelection()).set_handler()
-        event.GetEventObject().GetPage(event.GetSelection()).canvas.set_handler()
         WindowsManager.remove(event.GetEventObject().GetPage(event.GetSelection()))
+        ImageManager.remove(event.GetEventObject().GetPage(event.GetSelection()).ips)
+        event.GetEventObject().GetPage(event.GetSelection()).ips = None
+        event.GetEventObject().GetPage(event.GetSelection()).back = None
 
 class VirturlCanvas:
     instance = []

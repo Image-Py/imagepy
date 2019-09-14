@@ -17,7 +17,7 @@ class WindowsManager:
     def get(cls, title=None):
         if len(cls.wins)==0:return None
         if title==None:return cls.wins[0]
-        titles = [i.canvas.ips.title for i in cls.wins]
+        titles = [i.ips.title for i in cls.wins]
         if not title in titles:return None
         return cls.wins[titles.index(title)]
 
@@ -26,7 +26,7 @@ class WindowsManager:
         for i in cls.wins:
             if i == win: 
                 cls.wins.remove(i)
-                print('remove', i.canvas.ips.title)
+                print('remove', i.ips.title)
 
 class ImageManager:
     imgs = []

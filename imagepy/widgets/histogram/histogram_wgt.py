@@ -101,6 +101,7 @@ class Plugin( wx.Panel ):
 		if self.sli_high.GetValue()<self.sli_low.GetValue():
 			self.sli_high.SetValue(self.sli_low.GetValue())
 		ips.range = (self.sli_low.GetValue(), self.sli_high.GetValue())
+		ips.chan_rg = ips.range
 		lim1 = 1.0 * (self.sli_low.GetValue() - self.range[0])/(self.range[1]-self.range[0])
 		lim2 = 1.0 * (self.sli_high.GetValue() - self.range[0])/(self.range[1]-self.range[0])
 		self.histpan.set_lim(lim1*255, lim2*255)
@@ -112,6 +113,7 @@ class Plugin( wx.Panel ):
 		if self.sli_low.GetValue()>self.sli_high.GetValue():
 			self.sli_low.SetValue(self.sli_high.GetValue())
 		ips.range = (self.sli_low.GetValue(), self.sli_high.GetValue())
+		ips.chan_rg = ips.range
 		lim1 = 1.0 * (self.sli_low.GetValue() - self.range[0])/(self.range[1]-self.range[0])
 		lim2 = 1.0 * (self.sli_high.GetValue() - self.range[0])/(self.range[1]-self.range[0])
 		self.histpan.set_lim(lim1*255, lim2*255)
@@ -153,5 +155,5 @@ class Plugin( wx.Panel ):
 	def on_stack( self, event ):
 		ips = IPy.get_ips()
 		if ips is None: return
-		hists = ips.histogram(stack=True)
+		hists = ips.histogram(slices=True)
 		self.histpan.SetValue(hists)

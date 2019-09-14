@@ -66,7 +66,7 @@ class Plugin(Tool):
             if isinstance(ips.mark, Coordinate):
                 ips.mark.report(ips.title)
             return
-        lim = 5.0/key['canvas'].get_scale() 
+        lim = 5.0/key['canvas'].scale 
         if btn==1:
             if isinstance(ips.mark, Coordinate):
                 self.curobj = ips.mark.pick(x, y, lim)
@@ -85,7 +85,7 @@ class Plugin(Tool):
     
     def mouse_move(self, ips, x, y, btn, **key):
         if not isinstance(ips.mark, Coordinate):return
-        lim = 5.0/key['canvas'].get_scale()        
+        lim = 5.0/key['canvas'].scale        
         if btn==None:
             self.cursor = wx.CURSOR_CROSS
             if ips.mark.snap(x, y, lim)!=None:
