@@ -50,15 +50,16 @@ def buildToolsBar(parent, datas, toolsbar=None):
 
     add_tools(toolsbar, datas[1][0][1], clear=True)
 
-    gifpath = os.path.join(root_dir, "tools/drop.gif")
-    btn = wx.BitmapButton(toolsbar, wx.ID_ANY, make_bitmap(wx.Bitmap(gifpath)),
-                          wx.DefaultPosition, (32, 32), wx.BU_AUTODRAW|wx.RAISED_BORDER)
-    sp = wx.StaticLine( toolsbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
-    box.Add( sp, 0, wx.ALL|wx.EXPAND, 2 )
-    box.AddStretchSpacer(1)
-    box.Add(btn)
-    btn.Bind(wx.EVT_LEFT_DOWN, lambda x, ds=datas, b=btn:menu_drop(parent, toolsbar, ds, b, x))
-    add_tools(toolsbar, datas[1][1][1])
+    if len(datas[1]) > 1:
+        gifpath = os.path.join(root_dir, "tools/drop.gif")
+        btn = wx.BitmapButton(toolsbar, wx.ID_ANY, make_bitmap(wx.Bitmap(gifpath)),
+                              wx.DefaultPosition, (32, 32), wx.BU_AUTODRAW|wx.RAISED_BORDER)
+        sp = wx.StaticLine( toolsbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
+        box.Add( sp, 0, wx.ALL|wx.EXPAND, 2 )
+        box.AddStretchSpacer(1)
+        box.Add(btn)
+        btn.Bind(wx.EVT_LEFT_DOWN, lambda x, ds=datas, b=btn:menu_drop(parent, toolsbar, ds, b, x))
+        add_tools(toolsbar, datas[1][1][1])
 
     toolsbar.GetSizer().Layout()
     #toolsbar.Fit()
