@@ -4,10 +4,11 @@ class MkDown:
 	def __init__(self, title, cont, url=''):
 		self.title = title
 		self.cont = cont
+		self.url = url
 
 	def __call__(self): return self
 
-	def run(self): IPy.show_md(self.title, self.cont)
+	def run(self): IPy.show_md(self.title, self.cont, self.url)
 
 	def start(self, para=None, callafter=None): self.run()
 

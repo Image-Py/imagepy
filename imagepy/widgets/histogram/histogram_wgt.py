@@ -1,5 +1,5 @@
 from ...ui.widgets import HistCanvas, CMapPanel, CMapSelCtrl, FloatSlider
-from  imagepy.core.manager import ColorManager
+from imagepy.core.manager import ColorManager
 from imagepy import IPy
 import numpy as np
 import wx

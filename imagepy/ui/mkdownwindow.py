@@ -173,9 +173,11 @@ sup {
     '''
 
     ret = markdown(mdstr,extensions=exts)
+    '''
     f = open('yn.html', 'w', encoding='utf-8')
     f.write(html % ret);
     f.close()
+    '''
     return html % ret
 
 class HtmlPanel(wx.Panel):
@@ -190,7 +192,9 @@ class HtmlPanel(wx.Panel):
 
         sizer.Add(self.wv, 1, wx.EXPAND)
         self.SetSizer(sizer)
-        self.wv.SetPage(cont, url)
+        
+        if url != '': self.wv.LoadURL(url)
+        else: self.wv.SetPage(cont, url)
 
     def SetValue(self, value):
         self.wv.SetPage(*value)
