@@ -10,6 +10,7 @@ dependencies:
   - pypubsub
   - read-roi
   - scikit-image
+  - scikit-learn
   - shapely
   - wxpython
   - xlrd

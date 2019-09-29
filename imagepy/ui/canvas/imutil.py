@@ -26,7 +26,7 @@ def blend(img, out, msk, mode):
         np.multiply(img, mode, out=img, casting='unsafe')
         out += img
 
-def blend_jit(img, out, msk, mode):
+if not jit is None:
     @jit
     def blend_set(img, out, msk, mode):
         for r in range(img.shape[0]):
@@ -92,7 +92,7 @@ if not jit is None:
 def lookup(img, lut, out, mode='set'):
     blend(lut[img], out, img, mode)
 
-if not lookup is None:
+if not jit is None:
     @jit
     def lookup_set(img, lut, out, mode):
         for r in range(img.shape[0]):

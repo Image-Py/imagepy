@@ -88,8 +88,8 @@ def distance_transform_edt(img, output=np.float32, scale=1):
     nbs = neighbors(dis.shape)
     acc = np.cumprod((1,)+dis.shape[::-1][:-1])[::-1]
     line = dis.ravel()
-    pts = np.zeros(max(line.size//8, 1024**2), dtype=np.int64)
-    roots = np.zeros(max(line.size//8, 1024**2), dtype=np.int64)
+    pts = np.zeros(max(line.size//4, 1024**2), dtype=np.int64)
+    roots = np.zeros(max(line.size//4, 1024**2), dtype=np.int64)
     s = collect(line, nbs, pts, roots)
     for level in range(10000):
         s, c = clear(pts, roots, s, 0)
@@ -98,22 +98,8 @@ def distance_transform_edt(img, output=np.float32, scale=1):
     return dis[(slice(1,-1),)*img.ndim]
     
 if __name__ == '__main__':
-    import matplotlib.pyplot as plt
-    from skimage.io import imread, imsave
-    from scipy.ndimage import distance_transform_edt as scipyedt
-    from time import time
-
-    img = np.ones((2048,2048), dtype=np.uint8)
-    img[1024,1024] = 0
-
-    start = time()
-    dis1 = scipyedt(img)
-    print('scipy', time()-start)
-    #start = time()
-    dis = distance_transform_edt(img, np.float32, 2)
-    #print('my', time()-start)
-    start = time()
-    dis2 = distance_transform_edt(img, np.float32, 2)
-    print('my', time()-start)
-    plt.imshow(dis2, cmap='gray')
-    plt.show()
+    from skimage.io import imread
+    from glob import glob
+    fs = glob('C:/Users/54631/Desktop/二值化加黑框/*.png')
+    arr = np.array([imread(i) for i in fs])
+    dis = distance_transform_edt(arr, np.float32)

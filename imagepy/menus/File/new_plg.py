@@ -16,8 +16,8 @@ class Plugin(Free):
     title = 'New'
     para = {'name':'Undefined','width':300, 'height':300, 'type':'8-bit','slice':1}
     view = [(str, 'name', 'name', ''),
-            (int, 'width',  (1,2048), 0,  'width', 'pix'),
-            (int, 'height', (1,2048), 0,  'height', 'pix'),
+            (int, 'width',  (1,10240), 0,  'width', 'pix'),
+            (int, 'height', (1,10240), 0,  'height', 'pix'),
             (list, 'type', ['8-bit','RGB'], str, 'Type', ''),
             (int, 'slice',  (1,2048), 0,  'slice', '')]
 

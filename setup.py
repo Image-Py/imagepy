@@ -30,6 +30,7 @@ if __name__ == '__main__':
         package_data=get_data_files(),
         install_requires=[
             'scikit-image',
+            'scikit-learn',
             'shapely',
             'pypubsub',
             'wxpython',
