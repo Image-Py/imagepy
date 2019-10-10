@@ -125,12 +125,14 @@ if not jit is None:
             for c in range(img.shape[1]):
                 for i in (0,1,2):
                     out[r,c,i] = lut[img[r,c],i]*mode + out[r,c,i]*(1-mode)
+
     def lookup_jit(img, lut, out, mode):
         if mode == 'set': lookup_set(img, lut, out, mode)
         if mode == 'msk': lookup_msk(img, lut, out, mode)
         if mode == 'max': lookup_max(img, lut, out, mode)
         if mode == 'min': lookup_min(img, lut, out, mode)
         if isinstance(mode, float): lookup_mix(img, lut, out, mode)
+        
     lookup = lookup_jit
 
 # mode: set, min, max, mix, nor

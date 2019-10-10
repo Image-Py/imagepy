@@ -16,39 +16,41 @@ class Plugin( wx.Panel ):
 		self.btn_r = wx.Button( self, wx.ID_ANY, u" ", wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
 		self.btn_r.SetBackgroundColour( wx.Colour( 255, 0, 0 ) )
 		self.btn_r.SetMaxSize( wx.Size( -1,40 ) )
-		sizer_chans.Add( self.btn_r, 0, wx.ALL, 0)
+		sizer_chans.Add( self.btn_r, 0, wx.ALL|wx.CENTER, 0)
 		
 		com_rChoices = [ u"C:0" ]
 		self.com_r = wx.ComboBox( self, wx.ID_ANY, u"Combo!", wx.DefaultPosition, wx.DefaultSize, com_rChoices, wx.CB_READONLY )
 		self.com_r.SetSelection( 0 )
+		self.com_r.SetInitialSize((50,-1))
 		sizer_chans.Add( self.com_r, 1, wx.ALL|wx.EXPAND, 1)
 		
 		self.btn_g = wx.Button( self, wx.ID_ANY, u" ", wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
 		self.btn_g.SetBackgroundColour( wx.Colour( 0, 255, 0 ) )
 		self.btn_g.SetMaxSize( wx.Size( -1,40 ) )
 		
-		sizer_chans.Add( self.btn_g, 0, wx.ALL, 0)
+		sizer_chans.Add( self.btn_g, 0, wx.ALL|wx.CENTER, 0)
 		
 		com_gChoices = [ u"C:1" ]
 		self.com_g = wx.ComboBox( self, wx.ID_ANY, u"Combo!", wx.DefaultPosition, wx.DefaultSize, com_gChoices, wx.CB_READONLY )
 		self.com_g.SetSelection( 0 )
-
+		self.com_g.SetInitialSize((50,-1))
 		sizer_chans.Add( self.com_g, 1, wx.ALL|wx.EXPAND, 1)
 		
 		self.btn_b = wx.Button( self, wx.ID_ANY, u" ", wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
 		self.btn_b.SetBackgroundColour( wx.Colour( 0, 0, 255 ) )
 		self.btn_b.SetMaxSize( wx.Size( -1,40 ) )
-		sizer_chans.Add( self.btn_b, 0, wx.ALL, 0)
+		sizer_chans.Add( self.btn_b, 0, wx.ALL|wx.CENTER, 0)
 		
 		com_bChoices = [ u"C:2" ]
-		self.com_b = wx.ComboBox( self, wx.ID_ANY, u"Combo!", wx.DefaultPosition, wx.DefaultSize, com_bChoices, wx.CB_READONLY )
+		self.com_b = wx.ComboBox( self, wx.ID_ANY, u"Combo!", wx.DefaultPosition, (-1,-1), com_bChoices, wx.CB_READONLY )
 		self.com_b.SetSelection( 0 )
+		self.com_b.SetInitialSize((50,-1))
 		sizer_chans.Add( self.com_b, 1, wx.ALL|wx.EXPAND, 1 )
 
 		self.btn_gray = wx.Button( self, wx.ID_ANY, u" ", wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
 		self.btn_gray.SetBackgroundColour( wx.Colour( 128, 128, 128 ) )
 		self.btn_gray.SetMaxSize( wx.Size( -1,40 ) )
-		sizer_chans.Add( self.btn_gray, 0, wx.ALL, 0)
+		sizer_chans.Add( self.btn_gray, 0, wx.ALL|wx.CENTER, 0)
 
 		bSizer1.Add(sizer_chans, 0, wx.ALL|wx.EXPAND, 2)
 
@@ -111,9 +113,9 @@ class Plugin( wx.Panel ):
 		
 		#self.btn_back = wx.Button( self, wx.ID_ANY, 'Bg', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
 		#self.btn_back.SetMaxSize( wx.Size( -1,40 ) )
-		self.btn_back = wx.StaticText( self, wx.ID_ANY, u" BG ", wx.DefaultPosition, wx.DefaultSize, 0|wx.SIMPLE_BORDER )
-		self.btn_back.Wrap( -1 )
-		sizer_mode.Add( self.btn_back, 0, wx.ALL|wx.EXPAND, 3)
+		#self.btn_back = wx.StaticText( self, wx.ID_ANY, u" BG ", wx.DefaultPosition, wx.DefaultSize, 0|wx.SIMPLE_BORDER )
+		#self.btn_back.Wrap( -1 )
+		#sizer_mode.Add( self.btn_back, 0, wx.ALL|wx.EXPAND, 3)
 
 		com_backChoices = [ u"No Background" ]
 		self.com_back = wx.ComboBox( self, wx.ID_ANY, u"No Background", wx.DefaultPosition, wx.DefaultSize, com_backChoices, wx.CB_READONLY)
@@ -141,7 +143,7 @@ class Plugin( wx.Panel ):
 		self.btn_g.Bind( wx.EVT_BUTTON, lambda e: self.on_rgb(e, 'g') )
 		self.btn_b.Bind( wx.EVT_BUTTON, lambda e: self.on_rgb(e, 'b') )
 		self.btn_gray.Bind( wx.EVT_BUTTON, self.on_gray)
-		self.btn_back.Bind( wx.EVT_LEFT_DOWN, self.on_back)
+		# self.btn_back.Bind( wx.EVT_LEFT_DOWN, self.on_back)
 		self.com_r.Bind( wx.EVT_COMBOBOX, lambda e: self.on_chan(e, 'r'))
 		self.com_g.Bind( wx.EVT_COMBOBOX, lambda e: self.on_chan(e, 'g'))
 		self.com_b.Bind( wx.EVT_COMBOBOX, lambda e: self.on_chan(e, 'b'))
@@ -152,6 +154,7 @@ class Plugin( wx.Panel ):
 		self.btn_90.Bind( wx.EVT_BUTTON, lambda e: self.on_p(e, 0.9))
 		self.btn_95.Bind( wx.EVT_BUTTON, lambda e: self.on_p(e, 0.95))
 		self.btn_99.Bind( wx.EVT_BUTTON, lambda e: self.on_p(e, 0.99))
+		self.com_back.Bind(wx.EVT_COMBOBOX_DROPDOWN, self.on_back)
 		self.active = 0
 	
 	def on_back(self, event):
