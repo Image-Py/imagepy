@@ -77,7 +77,7 @@ class ImagePlus:
         else: self.channels = self.imgs[0].shape[2]
         self.dtype = self.imgs[0].dtype
         if self.dtype == np.uint8: self.range = (0, 255)
-        else: self.range = self.get_updown('all', 'one')
+        else: self.range = self.get_updown('all', 'one', step=512)
         if self.dtype == np.uint8:
             self.chan_range = [(0, 255)] * self.channels
         else: self.chan_range = self.get_updown('all', 'all', step=512)

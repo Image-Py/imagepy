@@ -190,7 +190,7 @@ class PointsValue(Simple):
         data, mark = [], []
         pts = np.array(ips.roi.body).round().astype(np.int)
         for n in range(len(imgs)):
-            xs, ys = (pts.T*k).round(2)
+            xs, ys = (pts.T[:2]*k).round(2)
             vs = imgs[n][ys, xs]
             cont = ([n]*len(vs), xs, ys, vs.round(2))
             if not para['slice']: cont = cont[1:]
