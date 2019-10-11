@@ -21,8 +21,7 @@ class Plugin(Simple):
 		self.root = osp.join(IPy.root_dir, 'data/ilastik')
 		fs = glob(osp.join(self.root, '*.fcl'))
 		fs = [osp.split(i)[1] for i in fs]
-		if path != '': 
-			self.root = ''
+		if '/' in path: 
 			fs = [path]
 		
 		if len(fs) == 0: return IPy.alert('No feature classfier found!')

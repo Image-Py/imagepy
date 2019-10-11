@@ -1,4 +1,4 @@
-import wx, joblib, os, os.path as osp
+import wx, joblib, os, shutil, os.path as osp
 from glob import glob
 from imagepy.core.manager import RoiManager, ImageManager, ReaderManager, ViewerManager
 from imagepy.core.engine import Macros
@@ -21,6 +21,12 @@ class Plugin( wx.Panel ):
 		
 		self.btn_save = wx.Button( self, wx.ID_ANY, u"Save", wx.DefaultPosition, wx.DefaultSize, 0 )
 		sizer_btns.Add( self.btn_save, 0, wx.ALL, 5 )
+
+		self.btn_saveas = wx.Button( self, wx.ID_ANY, u"Save As", wx.DefaultPosition, wx.DefaultSize, 0 )
+		sizer_btns.Add( self.btn_saveas, 0, wx.ALL, 5 )
+
+		self.btn_export = wx.Button( self, wx.ID_ANY, u"Export", wx.DefaultPosition, wx.DefaultSize, 0 )
+		sizer_btns.Add( self.btn_export, 0, wx.ALL, 5 )
 		
 		self.btn_run = wx.Button( self, wx.ID_ANY, u"Run", wx.DefaultPosition, wx.DefaultSize, 0 )
 		sizer_btns.Add( self.btn_run, 0, wx.ALL, 5 )
@@ -54,6 +60,8 @@ class Plugin( wx.Panel ):
 
 	def AddEvent(self):
 		self.btn_save.Bind(wx.EVT_BUTTON, self.on_save)
+		self.btn_saveas.Bind(wx.EVT_BUTTON, self.on_saveas)
+		self.btn_export.Bind(wx.EVT_BUTTON, self.on_export)
 		self.btn_rename.Bind(wx.EVT_BUTTON, self.on_rename)
 		self.btn_remove.Bind(wx.EVT_BUTTON, self.on_remove)
 		self.btn_run.Bind(wx.EVT_BUTTON, self.on_run)
@@ -67,6 +75,25 @@ class Plugin( wx.Panel ):
 		if not osp.exists(osp.join(IPy.root_dir, 'data/ilastik')):
 			os.mkdir(osp.join(IPy.root_dir, 'data/ilastik'))
 		joblib.dump( manager.model_para, osp.join(IPy.root_dir, 'data/ilastik/%s.fcl'%para['name']))
+		self.LoadModel()
+
+	def on_saveas(self, event):
+		if manager.model_para is None:
+		 	return IPy.alert('you must train your model first!')
+		para = {'path':''}
+		filt = '|'.join(['%s files (*.%s)|*.%s'%('FCL', 'fcl', 'fcl')])
+		if not IPy.getpath('Save..', filt, 'save', para): return
+		joblib.dump( manager.model_para, para['path'])
+
+	def on_export(self, event):
+		idx = self.lst_model.GetSelection()
+		if idx==-1: return IPy.alert('no model selected!')
+		para = {'path':''}
+		filt = '|'.join(['%s files (*.%s)|*.%s'%('FCL', 'fcl', 'fcl')])
+		if not IPy.getpath('Save..', filt, 'save', para): return
+		oldname = osp.join(IPy.root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection())
+		print(para['path'])
+		shutil.copyfile(oldname, para['path'])
 		self.LoadModel()
 
 	def on_rename(self, event):
@@ -87,8 +114,7 @@ class Plugin( wx.Panel ):
 	def on_run(self, event):
 		idx = self.lst_model.GetSelection()
 		if idx==-1: return IPy.alert('no model selected!')
-		name = self.lst_model.GetStringSelection()
-		Macros('', ["Feature Predictor>{'predictor':'%s', 'slice':True}"%name]).start()
+		FCL(path=self.lst_model.GetStringSelection()).start()
 		
 	def __del__( self ):
 		pass
