@@ -1,17 +1,65 @@
-from imagepy.core.engine import Filter
+from imagepy.core.engine import Filter, Simple
 from imagepy.core.manager import ImageManager
+from imagepy.core import ImagePlus
 
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier, \
     AdaBoostClassifier, BaggingClassifier, ExtraTreesClassifier,\
     GradientBoostingClassifier, VotingClassifier
 from sklearn.dummy import DummyClassifier
-from .features import get_feature, get_predict
+from imagepy.ipyalg import feature
+from imagepy import IPy
 
 model_para = None
 
-class RandomForest(Filter):
+class Base(Simple):
     """Closing: derived from imagepy.core.engine.Filter """
+    def load(self, ips): 
+        if len(ips.imgs)==1: ips.snapshot()
+        return True
+
+    def preview(self, ips, para): 
+        if len(ips.imgs)==1: 
+            ips.img[:] = ips.snap
+            self.run(ips, ips.imgs, para, True)
+        return True
+
+    def cancel(self, ips): 
+        if len(ips.imgs)==1: ips.swap()
+
+    def classify(self, para): pass
+
+    def run(self, ips, imgs, para = None, preview=False):
+        if len(ips.imgs)==1: ips.img[:] = ips.snap
+        key = {'chans':None, 'grade':para['grade'], 'w':para['w']}
+        key['items'] = [i for i in ['ori', 'blr', 'sob', 'eig'] if para[i]]
+        slir, slic = ips.get_rect()
+        labs = [i[slir, slic] for i in imgs]
+        ori = ImageManager.get(para['img']).imgs
+        if len(imgs)==1: ori = [ImageManager.get(para['img']).img]
+        oris = [i[slir, slic] for i in ori]
+
+        IPy.set_info('extract features...')
+        feat, lab, key = feature.get_feature(oris, labs, key, callback=self.progress)
+
+        IPy.set_info('training data...')
+        self.progress(None, 1)
+        model = self.classify(para)
+        model.fit(feat, lab)
+
+        IPy.set_info('predict data...')
+        if preview:
+            return feature.get_predict(oris, model, key, imgs, callback=self.progress)
+        if len(imgs) == 1: ips.swap()
+        outs = feature.get_predict(oris, model, key, callback=self.progress)
+        nips = ImagePlus(outs, ips.title+'rst')
+        nips.range, nips.lut = ips.range, ips.lut
+        nips.back, nips.chan_mode = ips.back, 0.4
+        IPy.show_ips(nips)
+        global model_para
+        model_para = model, key
+
+class RandomForest(Base):
     title = 'Random Forest Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
     para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
@@ -29,21 +77,13 @@ class RandomForest(Filter):
             (bool, 'sob', 'add sobel feature'),
             (bool, 'eig', 'add eig feature')]
 
-    def run(self, ips, snap, img, para = None):
-        key = {'chans':None, 'grade':para['grade'], 'w':para['w']}
-        key['items'] = [i for i in ['ori', 'blr', 'sob', 'eig'] if para[i]]
-        ori = ImageManager.get(para['img']).img
-        feat, lab, key = get_feature(ori, snap, key)
+    def classify(self, para):
         feat_dic = {'sqrt':'sqrt', 'log2':'log2', 'None':None}
         max_depth = None if para['max_depth']==0 else para['max_depth']
-        model = RandomForestClassifier(n_estimators=para['n_estimators'], 
+        return RandomForestClassifier(n_estimators=para['n_estimators'], 
             max_features = feat_dic[para['max_features']], max_depth=max_depth)
-        model.fit(feat, lab)
-        get_predict(ori, model, key, out=img)
-        global model_para
-        model_para = model, key
 
-class AdaBoost(Filter):
+class AdaBoost(Base):
     """Closing: derived from imagepy.core.engine.Filter """
     title = 'AdaBoost Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
@@ -62,19 +102,11 @@ class AdaBoost(Filter):
             (bool, 'sob', 'add sobel feature'),
             (bool, 'eig', 'add eig feature')]
 
-    def run(self, ips, snap, img, para = None):
-        key = {'chans':None, 'grade':para['grade'], 'w':para['w']}
-        key['items'] = [i for i in ['ori', 'blr', 'sob', 'eig'] if para[i]]
-        ori = ImageManager.get(para['img']).img
-        feat, lab, key = get_feature(ori, snap, key)
-        model = AdaBoostClassifier(n_estimators=para['n_estimators'], 
+    def classify(self, para):
+        return AdaBoostClassifier(n_estimators=para['n_estimators'], 
             learning_rate = para['learning_rate'], algorithm=para['algorithm'])
-        model.fit(feat, lab)
-        get_predict(ori, model, key, out=img)
-        global model_para
-        model_para = model, key
 
-class Bagging(Filter):
+class Bagging(Base):
     """Closing: derived from imagepy.core.engine.Filter """
     title = 'Bagging Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
@@ -92,19 +124,11 @@ class Bagging(Filter):
             (bool, 'sob', 'add sobel feature'),
             (bool, 'eig', 'add eig feature')]
 
-    def run(self, ips, snap, img, para = None):
-        key = {'chans':None, 'grade':para['grade'], 'w':para['w']}
-        key['items'] = [i for i in ['ori', 'blr', 'sob', 'eig'] if para[i]]
-        ori = ImageManager.get(para['img']).img
-        feat, lab, key = get_feature(ori, snap, key)
-        model = BaggingClassifier(n_estimators=para['n_estimators'], 
+    def classify(self, para):
+        return BaggingClassifier(n_estimators=para['n_estimators'], 
             max_features = para['max_features'])
-        model.fit(feat, lab)
-        get_predict(ori, model, key, out=img)
-        global model_para
-        model_para = model, key
 
-class ExtraTrees(Filter):
+class ExtraTrees(Base):
     """Closing: derived from imagepy.core.engine.Filter """
     title = 'ExtraTrees Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
@@ -123,21 +147,13 @@ class ExtraTrees(Filter):
             (bool, 'sob', 'add sobel feature'),
             (bool, 'eig', 'add eig feature')]
 
-    def run(self, ips, snap, img, para = None):
-        key = {'chans':None, 'grade':para['grade'], 'w':para['w']}
-        key['items'] = [i for i in ['ori', 'blr', 'sob', 'eig'] if para[i]]
-        ori = ImageManager.get(para['img']).img
-        feat, lab, key = get_feature(ori, snap, key)
+    def classify(self, para):
         feat_dic = {'sqrt':'sqrt', 'log2':'log2', 'None':None}
         max_depth = None if para['max_depth']==0 else para['max_depth']
-        model = ExtraTreesClassifier(n_estimators=para['n_estimators'], 
+        return ExtraTreesClassifier(n_estimators=para['n_estimators'], 
             max_features = feat_dic[para['max_features']], max_depth=max_depth)
-        model.fit(feat, lab)
-        get_predict(ori, model, key, out=img)
-        global model_para
-        model_para = model, key
 
-class GradientBoosting(Filter):
+class GradientBoosting(Base):
     """Closing: derived from imagepy.core.engine.Filter """
     title = 'Gradient Boosting Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
@@ -159,21 +175,13 @@ class GradientBoosting(Filter):
             (bool, 'sob', 'add sobel feature'),
             (bool, 'eig', 'add eig feature')]
 
-    def run(self, ips, snap, img, para = None):
-        key = {'chans':None, 'grade':para['grade'], 'w':para['w']}
-        key['items'] = [i for i in ['ori', 'blr', 'sob', 'eig'] if para[i]]
-        ori = ImageManager.get(para['img']).img
-        feat, lab, key = get_feature(ori, snap, key)
+    def classify(self, para):
         feat_dic = {'sqrt':'sqrt', 'log2':'log2', 'None':None}
-        model = GradientBoostingClassifier(n_estimators=para['n_estimators'], 
+        return GradientBoostingClassifier(n_estimators=para['n_estimators'], 
             loss=para['loss'], max_features = feat_dic[para['max_features']], 
             max_depth=para['max_depth'], learning_rate=para['learning_rate'])
-        model.fit(feat, lab)
-        get_predict(ori, model, key, out=img)
-        global model_para
-        model_para = model, key
 
-class Voting(Filter):
+class Voting(Base):
     """Closing: derived from imagepy.core.engine.Filter """
     title = 'Voting Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
@@ -195,18 +203,10 @@ class Voting(Filter):
             (bool, 'sob', 'add sobel feature'),
             (bool, 'eig', 'add eig feature')]
 
-    def run(self, ips, snap, img, para = None):
-        key = {'chans':None, 'grade':para['grade'], 'w':para['w']}
-        key['items'] = [i for i in ['ori', 'blr', 'sob', 'eig'] if para[i]]
-        ori = ImageManager.get(para['img']).img
-        feat, lab, key = get_feature(ori, snap, key)
+    def classify(self, para):
         feat_dic = {'sqrt':'sqrt', 'log2':'log2', 'None':None}
-        model = VotingClassifier(n_estimators=para['n_estimators'], 
+        return VotingClassifier(n_estimators=para['n_estimators'], 
             loss=para['loss'], max_features = feat_dic[para['max_features']], 
             max_depth=para['max_depth'], learning_rate=para['learning_rate'])
-        model.fit(feat, lab)
-        get_predict(ori, model, key, out=img)
-        global model_para
-        model_para = model, key
 
 plgs = [RandomForest, ExtraTrees, Bagging, AdaBoost, GradientBoosting]

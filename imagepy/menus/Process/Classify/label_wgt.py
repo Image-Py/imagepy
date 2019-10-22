@@ -1,8 +1,15 @@
 from imagepy.ui.widgets import CMapSelCtrl
-from imagepy.core.manager import ColorManager, ImageManager, WindowsManager
+from imagepy.core.manager import ColorManager, ImageManager, WindowsManager, ToolsManager
+from imagepy.core.engine import Macros
 import numpy as np
-import wx
+import wx, os.path as osp
 
+def make_bitmap(bmp):
+    img = bmp.ConvertToImage()
+    img.Resize((20, 20), (2, 2))
+    return img.ConvertToBitmap()
+
+# apply, paint, fill, width, slic
 class Plugin ( wx.Panel ):
 	title = 'Label Tool'
 	def __init__( self, parent ):
@@ -11,39 +18,57 @@ class Plugin ( wx.Panel ):
 		sizer = wx.BoxSizer( wx.VERTICAL )
 		sizer_color = wx.BoxSizer( wx.HORIZONTAL )
 		self.btns = []
-		for i in range(16):
+		self.btn_make =  wx.Button( self, wx.ID_ANY, 'New Mark', wx.DefaultPosition, wx.DefaultSize, 0 )
+		sizer_color.Add(self.btn_make, 0, wx.ALL, 2)
+		for i in range(11):
 			btn = wx.Button( self, wx.ID_ANY, str(i), wx.DefaultPosition, wx.DefaultSize, 0 )
 			btn.SetMaxSize( wx.Size( 30,-1 ) )
 			self.btns.append(btn)
 			sizer_color.Add( btn, 0, wx.ALL, 2 )
 		self.spn_num = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 2, 15, 0 )
 		self.spn_num.SetMaxSize(wx.Size(45, -1))
-		sizer_color.Add( self.spn_num, 0, wx.ALL|wx.EXPAND, 3 )
+		sizer_color.Add( self.spn_num, 0, wx.ALL|wx.EXPAND, 2 )
 
 		sizer.Add(sizer_color, 0, wx.ALL|wx.EXPAND, 0)
 
 		sizer_other = wx.BoxSizer( wx.HORIZONTAL )
 
+		self.btn_update =  wx.Button( self, wx.ID_ANY, 'Update', wx.DefaultPosition, wx.DefaultSize, 0 )
+		sizer_other.Add( self.btn_update, 0, wx.ALL, 2)
+
 		self.cmapsel = CMapSelCtrl(self)
 		self.cmapsel.SetItems(ColorManager.luts)
-		sizer_other.Add(self.cmapsel, 0, wx.ALL|wx.EXPAND, 3 )
+		sizer_other.Add(self.cmapsel, 0, wx.ALL|wx.EXPAND, 2 )
 
 		com_backChoices = [ u"No Background" ]
 		self.com_back = wx.ComboBox( self, wx.ID_ANY, u"No Background", wx.DefaultPosition, wx.DefaultSize, com_backChoices, wx.CB_READONLY)
 		self.com_back.SetSelection( 0 )
-		sizer_other.Add( self.com_back, 1, wx.ALL|wx.EXPAND, 3 )
+		sizer_other.Add( self.com_back, 1, wx.ALL|wx.EXPAND, 2 )
 		
 		com_modeChoices = [ u"None", u"Max", u"Min", u"Mask", u"2-8mix", u"4-6mix", u"5-5mix", u"6-4mix", u"8-2mix" ]
 		self.com_mode = wx.ComboBox( self, wx.ID_ANY, u"Min", wx.DefaultPosition, wx.DefaultSize, com_modeChoices, wx.CB_READONLY )
 		self.com_mode.SetSelection( 0 )
-		sizer_other.Add( self.com_mode, 0, wx.ALL|wx.EXPAND, 3 )
+		sizer_other.Add( self.com_mode, 0, wx.ALL|wx.EXPAND, 2 )
 
 		self.chk_hide = wx.CheckBox( self, wx.ID_ANY, u"Hide", wx.DefaultPosition, wx.DefaultSize, 0 )
 		sizer_other.Add( self.chk_hide, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
 
 		sizer.Add(sizer_other, 0, wx.ALL|wx.EXPAND, 0)
 
+		#sizer_tol = wx.GridSizer( 0, 3, 0, 0 )
+		self.pens = []
+		name = ['01.gif','03.gif','05.gif','10.gif','fill.gif']
+		path = osp.abspath(osp.dirname(__file__))
+		for i in (0,1,2,3,4):
+			pen = wx.BitmapButton(self, wx.ID_ANY, make_bitmap(wx.Bitmap(osp.join(path, name[i]))),#make_bitmap(wx.Bitmap(data[1])), 
+            wx.DefaultPosition, (30, 30), wx.BU_AUTODRAW|wx.RAISED_BORDER ) 
+            #wx.Button( self, wx.ID_ANY, str(i), wx.DefaultPosition, wx.DefaultSize, 0 )
+			pen.SetMaxSize( wx.Size( 30,-1 ) )
+			self.pens.append( pen )
+			sizer_color.Add( pen, 0, wx.ALL, 2 )
+
 		outsizer.AddStretchSpacer(prop=1)
+		#outsizer.Add(sizer_tol, 0, wx.ALL, 0)
 		outsizer.Add(sizer, 0, wx.ALL, 0)
 		outsizer.AddStretchSpacer(prop=1)
 
@@ -57,7 +82,24 @@ class Plugin ( wx.Panel ):
 		self.com_back.Bind( wx.EVT_COMBOBOX, self.on_setback)
 		self.com_mode.Bind( wx.EVT_COMBOBOX, self.on_mode)
 		self.chk_hide.Bind( wx.EVT_CHECKBOX, self.on_mode)
+		self.pens[-1].Bind( wx.EVT_BUTTON, self.on_fill)
 		for i in self.btns: i.Bind(wx.EVT_BUTTON, self.on_color)
+		for i in range(4): self.pens[i].Bind(wx.EVT_BUTTON, \
+			lambda e, x=(1,3,5,10)[i]: self.on_pen(x))
+		self.btn_make.Bind( wx.EVT_BUTTON, self.on_make)
+
+	def on_make(self, event):
+		Macros(None, ['Build Mark Image>None']).start()
+
+	def on_fill(self, event):
+		tol = ToolsManager.get('Flood Fill')()
+		tol.para['tor'] = 0
+		tol.start()
+
+	def on_pen(self, width):
+		tol = ToolsManager.get('Pencil')()
+		tol.para['width'] = width
+		tol.start()
 
 	def on_color(self, event):
 		ColorManager.set_front(self.btns.index(event.GetEventObject()))
@@ -88,9 +130,10 @@ class Plugin ( wx.Panel ):
 	def on_setback(self, event):
 		name = self.com_back.GetValue()
 		if name is None: return
-		curwin = WindowsManager.get()
-		curwin.set_back(ImageManager.get(name))
-		curwin.ips.update()
+		ImageManager.get().back = ImageManager.get(name)
+		#curwin = WindowsManager.get()
+		#curwin.set_back(ImageManager.get(name))
+		ImageManager.get().update()
 
 	def on_mode(self, event):
 		ips = ImageManager.get()

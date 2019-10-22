@@ -49,19 +49,24 @@ def grid_slice(H, W, size, mar):
             in_slice.append((slice(rs, re), slice(cs, ce)))
     return out_slice, in_slice
 
-def get_feature(img, lab, key=para, size=1024):
-    out_slice, in_slice = grid_slice(*img.shape[:2], size, 2**(key['grade']-1)*3)
-    feats, labs = [], []
-    msk = np.zeros(img.shape[:2], dtype=np.bool)
-    for outs, ins in zip(out_slice, in_slice):
-        msk[outs] = 0; msk[ins] = 1;
-        msk[outs][lab[outs]==0] = 0
-        if msk[outs].sum()==0: continue
-        feat, title = get_feature_one(img[outs], msk[outs], key)
-        feats.append(feat)
-        labs.append(lab[outs][msk[outs]])
+def get_feature(imgs, labs, key=para, size=1024, callback=print):
+    if not isinstance(labs, list) and labs.ndim==2:
+        imgs, labs = [imgs], [labs]
+    out_slice, in_slice = grid_slice(*imgs[0].shape[:2], size, 2**(key['grade']-1)*3)
+    m, n = len(out_slice), len(labs)
+    feats, vs = [], []
+    msk = np.zeros(imgs[0].shape[:2], dtype=np.bool)
+    for i, img, lab in zip(range(n), imgs, labs):
+        for j, outs, ins in zip(range(m), out_slice, in_slice):
+            callback(i*m+j, m*n)
+            msk[outs] = 0; msk[ins] = 1;
+            msk[outs][lab[outs]==0] = 0
+            if msk[outs].sum()==0: continue
+            feat, title = get_feature_one(img[outs], msk[outs], key)
+            feats.append(feat)
+            vs.append(lab[outs][msk[outs]])
     feats = np.vstack(feats)
-    labs = np.hstack(labs).reshape((-1,1))
+    vs = np.hstack(vs).reshape((-1,1))
     mins, ptps = feat.min(axis=0), feat.ptp(axis=0)
     feats -= mins
     feats /= ptps
@@ -69,20 +74,34 @@ def get_feature(img, lab, key=para, size=1024):
     para['min'] = mins.tolist()
     para['ptp'] = ptps.tolist()
     para['titles'] = title
-    return feats, np.hstack(labs), para
+    return feats, vs, para
 
-def get_predict(img, model, key=para, out=None, size=1024):
-    out_slice, in_slice = grid_slice(*img.shape[:2], size, 2**(key['grade']-1)*3)
-    feats, labs = [], []
-    if out is None: out = np.zeros(img.shape[:2], dtype=np.uint8)
-    msk = np.zeros(img.shape[:2], dtype=np.bool)
-    for outs, ins in zip(out_slice, in_slice):
-        msk[outs] = 0; msk[ins] = 1;
-        feat, title = get_feature_one(img[outs], msk[outs], key)
-        feat -= key['min']
-        feat /= key['ptp']
-        labs = model.predict(feat)
-        out[ins] = labs.reshape(out[ins].shape)
+def get_predict(imgs, model, key=para, out=None, size=1024, callback=print):
+    lut = {'ori':1, 'blr':key['grade'], 'sob':key['grade'], 'eig':key['grade']*2}
+    chans = len(key['titles'])/sum([lut[i] for i in key['items']])
+    print(chans)
+    islist = isinstance(imgs, list)
+    if islist and imgs[0].ndim == 2 and chans == 1: pass
+    elif islist and imgs[0].shape[2] == chans: pass
+    elif not islist and imgs.shape[2] == chans and imgs.ndim == 3: imgs = [imgs]
+    elif not islist and imgs.ndim == 4 and imgs.shape[3] == chans: pass
+    else: return None
+    out_slice, in_slice = grid_slice(*imgs[0].shape[:2], size, 2**(key['grade']-1)*3)
+    m, n = len(out_slice), len(imgs)
+    if out is None: 
+        temp = imgs[0] if imgs[0].ndim==2 else imgs[0][:,:,0]
+        out = [temp.astype(np.uint8)]; out[0] *= 0;
+        for i in range(1, len(imgs)): out.append(out[0].copy())
+    msk = np.zeros(imgs[0].shape[:2], dtype=np.bool)
+    for i, img, ot in zip(range(len(imgs)), imgs, out):
+        for j, outs, ins in zip(range(len(out_slice)), out_slice, in_slice):
+            callback(i*m+j, m*n)
+            msk[outs] = 0; msk[ins] = 1;
+            feat, title = get_feature_one(img[outs], msk[outs], key)
+            feat -= key['min']
+            feat /= key['ptp']
+            labs = model.predict(feat)
+            ot[ins] = labs.reshape(ot[ins].shape)
     return out
 
 def dump_model(model, para, path):

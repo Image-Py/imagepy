@@ -128,11 +128,11 @@ class CanvasPanel(wx.Panel):
             self.canvas.set_cn(self.ips.chan)
             self.canvas.set_rg(self.ips.chan_range)
 
-            if self.back != None:
-                self.canvas.set_back(self.back.imgs[self.ips.cur])
-                self.canvas.set_cn(self.back.chan, True)
-                self.canvas.set_rg(self.back.chan_range, True)
-                self.canvas.set_lut(self.back.lut, True)
+            if self.ips.back != None:
+                self.canvas.set_back(self.ips.back.imgs[self.ips.cur])
+                self.canvas.set_cn(self.ips.back.chan, True)
+                self.canvas.set_rg(self.ips.back.chan_range, True)
+                self.canvas.set_lut(self.ips.back.lut, True)
                 self.canvas.set_mode(self.ips.chan_mode)
             else: 
                 self.canvas.set_back(None)
@@ -223,6 +223,7 @@ class CanvasPanel(wx.Panel):
         self.canvas.set_rg(ips.chan_range)
         self.canvas.set_lut(ips.lut)
 
+    '''
     def set_back(self, ips):
         self.back = ips
         if ips is None:
@@ -231,7 +232,7 @@ class CanvasPanel(wx.Panel):
         self.canvas.set_cn(ips.chan, True)
         self.canvas.set_rg(ips.chan_range, True)
         self.canvas.set_lut(ips.lut, True)
-
+    '''
     def on_scroll(self, event):
         self.ips.cur = self.page.GetThumbPosition()
         if isinstance(self.ips.chan, int):

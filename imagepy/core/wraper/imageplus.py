@@ -43,18 +43,19 @@ class ImagePlus:
         self.set_title(title)
         self.snap = None
         self.cur = self.chan = 0
-        self.dirty = False
+        self.dirty = True
         self.scrchanged = False
         self.roi = None
         self.mark = None
         self.msk = None
         self.mskmode = None
         self.lut = ColorManager.get_lut('grays')
-        self.backimg = None
-        self.backmode = (0.5, 'Mean')
+        
         self.tool = None
         self.data = {}
         self.unit = (1, 'pix')
+
+        self.back = None
         self.chan_range = []
         self.chan_mode = 'min'
         self.set_imgs(imgs)

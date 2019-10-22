@@ -1,7 +1,6 @@
 import wx, joblib, os, shutil, os.path as osp
 from glob import glob
 from imagepy.core.manager import RoiManager, ImageManager, ReaderManager, ViewerManager
-from imagepy.core.engine import Macros
 from . import classify_plgs as manager
 from .predict_plg import Plugin as FCL
 from imagepy import IPy

@@ -4,7 +4,7 @@ from imagepy import IPy
 from glob import glob
 import os.path as osp
 import joblib
-from .features import get_feature, get_predict
+from imagepy.ipyalg import feature
 from imagepy.core.manager import ReaderManager, ViewerManager
 
 class Plugin(Simple):
@@ -21,9 +21,7 @@ class Plugin(Simple):
 		self.root = osp.join(IPy.root_dir, 'data/ilastik')
 		fs = glob(osp.join(self.root, '*.fcl'))
 		fs = [osp.split(i)[1] for i in fs]
-		if '/' in path: 
-			fs = [path]
-		
+		if '/' in path: fs = [path]
 		if len(fs) == 0: return IPy.alert('No feature classfier found!')
 		self.para['predictor'] = fs[0]
 		self.view[0] = (list, 'predictor', fs, str, 'predictor', '')
@@ -33,14 +31,12 @@ class Plugin(Simple):
 		if '/' in para['predictor']: path = para['predictor']
 		else: path = self.root+'/'+para['predictor']
 		model, key = joblib.load(path)
-		lut = {'ori':1, 'blr':key['grade'], 'sob':key['grade'], 'eig':key['grade']*2}
-		if sum([lut[i] for i in key['items']])*ips.channels != len(key['titles']):
-			return IPy.alert('image channels dismatch this predictor!')
 		if not para['slice']: imgs = [ips.img]
-		rst = []
-		for i in range(len(imgs)):
-			self.progress(i+1, len(imgs))
-			rst.append(get_predict(imgs[i], model, key))
+		slir, slic = ips.get_rect()
+		imgs = [i[slir, slic] for i in imgs]
+		rst = feature.get_predict(imgs, model, key, callback=self.progress)
+		if rst is None:
+			return IPy.alert('image channels dismatch this predictor!')
 		ips = ImagePlus(rst, ips.title+'-mark')
 		ips.range = ips.get_updown('all', 'one', step=512)
 		IPy.show_ips(ips)

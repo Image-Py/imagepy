@@ -30,15 +30,17 @@ class Duplicate(Simple):
             if ips.roi == None:
                 img = ips.img.copy()
                 ipsd = ImagePlus([img], name)
-                ipsd.backimg = ips.backimg
+                ipsd.back = ips.back
             else:
                 img = ips.get_subimg().copy()
                 ipsd = ImagePlus([img], name)
                 box = ips.roi.get_box()
                 ipsd.roi = ips.roi.affine(np.eye(2), (-box[0], -box[1]))
+                '''
                 if not ips.backimg is None:
                     sr, sc = ips.get_rect()
                     ipsd.backimg = ips.backimg[sr, sc]
+                '''
         elif ips.get_nslices()>1 and self.para['stack']:
             if ips.roi == None:
                 if ips.is3d:imgs=imgs.copy()
@@ -49,12 +51,12 @@ class Duplicate(Simple):
                 if ips.is3d: imgs=imgs[:, sc, sr].copy()
                 else: imgs = [i[sc,sr].copy() for i in imgs]
                 if not ips.backimg is None:
-                    backimg = ips.backimg[sr, sr]
+                    backimg = None #ips.backimg[sr, sr]
             ipsd = ImagePlus(imgs, name)
             if ips.roi != None:
                 ipsd.roi = ips.roi.affine(np.eye(2), (-sr.start, -sc.start))
             if not ips.backimg is None: ipsd.backimg = backimg
-        ipsd.backmode = ips.backmode
+        ipsd.chan_mode = ips.chan_mode
         IPy.show_ips(ipsd)
 
 class Rename(Simple):
