@@ -24,7 +24,7 @@ class BuildMark(Simple):
         modes = ['set', 'max', 'min', 'msk', 0.2, 0.4, 0.5, 0.6, 0.8]
         newips.lut = ColorManager.get_lut(para['cm'])
         newips.chan_mode = modes[idx.index(para['mode'])]
-        newips.range = (0, para['n'])
+        #newips.range = (0, para['n'])
         IPy.show_ips(newips)
 
 plgs = [BuildMark]

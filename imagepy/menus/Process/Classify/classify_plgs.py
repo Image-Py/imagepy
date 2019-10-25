@@ -49,7 +49,7 @@ class Base(Simple):
 
         IPy.set_info('predict data...')
         if preview:
-            return feature.get_predict(oris, model, key, imgs, callback=self.progress)
+            return feature.get_predict(oris, model, key, labs, callback=self.progress)
         if len(imgs) == 1: ips.swap()
         outs = feature.get_predict(oris, model, key, callback=self.progress)
         nips = ImagePlus(outs, ips.title+'rst')

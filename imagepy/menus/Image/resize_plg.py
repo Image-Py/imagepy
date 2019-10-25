@@ -50,6 +50,7 @@ class Plugin(Simple):
                     new.append(arr)
 
         ips.set_imgs(new)
+        return
         backimg = ips.backimg
         if backimg is None:return
         if backimg.ndim == 3:

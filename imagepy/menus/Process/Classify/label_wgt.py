@@ -60,7 +60,7 @@ class Plugin ( wx.Panel ):
 		name = ['01.gif','03.gif','05.gif','10.gif','fill.gif']
 		path = osp.abspath(osp.dirname(__file__))
 		for i in (0,1,2,3,4):
-			pen = wx.BitmapButton(self, wx.ID_ANY, make_bitmap(wx.Bitmap(osp.join(path, name[i]))),#make_bitmap(wx.Bitmap(data[1])), 
+			pen = wx.BitmapButton(self, wx.ID_ANY, make_bitmap(wx.Bitmap(osp.join(path, 'imgs', name[i]))),#make_bitmap(wx.Bitmap(data[1])), 
             wx.DefaultPosition, (30, 30), wx.BU_AUTODRAW|wx.RAISED_BORDER ) 
             #wx.Button( self, wx.ID_ANY, str(i), wx.DefaultPosition, wx.DefaultSize, 0 )
 			pen.SetMaxSize( wx.Size( 30,-1 ) )
