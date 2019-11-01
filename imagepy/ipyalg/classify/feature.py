@@ -105,7 +105,7 @@ def get_predict(imgs, model, key=para, out=None, size=1024, callback=print):
     return out
 
 def dump_model(model, para, path):
-    joblib.sump(path, (model, para))
+    joblib.dump(path, (model, para))
 
 def load_model(model, para, path):
     return joblib.load(path)
