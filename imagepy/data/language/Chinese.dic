@@ -1,0 +1,497 @@
+16-bit uint:转16位
+16_Colors:--
+2D Surface:表面积
+2DSurface Demo:二维表面重建演示
+32-bit float:转32位浮点
+32-bit int:转32位整数
+3D Image Cube:三维立方体
+3D Surface:三维表面重建
+5_ramps:--
+64-bit float:转64位浮点
+6_Shades:--
+8-bit:转8位无符号
+About:关于 ImagePy
+Active Ridge:交互式山脊线
+AdaBoost Classify:AdaBoost分类
+Adaptive Threshold:自适应阈值
+Add:加
+Add Column:添加列
+Add Slice:添加切片
+Adjust:调整
+Analysis:分析
+Analysis 3D:三维分析
+Append Rows:添加行
+Area Chart:面积图表
+AuPbSn 40 56K:--
+Author:--
+Auto Threshold:自动阈值
+BMP:--
+BMP Open:打开BMP
+BMP Save:关闭BMP
+BRGBCMYW:--
+Baboon 56K:--
+Background Self:设置自身为背景
+Bagging Classify:Bagging分类器
+Bar Chart:条形图
+Basic Operator:基础操作
+Binary:二值
+Binary 3D:三维二值
+Binary Closeing:形态学闭运算
+Binary ConvexHull:形态学凸包
+Binary Dilation:形态学膨胀
+Binary Erosion:形态学腐蚀
+Binary Opening:形态学开运算
+Binary Outline:形态学轮廓
+Binary Voronoi:平面瓜分
+Binary Watershed:二值分水岭
+Binary Watershed 3D:三维二值分水岭
+Blob 356K:--
+Blue:--
+Boats 25K:--
+Bound Snake Fit:边界曲线逼近
+Box Chart:箱状图
+Bridge 174K:--
+Bright And Constract:亮度对比度
+Build Graph:创建拓扑结构
+Build Graph 3D:创建三维拓扑结构
+Build Mark Image:创建标记图像
+CIERGB To RGB:CIERGB转RGB
+CSV Open:打开CSV
+CSV Save:保存CSV
+Calendar:日历
+Canny:Canny边缘算子
+Canvas Size:画布大小
+Cartwheel Galaxy 231K:--
+Cell Colony 34K:--
+Chart:图表
+Chinese:--
+Classify:特征分类
+Clean Dictionary:清除字典
+Clear:清除内部
+Clear Mark:清除覆盖物
+Clear Out:清除外部
+Closing 3D:三维形态学闭运算
+Clown 14K:--
+Color:颜色
+Color Balance:色彩平衡
+Color Cluster:色彩聚类
+Color Cluster 3D:三维色彩聚类
+Color Points Statistic:彩色点空间统计
+Color Stairs:彩色色阶
+Command Line:命令行工具
+Contribute:贡献
+Contribute Document:贡献文档
+Contribute Plugin:贡献插件
+Contributions:贡献者
+Copy:复制
+Crop:裁剪
+Cross Stick:十字绣
+Curve Adjust:曲线调整
+Cut Branch:修剪分支
+Cut By ROI:用ROI修剪分支
+Cyan:--
+Cyan_Hot:--
+DAT:--
+DAT Open:打开DAT
+DAT Save:保存DAT
+DCM Open:打开DICOM
+DEM:--
+DICOM:--
+DOG:差分高斯滤波
+Decoration Demo:装饰品
+Delete Columns:删除列
+Delete Rows:删除行
+Delete Slice:删除切片
+Demo Repo:--
+Detect Black Point:--
+Develop Tool Sute:开发者工具
+Diatoms 60K:--
+Dilation 3D:三维二值膨胀
+Distance 3D:三维距离变换
+Distance Transform:距离变换
+Duplicate:副本
+Edit:编辑
+Elegant ImagePy Style:ImagePy风格
+English:--
+Erosion 3D:三维二值腐蚀
+Errors:--
+Evolving Level Set:边框收敛水平集
+Excel Open:打开Excel
+Excel Save:保存Excel
+Exit:退出
+Export:导出
+ExtraTrees Classify:ExtraTrees分类
+FFT:快速傅里叶变换
+FRC:--
+Feature Classify Panel:特征分类面板
+Feature Predictor:特征预测
+Features:特征
+Features 3D:三维特征
+Felzenszwalb:--
+Felzenszwalb Label:--
+File:文件
+Fill:填充
+Fill Holes:二值空隙填充
+Fill Holes 3D:三维空隙填充
+Filters:滤波器
+Filters 3D:三维滤波器
+Find IsoLine:查找等值线
+Find Maximum:查找局部最大值
+Find Minimum:查找局部最小值
+Find Riedge:查找山脊线
+Find Watershed:查找分水岭
+FluidSurface:--
+FluorescentCells 400K:--
+Fragment Repair:碎片修复
+Frangi:Frangi山脊线提取
+Frangi 3D:三维Frangi山脊线提取
+Frequence:频率统计
+Frequence 3D:三维频率统计
+GIF:--
+GIF Animate Open:打开GIF动画
+GIF Animate Save:保存GIF动画
+GIF Open:打开GIF
+GIF Save:保存GIF
+Game Of Life:生命游戏
+Games:游戏
+Gamma:Gamma矫正
+Gaussian:高斯模糊
+Gaussian 3D:三维高斯模糊
+Gaussian Laplace:高斯-拉普拉斯滤波
+Gaussian Random:高斯随机数
+Geometry Analysis:几何分析
+Geometry Analysis 3D:三维几何分析
+Geometry Filter:几何过滤器
+Geometry Filter 3D:三维几何过滤器
+Glow:--
+Gradient Boosting Classify:Gradient Boosting分类器
+Graph Cut Branch 3D:三维分支修剪
+Graph Shortest Path:最短路径
+Graph Statistic:拓扑统计
+Graph Statistic 3D:三维拓扑统计
+Graph Summarise:节点路径汇总
+Graph Summarise 3D:三维节点路径汇总
+Gray Cluster:灰度聚类
+Gray Cluster 3D:三维灰度聚类
+Gray Points Statistic:灰度点统计
+Gray Stairs:灰度色戒
+Grays:--
+Green:--
+Green_Fire_Blue:--
+Group Statistic:分组统计
+HSV To RGB:HSV转RGB
+Harris:Harris角点检测
+Help:帮助
+Hessian:海森特征
+Hessian 3D:三维海森特征
+HiLo:--
+Hist Chart:频率直方图
+Histogram:直方图
+Histogram Match:直方图匹配
+Histogram Normalize:直方图标准化
+Home Page:主页
+Hydrology:水文算法
+Hysteresis Threshold:双阈值
+IBook:案例素材
+ICA:--
+ICA2:--
+ICA3:--
+Image:图像
+Image Calculator:图像运算
+Import:导入
+Import Rois from IJ:导入ImageJ的ROI文件
+Import Sequence:导入序列
+Install:安装
+Install Packages:安装python包
+Install Plugins:安装ImagePy插件
+Intensity Analysis:密度分析
+Intensity Filter:密度过滤
+Inverse FFT:快速傅里叶逆变换
+Invert:反向
+JPG:--
+JPG Open:打开JPG
+JPG Save:保存JPG
+Jet:--
+K-Means:K均值聚类
+Kill Image:关闭图像
+Kill TableLog:关闭表格
+Kill TextLog:关闭日志
+Kit3D:三维
+Kitchen Rosenfeld:--
+LUV To RGB:LUV转RGB
+Lab To RGB:Lab转RGB
+Label Image:图像标记
+Label Tool:标记工具
+Language:语言
+Laplace:拉普拉斯滤波
+Laplace Sharp:拉普拉斯瑞华
+Leaf 36K:--
+Lena:--
+Lena 68K:--
+Lines Demo:线条示例
+List Packages:列举已安装的包
+List Plugins:列举已安装的插件
+Log Power:对数功率谱
+Logo:--
+Lookup table:色彩映射表
+Lymp 17K:--
+M51 177K:--
+MAT:--
+MRI Head 47K:--
+Macros:宏
+Macros Recorder:宏录制
+Magenta:--
+Magenta_Hot:--
+Manager:管理
+Mark:覆盖物
+Mark Setting:覆盖物设定
+Mat 3D Open:打开三维Mat文件
+Mat 3D Save:保存三维Mat文件
+Mat Open:打开Mat
+Mat Save:保存Mat
+Math:数学
+Max:最大值
+Maximum:最大值滤波器
+Measure Surface And Volume:测量表面积体积
+Medial Axis:中轴线
+Median:中值滤波器
+Meijering:Meijering山脊线提取
+Meijering 3D:Meijering三维山脊线提取
+Merge RGB Channels:融合RGB通道
+Microm 32K:--
+Min:最小值
+Minimum:最小值滤波器
+Moravec:Moravec角点检测
+Morphological Snake Fit:形态学曲线逼近
+Multiply:乘
+Network 3D:三维拓扑网络
+New:新建
+New Filter:新建滤镜
+New Free:新建自由插件
+New Language:新建语言
+New Simple:新建基础插件
+New Tool:新建工具
+Next Slice:下一切片
+Niblack Threshold:Niblack阈值
+NileBend 1.9M:--
+Numpy:--
+Numpy 3D Open:打开三维Numpy
+Numpy 3D Save:--保存三维Numpy
+Numpy Open:打开Numpy
+Numpy Save:保存Numpy
+Open:打开
+Open Mark:打开覆盖物
+Open Raw:打开二进制文件
+Open Recent:最近打开
+Open Url:打开URL
+OpenCV:OpenCV
+Opening 3D:三维形态学膨胀
+Orange_Hot:--
+Orthogonal view:三视图
+Others:--
+PNG:--
+PNG Open:打开PNG
+PNG Save:保存PNG
+Paste:粘贴
+Pay Tribute To ImageJ:致敬ImageJ
+Percent:百分比滤波
+Pie Chart:饼状图
+Pink:--
+Pixel Cluster:像素聚类
+Pixel Statistic:像素统计
+Pixel Statistic 3D:三维像素统计
+Plot Chart:折线图
+Plugin List View:插件列表视图
+Plugin Tree View:插件树形视图
+Plugins:插件
+Plugins Manager:插件管理器
+Points Value:点的像素值
+Previous Slice:前一切片
+Prewitt:Previtt梯度算子
+Process:处理
+Property Marker:属性标记
+Quick Shift:快速Shift超像素
+Quickshift Label:快速Shift超像素标记
+RAG Cut Normalized:RAG图标准化
+RAG Merge Hierarchical:RAG图层级融合
+RAG Threshold:RAG阈值
+RGB:转RGB彩色
+RGB Points Cloud:RGB点云
+RGB To CIERGB:RGB转CIERGB
+RGB To Gray:RGB转灰度
+RGB To HSV:RGB转HSV
+RGB To LUV:RGB转LUV
+RGB To Lab:RGB转Lab
+RGB To XYZ:RGB转XYZ
+ROI Add:热区添加
+ROI Bound Box:热区外接矩形
+ROI Clip:热区裁剪
+ROI Convex Hull:热区凸包
+ROI Ctrl Panel:热区面板
+ROI Difference:热区差异
+ROI Inflate:热区膨胀
+ROI Intersect:热区交集
+ROI Invert:热区反向
+ROI Load:热区载入
+ROI Open:热区打开
+ROI Remove:热区移除
+ROI Save:热区保存
+ROI Setting:热区设置
+ROI Shrink:热区收缩
+ROI Snake Fit:热区蛇形收敛
+ROI Symmetric Diff:热区非相交并集
+ROI Union:热区并集
+Rainbow_RGB:--
+Random Balls Demo:随机球
+Random Forest Classify:Random Forest分类
+Random Walker:随机游走
+Red:--
+Red_Hot:--
+Region Analysis:区域分析
+Region Label 3D:三维区域标记
+Register By Mats:按照矩阵对齐
+Reload Plugins:插件重加载
+Remove 2Path Node:移除双路径节点
+Remove 2Path Node 3D:移除三维双路径节点
+Remove Isolate 3D:移除三维孤立节点
+Remove Isolate Node:移除孤立节点
+Rename:重命名
+Resize:重设大小
+Rotate:旋转
+Run Macros:运行宏
+SLIC Superpixel:SLIC超像素
+SLIC Superpixel Label:SLIC超像素标记
+Samples ImageJ:ImageJ素材图像
+Samples Local:本地素材
+Samples Online:在线素材
+Sato:Sato山脊线提取
+Sato 3D:Sato三维山脊线提取
+Sauvola Threshold:Sauvola阈值
+Save:保存
+Save Mark:保存覆盖物
+Save Sequence:保存序列
+Save With Mark:带覆盖物保存
+Scale:缩放
+Scale And Unit:比例尺和单位
+Scatter Chart:三点图表
+Screen Capture:屏幕截取
+Sea Ice:--
+Segment:分割
+Sel By C Name R Count:根据行号与列名选取
+Select All:全选
+Select None:取消热区
+Selection:热区
+Set Background:设置背景
+Set Slice:设置切片
+Shotcut Editor:快捷键编辑器
+Show Graph 3D:三维图网展示
+Show Graph R 3D:展示带有半径的三维图网
+Show Viewer 3D:三维画布
+Signal:信号
+Signal Uniform Filter:信号均值滤波
+Simple Threshold:阈值
+SimpleITK:--
+Skeleton:骨架
+Skeleton 3D:三维骨架
+Skeleton Network:骨架拓扑结构
+Sketch:描边
+SmartSEMSample 780K:--
+Sobel:Sobel梯度算子
+Sobel 3D:三维Sobel梯度算子
+Split RGB Channels:拆分RGB通道
+Squre Root:平方根
+Stack:图像栈
+Stack Register:图像栈对齐
+StackReg:对齐
+StackReg License:-图像栈对齐协议
+Statistic:统计
+Stroke Step:分布画笔
+Sub Stack:截取子栈
+Subtract:减
+TIF:--
+TIF 3D Open:打开三维TIF
+TIF 3D Save:保存三维TIF
+TIF Open:打开TIF
+TIF Save:保存TIF
+Table:表格
+Table Bins Frequency:表格值频率
+Table Corp:表格裁剪
+Table Duplicate:表格副本
+Table IO:表格输入输出
+Table Point Cloud:从表格制作点云
+Table Sort By Key:表格排序
+Table Statistic:表格统计
+Table Transpose:表格反转
+Tables Window:表格窗口
+Thermal:--
+Threshold:阈值
+Tomasi:--
+Tool Tree View:工具树型列表
+Toolbar:工具栏
+Topic:主题帮助
+Trans to List:转为离散序列
+Trans to Stack:转为连续栈
+Transform:变换
+Tree Rings 48K:--
+Two Boxes:--
+Type:类型
+Undo:撤销
+Uniform:均值滤波
+Uniform 3D:三维均值滤波
+Uniform Random:均匀随机数
+Unit Matrix:单位矩阵
+Universal Generator:通用数组生成器
+Unsharp Mask:USM锐化
+Unsharp Mask 3D:三维USM锐化
+Up And Down Watershed:高低阈值分水岭
+Up Down Watershed 3D:三维高低阈值分水岭
+Update Dictionary:更新字典
+Update Software:更新软件
+Values Frequency:数值频率统计
+Variance:方差滤波
+Video:视频
+Video Ctrl Panel:视频面板
+Viewer 3D:三维可视化
+Viridis:--
+Watershed With ROI:用ROI做种子进行分水岭
+Widgets:桌面控件
+Window:窗口
+Windows Style:窗口风格
+XYZ To RGB:XYZ转RGB
+Yellow:--
+Yellow_Hot:--
+Zero Center:零位于中心
+Zero Edge:零位于边缘
+ametrine:--
+ascent:--
+astronaut:--
+blue_orange_icb:--
+camera:--
+coffee:--
+coins:--
+cool:--
+edges:轮廓
+face:--
+gem:--
+glasbey:--
+glasbey_inverted:--
+glasbey_on_dark:--
+horse:--
+hubble_deep_field:--
+immunohistochemistry:--
+isolum:--
+moon:--
+morgenstemning:--
+mpl-inferno:--
+mpl-magma:--
+mpl-plasma:--
+mpl-viridis:--
+page:--
+phase:--
+physics:--
+royal:--
+sepia:--
+smart:--
+thal:--
+thallium:--
+unionjack:--

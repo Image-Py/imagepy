@@ -30,6 +30,7 @@ class To8bit(Simple):
             minv, maxv = ips.get_updown()
             for i in range(n):
                 self.progress(i, len(imgs))
+
                 if ips.imgtype == 'rgb':
                     img8.append(imgs[i].mean(axis=2).astype(np.uint8))
                 else:

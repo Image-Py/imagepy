@@ -107,11 +107,13 @@ class CanvasPanel(wx.Panel):
         if self.ips.scrchanged:
             self.set_ips(self.ips)
             self.ips.scrchanged = False
-            self.canvas.fit()
             self.set_info(self.ips)
+            self.canvas.fit()
             self.set_fit(self.ips)
             print('scr changed =====')
+        
         if self.ips.dirty != False:
+            self.set_info(self.ips)
             if self.ips.roi is None: self.canvas.marks['roi'] = None
             else: 
                 draw = lambda dc, f, **key: self.ips.roi.draw(dc, f, cur=self.ips.cur, **key)
