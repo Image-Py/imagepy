@@ -8,7 +8,7 @@ import numpy as np
 import wx
 from numba import jit
 
-@jit
+@jit(nopython=True)
 def floodfill(img, x, y):
     buf = np.zeros((131072,2), dtype=np.uint16)
     color = img[int(y), int(x)]

@@ -12,7 +12,7 @@ def neighbors(shape):
     acc = np.cumprod((1,)+shape[::-1][:-1])
     return np.dot(idx, acc[::-1])
 
-@jit # trans index to r, c...
+@jit(nopython=True) # trans index to r, c...
 def idx2rc(idx, acc):
     rst = np.zeros((len(idx), len(acc)), dtype=np.int16)
     for i in range(len(idx)):
@@ -21,7 +21,7 @@ def idx2rc(idx, acc):
             idx[i] -= rst[i,j]*acc[j]
     return rst
 
-@jit # fill a node (may be two or more points)
+@jit(nopython=True)  # fill a node (may be two or more points)
 def fill(img, msk, p, nbs, buf):
     buf[0] = p
     back = img[p]
@@ -40,9 +40,8 @@ def fill(img, msk, p, nbs, buf):
                     s-=cur; cur=0;
         cur += 1
 
-@jit # my mark
-def mark(img, msk, buf, mode): # mark the array use (0, 1, 2)
-    nbs = neighbors(img.shape)
+@jit(nopython=True)  # my mark
+def mark(img, nbs, msk, buf, mode): # mark the array use (0, 1, 2)
     idx = np.zeros(msk.size//3, dtype=np.int64)
     img = img.ravel()
     msk = msk.ravel()
@@ -68,10 +67,8 @@ def mark(img, msk, buf, mode): # mark the array use (0, 1, 2)
         if s==len(idx):break
     return idx[:s].copy()
 
-@jit # 3 max 2 zmd b4 ptd
-def filter(img, msk, idx, bur, tor, mode):
-    nbs = neighbors(img.shape)
-    acc = np.cumprod((1,)+img.shape[::-1][:-1])[::-1]
+@jit(nopython=True)  # 3 max 2 zmd b4 ptd
+def filter(img, msk, nbs, acc, idx, bur, tor, mode):
     img = img.ravel()
     msk = msk.ravel()
 
@@ -114,16 +111,20 @@ def find_maximum(img, tor, mode = True):
     msk = np.zeros_like(img, dtype=np.uint8)
     msk[tuple([slice(1,-1)]*img.ndim)] = 1
     buf = np.zeros(img.size//3, dtype=np.int64)
-    idx = mark(img, msk, buf, mode)
-    idx = filter(img, msk, idx, buf, tor, mode)
+    nbs = neighbors(img.shape)
+    acc = np.cumprod((1,)+img.shape[::-1][:-1])[::-1]
+    idx = mark(img, nbs, msk, buf, mode)
+    idx = filter(img, msk, nbs, acc, idx, buf, tor, mode)
     return idx
 
 if __name__ == '__main__':
     from skimage.io import imread
-    from scipy.ndimage import gaussian_filter
+    from scipy.ndimage import gaussian_filter, distance_transform_edt
     from time import time
     import matplotlib.pyplot as plt
-    img = gaussian_filter(imread('test.png'), 0)
+    from skimage.data import horse
+
+    img = distance_transform_edt(~horse())
     pts = find_maximum(img, 20, True)
     start = time()
     pts = find_maximum(img, 10, True)

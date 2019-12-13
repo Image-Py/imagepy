@@ -2,7 +2,6 @@ import numpy as np
 from numba import jit
 import networkx as nx
 
-# get neighbors d index
 def neighbors(shape):
     dim = len(shape)
     block = np.ones([3]*dim)
@@ -13,9 +12,8 @@ def neighbors(shape):
     acc = np.cumprod((1,)+shape[::-1][:-1])
     return np.dot(idx, acc[::-1])
 
-@jit # my mark
-def mark(img): # mark the array use (0, 1, 2)
-    nbs = neighbors(img.shape)
+@jit(nopython=True) # my mark
+def mark(img, nbs): # mark the array use (0, 1, 2)
     img = img.ravel()
     for p in range(len(img)):
         if img[p]==0:continue
@@ -25,7 +23,7 @@ def mark(img): # mark the array use (0, 1, 2)
         if s==2:img[p]=1
         else:img[p]=2
 
-@jit # trans index to r, c...
+@jit(nopython=True) # trans index to r, c...
 def idx2rc(idx, acc):
     rst = np.zeros((len(idx), len(acc)), dtype=np.int16)
     for i in range(len(idx)):
@@ -35,7 +33,7 @@ def idx2rc(idx, acc):
     rst -= 1
     return rst
     
-@jit # fill a node (may be two or more points)
+@jit(nopython=True) # fill a node (may be two or more points)
 def fill(img, p, num, nbs, acc, buf):
     back = img[p]
     img[p] = num
@@ -54,7 +52,7 @@ def fill(img, p, num, nbs, acc, buf):
         if cur==s:break
     return idx2rc(buf[:s], acc)
 
-@jit # trace the edge and use a buffer, then buf.copy, if use [] numba not works
+@jit(nopython=True) # trace the edge and use a buffer, then buf.copy, if use [] numba not works
 def trace(img, p, nbs, acc, buf):
     c1 = 0; c2 = 0;
     newp = 0
@@ -75,12 +73,9 @@ def trace(img, p, nbs, acc, buf):
         if c2!=0:break
     return (c1-10, c2-10, idx2rc(buf[:cur], acc))
    
-@jit # parse the image then get the nodes and edges
-def parse_struc(img):
-    nbs = neighbors(img.shape)
-    acc = np.cumprod((1,)+img.shape[::-1][:-1])[::-1]
+@jit(nopython=True) # parse the image then get the nodes and edges
+def parse_struc(img, pts, nbs, acc):
     img = img.ravel()
-    pts = np.array(np.where(img==2))[0]
     buf = np.zeros(131072, dtype=np.int64)
     num = 10
     nodes = []
@@ -115,8 +110,11 @@ def buffer(ske):
 
 def build_sknw(ske, multi=False):
     buf = buffer(ske)
-    mark(buf)
-    nodes, edges = parse_struc(buf)
+    nbs = neighbors(buf.shape)
+    acc = np.cumprod((1,)+buf.shape[::-1][:-1])[::-1]
+    mark(buf, nbs)
+    pts = np.array(np.where(buf.ravel()==2))[0]
+    nodes, edges = parse_struc(buf, pts, nbs, acc)
     return build_graph(nodes, edges, multi)
     
 # draw the graph

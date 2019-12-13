@@ -12,7 +12,7 @@ def neighbors(shape):
     acc = np.cumprod((1,)+shape[::-1][:-1])
     return np.dot(idx, acc[::-1])
 
-@jit
+@jit(nopython=True)
 def dist(idx1, idx2, acc):
     dis = 0
     for i in range(len(acc)):
@@ -23,7 +23,7 @@ def dist(idx1, idx2, acc):
         idx2 -= c2*acc[i]
     return dis
 
-@jit
+@jit(nopython=True)
 def step(dis, pts, roots, s, level, nbs, acc, scale):
     cur = 0
     while cur<s:
@@ -48,7 +48,7 @@ def step(dis, pts, roots, s, level, nbs, acc, scale):
         cur+=1
     return cur
 
-@jit
+@jit(nopython=True)
 def clear(pts, roots, s, cur):
     ns = 0; nc=0;
     for c in range(s):
@@ -59,7 +59,7 @@ def clear(pts, roots, s, cur):
             if c<cur:nc += 1
     return ns, nc
         
-@jit
+@jit(nopython=True)
 def collect(dis, nbs, pts, root):
     cur = 0
     for p in range(len(dis)):
@@ -72,17 +72,18 @@ def collect(dis, nbs, pts, root):
                 break
     return cur
 
-@jit
+@jit(nopython=True)
+def bufjit(line):
+    for i in range(len(line)):
+        line[i] = 1 if line[i]==0 else 0xffff
+
 def buffer(img, dtype):
     buf = np.ones(tuple(np.array(img.shape)+2), dtype=dtype)
     buf[tuple([slice(1,-1)]*buf.ndim)] = img
-    line = buf.ravel()
-    for i in range(len(line)):
-        line[i] = 1 if line[i]==0 else 0xffff
+    bufjit(buf.ravel())
     buf[tuple([slice(1,-1)]*buf.ndim)] -= 1
     return buf
 
-@jit
 def distance_transform_edt(img, output=np.float32, scale=1):
     dis = buffer(img, output)
     nbs = neighbors(dis.shape)
@@ -98,8 +99,19 @@ def distance_transform_edt(img, output=np.float32, scale=1):
     return dis[(slice(1,-1),)*img.ndim]
     
 if __name__ == '__main__':
+    import matplotlib.pyplot as plt
     from skimage.io import imread
     from glob import glob
-    fs = glob('C:/Users/54631/Desktop/二值化加黑框/*.png')
-    arr = np.array([imread(i) for i in fs])
-    dis = distance_transform_edt(arr, np.float32)
+    arr = np.ones((255,255), dtype=np.uint8)
+    arr[128,128] = 0
+    from skimage.data import horse
+
+    arr = ~horse()*255
+    print(arr.min(), arr.max())
+    dis = distance_transform_edt(arr, np.float64)
+
+    from scipy.ndimage import distance_transform_edt as sciedt
+    dis2 = sciedt(arr)
+    print(np.abs(dis-dis2).max())
+    plt.imshow(dis2)
+    plt.show()

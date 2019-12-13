@@ -3,7 +3,7 @@ import scipy.ndimage as ndimg
 from numba import jit
 
 from scipy.ndimage import label, generate_binary_structure
-from ..hydrology.edt import distance_transform_edt
+from scipy.ndimage import distance_transform_edt
 strc = np.ones((3,3), dtype=np.bool)
     
 # check whether this pixcel can be removed
@@ -33,7 +33,7 @@ lut = np.array([200, 206, 220, 204, 0, 207, 0, 204, 0, 207, 221, 51, 1, 207, 221
 
 fac = np.array([1,2,4,8,16,32,64,128])
 
-@jit
+@jit(nopython=True)
 def medial_axis(data, idx, branch = True):
     h, w = data.shape
     data = data.ravel()
@@ -59,7 +59,7 @@ def mid_axis(img):
 if __name__ == '__main__':
     from time import time
     from skimage.data import horse
-    from skimage.morphology import medial_axis
+    #from skimage.morphology import medial_axis
     import matplotlib.pyplot as plt
 
     img = ~horse()*255

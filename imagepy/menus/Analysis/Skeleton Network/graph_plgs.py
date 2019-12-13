@@ -176,7 +176,7 @@ class Remove2Node(Simple):
         sknw.draw_graph(ips.img, g)
         ips.mark = Mark(ips.data)
 
-@jit
+@jit(nopython=True)
 def floodfill(img, x, y):
     buf = np.zeros((131072,2), dtype=np.uint16)
     color = img[int(y), int(x)]

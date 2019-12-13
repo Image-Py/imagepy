@@ -1,6 +1,5 @@
 import scipy.ndimage as ndimg
 import numpy as np
-from numba import jit
 from imagepy.core.engine import Filter
 from imagepy.ipyalg import find_maximum, ridge, stair, isoline, watershed
 from imagepy.core.roi import PointRoi

@@ -45,17 +45,17 @@ class Duplicate(Simple):
             if ips.roi == None:
                 if ips.is3d:imgs=imgs.copy()
                 else:imgs = [i.copy() for i in imgs]
-                backimg = ips.backimg
+                #backimg = ips.backimg
             else:
                 sc, sr = ips.get_rect()
                 if ips.is3d: imgs=imgs[:, sc, sr].copy()
                 else: imgs = [i[sc,sr].copy() for i in imgs]
-                if not ips.backimg is None:
-                    backimg = None #ips.backimg[sr, sr]
+                #if not ips.backimg is None:
+                #    backimg = None #ips.backimg[sr, sr]
             ipsd = ImagePlus(imgs, name)
             if ips.roi != None:
                 ipsd.roi = ips.roi.affine(np.eye(2), (-sr.start, -sc.start))
-            if not ips.backimg is None: ipsd.backimg = backimg
+            #if not ips.backimg is None: ipsd.backimg = backimg
         ipsd.chan_mode = ips.chan_mode
         IPy.show_ips(ipsd)
 
