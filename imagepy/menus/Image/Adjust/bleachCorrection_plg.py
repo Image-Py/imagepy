@@ -16,6 +16,7 @@ def simple_ratio(imgs):
         imgs[:,:,i+1] *= (ref/(imgs[:,:,i+1].sum()
             /x/y)).astype(imgs.dtype)
     return imgs
+
 def exponential_fit(imgs):
     imgs_=imgs.astype('float32')
     x,y,z = imgs.shape
@@ -49,7 +50,7 @@ class Plugin(Simple):
 
     def run(self, ips, imgs, para = None):
         Bconstant = para['Background']
-        imgs_= imgs.transpose(1,2,0)
+        imgs_= np.array(imgs).transpose(1,2,0)
         if Bconstant != 0:
             for i in range (z):
                 imgs_[:,:,i] -= Bconstant
