@@ -65,7 +65,6 @@ class Plugin(Simple):
         print (para['Method'])
         if para['Method'] == 'Simple ratio':
             imgs_,ratio = simple_ratio(imgs_)
-            t = np.linspace(0, imgs_.shape[2]-1, imgs_.shape[2])
             index = ['Frame%s'%i for i in range(1,imgs_.shape[2]+1)]
             columns = ['Mean value', 'Ratio']
             IPy.show_table(pd.DataFrame(ratio, index, columns), 'Log of simple ratio')
