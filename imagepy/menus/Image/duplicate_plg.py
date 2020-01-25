@@ -14,12 +14,12 @@ class Duplicate(Simple):
     title = 'Duplicate'
     note = ['all']
     
-    # para = {'name':'Undefined','start':1,'end':2,'stack':True}
+    para = {'name':'Undefined','start':1,'end':2,'stack':True}
     
     def load(self, ips):
         self.slength = len(ips.imgs)
-        self.para = {'name':'Undefined','start':1,'end':self.slength,'stack':True}
         self.para['name'] = ips.title+'-copy'
+        self.para['end'] = self.slength
         self.view = [(str, 'name', 'Name', '')]
         if ips.get_nslices()>1:
             self.view.append((int, 'start', 
