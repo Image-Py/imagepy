@@ -14,12 +14,18 @@ class Duplicate(Simple):
     title = 'Duplicate'
     note = ['all']
     
-    para = {'name':'Undefined','stack':True}
+    # para = {'name':'Undefined','start':1,'end':2,'stack':True}
     
     def load(self, ips):
+        self.slength = len(ips.imgs)
+        self.para = {'name':'Undefined','start':1,'end':self.slength,'stack':True}
         self.para['name'] = ips.title+'-copy'
         self.view = [(str, 'name', 'Name', '')]
         if ips.get_nslices()>1:
+            self.view.append((int, 'start', 
+                (1,self.slength),0,'Start slice','1~%d'%self.slength))
+            self.view.append((int, 'end', 
+                (1,self.slength),0,'End slice','1~%d'%self.slength))
             self.view.append((bool, 'stack', 'duplicate stack'))
         return True
     #process
@@ -42,6 +48,7 @@ class Duplicate(Simple):
                     ipsd.backimg = ips.backimg[sr, sc]
                 '''
         elif ips.get_nslices()>1 and self.para['stack']:
+            imgs=imgs[para['start']-1: para['end']]
             if ips.roi == None:
                 if ips.is3d:imgs=imgs.copy()
                 else:imgs = [i.copy() for i in imgs]

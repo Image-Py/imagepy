@@ -31,13 +31,16 @@ def color_code(img, lut):
 class Plugin(Simple):
     title = 'Temporal color-code'
     note = ['all', 'stack']
-    para = {'LUT':'Jet',
-            'Start image':1,
-            'End image': 2,
-            'Creatbar':True}
-
+    # para = {'LUT':'Jet',
+    #         'Start image':1,
+    #         'End image': 2,
+    #         'Creatbar':True}
     def load(self, ips): 
         self.slength = len(ips.imgs)
+        self.para = {'LUT':'Jet',
+            'Start image':1,
+            'End image': self.slength,
+            'Creatbar':True}
         self.para['End image'] = self.slength
         self.view = [(list, 'LUT', list(ColorManager.luts.keys()), str, 'LUT',''),
             (int, 'Start image', (1,self.slength),0,'Start image','1~%d'%self.slength),
