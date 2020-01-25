@@ -58,13 +58,13 @@ class Plugin(Simple):
         print (para['Method'])
         if para['Method'] == 'Simple ratio':
             imgs_=simple_ratio(imgs_)
-            IPy.show_img(imgs_.transpose(2,0,1),'Corrected %s'%ips.title)
+            # IPy.show_img(imgs_.transpose(2,0,1),'Corrected %s'%ips.title)
         if para['Method'] == 'Exponential fit':
             imgs_=exponential_fit(imgs_)
-            IPy.show_img(imgs_.transpose(2,0,1),'Corrected %s'%ips.title)
+            # IPy.show_img(imgs_.transpose(2,0,1),'Corrected %s'%ips.title)
         if para['Method'] == 'Histogram match':
             imgs_=histogram_match(imgs_)
-            IPy.show_img(imgs_.transpose(2,0,1),'Corrected %s'%ips.title)
+        IPy.show_img(imgs_.transpose(2,0,1),'Corrected %s'%ips.title)
 
 
 
