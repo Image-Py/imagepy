@@ -34,7 +34,7 @@ class Plugin(Simple):
     para = {'LUT':'Jet',
             'Start image':1,
             'End image': 2,
-            'Creat time color scale bar':True}
+            'Creatbar':True}
 
     def load(self, ips): 
         self.slength = len(ips.imgs)
@@ -42,14 +42,14 @@ class Plugin(Simple):
         self.view = [(list, 'LUT', list(ColorManager.luts.keys()), str, 'LUT',''),
             (int, 'Start image', (1,self.slength),0,'Start image','1~%d'%self.slength),
             (int, 'End image', (2,self.slength),0,'End image','start~%d'%self.slength),
-            (bool, 'Creat time color scale bar', 'Creat time color scale bar')]
+            (bool, 'Creatbar', 'Creat time color scale bar')]
         return True
 
     def run(self, ips, imgs, para = None):
         cmap = ColorManager.luts[ para['LUT'] ]
         imglut = color_code(imgs[para['Start image']-1: para['End image']], cmap)
         IPy.show_img([imglut],'Color-coded %s'%ips.title)
-        if para['Creat time color scale bar']:
+        if para['Creatbar']:
             cmapshow = np.ones([32,256,3])*cmap
             IPy.show_img([cmapshow.astype('uint8')],'Color bar')
 
