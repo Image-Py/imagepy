@@ -40,6 +40,7 @@ def histogram_match(imgs):
     for i in range(z-1):
         imgs[:,:,i+1] = histogram_matching.match_histograms(
             imgs[:,:,i+1],imgs[:,:,0])
+    print(imgs.dtype)
     return imgs 
 
 def exponential_func(t, ref, k, offset):
