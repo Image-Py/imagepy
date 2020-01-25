@@ -4,7 +4,7 @@ Created on Sun Jan 25 17:00:00 2020
 """
 from imagepy.core.engine import Filter
 from skimage import exposure
-
+import numpy as np
 class Plugin(Filter):
     title = 'Enhance contrast'
     note = ['all', 'auto_msk', 'auto_snap','preview']
