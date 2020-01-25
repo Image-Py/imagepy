@@ -68,8 +68,6 @@ class Plugin(Simple):
             index = ['Frame%s'%i for i in range(1,imgs_.shape[2]+1)]
             columns = ['Mean value', 'Ratio']
             IPy.show_table(pd.DataFrame(ratio, index, columns), 'Log of simple ratio')
-
-            # IPy.show_img(imgs_.transpose(2,0,1),'Corrected %s'%ips.title)
         if para['Method'] == 'Exponential fit':
             [imgs_, popt, intensity] = exponential_fit(imgs_)
             t = np.linspace(0, imgs_.shape[2]-1, imgs_.shape[2])
@@ -81,7 +79,6 @@ class Plugin(Simple):
             plt.title('Exponential fitted result')
             plt.legend()
             plt.show()
-            # IPy.show_img(imgs_.transpose(2,0,1),'Corrected %s'%ips.title)
         if para['Method'] == 'Histogram match':
             imgs_=histogram_match(imgs_)
         IPy.show_img(imgs_.transpose(2,0,1),'Corrected %s'%ips.title)
