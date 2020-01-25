@@ -1,5 +1,5 @@
 """
-Created on Sun Jan 23 11:53:00 2020
+Created on Sun Jan 25 9:00:00 2020
 @author: weisong
 """
 from imagepy.core.engine import Simple
@@ -8,13 +8,12 @@ from imagepy import IPy
 
 class Plugin(Simple):
     title = 'Normalize'
-    note = ['8-bit','16-bit','int','float','stack']
+    note = ['8-bit','16-bit','float','stack']
     para = {'if3d': False, 'Sb':False}
     view = [(bool, 'if3d', '3D stack'),
     (bool, 'Sb', 'Subtract background')]
 
     def run(self, ips, imgs, para = None):
-        # .astype('float64')
         imgs_= np.array(imgs).astype('float64').transpose(1,2,0)
         x, y, z = imgs_.shape
         if para['if3d']:
