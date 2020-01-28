@@ -42,8 +42,8 @@ Simply unzip the archive and run the ImagePy.bat file.
 This will open a command line window and open the GUI of ImagePy.
 
 ### - Using pip
-In a command-prompt type `pip install imagepy`.  
-On Windows you currently need to first install shapely using conda.   
+In a command-prompt type `pip install imagepy`.
+~~On Windows you currently need to first install shapely using conda.~~ This should also work for windows, now that shapely is available via pip.
 Once installed, ImagePy can be run by typing `python -m imagepy` in a command prompt.
 
 
