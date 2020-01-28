@@ -15,7 +15,6 @@ class Plugin(Simple):
 
     def run(self, ips, imgs, para = None):
         imgs_= np.array(imgs).astype('float64').transpose(1,2,0)
-        x, y, z = imgs_.shape
         if para['if3d']:
             if para['Sb']:
                 imgs_ -= imgs_.min()

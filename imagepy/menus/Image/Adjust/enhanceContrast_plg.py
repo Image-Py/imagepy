@@ -10,8 +10,8 @@ class Plugin(Filter):
     title = 'Enhance contrast'
     note = ['all', 'auto_msk', 'auto_snap','preview']
     para = {'percentage': 0.3}
-    view = [(float, 'percentage', (0,100), 2, 'Saturated pixels', '%')]
+    view = [(float, 'percentage', (0,100), 4, 'Saturated pixels', '%')]
     
     def run(self, ips, snap, img, para = None):
-        up, down = np.percentile(snap, (0, 100 - para['percentage']/100))
+        up, down = np.percentile(snap, (0, 100 - para['percentage']))
         return exposure.rescale_intensity(snap, in_range=(up, down))

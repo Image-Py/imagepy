@@ -7,18 +7,6 @@ import numpy as np
 from imagepy.core.manager import ColorManager
 from imagepy import IPy
 
-def color_code(imgs,cmap,start,end):
-    x,y,z = imgs.shape
-    z = end - start
-    imgLUT = np.zeros([x,y,3],'float32')
-    for i in range(start, end):
-        for rgb in range (2):
-            imgLUT[:,:,rgb] += imgs[:,:,i] * \
-            cmap[np.floor((i+1)*256/z).astype(np.int)-1,rgb]
-    for rgb in range(2):
-        imgLUT[:,:,rgb] = 255 * imgLUT[:,:,rgb] / imgLUT[:,:,rgb].max()
-    return imgLUT
-
 def color_code(img, lut):
     idx = np.linspace(0,255,len(img)).astype(int)
     cs = lut[idx].astype(np.uint32)
