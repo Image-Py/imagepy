@@ -178,7 +178,6 @@ class ImagePlus:
 
 
     def swap(self):
-        print(type(self.snap), type(self.imgs[self.cur]), self.cur)
         if self.snap is None:return
         if isinstance(self.imgs, list):
             self.snap, self.imgs[self.cur] = self.imgs[self.cur], self.snap

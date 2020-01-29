@@ -8,26 +8,27 @@ from imagepy import IPy
 
 class Plugin(Simple):
     title = 'Normalize'
-    note = ['8-bit','16-bit','float','stack']
-    para = {'if3d': False, 'Sb':False}
-    view = [(bool, 'if3d', '3D stack'),
-    (bool, 'Sb', 'Subtract background')]
+    note = ['8-bit','16-bit','float']
+    para = {'is3d': False, 'sb':True}
+    view = [(bool, 'is3d', '3D stack'),
+            (bool, 'sb', 'Subtract background')]
 
     def run(self, ips, imgs, para = None):
-        imgs_= np.array(imgs).astype('float64').transpose(1,2,0)
-        if para['if3d']:
-            if para['Sb']:
-                imgs_ -= imgs_.min()
-            imgs_ = imgs_ / imgs_.max()
-        else:
-            if para['Sb']:
-                for i in range(z):
-                    imgs_[:,:,i] -= imgs_[:,:,i].min()
-            for i in range(z):
-                imgs_[:,:,i] = imgs_[:,:,i] / imgs_[:,:,i].max()        
-        if imgs.dtype == np.uint8:
-            imgs[:] = (255*imgs_).astype(imgs.dtype).transpose(2,0,1)
-        elif imgs.dtype == np.uint16:
-            imgs[:] = (65535*imgs_).astype(imgs.dtype).transpose(2,0,1)
-        else:
-            imgs[:] = (imgs_).astype(imgs.dtype).transpose(2,0,1)
+        lim = np.zeros([len(imgs), 2], dtype=imgs[0].dtype)
+        dic = {np.uint8:255, np.uint16:65535, np.float32:1, np.float64:1}
+
+        IPy.set_info('count range ...')
+        for i in range(len(imgs)):
+            lim[i] = imgs[i].min(), imgs[i].max()
+            self.progress(i, len(imgs))
+        
+        maxvalue = dic[imgs[0].dtype.type]
+        if not para['sb']: lim[:,0] = 0
+        rg = lim[:,0].min(), lim[:,1].max()
+        if para['is3d']: lim[:] = rg
+        IPy.set_info('adjust range ...')
+        for i in range(len(imgs)):
+            if para['sb']: imgs[i] -= lim[i,0]
+            np.multiply(imgs[i], maxvalue/(lim[i].ptp()), out=imgs[i], casting='unsafe')
+            self.progress(i, len(imgs))
+        ips.range = 0, maxvalue
