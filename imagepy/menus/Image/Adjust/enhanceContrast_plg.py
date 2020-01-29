@@ -13,5 +13,5 @@ class Plugin(Filter):
     view = [(float, 'percentage', (0,100), 4, 'Saturated pixels', '%')]
     
     def run(self, ips, snap, img, para = None):
-        up, down = np.percentile(snap, (0, 100 - para['percentage']))
+        up, down = np.percentile(snap, (para['percentage']/2, 100 - para['percentage']/2))
         return exposure.rescale_intensity(snap, in_range=(up, down))
