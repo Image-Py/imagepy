@@ -13,4 +13,5 @@ wxpython
 xlrd
 xlwt
 markdown
+python-markdown-math
 moderngl

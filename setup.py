@@ -43,6 +43,7 @@ if __name__ == '__main__':
             'xlwt',
             'openpyxl',
             'markdown',
+            'python-markdown-math',
             'numba'
         ],
     )
