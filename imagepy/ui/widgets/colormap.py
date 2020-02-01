@@ -95,4 +95,4 @@ class CMapSelPanel(wx.Panel):
     def Bind(self, z, f): self.f = f
 
     def on_sel(self, event):
-        self.f(event)
+        self.f(self)

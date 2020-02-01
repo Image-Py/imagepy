@@ -70,6 +70,7 @@ class Plugin ( wx.Panel ):
 		self.viewport.set_box(win.canvas.conbox, win.canvas.winbox)
 
 	def on_zoom(self, event):
+		self.on_apply(event)
 		k = self.scales[self.slider.GetValue()]
 		self.label.SetLabel('%.2f%%'%(k*100))
 		win = IPy.get_window()
@@ -81,6 +82,7 @@ class Plugin ( wx.Panel ):
 		self.viewport.set_box(win.canvas.conbox, win.canvas.winbox)
 
 	def on_fit(self, event):
+		self.on_apply(event)
 		win = IPy.get_window()
 		if win is None: return
 		win.canvas.fit()
@@ -92,6 +94,7 @@ class Plugin ( wx.Panel ):
 		self.viewport.set_box(win.canvas.conbox, win.canvas.winbox)
 
 	def on_one(self, event):
+		self.on_apply(event)
 		win = IPy.get_window()
 		if win is None: return
 		a,b,c,d = win.canvas.winbox
@@ -102,7 +105,8 @@ class Plugin ( wx.Panel ):
 		self.label.SetLabel('%.2f%%'%100)
 		self.viewport.set_box(win.canvas.conbox, win.canvas.winbox)
 
-	def on_handle(self):
+	def on_handle(self, update=False):
+		if update: self.on_apply(update)
 		win = IPy.get_window()
 		if win is None: return
 		x, y = self.viewport.GetValue()

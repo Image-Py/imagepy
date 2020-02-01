@@ -243,8 +243,8 @@ if __name__=='__main__':
     canvas.set_lut(lut)
     canvas.set_cn(0)
     canvas.set_back(astronaut())
-    canvas.set_cn('rgb', 1)
-    canvas.set_mode('msk')
+    canvas.set_cn((0,1,2), True)
+    canvas.set_mode(0.5)
     x = np.arange(512)
     y = np.sin(x/30) * 100 + 256
     canvas.marks['line'] = {'type':'line', 'lw':3, 'body':np.array([x,y]).T.tolist()}

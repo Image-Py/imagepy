@@ -63,6 +63,7 @@ class ParaDialog (wx.Dialog):
     
     def OnDestroy( self, event ):
         self.set_handle(None)
+        self.on_cancel = self.on_ok = self.on_help = None
         del self.ctrl_dic
 
     def parse(self, para) :
@@ -92,17 +93,23 @@ class ParaDialog (wx.Dialog):
 
     def para_check(self, para, key):pass
 
-    def para_changed(self, key):
+    def para_changed(self, obj):
+        key = ''
         para = self.para
-        for p in list(para.keys()):
-            if p in self.ctrl_dic:
+        for p in self.ctrl_dic:
+            if p in para:
                 para[p] = self.ctrl_dic[p].GetValue()
+            if self.ctrl_dic[p] == obj: key = p
+
         sta = sum([i is None for i in list(para.values())])==0
         self.btn_ok.Enable(sta)
         if not sta: return
         self.para_check(para, key)
         if 'preview' not in self.ctrl_dic:return
-        if not self.ctrl_dic['preview'].GetValue():return
+        if not self.ctrl_dic['preview'].GetValue():
+            if key=='preview' and self.on_cancel != None: 
+                return self.on_cancel()
+            else: return
         self.handle(para)
 
     def reset(self, para=None):

@@ -61,7 +61,7 @@ class CurvePanel(wx.Panel):
             self.pts.append((x, 255-y))
             self.idx = len(self.pts)-1
             self.update()
-            self.handle(event)
+            self.handle(self)
 
     def on_lu(self, event):
         self.idx = -1
@@ -75,7 +75,7 @@ class CurvePanel(wx.Panel):
             del self.pts[self.idx]
             self.idx = -1
             self.update()
-            self.handle(event)
+            self.handle(self)
 
     def on_mv(self, event):
         x = (event.GetX()-self.offset[0])/self.k 
@@ -91,7 +91,7 @@ class CurvePanel(wx.Panel):
             y = np.clip(y, 0, 255)
             self.pts[self.idx] = (x, 255-y)
             self.update()
-            self.handle(event)
+            self.handle(self)
         
 
     def on_paint(self, event):

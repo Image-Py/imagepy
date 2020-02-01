@@ -47,12 +47,12 @@ class ViewPort(wx.Panel):
         wx.BufferedPaintDC(self, self.buffer)
 
     def on_ld(self, event):
+        self.handle(True)
         x, y = event.GetX(), event.GetY()
         x = 1.0*(x-self.offx)/self.imgw
         y = 1.0*(y-self.offy)/self.imgh
         if x<0 or x>1 or y<0 or y>1:return
         self.loc = (x*self.ibox[0], y*self.ibox[1])
-        self.handle()
         self.drag = True
 
     def on_lu(self, event):

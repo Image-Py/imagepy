@@ -105,9 +105,10 @@ class Filter:
 
         self.dialog.on_help = lambda : IPy.show_md(self.title, DocumentManager.get(self.title))
         self.dialog.set_handle(lambda x:self.preview(self.ips, x))
-        if self.modal: return self.dialog.ShowModal() == wx.ID_OK
+
         self.dialog.on_ok = lambda : self.ok(self.ips)
         self.dialog.on_cancel = lambda : self.cancel(self.ips)
+        if self.modal: return self.dialog.ShowModal() == wx.ID_OK
         self.dialog.Show()
     
     def run(self, ips, snap, img, para = None):
@@ -184,7 +185,7 @@ class Filter:
         
     def cancel(self, ips):
         if 'auto_snap' in self.note:
-            ips.swap()
+            ips.img[:] = ips.snap
             ips.update()
             
     def start(self, para=None, callafter=None):

@@ -30,7 +30,7 @@ class NumCtrl(wx.Panel):
     def Bind(self, z, f):self.f = f
         
     def ontext(self, event):
-        self.f(event)
+        self.f(self)
         if self.GetValue()==None:
             self.ctrl.SetBackgroundColour((255,255,0))
         else:
@@ -78,7 +78,7 @@ class TextCtrl(wx.Panel):
     def Bind(self, z, f):self.f = f
         
     def ontext(self, event):
-        self.f(event)
+        self.f(self)
         
     def SetValue(self, n):
         self.ctrl.SetValue(n)
@@ -120,7 +120,7 @@ class ColorCtrl(wx.Panel):
             rst = dialog.GetColourData().GetColour()
             self.ctrl.SetBackgroundColour(rst)
             self.ctrl.SetValue(rst.GetAsString(wx.C2S_HTML_SYNTAX))
-            self.f(event)
+            self.f(self)
         dialog.Destroy()
     
     def SetValue(self, color):
@@ -199,7 +199,7 @@ class Choice(wx.Panel):
         self.f = f
         
     def on_choice(self, event):
-        self.f(event)
+        self.f(self)
 
     def SetValue(self, x):
         n = self.choices.index(x) if x in self.choices else 0
@@ -260,7 +260,7 @@ class AnyType( wx.Panel ):
     
     # Virtual event handlers, overide them in your derived class
     def on_text( self, event ):
-        self.f(event)
+        self.f(self)
         if self.GetValue()==None:
             self.txt_value.SetBackgroundColour((255,255,0))
         else: self.txt_value.SetBackgroundColour((255,255,255))
@@ -292,7 +292,7 @@ class Choices(wx.Panel):
         self.f = f
 
     def on_check(self, event):
-        self.f(event)
+        self.f(self)
 
     def GetValue(self):
         return [self.choices[i] for i in self.ctrl.GetCheckedItems()]
@@ -354,14 +354,14 @@ class FloatSlider(wx.Panel):
         n = value/255.0*(self.max-self.min)+self.min
         self.text.SetValue(str(round(n,self.accury) if self.accury>0 else int(n)))
         self.text.SetBackgroundColour((255,255,255))
-        self.f(event)
+        self.f(self)
 
     def on_spin(self, event):
         self.slider.SetValue(self.spin.GetValue())
         self.on_scroll(event)
 
     def on_text(self, event):
-        self.f(event)
+        self.f(self)
         if self.GetValue()==None:
             self.text.SetBackgroundColour((255,255,0))
         else:
@@ -416,7 +416,7 @@ class Check(wx.Panel):
         self.GetValue = check.GetValue
         check.Bind(wx.EVT_CHECKBOX, self.on_check)
 
-    def on_check(self, event):self.f(event)
+    def on_check(self, event):self.f(self)
     def Bind(self, z, f): self.f = f
 
 if __name__ == '__main__':
