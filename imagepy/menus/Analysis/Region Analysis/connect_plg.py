@@ -4,16 +4,17 @@ from imagepy.core.engine import Simple
 from skimage.measure import regionprops
 from imagepy.core.mark import GeometryMark
 from scipy.ndimage import label, generate_binary_structure
-from imagepy.ipyalg.graph.connect import connect, mapidx
+from imagepy.ipyalg.graph.connect import connect_graph, mapidx
 import pandas as pd
 
 # center, area, l, extent, cov
 class Plugin(Simple):
     title = 'Connective Analysis'
     note = ['8-bit', '16-bit', 'int']
-    para = {'con':'8-connect', 'labled':False, 'slice':False}
+    para = {'con':'8-connect', 'labled':False, 'nozero':True, 'slice':False}
     view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             (bool, 'labled', 'it is a label image'),
+            (bool, 'nozero', 'nonzero'),
             (bool, 'slice', 'slice')]
 
     #process
@@ -27,7 +28,7 @@ class Plugin(Simple):
         for i in range(len(imgs)):
             if para['labled']: buf = imgs[i]
             else: label(imgs[i], generate_binary_structure(2, 1), output=buf)
-            conarr = connect(buf, 1 if para['con']=='4-connect' else 2)
+            conarr = connect(buf, 1 if para['con']=='4-connect' else 2, not self.para['nozero'])
             conmap = mapidx(conarr)
 
             ls = regionprops(buf)

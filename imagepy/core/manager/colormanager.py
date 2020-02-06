@@ -50,7 +50,7 @@ class ColorManager:
         return np.dot((cls.wr,cls.wg,cls.wb), cls.frontcolor)
 
     @classmethod
-    def get_back(cls, one):
+    def get_back(cls, one=False):
         if not one:return cls.backcolor
         return np.dot((cls.wr,cls.wg,cls.wb), cls.backcolor)
 

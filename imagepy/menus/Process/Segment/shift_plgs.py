@@ -37,7 +37,7 @@ class Felzenszwalb(Filter):
     note = ['all', 'not_slice', 'auto_snap', 'auto_msk', 'not_channel', 'preview']
     
     para = {'scale':1.0, 'sigma':0.8, 'min_size':20}
-    view = [(float, 'scale', (0.01, 10), 2, 'scale', ''),
+    view = [(float, 'scale', (0.01, 1024), 2, 'scale', ''),
             (float, 'sigma', (0, 30), 2, 'sigma', ''),
             (int, 'min_size', (1, 1024), 0, 'min_size', '')]
 
@@ -51,7 +51,7 @@ class SLICLab(Simple):
     
     para = {'n_segments':100, 'compactness':10.0, 'max_iter':10, 'sigma':0, 'stack':False}
     view = [(int, 'n_segments', (1, 1e8), 0, 'segments', 'n'),
-            (float, 'compactness', (0.01, 100), 2, 'campactness', 'color-space'),
+            (float, 'compactness', (0.01, 1024), 2, 'campactness', 'color-space'),
             (int, 'max_iter', (3, 50), 0, 'max_iter', 'n'),
             (float, 'sigma', (0, 30), 1, 'sigma', 'smooth'),
             (bool, 'stack', 'stack')]

@@ -18,8 +18,12 @@ class Plugin(Tool):
             (list, 'con', ['4-connect', '8-connect'], str, 'fill', 'pix')]
         
     def mouse_down(self, ips, x, y, btn, **key):
-        ips.snapshot()
+        
         img, color = ips.img, ColorManager.get_front()
+        if int(y)<0 or int(x)<0: return
+        if int(y)>=img.shape[0] or int(x)>=img.shape[1]: return 
+
+        ips.snapshot()
         connectivity=(self.para['con']=='8-connect')+1
         img = ips.img.reshape((ips.img.shape+(1,))[:3])
         msk = np.ones(img.shape[:2], dtype=np.bool)

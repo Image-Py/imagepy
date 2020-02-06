@@ -251,7 +251,6 @@ def draw_text(pts, dc, f, **key):
 	brush.SetColour(pen.GetColour())
 	brush.SetStyle(100)
 	if 'fcolor' in pts:
-		print('hahaha')
 		dc.SetTextBackground(pts['fcolor'])
 	if 'size' in pts:
 		font.SetPointSize(pts['size'])

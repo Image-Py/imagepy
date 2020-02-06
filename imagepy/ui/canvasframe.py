@@ -120,7 +120,8 @@ class CanvasPanel(wx.Panel):
                 self.canvas.marks['roi'] = draw
             if self.ips.mark is None: self.canvas.marks['mark'] = None
             else:
-                draw = lambda dc, f, **key: self.ips.mark.draw(dc, f, cur=self.ips.cur, **key)
+                if self.ips.mark is None: draw = None
+                else: draw = lambda dc, f, **key: self.ips.mark.draw(dc, f, cur=self.ips.cur, **key)
                 self.canvas.marks['mark'] = draw
             if self.ips.unit == (1, 'pix'): self.canvas.marks['unit'] = None
             else:
