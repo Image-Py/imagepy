@@ -10,6 +10,7 @@ import scipy.ndimage as ndimg
 import numpy as np
 from imagepy.core.engine import Filter
 from skimage.morphology import convex_hull_object
+from skimage.segmentation import clear_border
 
 class Closing(Filter):
     """Closing: derived from imagepy.core.engine.Filter """
@@ -82,13 +83,20 @@ class FillHoles(Filter):
         ndimg.binary_fill_holes(snap, output=img)
         img *= 255
 
+class ClearBorder(Filter):
+    title = 'Clear Border'
+    note = ['8-bit', 'auto_msk', 'auto_snap']
+
+    def run(self, ips, snap, img, para = None):
+        clear_border(img, in_place=True)
+        
+
 class Convex(Filter):
     title = 'Binary ConvexHull'
     note = ['8-bit', 'auto_msk', 'auto_snap']
 
-    #process
     def run(self, ips, snap, img, para = None):
         img[convex_hull_object(snap)] = 255
         
 
-plgs = [Dilation, Erosion, '-', Closing, Opening, '-', Outline, FillHoles, Convex]
+plgs = [Dilation, Erosion, '-', Closing, Opening, '-', Outline, FillHoles, ClearBorder, Convex]

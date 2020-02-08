@@ -1,1 +1,1 @@
-catlog = ['corner_plgs', '-', 'edge_plgs']
+catlog = ['edge_plgs', '-', 'corner_plgs', '-', 'ridge_plgs', '-', 'blob_plgs']

@@ -15,8 +15,8 @@ def fill_normal(img, r, c, color, con, tor):
         msk &= flood(img[:,:,i], (r, c), connectivity=con, tolerance=tor)
     img[msk] = color
 
-def local_brush(img, r, c, color, sigma, msize):
-    lab = felzenszwalb(img, 1, sigma, msize)
+def local_brush(img, back, r, c, color, sigma, msize):
+    lab = felzenszwalb(back, 1, sigma, msize)
     msk = flood(lab, (r, c), connectivity=2)
     img[msk] = color
 
@@ -127,10 +127,11 @@ out fill:                   | right ctrl + alt
 
 scale and move:             | wheel
 '''
+
 class Plugin(Tool):
-    title = 'AI Painter'
+    title = 'AI Brush'
     
-    para = {'win':48, 'tor':10, 'con':'8-connect', 'ms':20, 'r':2, 'color':(255,0,128)}
+    para = {'win':48, 'tor':10, 'con':'8-connect', 'ms':30, 'r':2, 'color':(255,0,128)}
     view = [(int, 'win', (28, 64), 0, 'window', 'size'),
             ('color', 'color', 'color', 'mark'),
             ('lab', None, '======= Brush ======='),
@@ -244,19 +245,21 @@ class Plugin(Tool):
             sr = (max(0,r-w), min(img.shape[0], r+w))
             sc = (max(0,c-w), min(img.shape[1], c+w))
             r, c = min(r, w), min(c, w)
-            clip = img[slice(*sr), slice(*sc)]
+            backclip = imgclip = img[slice(*sr), slice(*sc)]
+            if not ips.back is None: 
+                backclip = ips.back.img[slice(*sr), slice(*sc)]
 
             if self.status == 'local_pen':
-                local_pen(clip, r, c, self.para['r'], color)
+                local_pen(imgclip, r, c, self.para['r'], color)
             if self.status == 'local_brush':
-                if (clip[r,c] - color).sum()==0: continue
-                local_brush(clip, r, c, color, 0, self.para['ms'])
+                if (imgclip[r,c] - color).sum()==0: continue
+                local_brush(imgclip, backclip, r, c, color, 0, self.para['ms'])
             if self.status == 'local_in':
-                local_in_fill(clip, r, c, self.para['r'], self.pickcolor, color)
+                local_in_fill(imgclip, r, c, self.para['r'], self.pickcolor, color)
             if self.status == 'local_sketch':
-                local_sketch(clip, r, c, self.para['r'], self.pickcolor, color)
+                local_sketch(imgclip, r, c, self.para['r'], self.pickcolor, color)
             if self.status=='local_out':
-                local_out_fill(clip, r, c, self.para['r'], self.pickcolor, color)
+                local_out_fill(imgclip, r, c, self.para['r'], self.pickcolor, color)
 
 
         ips.mark = self.make_mark(x, y)

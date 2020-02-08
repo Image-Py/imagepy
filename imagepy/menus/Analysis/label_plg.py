@@ -5,6 +5,7 @@ Created on Mon Dec 26 22:05:43 2016
 """
 import numpy as np
 from scipy.ndimage import label, generate_binary_structure
+from skimage.segmentation import find_boundaries
 from imagepy import IPy
 from imagepy.core import ImagePlus
 from imagepy.core.engine import Filter, Simple
@@ -27,7 +28,27 @@ class Label(Simple):
             lab, n = label(imgs[i], strc, output = np.int32)
             labels.append(lab)
         IPy.show_img(labels, ips.title+'-label') 
+
+class Boundaries(Simple):
+    title = 'Mark Boundaries'
+    note = ['8-bit', '16-bit','int']    
+    para = {'slice':False, 'mode':'outer', 'con':'4-Connect'}
+    view = [(list, 'con', ['4-Connect','8-Connect'], str, 'Structure', 'connect'),
+            (list, 'mode', ['thick', 'inner', 'outer', 'subpixel'], str, 'mode', ''),
+            (bool, 'slice', 'slice')]
         
+    def run(self, ips, imgs, para = None):
+        if not para['slice']:  imgs = [ips.img]
+        labels = []
+        for i in range(len(imgs)):
+            self.progress(i, len(imgs))
+            con = 1 if para['con']=='4-Connect' else 2
+            bound = find_boundaries(imgs[i], con, para['mode'])
+            bound.dtype = np.uint8
+            bound *= 255
+            labels.append(bound)
+        IPy.show_img(labels, ips.title+'-boundary') 
+
 class Render(Simple):
     title = 'Label Render'
     note = ['8-bit', '16-bit', 'int']    
@@ -36,7 +57,7 @@ class Render(Simple):
             (int, 'colors', (4, 255), 0, 'colors', 'n'),
             (bool, 'back', 'background'),
             (bool, 'slice', 'slice')]
-        
+    
     def run(self, ips, imgs, para = None):
         if not para['slice']:  imgs = [ips.img]
         print(para)
@@ -57,4 +78,4 @@ class Render(Simple):
         ips.range = (0, para['colors'])
         IPy.show_ips(ips) 
 
-plgs = [Label, Render]
+plgs = [Label, Boundaries, Render]
