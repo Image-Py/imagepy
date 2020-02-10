@@ -9,7 +9,8 @@ def get_img_type(imgs):
     if imgs[0].dtype == np.int32:return '32-int'
     if imgs[0].dtype == np.float32:return '32-float'
     if imgs[0].dtype == np.float64:return '64-float'
-    if imgs[0].dtype == np.complex128:return 'complex'
+    if imgs[0].dtype == np.complex128:return '128-complex'
+    if imgs[0].dtype == np.complex64:return '64-complex'
 
 def get_updown(imgs, slices='all', chans='all', step=1):
     c = chans if isinstance(chans, int) else slice(None)
@@ -23,6 +24,8 @@ def get_updown(imgs, slices='all', chans='all', step=1):
     mins = np.array(mins).reshape((len(mins),-1))
     maxs = np.array(maxs).reshape((len(maxs),-1))
     mins, maxs = mins.min(axis=0), maxs.max(axis=0)
+    if np.iscomplexobj(mins):
+        mins, maxs = np.zeros(mins.shape), np.abs(maxs)
     if chans!='all': return mins.min(), maxs.max()
     return [(i,j) for i,j in zip(mins, maxs)]
 
@@ -50,6 +53,7 @@ class ImagePlus:
         self.msk = None
         self.mskmode = None
         self.lut = ColorManager.get_lut('grays')
+        self.log = False
         
         self.tool = None
         self.data = {}

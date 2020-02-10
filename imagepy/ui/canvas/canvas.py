@@ -25,17 +25,19 @@ class Canvas (wx.Panel):
 
         self.buffer = None
         
-        lut = np.arange(256*3)
+        lut = np.arange(256*3)//3
         lut.shape = (256,3)
         lut = lut.astype(np.uint8)
 
         self.lut = lut
         self.rg = (0, 255)
         self.cn = 0
+        self.log = False
 
         self._lut = lut
         self._rg = (0, 255)
         self._cn = 0
+        self._log = False
 
         self.marks = {}
         
@@ -99,6 +101,10 @@ class Canvas (wx.Panel):
     def set_back(self, back): 
         self.back = back
 
+    def set_log(self, log, b=False):
+        if b: self._log = log
+        else: self.log = log
+        
     def set_rg(self, rg, b=False):
         if b: self._rg = rg
         else: self.rg = rg
@@ -158,17 +164,17 @@ class Canvas (wx.Panel):
         
         #if not back is None: print('has back image')
         mix_img(back, m, o, shp, self.outbak, 
-              self.outrgb, self.outint,
-              self._rg, self._lut, cns=self._cn, mode='set')
+              self.outrgb, self.outint, self._rg,
+                self._lut, self._log, cns=self._cn, mode='set')
         
         mix_img(self.img, m, o, shp, self.outimg,
-              self.outrgb, self.outint,
-              self.rg, self.lut, cns=self.cn, mode=self.mode)
-        
+              self.outrgb, self.outint, self.rg,
+                self.lut, self.log, cns=self.cn, mode=self.mode)
         self.outbmp.CopyFromBuffer(memoryview(self.outrgb))
         dc.DrawBitmap(self.outbmp, *csbox[:2])
         
-    def update(self):
+    def update(self, counter = [0,0]):
+        counter[0] += 1
         start = time()
         lay(self.winbox, self.conbox)
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
@@ -181,8 +187,11 @@ class Canvas (wx.Panel):
             else:
                 drawmark(dc, self.to_panel_coor, self.marks[i], k=self.scale)
         dc.UnMask()
-        print('frame rate:',int(1/max(0.001, time()-start)))
-
+        counter[1] += time()-start
+        if counter[0] == 10:
+            print('frame rate:',int(10/max(0.001,counter[1])))
+            counter[0] = counter[1] = 0
+        
     def center(self, x, y, coord='win'):
         if coord=='data':
             x,y = self.to_panel_coor(x, y)
@@ -229,24 +238,27 @@ class Canvas (wx.Panel):
         print('========== canvas del')
 
 if __name__=='__main__':
-    msk = np.zeros((512,512), dtype=np.uint8)
-    msk[100:200,100:200] = 1
-    msk[200:300,200:300] = 2
-    msk[300:400,300:400] = 3
-    lut = np.array([(0,0,0),(255,0,0),(0,255,0),(0,0,255)], dtype=np.uint8)
-    
     from skimage.data import astronaut, camera
+    from numpy.fft import fft2, ifft2, fftshift, ifftshift
+    import matplotlib.pyplot as plt
+
+    img = camera()
+    img = fftshift(fft2(img))
+    farr = img.view(dtype=np.float64)
+    #a = farr.reshape((512,2,512)).transpose(0,2,1)
+    # farr.shape = img.shape+(-1,)
+    #plt.imshow(np.log(np.abs(a[:,:,1])))
+    #plt.show()
+    
     app = wx.App()
     frame = wx.Frame(None)
     canvas = Canvas(frame)
-    canvas.set_img(msk)
-    canvas.set_lut(lut)
+    
+    canvas.set_img(img)
+    # canvas.set_rg((-128, 127))
+    canvas.set_rg((0,31015306))
     canvas.set_cn(0)
-    canvas.set_back(astronaut())
-    canvas.set_cn((0,1,2), True)
-    canvas.set_mode(0.5)
-    x = np.arange(512)
-    y = np.sin(x/30) * 100 + 256
-    canvas.marks['line'] = {'type':'line', 'lw':3, 'body':np.array([x,y]).T.tolist()}
+    canvas.set_log(True)
     frame.Show(True)
+    frame.SetSize(512,512)
     app.MainLoop()

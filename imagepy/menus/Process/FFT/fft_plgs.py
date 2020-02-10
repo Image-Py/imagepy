@@ -2,6 +2,7 @@ import numpy as np
 from imagepy.core.engine import Simple, Filter
 from numpy.fft import fft2, ifft2, fftshift, ifftshift
 from imagepy import IPy
+from imagepy.core import ImagePlus
 
 class FFT(Simple):
 	title = 'FFT'
@@ -17,26 +18,9 @@ class FFT(Simple):
 		for i in range(len(imgs)):
 			rst.append(shift(fft2(imgs[i])))
 			self.progress(i, len(imgs))
-		IPy.show_img(rst, '%s-fft'%ips.title)
-
-class LogPower(Simple):
-	title = 'Log Power'
-	note = ['complex']
-	para = {'slice':False, 'type':'float', 'log':2.718}
-	view = [(float, 'log', (2,30), 3, 'log', ''),
-			(list, 'type', ['uint8', 'int', 'float'], str, 'type', ''),
-			(bool, 'slice', 'slices')]
-
-	def run(self, ips, imgs, para = None):
-		if not para['slice']: imgs = [ips.img]
-		tp = {'uint8':np.uint8, 'int':np.int32, 'float':np.float32}
-		rst, tp = [], tp[para['type']]
-		for i in range(len(imgs)):
-			zs = np.log(np.abs(imgs[i]))
-			zs /= np.log(para['log'])
-			rst.append(zs.astype(tp))
-			self.progress(i, len(imgs))
-		IPy.show_img(rst, '%s-fft'%ips.title)
+		ips = ImagePlus(rst, '%s-fft'%ips.title)
+		ips.log = True
+		IPy.show_ips(ips)
 
 class IFFT(Simple):
 	title = 'Inverse FFT'
@@ -70,4 +54,22 @@ class IShift(Filter):
 	def run(self, ips, snap, img, para = None):
 		return ifftshift(img)
 
-plgs = [FFT, IFFT, '-', Shift, IShift, LogPower]
+class Split(Simple):
+	title = 'Split Real And Image'
+	note = ['complex']
+	para = {'slice':False, 'copy':False}
+	view = [(bool, 'slice', 'slices'),
+			(bool, 'copy', 'memory copy')]
+
+	def run(self, ips, imgs, para = None):
+		if not para['slice']: imgs = [ips.img]
+		copy = np.copy if para['copy'] else lambda x:x
+		imags, reals = [], []
+		for i in range(len(imgs)):
+			reals.append(copy(imgs[i].real))
+			imags.append(copy(imgs[i].imag))
+			self.progress(i, len(imgs))
+		IPy.show_img(reals, '%s-real'%ips.title)
+		IPy.show_img(imags, '%s-image'%ips.title)
+
+plgs = [FFT, IFFT, '-', Shift, IShift, '-', Split]

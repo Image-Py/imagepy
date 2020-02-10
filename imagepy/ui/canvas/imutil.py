@@ -1,9 +1,11 @@
 import numpy as np
 from scipy.ndimage import affine_transform
 try: from numba import njit as jit
-except: jit = None
+except:
+    print('install numba may be several times faster!')
+    jit = None
 # jit = None
-
+    
 def affine_jit(img, m, offset, output_shape=0, output=0, order=0, prefilter=0):
     kr=m[0]; kc=m[1]; ofr=offset[0]; ofc=offset[1];
     for r in range(output_shape[0]):
@@ -61,33 +63,87 @@ if not jit is None:
         if isinstance(mode, float): blend_mix(img, out, msk, mode)
     blend = blend_jit
 
-def stretch(img, out, rg, mode='set'):
-    if img.dtype==np.uint8 and (rg==[(0,255)] or rg==(0,255)):
+def stretch(img, out, rg, log=False):
+    if img.dtype==np.uint8 and not log and (rg==[(0,255)] or rg==(0,255)):
         out[:] = img
-    else:
+    elif not log:
+        ptp = max(rg[1]-rg[0], 1e-6)
         np.clip(img, rg[0], rg[1], out=img)
         np.subtract(img, rg[0], out=img, casting='unsafe')
-        np.multiply(img, 255.0/np.ptp(rg), out=out, casting='unsafe')
+        np.multiply(img, 255/ptp, out=out, casting='unsafe')
+    elif img.itemsize<3:
+        length = 2**(img.itemsize*8)
+        lut = np.arange(length, dtype=np.float32)
+        if img.dtype in (np.int8, np.int16):
+            lut[length//2:] -= length
+        np.clip(lut, rg[0], rg[1], out=lut)
+        np.subtract(lut, rg[0]-1, out=lut)
+        ptp = np.log(max(rg[1]-rg[0]+1, 1+1e-6))
+        np.log(lut, out=lut)
+        lut *= 255/np.log(max(rg[1]-rg[0]+1, 1+1e-6))
+        out[:] = lut[img]
+    else:
+        fimg = img.ravel().view(np.float32)
+        fimg = fimg[:img.size].reshape(img.shape)
+        np.clip(img, rg[0], rg[1], out=fimg)
+        np.subtract(fimg, rg[0]-1, out=fimg)
+        ptp = np.log(max(rg[1]-rg[0]+1, 1+1e-6))
+        np.log(fimg, out=fimg)
+        np.multiply(fimg, 255/ptp, out=out, casting='unsafe')
 
 if not jit is None:
     @jit
-    def stretch_int(img, out, rg):
-        for r in range(img.shape[0]):
-            for c in range(img.shape[1]):
-                out[r,c] = img[r,c]
-    @jit
-    def stretch_other(img, out, rg):
+    def stretch_linear(img, out, rg):
         ptp = max(rg[1]-rg[0], 1e-6)
         for r in range(img.shape[0]):
             for c in range(img.shape[1]):
                 v = (img[r,c]-rg[0])/ptp*255
                 out[r,c] = min(max(v, 0), 255)
-    def stretch_jit(img, out, rg):
-        # print(img.dtype, rg)
-        if img.dtype==np.uint8 and (rg==[(0,255)] or rg==(0,255)):
-            stretch_int(img, out, rg)
-        else: stretch_other(img, out, rg)
+    @jit
+    def stretch_log(img, out, rg):
+        ptp = 255/np.log(max(rg[1]-rg[0]+1, 1+1e-6))
+        for r in range(img.shape[0]):
+            for c in range(img.shape[1]):
+                v = np.log(img[r,c]-rg[0]+1)*ptp
+                out[r,c] = min(max(v, 0), 255)
+    @jit
+    def stretch_lut(img, out, lut):
+        for r in range(img.shape[0]):
+            for c in range(img.shape[1]):
+                out[r,c] = lut[img[r,c]]
+        
+    def stretch_jit(img, out, rg, log=False):
+        if img.dtype==np.uint8 and not log and (rg==[(0,255)] or rg==(0,255)):
+            out[:] = img
+        elif not log:
+            stretch_linear(img, out, rg)
+        elif img.itemsize<3:
+            length = 2**(img.itemsize*8)
+            lut = np.arange(length, dtype=np.float32)
+            if img.dtype in (np.int8, np.int16):
+                lut[length//2:] -= length
+            np.clip(lut, rg[0], rg[1], out=lut)
+            np.subtract(lut, rg[0]-1, out=lut)
+            ptp = np.log(max(rg[1]-rg[0]+1, 1+1e-6))
+            np.log(lut, out=lut)
+            lut *= 255/np.log(max(rg[1]-rg[0]+1, 1+1e-6))
+            stretch_lut(img, out, lut)
+        else:
+            stretch_log(img, out, rg)
+            
     stretch = stretch_jit
+
+def complex_norm(ori, real, img, out):
+    np.abs(ori, out=out)
+    return out
+
+if not jit is None:
+    @jit
+    def complex_norm(ori, real, img, out):
+        for r in range(img.shape[0]):
+            for c in range(img.shape[1]):
+                out[r,c] = (img[r,c]**2+real[r,c]**2)**0.5
+        return out
 
 def lookup(img, lut, out, mode='set'):
     blend(lut[img], out, img, mode)
@@ -136,26 +192,27 @@ if not jit is None:
     lookup = lookup_jit
 
 # mode: set, min, max, mix, nor
-def mix_img(img, m, o, shp, buf, rgb, byt, rg=(0,255), lut=None, cns=0, mode='set'):
+def mix_img(img, m, o, shp, buf, rgb, byt, rg=(0,255), lut=None, log=True, cns=0, mode='set'):
     if img is None: return
     img = img.reshape((img.shape[0], img.shape[1], -1))
     if isinstance(rg, tuple): rg = [rg]*img.shape[2]
 
     if isinstance(cns, int):
-        # print(img.dtype, buf.dtype, 'type')
-        affine_transform(img[:,:,cns], m, o, shp, buf, 0, prefilter=False)
-        stretch(buf, byt, rg[cns])
+        if np.iscomplexobj(buf):
+            affine_transform(img[:,:,0].real, m, o, shp, buf.real, 0, prefilter=False)
+            affine_transform(img[:,:,0].imag, m, o, shp, buf.imag, 0, prefilter=False)
+            buf = complex_norm(buf, buf.real, buf.imag, buf.real)
+        else: affine_transform(img[:,:,cns], m, o, shp, buf, 0, prefilter=False)
+        stretch(buf, byt, rg[cns], log)
         return lookup(byt, lut, rgb, mode)
-
     for i,v in enumerate(cns):
         if v==-1: rgb[:,:,i] = 0
-        elif mode=='set' and buf.dtype==np.uint8 and rg[v]==(0,255):
+        elif mode=='set' and img.dtype==np.uint8 and rg[v]==(0,255) and not log:
             affine_transform(img[:,:,v], m, o, shp, rgb[:,:,i], 0, prefilter=False)
         else:
             affine_transform(img[:,:,v], m, o, shp, buf, 0, prefilter=False)
-            stretch(buf, byt, rg[v])
+            stretch(buf, byt, rg[v], log)
             blend(byt, rgb[:,:,i], byt, mode)
-
 
 '''
 rgb = np.array([[[0,0,0]]], dtype=np.uint8)

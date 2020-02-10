@@ -6,6 +6,7 @@ from wx.adv import SplashScreen as SplashScreen
 import wx.lib.agw.advancedsplash as AS
 
 from .IPy import *
+from .core import ImagePlus, TablePlus
 root_dir = osp.abspath(osp.dirname(__file__))
 os.chdir(root_dir)
 

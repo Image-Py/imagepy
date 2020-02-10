@@ -130,11 +130,13 @@ class CanvasPanel(wx.Panel):
             self.canvas.set_img(self.ips.imgs[self.ips.cur])
             self.canvas.set_cn(self.ips.chan)
             self.canvas.set_rg(self.ips.chan_range)
+            self.canvas.set_log(self.ips.log)
 
             if self.ips.back != None:
                 self.ips.back.cur = self.ips.cur
                 self.canvas.set_back(self.ips.back.img)
                 self.canvas.set_cn(self.ips.back.chan, True)
+                self.canvas.set_log(self.ips.back.log, True)
                 self.canvas.set_rg(self.ips.back.chan_range, True)
                 self.canvas.set_lut(self.ips.back.lut, True)
                 self.canvas.set_mode(self.ips.chan_mode)

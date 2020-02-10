@@ -26,7 +26,6 @@ class WindowsManager:
         for i in cls.wins:
             if i == win: 
                 cls.wins.remove(i)
-                print('remove', i.ips.title)
 
 class ImageManager:
     imgs = []
