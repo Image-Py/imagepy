@@ -4,7 +4,7 @@ Created on Sat Jan  7 16:01:14 2017
 
 @author: yxl
 """
-import wx, os, glob, shutil
+import wx, os, glob, shutil, random
 from imagepy import IPy, root_dir
 from imagepy.core.manager import PluginsManager
 from imagepy.ui.mkdownwindow import HtmlPanel, md2html
@@ -110,7 +110,7 @@ class Plugin( wx.Panel ):
         keys = set([i['path'] for i in prjs])
         for i in has:
             if not i['path'] in keys: prjs.append(i)
-        prjs = sorted([(i['name'], i) for i in prjs])
+        prjs = sorted([(i['name']+str(random.random()), i) for i in prjs])
         self.prjs = [i[1] for i in prjs]
 
         for i in self.prjs:
