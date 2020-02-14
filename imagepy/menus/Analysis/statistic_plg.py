@@ -5,13 +5,15 @@ Created on Mon Dec 26 20:34:59 2016
 """
 from imagepy import IPy, root_dir
 import wx, numpy as np, os
-from imagepy.core.engine import Simple
-from imagepy.core.roi import PointRoi
+from imagepy.core.engine import Filter,Simple
+from imagepy.core.roi import PointRoi,LineRoi
 from imagepy.core.manager import ImageManager, WindowsManager
 from imagepy.ui.widgets import HistCanvas
 from pubsub import pub
 import pandas as pd
 
+from skimage.graph import route_through_array
+from imagepy.core.mark import GeometryMark
 class HistogramFrame(wx.Frame):
     def __init__(self, parent, title, hist):
         wx.Frame.__init__(self, parent, title=title, style = wx.DEFAULT_DIALOG_STYLE)
@@ -200,4 +202,44 @@ class PointsValue(Simple):
         IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-points')
         if para['buf']:ips.mark = Mark(mark)
 
-plgs = [Frequence, Statistic, Histogram, PointsValue]
+class ShortRoute(Filter):
+    title = 'Short Route'
+    note = ['auto_snap','8-bit', '16-bit','int', 'float', 'req_roi','preview']
+    
+    para = {'fully connected':True, 'geometric':True,'type':'white line'}
+    view = [(bool, 'fully connected', 'fully connected'),
+            (bool, 'geometric', 'geometric'),
+            (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', '')]
+        
+    def load(self, ips):
+        if not isinstance(ips.roi, LineRoi):
+            IPy.alert('LineRoi are needed!')
+            return False
+        return True
+
+    def run(self, ips, snap, img, para = None):
+        img[:] = snap
+        print(np.array(ips.roi.body))
+        pts = np.array(ips.roi.body).astype(np.int)
+        img_min,img_max=snap.min(),snap.max()
+        arr=img.copy()
+        arr = (arr-arr.min())/np.ptp(arr)
+
+        print(pts)
+
+        if para['type']=='gray line' or para['type']=='white line':
+            img[:] = img_min
+        for i in pts:
+            for j in range(len(i)-1):
+                p0=(i[j][1],i[j][0])
+                p1=(i[j+1][1],i[j+1][0])
+                indices, weight = route_through_array(arr,p0, p1)
+                indices=np.array(indices)
+                if para['type']=='white line on ori':
+                    img[indices[:,0],indices[:,1]]=img_max
+                elif para['type']=='gray line':
+                    img[indices[:,0],indices[:,1]] = snap[indices[:,0],indices[:,1]]
+                elif para['type']=='white line':
+                    img[indices[:,0],indices[:,1]] = img_max
+        
+plgs = [Frequence, Statistic, Histogram, PointsValue,ShortRoute]
