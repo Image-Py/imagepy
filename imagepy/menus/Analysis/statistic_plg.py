@@ -203,43 +203,42 @@ class PointsValue(Simple):
         if para['buf']:ips.mark = Mark(mark)
 
 class ShortRoute(Filter):
-    title = 'Short Route'
-    note = ['auto_snap','8-bit', '16-bit','int', 'float', 'req_roi','preview']
+    title = 'Shortest Route'
+    note = ['auto_snap','8-bit', '16-bit','int', 'float', 'req_roi', '2int', 'preview']
     
-    para = {'fully connected':True, 'geometric':True,'type':'white line'}
-    view = [(bool, 'fully connected', 'fully connected'),
+    para = {'fully connected':True, 'lcost':0, 'max':False, 'geometric':True, 'type':'white line'}
+    view = [(float, 'lcost', (0, 1e5), 3, 'step', 'cost'),
+            (bool, 'max', 'max cost'),
+            (bool, 'fully connected', 'fully connected'),
             (bool, 'geometric', 'geometric'),
             (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', '')]
         
     def load(self, ips):
         if not isinstance(ips.roi, LineRoi):
-            IPy.alert('LineRoi are needed!')
-            return False
+            return IPy.alert('LineRoi are needed!')
         return True
 
     def run(self, ips, snap, img, para = None):
         img[:] = snap
-        print(np.array(ips.roi.body))
-        pts = np.array(ips.roi.body).astype(np.int)
-        img_min,img_max=snap.min(),snap.max()
-        arr=img.copy()
-        arr = (arr-arr.min())/np.ptp(arr)
+        if para['max']: img *= -1
+        np.add(img, para['lcost']-img.min(), casting='unsafe', out=img)
 
-        print(pts)
-
-        if para['type']=='gray line' or para['type']=='white line':
-            img[:] = img_min
-        for i in pts:
-            for j in range(len(i)-1):
-                p0=(i[j][1],i[j][0])
-                p1=(i[j+1][1],i[j+1][0])
-                indices, weight = route_through_array(arr,p0, p1)
-                indices=np.array(indices)
-                if para['type']=='white line on ori':
-                    img[indices[:,0],indices[:,1]]=img_max
-                elif para['type']=='gray line':
-                    img[indices[:,0],indices[:,1]] = snap[indices[:,0],indices[:,1]]
-                elif para['type']=='white line':
-                    img[indices[:,0],indices[:,1]] = img_max
+        minv, maxv = ips.range
+        routes = []
+        for line in ips.roi.body:
+            pts = np.array(list(zip(line[:-1], line[1:])))
+            for p0, p1 in pts[:,:,::-1].astype(int):
+                indices, weight = route_through_array(img, p0, p1)
+                routes.append(indices)
+        rs, cs = np.vstack(routes).T
+        if para['type']=='white line on ori':
+            img[:] = snap
+            img[rs,cs] = maxv
+        elif para['type']=='gray line':
+            img[:] = minv
+            img[rs,cs] = snap[rs,cs]
+        elif para['type']=='white line':
+            img[:] = minv
+            img[rs,cs] = maxv
         
 plgs = [Frequence, Statistic, Histogram, PointsValue,ShortRoute]
