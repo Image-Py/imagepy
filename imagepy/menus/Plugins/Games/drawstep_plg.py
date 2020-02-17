@@ -41,8 +41,8 @@ def build_graph(graph, dis, step=True):
         for i in eds:
             if step:ls.append(ls[-1].copy())
             pts = eds[i]['pts']
-            ptss = graph.node[s]['pts']
-            ptse = graph.node[e]['pts']
+            ptss = graph.nodes[s]['pts']
+            ptse = graph.nodes[e]['pts']
             pts = np.vstack((ptss,pts,ptse))
             draw_edge(ls[-1], dis, pts)
     return ls if step else ls[0]

@@ -221,7 +221,8 @@ class Manager:
 		self.ctx.enable(moderngl.DEPTH_TEST)
 		#self.ctx.enable(ModernGL.CULL_FACE)
 		self.ctx.enable(moderngl.BLEND)
-		for i in self.objs.values(): i.draw(self.mvp, self.light, self.bright, self.scatter)
+		for i in self.objs.values():
+                    i.draw(self.mvp, self.light, self.bright, self.scatter)
 
 	def count_box(self):
 		minb = np.array([i.box[0] for i in self.objs.values() if not i.box is None]).min(axis=0)

@@ -122,7 +122,7 @@ def draw_graph(img, graph, cn=255, ce=128):
     acc = np.cumprod((1,)+img.shape[::-1][:-1])[::-1]
     img = img.ravel()
     for idx in graph.nodes():
-        pts = graph.node[idx]['pts']
+        pts = graph.nodes[idx]['pts']
         img[np.dot(pts, acc)] = cn
     for (s, e) in graph.edges():
         eds = graph[s][e]

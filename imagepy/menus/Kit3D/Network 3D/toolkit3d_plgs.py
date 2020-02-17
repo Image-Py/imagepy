@@ -49,12 +49,12 @@ class Show3DGraph(Simple):
 		balls, ids, rs, graph = [], [], [], ips.data
 		for idx in graph.nodes():
 			ids.append(idx)
-			balls.append(graph.node[idx]['o'])
+			balls.append(graph.nodes[idx]['o'])
 		xs, ys, zs = [], [], []
 		lxs, lys, lzs = [], [], []
 		for (s, e) in graph.edges():
 			eds = graph[s][e]
-			st, ed = graph.node[s]['o'], graph.node[e]['o']
+			st, ed = graph.nodes[s]['o'], graph.nodes[e]['o']
 			lxs.append([st[0],ed[0]])
 			lys.append([st[1],ed[1]])
 			lzs.append([st[2],ed[2]])
@@ -102,14 +102,14 @@ class Show3DGraphR(Simple):
 		balls, ids, rs, graph = [], [], [], ips.data
 		for idx in graph.nodes():
 			ids.append(idx)
-			balls.append(graph.node[idx]['o'])
+			balls.append(graph.nodes[idx]['o'])
 
 
 		xs, ys, zs = [], [], []
 		v1s, v2s = [], []
 		for (s, e) in graph.edges():
 			eds = graph[s][e]
-			st, ed = graph.node[s]['o'], graph.node[e]['o']
+			st, ed = graph.nodes[s]['o'], graph.nodes[e]['o']
 			v1s.append(st)
 			v2s.append(ed)
 			for i in eds:
@@ -157,13 +157,13 @@ class Statistic(Simple):
 		comid = 0
 		for g in nx.connected_component_subgraphs(ips.data, False):
 			for idx in g.nodes():
-				o = g.node[idx]['o']
+				o = g.nodes[idx]['o']
 				nodes.append([comid, idx, g.degree(idx), round(o[1]*k,2), round(o[0]*k,2), round(o[2])])
 			for (s, e) in g.edges():
 				eds = g[s][e]
 				for i in eds:
 					l = round(eds[i]['weight']*k, 2)
-					dis = round(np.linalg.norm(g.node[s]['o']-g.node[e]['o'])*k, 2)
+					dis = round(np.linalg.norm(g.nodes[s]['o']-g.nodes[e]['o'])*k, 2)
 					edges.append([comid, s, e, l, dis])
 			comid += 1
 
@@ -215,7 +215,7 @@ class Angles(Simple):
 		graph = ips.data
 		datas = []
 		for s in graph.nodes():
-			o = graph.node[s]['o']
+			o = graph.nodes[s]['o']
 			x = graph[s]
 			if len(x)<=1: continue
 			rst = []
@@ -302,8 +302,8 @@ class Remove2Node(Simple):
                 if len(e1)!=1 or len(e2)!=1: continue
                 e1, e2 = e1[0], e2[0]
             l1, l2 = e1['pts'], e2['pts']
-            d1 = norm(l1[0]-g.node[n]['o']) > norm(l1[-1]-g.node[n]['o'])
-            d2 = norm(l2[0]-g.node[n]['o']) < norm(l2[-1]-g.node[n]['o'])
+            d1 = norm(l1[0]-g.nodes[n]['o']) > norm(l1[-1]-g.nodes[n]['o'])
+            d2 = norm(l2[0]-g.nodes[n]['o']) < norm(l2[-1]-g.nodes[n]['o'])
             pts = np.vstack((l1[::[-1,1][d1]], l2[::[-1,1][d2]]))
             l = np.linalg.norm(pts[1:]-pts[:-1], axis=1).sum()
             g.remove_node(n)

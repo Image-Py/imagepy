@@ -20,7 +20,7 @@ class Mark:
         dc.SetFont(font)
 
         ids = self.graph.nodes()
-        pts = [self.graph.node[i]['o'] for i in ids]
+        pts = [self.graph.nodes[i]['o'] for i in ids]
         pts = [f(i[1], i[0]) for i in pts]
         dc.DrawPointList(pts)
         dc.DrawTextList([str(i) for i in ids], pts)
@@ -53,7 +53,7 @@ class Statistic(Simple):
         comid = 0
         for g in nx.connected_component_subgraphs(ips.data, False):
             for idx in g.nodes():
-                o = g.node[idx]['o']
+                o = g.nodes[idx]['o']
                 print(idx, g.degree(idx))
                 nodes.append([comid, idx, g.degree(idx), round(o[1]*k,2), round(o[0]*k,2)])
             for (s, e) in g.edges():
@@ -166,8 +166,8 @@ class Remove2Node(Simple):
                 if len(e1)!=1 or len(e2)!=1: continue
                 e1, e2 = e1[0], e2[0]
             l1, l2 = e1['pts'], e2['pts']
-            d1 = norm(l1[0]-g.node[n]['o']) > norm(l1[-1]-g.node[n]['o'])
-            d2 = norm(l2[0]-g.node[n]['o']) < norm(l2[-1]-g.node[n]['o'])
+            d1 = norm(l1[0]-g.nodes[n]['o']) > norm(l1[-1]-g.nodes[n]['o'])
+            d2 = norm(l2[0]-g.nodes[n]['o']) < norm(l2[-1]-g.nodes[n]['o'])
             pts = np.vstack((l1[::[-1,1][d1]], l2[::[-1,1][d2]]))
             l = np.linalg.norm(pts[1:]-pts[:-1], axis=1).sum()
             g.remove_node(n)

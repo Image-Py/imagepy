@@ -29,7 +29,7 @@ def show(ui = True):
 		AS.AS_SHADOW_BITMAP,
 		shadowcolour=shadow)
 
-	ImagePy(None).Show()	
+	ImagePy(None).Show()
 	app.MainLoop()
 	
 	

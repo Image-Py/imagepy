@@ -62,7 +62,7 @@ class RegionCounter(Simple):
             texts = [(i.centroid[::-1])+('id=%d'%n,) for i,n in zip(ls,range(len(ls)))]
             layer['body'].append({'type':'texts', 'body':texts})
             if para['cov']:
-                ellips = [i.centroid[::-1] + (i.major_axis_length/2,i.minor_axis_length/2,i.orientation) for i in ls]
+                ellips = [i.centroid[::-1] + (i.major_axis_length/2,i.minor_axis_length/2, i.orientation+np.pi/2) for i in ls]
                 layer['body'].append({'type':'ellipses', 'body':ellips})
             mark['body'][i] = layer
 
