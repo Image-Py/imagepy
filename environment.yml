@@ -1,6 +1,7 @@
 name: imagepy
 channels:
   - conda-forge
+  - nsls2forge
 dependencies:
   - numba
   - numpy-stl
@@ -16,6 +17,6 @@ dependencies:
   - xlrd
   - xlwt
   - markdown
-  - pip:
-    - moderngl
-    - pystackreg
+  - python-markdown-math
+  - moderngl
+  - pystackreg
