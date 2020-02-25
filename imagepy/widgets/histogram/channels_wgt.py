@@ -172,6 +172,7 @@ class Plugin( wx.Panel ):
 		name = self.com_back.GetValue()
 		if name is None: return
 		ImageManager.get().back = ImageManager.get(name)
+		curwin = WindowsManager.get()
 		curwin.ips.update()
 
 	def on_mode(self, event):

@@ -42,8 +42,8 @@ def draw(img, lines):
         cx, cy = i
         dx, dy = cx-ox, cy-oy
         n = max(abs(dx), abs(dy)) + 1
-        xs = np.linspace(ox, cx, n).round().astype(np.int16)
-        ys = np.linspace(oy, cy, n).round().astype(np.int16)
+        xs = np.linspace(ox, cx, n.astype(np.uint16)).round().astype(np.int16)
+        ys = np.linspace(oy, cy, n.astype(np.uint16)).round().astype(np.int16)
         for x,y in zip(xs, ys):
             if x<0 or x>img.shape[1]: continue
             if y<0 or y>img.shape[0]: continue

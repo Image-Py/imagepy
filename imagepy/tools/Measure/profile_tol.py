@@ -131,8 +131,8 @@ class Plugin(Tool):
         (x1, y1), (x2, y2) = body[0]
         dx, dy = x2-x1, y2-y1
         n = max(abs(dx), abs(dy)) + 1
-        xs = np.linspace(x1, x2, n).round().astype(np.int16)
-        ys = np.linspace(y1, y2, n).round().astype(np.int16)
+        xs = np.linspace(x1, x2, int(n)).round().astype(np.int16)
+        ys = np.linspace(y1, y2, int(n)).round().astype(np.int16)
         msk = (xs>=0) * (xs<img.shape[1])
         msk*= (ys>=0) * (ys<img.shape[0])
         ix = np.arange(len(xs))

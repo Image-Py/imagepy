@@ -41,8 +41,8 @@ def cut(img, lines):
         cx, cy = i
         dx, dy = cx-ox, cy-oy
         n = max(abs(dx), abs(dy)) + 1
-        xs = np.linspace(cx, ox, n).round().astype(np.int16)
-        ys = np.linspace(cy, oy, n).round().astype(np.int16)
+        xs = np.linspace(cx, ox, n.astype(np.uint16)).round().astype(np.int16)
+        ys = np.linspace(cy, oy, n.astype(np.uint16)).round().astype(np.int16)
         for x,y in zip(xs, ys):
             for dxy in [(1,0),(0,1)]:
                 xx = x + dxy[0]
