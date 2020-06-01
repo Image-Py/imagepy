@@ -6,7 +6,6 @@ Created on Fri Jan  6 23:45:59 2017
 """
 import os, sys
 from ..engine import Macros, MkDown, Widget, WorkFlow, Report
-from ..manager import DocumentManager
 from sciapp import Source
 from ... import root_dir
 from codecs import open

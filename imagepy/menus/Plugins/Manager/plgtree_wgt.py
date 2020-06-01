@@ -8,10 +8,10 @@ Created on Sat Jan  7 01:00:02 2017
 from imagepy.core.engine import Free
 import wx,os
 from imagepy import root_dir
-from imagepy.core.loader import loader
+from imagepy.core.app import loader
 from wx.py.editor import EditorFrame
 from sciwx.text import MDPad
-from imagepy.core.manager import DocumentManager
+from sciapp import Source
 from glob import glob
 
 class Plugin ( wx.Panel ):
@@ -102,7 +102,7 @@ class Plugin ( wx.Panel ):
         if plg!=None:
             self.plg = plg
             name = self.tre_plugins.GetItemText(event.GetItem())
-            self.txt_info.set_cont(DocumentManager.get(name=name))
+            self.txt_info.set_cont(Source.manager('document').get(name))
         
     def on_source(self, event):
         ## TODO: should it be absolute path ?

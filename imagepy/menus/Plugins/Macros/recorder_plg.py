@@ -1,5 +1,5 @@
 from imagepy.core.util import fileio
-from imagepy.core.manager import ReaderManager
+from sciapp import Source
 
 def readmc(path):
     with open(path) as f:
@@ -10,4 +10,4 @@ class Plugin(fileio.Reader):
     tag = 'macros'
     filt = ['MC']
 
-ReaderManager.add(name='mc', tag='macros', obj=readmc)
+Source.manager('reader').add(name='mc', tag='macros', obj=readmc)

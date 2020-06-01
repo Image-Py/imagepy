@@ -1,21 +1,12 @@
 import os
-from ..manager import ConfigManager
-from ..manager import ReaderManager, WriterManager
+from sciapp import Source
 from ... import root_dir
 from ..engine import Free, Simple, Macros
 import numpy as np
 
-def show_img(img, title):
-    if isinstance(img, list):
-        return IPy.show_img(img, title)
-    if img.ndim>2 and img.shape[2]!=3:
-        return IPy.show_img(img, title)
-    if img.dtype==np.uint8 and img.ndim==3 and img.shape[2]==4:
-        img = img[:,:,:3].copy()
-    IPy.show_img([img], title)
 
 # ViewerManager.add('imgs', IPy.show_img)
-recent = ConfigManager.get('recent')
+recent = Source.manager('config').get('recent')
 if recent==None : recent = []
 
 def f(path):
@@ -36,7 +27,7 @@ def add_recent(path):
         recent.pop(-1)
         rlist.pop(-1)
 
-    ConfigManager.set('recent', recent)
+    Source.manager('config').add('recent', recent)
     #IPy.curapp.reload_plugins()
 
 class Reader(Free):
@@ -53,7 +44,7 @@ class Reader(Free):
 
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        reader = ReaderManager.gets(name=fe[1:], tag=self.tag, note=self.note)
+        reader = Source.manager('reader').gets(name=fe[1:], tag=self.tag, note=self.note)
         print(fe, self.tag, self.note, reader)
         '''
         if len(reader) == 0:
@@ -78,7 +69,7 @@ class Writer(Simple):
     def run(self, ips, imgs, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        writer = WriterManager.get(ext=fe[1:], tag='img')
+        writer = Source.manager('writer').get(ext=fe[1:], tag='img')
         if len(writer)==1: return writer[0][1](para['path'], ips.img)
-        writer = WriterManager.get(fe[1:], 'imgs')
+        writer = Source.manager('writer').get(fe[1:], 'imgs')
         if len(writer)==1: return writer[0][1](para['path'], imgs)

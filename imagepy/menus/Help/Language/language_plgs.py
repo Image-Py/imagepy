@@ -1,4 +1,4 @@
-from imagepy.core.manager import ColorManager, LanguageManager
+from sciapp import Source
 from imagepy.core.engine import Free
 
 class Language(Free):
@@ -8,13 +8,13 @@ class Language(Free):
 
 	#process
 	def run(self, para = None):
-		LanguageManager.set(self.title)
+		Manager.set(self.title)
 		self.app.reload_plugins()
 
 	def __call__(self):
 		return self
 
-plgs = [Language(i) for i in list(LanguageManager.langs.keys())]
+plgs = [Language(i) for i in list(Source.manager('language').names())]
 plgs.insert(0, Language('English'))
 plgs.append('-')
 

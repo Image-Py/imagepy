@@ -1,5 +1,5 @@
 from imagepy.core.engine import Table
-from imagepy.core.manager import ColorManager
+from sciapp import Source
 import numpy as np
 
 class Plugin(Table):

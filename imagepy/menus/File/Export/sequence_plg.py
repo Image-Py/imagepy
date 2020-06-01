@@ -7,7 +7,7 @@ Created on Mon Dec  5 04:34:09 2016
 import wx
 from skimage.io import imsave
 from imagepy.core.engine import Simple
-from imagepy.core.manager import WriterManager
+from sciapp import Source
 
 class Plugin(Simple):
     title = 'Save Sequence'
@@ -29,7 +29,7 @@ class Plugin(Simple):
     #process
     def run(self, ips, imgs, para = None):
         path = para['path']+'/'+para['name']
-        write = WriterManager.get(para['format'])
+        write = Source.manager('writer').get(para['format'])
         print(path)
         for i in range(len(imgs)):
             self.progress(i, len(imgs))

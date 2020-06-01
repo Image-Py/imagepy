@@ -6,7 +6,7 @@ Created on Sat Dec  3 03:32:05 2016
 import wx
 import threading
 
-from ..manager import TaskManager, DocumentManager
+from sciapp import Source
 from time import time
 import numpy as np
 
@@ -48,12 +48,12 @@ class Simple:
         self.app.record_macros('{}>{}'.format(self.title, para))
 
     def runasyn(self,  ips, imgs, para = None, callback = None):
-        TaskManager.add(self)
+        self.app.manager('task').add(self,title, self)
         start = time()
         self.run(ips, imgs, para)
         self.app.info('%s: cost %.3fs'%(ips.title, time()-start))
         ips.update()
-        TaskManager.remove(self)
+        self.app.manager('task').remove(self)
         if callback!=None:callback()
 
     def check(self, ips):

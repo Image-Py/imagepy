@@ -1,7 +1,7 @@
 import wx, sys
 sys.path.append('../')
 from imagepy.core.app import ImagePy
-from imagepy.core.loader import loader
+from imagepy.core.app import loader
 
 from sciapp.action import ImgAction, Tool, DefaultTool
 from sciwx.plugins.curve import Curve

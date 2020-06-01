@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import wx, os
 from imagepy.core.engine import Free
-from imagepy.core.manager import ShotcutManager
 from sciapp import Source
 from imagepy import root_dir
 
@@ -65,8 +64,8 @@ class Plugin( wx.Panel ):
     
     #def list_plg(self, lst, items
     def load(self):
-        lst = Source.manager('plugin').gets(item='name')
-        self.plgs = [[i, ShotcutManager.get(item='shotcut', name=i)] for i in lst]
+        lst = Source.manager('plugin').names()
+        self.plgs = [[i, Source.manager('shotcut').get(item='shotcut', name=i)] for i in lst]
         for i in self.plgs:
             if i[1]==None:i[1]=''
         self.plgs.sort()
@@ -117,9 +116,9 @@ class Plugin( wx.Panel ):
         if len(txt)>0 and txt[-1]=='-':txt=txt[:-1]
         self.buf[event.GetIndex()][1] = txt
         self.lst_plgs.RefreshItem(event.GetIndex())
-        ShotcutManager.remove(name=title)
-        if txt!='': ShotcutManager.add(name=title, shotcut=txt)
+        Source.manager('shotcut').remove(name=title)
+        if txt!='': Source.manager('shotcut').add(title, txt)
         #PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
         
     def close(self):
-        ShotcutManager.write(os.path.join(root_dir,'data/shotcut.cfg'))
+        Source.manager('shotcut').write(os.path.join(root_dir,'data/shotcut.cfg'))

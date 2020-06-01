@@ -7,9 +7,9 @@ Created on Wed Oct 19 17:35:09 2016
 import wx
 from imagepy.core.engine import Tool,Filter
 import numpy as np
-from imagepy.core.manager import ColorManager
-from imagepy.core.roi import lineroi
-from imagepy.core.mark import GeometryMark
+#from imagepy.core.manager import ColorManager
+#from imagepy.core.roi import lineroi
+#from imagepy.core.mark import GeometryMark
 from skimage.graph import route_through_array
 import scipy.ndimage as ndimg
 def route_through(ips, snap,poins,para):

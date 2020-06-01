@@ -7,10 +7,10 @@ Created on Wed Oct 19 17:35:09 2016
 import wx
 from imagepy.core.engine import Tool
 import numpy as np
-from imagepy.core.manager import ColorManager
+#from imagepy.core.manager import ColorManager
 from skimage.morphology import flood_fill, flood
 from skimage.measure import find_contours
-from imagepy.core.roi.convert import shape2roi, roi2shape
+# from imagepy.core.roi.convert import shape2roi, roi2shape
 from shapely.geometry import Polygon, Point
 from shapely.ops import cascaded_union
 import matplotlib.pyplot as plt

@@ -4,7 +4,6 @@ Created on Sat Dec  3 03:57:53 2016
 @author: yxl
 """
 import threading
-from ...core.manager import TaskManager, DocumentManager
 from time import time
 
 class Free:
@@ -21,11 +20,11 @@ class Free:
         print('this is a plugin')
         
     def runasyn(self, para, callback=None):
-        TaskManager.add(self)
+        self.app.manager('task').add(self,title, self)
         start = time()
         self.run(para)
         self.app.info('%s: cost %.3fs'%(self.title, time()-start))
-        TaskManager.remove(self)
+        self.app.manager('task').remove(self)
         if callback!=None:callback()
 
     def load(self):return True

@@ -6,7 +6,7 @@ Created on Sat Oct 15 14:42:55 2016
 
 from imagepy.core.util import fileio
 from skimage.io import imread
-from imagepy.core.manager import ReaderManager
+from sciapp import Source
 from imagepy.core.engine import Free
 from glob import glob
 import wx, os
@@ -16,7 +16,7 @@ class Plugin(Free):
     para = {'path':'', 'start':0, 'end':0, 'step':1, 'title':'sequence'}
 
     def load(self):
-        self.filt = ReaderManager.gets('name')
+        self.filt = Source.manager('reader').names()
         return True
 
     def show(self):
@@ -53,7 +53,7 @@ class Plugin(Free):
     def run(self, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        read = ReaderManager.get(name=fe[1:])
+        read = Source.manager('reader').get(name=fe[1:])
         try: img = read(para['path'])
         except: return self.app.alert('unknown img format!')
         files = self.getfiles(para['path'])

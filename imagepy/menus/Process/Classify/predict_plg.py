@@ -4,7 +4,7 @@ from glob import glob
 import os.path as osp
 import joblib
 from imagepy.ipyalg import feature
-from imagepy.core.manager import ReaderManager
+from sciapp import Source
 
 class Plugin(Simple):
 	title = 'Feature Predictor'

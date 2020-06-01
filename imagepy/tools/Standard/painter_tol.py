@@ -1,5 +1,5 @@
 from imagepy.core.engine import Tool
-from imagepy.core.manager import ColorManager
+from sciapp import Source
 from skimage.draw import line, circle
 
 def drawline(img, oldp, newp, w, value):
@@ -31,7 +31,7 @@ class Plugin(Tool):
     def mouse_move(self, ips, x, y, btn, **key):
         if not self.status:return
         w = self.para['width']
-        value = ColorManager.get_front()
+        value = Source.manager('color').get('front')
         drawline(ips.img, self.oldp, (y, x), w, value)
         self.oldp = (y, x)
         ips.update()

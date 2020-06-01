@@ -8,7 +8,7 @@ import wx
 import threading
 import numpy as np
 
-from ...core.manager import TaskManager, DocumentManager
+from sciapp import Source
 from time import time
 
 def process_channels(plg, ips, src, des, para):
@@ -24,7 +24,7 @@ def process_channels(plg, ips, src, des, para):
     return des
 
 def process_one(plg, ips, src, img, para, callafter=None):
-    TaskManager.add(plg)
+    Source.manager('task').add(plt.title, plg)
     start = time()
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.complex128, np.float32, np.float64)
@@ -43,11 +43,11 @@ def process_one(plg, ips, src, img, para, callafter=None):
         img[msk] = src[msk]
     plg.app.info('%s: cost %.3fs'%(ips.title, time()-start))
     ips.update()
-    TaskManager.remove(plg)
+    Source.manager('task').remove(plg)
     if not callafter is None:callafter()
     
 def process_stack(plg, ips, src, imgs, para, callafter=None):
-    TaskManager.add(plg)
+    Source.manager('task').add(plt.title, plg)
     start = time()
 
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
@@ -74,7 +74,7 @@ def process_stack(plg, ips, src, imgs, para, callafter=None):
             i[msk] = src[msk]
     plg.app.info('%s: cost %.3fs'%(ips.title, time()-start))
     ips.update()
-    TaskManager.remove(plg)
+    Source.manager('task').remove(plg)
     if not callafter is None:callafter()
     
 

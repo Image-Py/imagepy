@@ -4,13 +4,12 @@ Created on Thu Dec 29 01:48:23 2016
 @author: yxl
 """
 import wx
-from imagepy.core.manager import TaskManager
 from sciapp import Source
-from imagepy.core.manager import ReaderManager
 #from imagepy.ui.propertygrid import GridDialog
 from imagepy.core.util import xlreport
 from time import time
 import openpyxl as pyxl
+from sciapp import Source
 
 class Report:
     def __init__(self, title, cont):
@@ -20,7 +19,7 @@ class Report:
     def __call__(self): return self
 
     def runasyn(self,  wb, info, key, para = None, callback = None):
-        TaskManager.add(self)
+        Source.manager('task').add(self)
         for i in para: 
             if i in key and key[i][0] == 'img':
                 ips = ImageManager.get(para[i])
@@ -33,8 +32,8 @@ class Report:
         start = time()
         xlreport.fill_value(wb, info, para)
         wb.save(para['path'])
-        IPy.set_info('%s: cost %.3fs'%(self.title, time()-start))
-        TaskManager.remove(self)
+        self.app.set_info('%s: cost %.3fs'%(self.title, time()-start))
+        Source.manager('task').remove(self)
         if callback!=None:callback()
 
     def start(self, para=None, callafter=None):
@@ -49,7 +48,7 @@ class Report:
         dialog.Destroy()
         if rst != 5100: return
         filt = '|'.join(['%s files (*.%s)|*.%s'%('XLSX', 'xlsx', 'xlsx')])
-        if not IPy.getpath('Save..', filt, 'save', para): return
+        if not self.app.getpath('Save..', filt, 'save', para): return
         win = Source.manager('widget').get('obj', name='Macros Recorder')
         if win!=None: win.write('{}>{}'.format(self.title, para))
         self.runasyn(wb, info, key, para, callafter)
@@ -59,4 +58,5 @@ def show_rpt(data, title):
     
 # ViewerManager.add('rpt', show_rpt)
 def read_rpt(path): return path
-ReaderManager.add(name='rpt', obj=read_rpt, tag='rpt')
+
+Source.manager('reader').add(name='rpt', obj=read_rpt, tag='rpt')

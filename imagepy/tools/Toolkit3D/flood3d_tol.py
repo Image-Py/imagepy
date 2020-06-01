@@ -7,7 +7,7 @@ Created on Wed Oct 19 17:35:09 2016
 
 from imagepy.core.engine import Tool
 import numpy as np
-from imagepy.core.manager import ColorManager
+from sciapp import Source
 from skimage.morphology import flood_fill, flood
 from imagepy.core.engine import Filter, Simple
 
@@ -25,7 +25,7 @@ class Plugin(Tool):
             (list, 'con', ['4-connect', '8-connect'], str, 'fill', 'pix')]
         
     def mouse_down(self, ips, x, y, btn, **key):
-        FloodFill3D().start({'seed':(ips.cur, int(y), int(x)), 'color':np.mean(ColorManager.get_front()),
+        FloodFill3D().start({'seed':(ips.cur, int(y), int(x)), 'color':np.mean(Source.manager('color').get('front')),
             'conn':(self.para['con']=='8-connect')+1, 'tor':self.para['tor']})
     
     def mouse_up(self, ips, x, y, btn, **key):

@@ -6,8 +6,7 @@ Created on Sat Nov 26 01:26:25 2016
 import numpy as np
 from imagepy.core.pixel import bliter
 from imagepy.core.engine import Simple, Tool, Filter
-from imagepy.core.roi.rectangleroi import RectangleRoi
-from imagepy.core.manager import ClipBoardManager, ColorManager
+from sciapp import Source
 
 class PasteMove(Tool):
     def __init__(self):
@@ -26,7 +25,7 @@ class PasteMove(Tool):
     def mouse_up(self, ips, x, y, btn, **key):
         if self.moving == True:
             self.moving = False
-            ci = ClipBoardManager.img
+            ci = self.app.manager('xxxxxx')
             img = ips.img
             #ips.roi.draged(ci.shape[1]/2,ci.shape[0]/2, ips.size[1]/2, ips.size[0]/2, True)
             #ips.roi = IPy.clipboard[1].affine(np.eye(2), ((np.array(ips.size)-ci.shape[:2])[::-1]/2))          

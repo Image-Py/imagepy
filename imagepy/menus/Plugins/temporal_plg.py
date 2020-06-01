@@ -3,8 +3,8 @@ Created on Sun Jan 22 12:56:00 2020
 @author: weisong
 """
 from imagepy.core.engine import Simple
+from sciapp import Source
 import numpy as np
-from imagepy.core.manager import ColorManager
 
 def color_code(img, lut):
     idx = np.linspace(0,255,len(img)).astype(int)
@@ -22,20 +22,21 @@ class Plugin(Simple):
             'Start image':1,
             'End image': 2,
             'Creatbar':True}
+
     def load(self, ips): 
         self.slength = len(ips.imgs)
         self.para['End image'] = self.slength
-        self.view = [(list, 'LUT', list(ColorManager.luts.keys()), str, 'LUT',''),
+        self.view = [(list, 'LUT', Source.manager('colormap').names(), str, 'LUT',''),
             (int, 'Start image', (1,self.slength),0,'Start image','1~%d'%self.slength),
             (int, 'End image', (2,self.slength),0,'End image','start~%d'%self.slength),
             (bool, 'Creatbar', 'Creat time color scale bar')]
         return True
 
     def run(self, ips, imgs, para = None):
-        cmap = ColorManager.luts[ para['LUT'] ]
+        cmap = Source.manager('colormap').get(para['LUT'])
         imglut = color_code(imgs[para['Start image']-1: para['End image']], cmap)
-        IPy.show_img([imglut],'Color-coded %s'%ips.title)
+        self.app.show_img([imglut],'Color-coded %s'%ips.title)
         if para['Creatbar']:
             cmapshow = np.ones([32,256,3])*cmap
-            IPy.show_img([cmapshow.astype('uint8')],'Color bar')
+            self.app.show_img([cmapshow.astype('uint8')],'Color bar')
 

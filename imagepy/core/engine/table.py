@@ -5,9 +5,6 @@ Created on Sat Dec  3 03:32:05 2016
 """
 import wx
 import threading
-
-from ..manager import TaskManager, DocumentManager
-from sciapp import Source
 from time import time
 
 class Table:
@@ -56,12 +53,12 @@ class Table:
         if win!=None: win.write('{}>{}'.format(self.title, para))
 
     def runasyn(self,  tps, snap, data, para = None, callback = None):
-        TaskManager.add(self)
+        self.app.manager('task').add(self,title, self)
         start = time()
         self.run(tps, data, snap, para)
         self.app.set_info('%s: cost %.3fs'%(tps.title, time()-start))
         tps.update()
-        TaskManager.remove(self)
+        self.app.manager('task').remove(self)
         if callback!=None:callback()
 
     def check(self, tps):

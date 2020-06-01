@@ -1,5 +1,5 @@
 import threading, wx, os, wx.lib.agw.aui as aui
-from imagepy.core.manager import ReaderManager
+from sciapp import Source
 
 def parse(cont):
 	ls = cont.split('\n')
@@ -49,4 +49,4 @@ def read_wf(path):
 	print(cont)
 	return cont
 
-ReaderManager.add(name='wf', obj=read_wf, tag='wf')
+Source.manager('reader').add(name='wf', obj=read_wf, tag='wf')
