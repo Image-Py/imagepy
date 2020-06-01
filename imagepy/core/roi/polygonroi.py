@@ -10,7 +10,6 @@ from shapely.ops import polygonize
 from ..draw import paint
 from .roi import ROI
 from ..manager import RoiManager
-from imagepy import IPy
 
 def parse_poly(geom):
     out = list(geom.exterior.coords)

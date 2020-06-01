@@ -1,7 +1,6 @@
 from imagepy.core.engine import Filter, Simple
 from imagepy.core.manager import ColorManager
-from imagepy.core import ImagePlus
-from imagepy import IPy
+# from imagepy.core import ImagePlus
 import numpy as np
 
 class BuildMark(Simple):

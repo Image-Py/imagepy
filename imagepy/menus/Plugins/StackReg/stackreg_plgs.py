@@ -1,11 +1,9 @@
 from imagepy.core.engine import Filter, Simple
-from imagepy import IPy
 from pystackreg import StackReg
 import numpy as np
 import pandas as pd
 from skimage import transform as tf
 import scipy.ndimage as ndimg
-from imagepy.core.manager import TableManager
 
 class Register(Simple):
 	title = 'Stack Register'

@@ -1,6 +1,6 @@
 import os
-from ..manager import ViewerManager, ReaderManager, WriterManager
-from ... import IPy, root_dir
+from ..manager import ReaderManager, WriterManager
+from ... import root_dir
 from ..engine import Free, Table, Macros
 import numpy as np
 

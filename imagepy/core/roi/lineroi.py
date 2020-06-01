@@ -9,7 +9,6 @@ import wx
 from ..draw import paint
 from .roi import ROI
 from ..manager import RoiManager
-from imagepy import IPy
 
 class LineRoi(ROI):
     dtype = 'line'

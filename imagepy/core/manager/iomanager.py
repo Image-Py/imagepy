@@ -1,63 +1,48 @@
+'''
 class ReaderManager:
-    reader = {}
-    
+    reader = []
+
     @classmethod
-    def add(cls, ext, read, tag='img'):
-        if not tag in cls.reader: cls.reader[tag] = {}
-        if isinstance(ext, str):
-            cls.reader[tag][ext.lower()] = read
-            return
+    def add(cls, ext, read, tag='img', note=''):
+        if isinstance(ext, str): ext = [ext]
         for i in ext:
-            cls.reader[tag][i.lower()] = read
+            obj = (i, read, tag, note)
+            if not obj in cls.reader: cls.reader.append(obj)
         
     @classmethod
-    def get(cls, ext=None, tag='img'):
-        if ext is None and tag is None:
-            ls = [cls.reader[i].keys() for i in cls.reader.keys()]
-            return sorted([x for j in ls for x in j])
-        elif ext is None and not tag is None:
-            return sorted(cls.reader[tag].keys())
-        elif not ext is None and tag is None:
-            for i in cls.reader.values():
-                if ext.lower() in i: return i[ext.lower()]
-        elif not tag is None and not ext is None:
-            if ext.lower() in cls.reader[tag]:
-                return cls.reader[tag][ext.lower()]
+    def get(cls, ext=None, tag=None, note=None):
+        msk = [True for i in cls.reader]
+        if not ext is None: 
+            for i in range(len(msk)): msk[i] &= cls.reader[i][0]==ext
+        if not tag is None:
+            for i in range(len(msk)): msk[i] &= cls.reader[i][2]==tag
+        if not note is None:
+            for i in range(len(msk)): msk[i] &= cls.reader[i][3]==note
+        return [cls.reader[i] for i in range(len(msk)) if msk[i]]
 
 class WriterManager:
-    writer = {}
+    writer = []
     
     @classmethod
-    def add(cls, ext, write, tag='img'):
-        if not tag in cls.writer: cls.writer[tag] = {}
-        if isinstance(ext, str):
-            cls.writer[tag][ext.lower()] = write
-            return
+    def add(cls, ext, read, tag='img', note=''):
+        if isinstance(ext, str): ext = [ext]
         for i in ext:
-            cls.writer[tag][i.lower()] = write
-        
-    @classmethod
-    def get(cls, ext=None, tag='img'):
-        if ext is None and tag is None:
-            ls = [cls.writer[i].keys() for i in cls.writer.keys()]
-            return sorted([x for j in ls for x in j])
-        elif ext is None and not tag is None:
-            return sorted(cls.writer[tag].keys())
-        elif not ext is None and tag is None:
-            for i in cls.writer.values():
-                if ext.lower() in i: return i[ext.lower()]
-        elif not tag is None and not ext is None:
-            if ext.lower() in cls.writer[tag]:
-                return cls.writer[tag][ext.lower()]
-
-class ViewerManager:
-    viewer = {}
+            obj = (i, read, tag, note)
+            if not obj in cls.writer: cls.writer.append(obj)
     
     @classmethod
-    def add(cls, ext, view):cls.viewer[ext.lower()] = view
-        
-    @classmethod
-    def get(cls, ext='img'):
-        for i in ReaderManager.reader:
-            if ext.lower() in ReaderManager.reader[i]:
-                return cls.viewer[i]
+    def get(cls, ext=None, tag=None, note=None):
+        msk = [True for i in cls.writer]
+        if not ext is None: 
+            for i in range(len(msk)): msk[i] &= cls.writer[i][0]==ext
+        if not tag is None:
+            for i in range(len(msk)): msk[i] &= cls.writer[i][2]==tag
+        if not note is None:
+            for i in range(len(msk)): msk[i] &= cls.writer[i][3]==note
+        return [cls.writer[i] for i in range(len(msk)) if msk[i]]
+'''
+
+from sciapp import Manager
+
+ReaderManager = Manager()
+WriterManager = Manager()

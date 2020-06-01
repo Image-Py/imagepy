@@ -3,9 +3,6 @@
 Created on Thu Dec  1 01:22:19 2016
 @author: yxl
 """
-from imagepy.core.manager import ImageManager
-from imagepy import IPy
-
 from imagepy.core.engine import Simple
 from imagepy.core.pixel import bliter
 
@@ -20,23 +17,20 @@ class Plugin(Simple):
             ('img', 'img2', 'image2', '')]
     
     def run(self, ips, imgs, para = None):
-        ips1 = ImageManager.get(para['img1'])
-        ips2 = ImageManager.get(para['img2'])
+        ips1 = self.app.get_img(para['img1'])
+        ips2 = self.app.get_img(para['img2'])
         ips1.snapshot()
 
-        sl1, sl2 = ips1.get_nslices(), ips2.get_nslices()
-        cn1, cn2 = ips1.get_nchannels(), ips2.get_nchannels()
+        sl1, sl2 = ips1.slices, ips2.slices
+        cn1, cn2 = ips1.channels, ips2.channels
         if ips1.dtype != ips2.dtype:
-            IPy.alert('Two stack must be equal dtype!')
-            return
+            return self.app.alert('Two stack must be equal dtype!')
         elif sl1>1 and sl2>1 and sl1!=sl2:
-            IPy.alert('Two stack must have equal slices!')
-            return
+            return self.app.alert('Two stack must have equal slices!')
         elif cn1>1 and cn2>1 and cn1!=cn2:
-            IPy.alert('Two stack must have equal channels!')
-            return
+            return self.app.alert('Two stack must have equal channels!')
             
-        w, h = ips1.size, ips2.size
+        w, h = ips1.shape, ips2.shape
         w, h = min(w[0], h[0]), min(w[1], h[1])
         if sl1 == 1:
             bliter.blit(ips1.get_subimg(), ips2.get_subimg(), mode=para['op'])

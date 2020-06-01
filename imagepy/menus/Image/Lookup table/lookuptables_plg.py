@@ -3,47 +3,30 @@
 Created on Mon Oct 17 21:13:42 2016
 @author: yxl
 """
-from imagepy import IPy, root_dir
+from imagepy import root_dir
 import numpy as np
-from imagepy.core import ImagePlus
-from imagepy.ui.canvasframe import CanvasFrame
+#from imagepy.core import ImagePlus
 from imagepy.core.engine import Free
-from imagepy.core.manager import ColorManager
-import os, glob
+from sciapp import Source
+from sciapp.object import Image
 
-class Plugin(Free):
-    def __init__(self, key):
-        self.title = key
-    
-    def load(self):
-        plus = IPy.get_ips()
-        if plus==None:
-            img = np.ones((30,1), dtype=np.uint8) * np.arange(256, dtype=np.uint8)
-            ips = ImagePlus([img], self.title)
-            ips.lut = ColorManager.get_lut(self.title)
-            IPy.show_ips(ips)
-            return False
-        elif plus.channels != 1:
-            IPy.alert('RGB image do not surport Lookup table!')
-            return False
-        return True
+class LUT(Free):
+    def __init__(self, key, v):
+        self.title, self.lut = key, v
 
-    #process
     def run(self, para = None):
-        plus = IPy.get_ips()
-        plus.lut = ColorManager.get_lut(self.title)
-        plus.update()
+        ips = self.app.get_img()
+        if ips==None:
+            img = np.arange(256*30, dtype=np.uint8).reshape((-1,256))
+            ips = Image([img], self.title)
+            ips.lut = self.lut
+            return self.app.show_img(ips)
+        if ips.channels != 1:
+            return self.app.alert('only one channel image surport Lookup table!')
+        ips.lut = self.lut
+        ips.update()
     
-    def __call__(self):
-        return self
+    def __call__(self): return self
           
-fs = glob.glob(os.path.join(root_dir,'data/luts/*.lut'))
-plgs = [Plugin(i) for i in [os.path.split(f)[-1][:-4] for f in fs]]
-
-for i in range(len(plgs)):
-    if plgs[i].title == 'Grays':
-        plgs.insert(0, plgs.pop(i))
-
-if __name__ == '__main__':
-    print(list(ColorManager.luts.keys()))
+plgs = [LUT(i, j) for i, j, _ in Source.manager('colormap').gets(tag='base')]
     

@@ -1,6 +1,5 @@
 from skimage.io import imread, imsave
 from imagepy.core.util import fileio
-from imagepy import IPy
 import os
 
 class Save(fileio.Writer):
@@ -21,6 +20,6 @@ class Open(fileio.Reader):
 		imgs = imread(para['path']).transpose(2,0,1)
 		fp, fn = os.path.split(para['path'])
 		fn, fe = os.path.splitext(fn) 
-		IPy.show_img(imgs, fn)
+		self.app.show_img(imgs, fn)
 
 plgs = [Open, Save]

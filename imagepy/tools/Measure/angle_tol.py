@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from numpy.linalg import norm
 from .setting import Setting
-from imagepy import IPy
+#from imagepy import IPy
 
 class Angle:
     """Define the class with line drawing fucntions """

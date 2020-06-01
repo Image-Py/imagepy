@@ -1,7 +1,6 @@
 from imagepy.core.engine import Table
-from imagepy import IPy
 import matplotlib.pyplot as plt
-from imagepy.core.manager import ColorManager
+#from imagepy.core.manager import ColorManager
 from matplotlib import colors
 
 class Plot(Table):
@@ -14,8 +13,10 @@ class Plot(Table):
 			(bool, 'grid', 'grid')]
 
 	def run(self, tps, snap, data, para = None):
-		data[para['cn']].plot(lw=para['lw'], grid=para['grid'], title=para['title'])
-		plt.show()
+		plt = self.app.show_plot(para['title'])
+		data[para['cn']].plot(lw=para['lw'], grid=para['grid'], 
+			title=para['title'], ax=plt.add_subplot())
+		plt.Show()
 
 class Bar(Table):
 	title = 'Bar Chart'
@@ -28,10 +29,13 @@ class Bar(Table):
 			(bool, 'grid', 'grid')]
 
 	def run(self, tps, snap, data, para = None):
+		plt = self.app.show_plot(para['title'])
 		if para['dir']:
-			data[para['cn']].plot.barh(stacked=para['stack'], grid=para['grid'], title=para['title'])
-		else: data[para['cn']].plot.bar(stacked=para['stack'], grid=para['grid'], title=para['title'])
-		plt.show()
+			data[para['cn']].plot.barh(stacked=para['stack'], grid=para['grid'], 
+				title=para['title'], ax=plt.add_subplot())
+		else: data[para['cn']].plot.bar(stacked=para['stack'], grid=para['grid'], 
+			title=para['title'], ax=plt.add_subplot())
+		plt.Show()
 
 class Hist(Table):
 	title = 'Hist Chart'
@@ -48,13 +52,14 @@ class Hist(Table):
 			(bool, 'grid', 'grid')]
 
 	def run(self, tps, snap, data, para = None):
+		plt = self.app.show_plot(para['title'])
 		if para['overlay']:
 			data[para['cn']].plot.hist(stacked=para['stack'], bins=para['bins'], alpha=para['alpha'],
-				orientation=para['dir'], grid=para['grid'], title=para['title'])
+				orientation=para['dir'], grid=para['grid'], title=para['title'], ax=plt.add_subplot())
 		else:
 			data[para['cn']].hist(stacked=para['stack'], bins=para['bins'], alpha=para['alpha'],
-				orientation=para['dir'], grid=para['grid'])
-		plt.show()
+				orientation=para['dir'], grid=para['grid'], ax=plt.add_subplot())
+		plt.Show()
 
 class Box(Table):
 	title = 'Box Chart'
@@ -67,8 +72,10 @@ class Box(Table):
 			(bool, 'grid', 'grid')]
 
 	def run(self, tps, snap, data, para = None):
-		data[para['cn']].plot.box(by=None, vert=~para['hor'], grid=para['grid'], title=para['title'])
-		plt.show()
+		plt = self.app.show_plot(para['title'])
+		data[para['cn']].plot.box(by=None, vert=~para['hor'], grid=para['grid'], 
+			title=para['title'], ax=plt.add_subplot())
+		plt.Show()
 
 class Area(Table):
 	title = 'Area Chart'
@@ -81,9 +88,10 @@ class Area(Table):
 			(bool, 'grid', 'grid')]
 
 	def run(self, tps, snap, data, para = None):
+		plt = self.app.show_plot(para['title'])
 		data[para['cn']].plot.area(stacked=para['stack'], alpha=para['alpha'], 
-			grid=para['grid'], title=para['title'])
-		plt.show()
+			grid=para['grid'], title=para['title'], ax=plt.add_subplot())
+		plt.Show()
 
 class Scatter(Table):
 	title = 'Scatter Chart'
@@ -106,9 +114,10 @@ class Scatter(Table):
 		cs = data[para['cs']] if para['cs'] != 'None' else '#%.2x%.2x%.2x'%para['c']
 		cm = ColorManager.get_lut(para['cm'])/255.0
 		cm = None if para['cs'] == 'None' else colors.ListedColormap(cm, N=256)
+		plt = self.app.show_plot(para['title'])
 		data.plot.scatter(x=para['x'], y=para['y'], s=rs, c=cs, alpha=para['alpha'], 
-			cmap=cm, grid=para['grid'], title=para['title'])
-		plt.show()
+			cmap=cm, grid=para['grid'], title=para['title'], ax=plt.add_subplot())
+		plt.Show()
 
 class Pie(Table):
 	title = 'Pie Chart'
@@ -118,7 +127,8 @@ class Pie(Table):
 			('fields', 'cn', 'select fields')]
 
 	def run(self, tps, snap, data, para = None):
-		data[para['cn']].plot.pie(subplots=True, title=para['title'])
-		plt.show()
+		plt = self.app.show_plot(para['title'])
+		data[para['cn']].plot.pie(subplots=True, title=para['title'], ax=plt.add_subplot())
+		plt.Show()
 
 plgs = [Plot, Area, Bar, Box, Hist, Pie, Scatter]

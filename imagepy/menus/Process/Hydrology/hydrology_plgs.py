@@ -2,11 +2,11 @@ import scipy.ndimage as ndimg
 import numpy as np
 from imagepy.core.engine import Filter
 from imagepy.ipyalg import find_maximum, ridge, stair, isoline, watershed
-from imagepy.core.roi import PointRoi
+# from imagepy.core.roi import PointRoi
+from sciapp.object import Points, ROI
 #from skimage.morphology import watershed, disk
 from skimage.filters import rank
 from skimage.filters import sobel
-from imagepy import IPy
 
 class IsoLine(Filter):
     title = 'Find IsoLine'
@@ -42,8 +42,8 @@ class FindMax(Filter):
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'])
-        self.ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
-        self.ips.update()
+        ips.roi = ROI([Points(pts[:,::-1])])
+        ips.update()
 
 class FindMin(Filter):
     title = 'Find Minimum'
@@ -54,8 +54,8 @@ class FindMin(Filter):
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'], False)
-        self.ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
-        self.ips.update()
+        ips.roi = ROI([Points(pts[:,::-1])])
+        ips.update()
 
 class UPRidge(Filter):
     title = 'Find Riedge'
@@ -213,7 +213,7 @@ class ROIWatershed(Filter):
         #gradient = rank.gradient(denoised, disk(para['gdt']))
         ndimg.gaussian_filter(snap, para['sigma'], output=img)
 
-        markers, n = ndimg.label(ips.get_msk(), np.ones((3,3)), output=np.uint32)
+        markers, n = ndimg.label(ips.mask(), np.ones((3,3)), output=np.uint32)
         if not para['ud']:img[:] = 255-img
         mark = watershed(img, markers, line=True, conn=para['con']+1)
         mark = np.multiply((mark==0), 255, dtype=np.uint8)

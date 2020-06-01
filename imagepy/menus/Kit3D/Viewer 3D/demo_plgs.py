@@ -1,11 +1,10 @@
 from imagepy.core.engine import Free
-from imagepy.core import myvi
-from imagepy import IPy
+from sciapp.object import Surface, MarkText
+from sciapp.util import surfutil
 import numpy as np
 
 class Decoration(Free):
 	title = 'Decoration Demo'
-	asyn = False
 
 	def run(self, para=None):
 		dphi, dtheta = np.pi/20.0, np.pi/20.0  
@@ -15,16 +14,12 @@ class Decoration(Free):
 		x = r*np.sin(phi)*np.cos(theta)  
 		y = r*np.cos(phi)  
 		z = r*np.sin(phi)*np.sin(theta)  
-		vts, fs, ns, cs = myvi.build_mesh(x, y, z)
-		cs[:] = myvi.util.auto_lookup(vts[:,2], myvi.util.linear_color('jet'))/255
-
-		manager = myvi.Manager()
-		manager.add_surf('mesh', vts, fs, ns, cs)
-		myvi.Frame3D(IPy.curapp, 'Decoration Demo', manager).Show()
+		vts, fs, ns, cs = surfutil.build_mesh(x, y, z)
+		cs[:] = surfutil.auto_lookup(vts[:,2], surfutil.linear_color('jet'))/255
+		self.app.show_mesh(Surface(vts, fs, ns, cs), 'decoration')
 
 class Lines(Free):
 	title = 'Lines Demo'
-	asyn = False
 
 	def run(self, para=None):
 		vts = np.array([(0,0,0),(1,1,0),(2,1,0),(1,0,0)], dtype=np.float32)
@@ -40,27 +35,20 @@ class Lines(Free):
 		y = np.sin(mu) * (1 + np.cos(n_long * mu / n_mer) * 0.5)
 		z = np.sin(n_long * mu / n_mer) * 0.5
 
-		vts, fs, ns, cs = myvi.build_line(x, y, z, (1, 0, 0))
-		cs[:] = myvi.auto_lookup(vts[:,2], myvi.linear_color('jet'))/255
-
-		manager = myvi.Manager()
-		obj = manager.add_surf('line', vts, fs, ns, cs)
-		obj.set_style(mode='grid')
-		myvi.Frame3D(IPy.curapp, 'Colorful Lines Demo', manager).Show()
+		vts, fs, ns, cs = surfutil.build_line(x, y, z, (1, 0, 0))
+		cs[:] = surfutil.auto_lookup(vts[:,2], surfutil.linear_color('jet'))/255
+		self.app.show_mesh(Surface(vts, fs, ns, cs, mode='grid'), 'line')
 
 class Balls(Free):
 	title = 'Random Balls Demo'
-	asyn = False
 
 	def run(self, para=None):
 		os = np.random.rand(30).reshape((-1,3))
 		rs = np.random.rand(10)/5
 		cs = (np.random.rand(10)*255).astype(np.uint8)
-		cs = myvi.linear_color('jet')[cs]/255
+		cs = surfutil.linear_color('jet')[cs]/255
 
-		vts, fs, ns, cs = myvi.build_balls(os, rs, cs)
-		manager = myvi.Manager()
-		manager.add_surf('balls', vts, fs, ns, cs)
-		myvi.Frame3D(IPy.curapp, 'Random Balls Demo', manager).Show()
+		vts, fs, ns, cs = surfutil.build_balls(os, rs, cs)
+		self.app.show_mesh(Surface(vts, fs, ns, cs), 'balls')
 
 plgs = [Lines, Balls, Decoration]

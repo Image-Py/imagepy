@@ -3,17 +3,15 @@
 Created on Mon Dec 26 20:34:59 2016
 @author: yxl
 """
-from imagepy import IPy, root_dir
+from imagepy import root_dir
 import wx, numpy as np, os
 from imagepy.core.engine import Filter,Simple
-from imagepy.core.roi import PointRoi,LineRoi
-from imagepy.core.manager import ImageManager, WindowsManager
-from imagepy.ui.widgets import HistCanvas
 from pubsub import pub
 import pandas as pd
 
 from skimage.graph import route_through_array
-from imagepy.core.mark import GeometryMark
+from sciapp.object import mark2shp, Circles
+
 class HistogramFrame(wx.Frame):
     def __init__(self, parent, title, hist):
         wx.Frame.__init__(self, parent, title=title, style = wx.DEFAULT_DIALOG_STYLE)
@@ -72,7 +70,7 @@ class Histogram(Simple):
     note = ['8-bit', '16-bit', 'rgb']
 
     def run(self, ips, imgs, para = None):
-        msk = ips.get_msk('in')
+        msk = ips.mask('in')
         if ips.imgtype == 'rgb':
             img = ips.img if msk is None else ips.img[msk]
             hist = [np.histogram(img.ravel()[i::3], np.arange(257))[0] for i in (0,1,2)]
@@ -93,7 +91,7 @@ class Frequence(Simple):
     def run(self, ips, imgs, para = None):
         if not para['slice']: imgs = [ips.img]
         data = []
-        msk = ips.get_msk('in')
+        msk = ips.mask('in')
         for i in range(len(imgs)):
             img = imgs[i] if msk is None else imgs[i][msk]
             maxv = img.max()
@@ -110,7 +108,7 @@ class Frequence(Simple):
             dt = list(zip(*dt))
             data.extend(dt)
 
-        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-histogram')
+        self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-histogram')
         
 class Statistic(Simple):
     title = 'Pixel Statistic'
@@ -140,12 +138,12 @@ class Statistic(Simple):
 
         if not self.para['slice']:imgs = [ips.img]
         data = []
-        msk = ips.get_msk('in')
+        msk = ips.mask('in')
         for n in range(len(imgs)):
             img = imgs[n] if msk is None else imgs[n][msk]
             data.append(self.count(img, para))
             self.progress(n, len(imgs))
-        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-statistic')
+        self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-statistic')
         
 class Mark:
     def __init__(self, data):
@@ -177,9 +175,8 @@ class PointsValue(Simple):
             (bool, 'slice', 'slice')]
         
     def load(self, ips):
-        if not isinstance(ips.roi, PointRoi):
-            IPy.alert('a PointRoi needed!')
-            return False
+        if ips.roi.roitype != 'point':
+            return self.app.alert('a PointRoi needed!')
         return True
     
         
@@ -189,18 +186,20 @@ class PointsValue(Simple):
         if not para['slice']:
             imgs = [ips.img]
             titles = titles[1:]
-        data, mark = [], []
-        pts = np.array(ips.roi.body).round().astype(np.int)
+        data = []
+        pts = np.vstack([i.body.reshape(-1,2) for i in ips.roi.body])
+        layers = {'type':'layers', 'body':{}}
         for n in range(len(imgs)):
-            xs, ys = (pts.T[:2]*k).round(2)
+            xs, ys = (pts.T[:2]*k).round(2).astype(np.int16)
             vs = imgs[n][ys, xs]
             cont = ([n]*len(vs), xs, ys, vs.round(2))
             if not para['slice']: cont = cont[1:]
             data.extend(zip(*cont))
-            if para['buf']:mark.append(list(zip(xs, ys, vs.round(2))))
+            if para['buf']:
+                layers['body'][n] = {'type':'circles', 'body':list(zip(xs, ys, vs.round(2)))}
             self.progress(n, len(imgs))
-        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-points')
-        if para['buf']:ips.mark = Mark(mark)
+        self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-points')
+        if para['buf']:ips.mark = mark2shp(layers)
 
 class ShortRoute(Filter):
     title = 'Shortest Route'
@@ -214,8 +213,8 @@ class ShortRoute(Filter):
             (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', '')]
         
     def load(self, ips):
-        if not isinstance(ips.roi, LineRoi):
-            return IPy.alert('LineRoi are needed!')
+        if ips.roi.roitype != 'line':
+            return self.app.alert('LineRoi are needed!')
         return True
 
     def run(self, ips, snap, img, para = None):
@@ -226,7 +225,7 @@ class ShortRoute(Filter):
         minv, maxv = ips.range
         routes = []
         for line in ips.roi.body:
-            pts = np.array(list(zip(line[:-1], line[1:])))
+            pts = np.array(list(zip(line.body[:-1], line.body[1:])))
             for p0, p1 in pts[:,:,::-1].astype(int):
                 indices, weight = route_through_array(img, p0, p1)
                 routes.append(indices)

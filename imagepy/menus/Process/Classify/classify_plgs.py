@@ -1,6 +1,5 @@
 from imagepy.core.engine import Filter, Simple
-from imagepy.core.manager import ImageManager
-from imagepy.core import ImagePlus
+# from imagepy.core import ImagePlus
 
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier, \
@@ -8,7 +7,6 @@ from sklearn.ensemble import RandomForestClassifier, \
     GradientBoostingClassifier, VotingClassifier
 from sklearn.dummy import DummyClassifier
 from imagepy.ipyalg import feature
-from imagepy import IPy
 
 model_para = None
 

@@ -1,8 +1,8 @@
 import numpy as np
 from imagepy.core.engine import Simple, Filter
 from numpy.fft import fft2, ifft2, fftshift, ifftshift
-from imagepy import IPy
-from imagepy.core import ImagePlus
+from sciapp.object import Image
+#from imagepy.core import ImagePlus
 
 class FFT(Simple):
 	title = 'FFT'
@@ -18,9 +18,9 @@ class FFT(Simple):
 		for i in range(len(imgs)):
 			rst.append(shift(fft2(imgs[i])))
 			self.progress(i, len(imgs))
-		ips = ImagePlus(rst, '%s-fft'%ips.title)
+		ips = Image(rst, '%s-fft'%ips.title)
 		ips.log = True
-		IPy.show_ips(ips)
+		self.app.show_img(ips)
 
 class IFFT(Simple):
 	title = 'Inverse FFT'
@@ -38,7 +38,7 @@ class IFFT(Simple):
 		for i in range(len(imgs)):
 			rst.append(ifft2(shift(ips.img)).astype(tp))
 			self.progress(i, len(imgs))
-		IPy.show_img(rst, '%s-ifft'%ips.title)
+		self.app.show_img(rst, '%s-ifft'%ips.title)
 
 class Shift(Filter):
 	title = 'Zero Center'
@@ -69,7 +69,7 @@ class Split(Simple):
 			reals.append(copy(imgs[i].real))
 			imags.append(copy(imgs[i].imag))
 			self.progress(i, len(imgs))
-		IPy.show_img(reals, '%s-real'%ips.title)
-		IPy.show_img(imags, '%s-image'%ips.title)
+		self.app.show_img(reals, '%s-real'%ips.title)
+		self.app.show_img(imags, '%s-image'%ips.title)
 
 plgs = [FFT, IFFT, '-', Shift, IShift, '-', Split]

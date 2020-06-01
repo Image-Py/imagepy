@@ -3,7 +3,6 @@
 Created on Mon Dec  5 05:43:50 2016
 @author: yxl
 """
-from imagepy import IPy
 from imagepy.core.engine import Free
 
 class Plugin(Free):

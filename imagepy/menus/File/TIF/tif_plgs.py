@@ -2,9 +2,9 @@ from imagepy.core.util import fileio
 from skimage.io import imread, imsave
 from imagepy.core.manager import ReaderManager, WriterManager
 
-ReaderManager.add('tif', imread)
-ReaderManager.add('tiff', imread)
-WriterManager.add('tif', imsave)
+ReaderManager.add(name='tif', obj=imread)
+ReaderManager.add(name='tiff', obj=imread)
+WriterManager.add(name='tif', obj=imsave)
 
 class OpenFile(fileio.Reader):
 	title = 'TIF Open'

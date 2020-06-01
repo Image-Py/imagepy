@@ -3,13 +3,11 @@
 Created on Tue Dec 27 01:06:59 2016
 @author: yxl
 """
-from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Simple, Filter
-from imagepy.core.manager import ImageManager, ColorManager
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
-from imagepy.core.mark import GeometryMark
+from sciapp.object import mark2shp
 import pandas as pd
 
 # center, area, l, extent, cov
@@ -64,7 +62,8 @@ class RegionCounter(Simple):
             if para['cov']:
                 ellips = [i.centroid[::-1] + (i.major_axis_length/2,i.minor_axis_length/2, i.orientation+np.pi/2) for i in ls]
                 layer['body'].append({'type':'ellipses', 'body':ellips})
-            mark['body'][i] = layer
+            print(i,i,i,i,i)
+            if len(ls)>0: mark['body'][i] = layer
 
             if para['center']:
                 dt.append([round(i.centroid[1]*k,1) for i in ls])
@@ -92,8 +91,8 @@ class RegionCounter(Simple):
                 dt.append([round(i.orientation*k, 1) for i in ls])
 
             data.extend(list(zip(*dt)))
-        ips.mark = GeometryMark(mark)
-        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-region')
+        ips.mark = mark2shp(mark if para['slice'] else mark['body'][0])
+        self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-region')
 
 # center, area, l, extent, cov
 class RegionFilter(Filter):

@@ -1,4 +1,3 @@
-from imagepy import IPy, root_dir
 from imagepy.core.engine import Free
 import os, sys, os.path as osp
 import zipfile, urllib

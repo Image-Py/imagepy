@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from ..manager import TableManager
 
 class TablePlus():
     def __init__(self, data, title=None):

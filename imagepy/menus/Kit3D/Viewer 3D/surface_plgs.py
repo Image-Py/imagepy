@@ -4,16 +4,15 @@ Created on Tue Jan 10 22:33:33 2017
 
 @author: yxl
 """
-from imagepy import IPy
 from imagepy.core.engine import Simple, Filter, Free
 from scipy.ndimage.filters import gaussian_filter
-from imagepy.core import myvi
+from sciapp.object import Surface, MarkText
+from sciapp.util import surfutil
 
 class Show(Free):
     title = 'Show Viewer 3D'
-    asyn = False
     def run(self, para):
-        myvi.Frame3D.figure(IPy.curapp, title='3D Canvas').Raise()
+        self.app.show_mesh()
 
 class Surface2D(Simple):
     title = '2D Surface'
@@ -23,23 +22,16 @@ class Surface2D(Simple):
             (int, 'scale', (1,5), 0, 'down scale', 'pix'),
             (int, 'sigma', (0,30), 0, 'sigma', ''),
             (float, 'h', (0.1,10), 1, 'scale z', '')]
-    
-    def load(self, para):
-        self.frame = myvi.Frame3D.figure(IPy.curapp, title='3D Canvas')
-        return True
 
     def run(self, ips, imgs, para = None):
         ds, sigma = para['scale'], para['sigma']
-        vts, fs, ns, cs = myvi.build_surf2d(ips.img, ds=ds, sigma=para['sigma'], k=para['h'])
-        self.frame.viewer.add_surf_asyn(para['name'], vts, fs, ns, cs)
-        self.frame.Raise()
-        self.frame = None
-        #self.frame.add_surf2d('dem', ips.img, ips.lut, scale, sigma)
+        vts, fs, ns, cs = surfutil.build_surf2d(ips.img, ds=ds, sigma=para['sigma'], k=para['h'])
+        self.app.show_mesh(Surface(vts, fs, ns, cs), para['name'])
 
-class Surface3D(Filter):
+class Surface3D(Simple):
     modal = False
     title = '3D Surface'
-    note = ['8-bit', 'not_slice', 'not_channel', 'preview']
+    note = ['8-bit', 'stack3d', 'preview']
     para = {'name':'undifine', 'ds':2, 'thr':128, 'step':1, 'color':(0,255,0)}
     view = [(str, 'name', 'Name', ''),
             ('slide', 'thr', (0,255), 0, 'threshold'),
@@ -48,10 +40,6 @@ class Surface3D(Filter):
             ('color', 'color', 'color', 'rgb')]
 
     def load(self, ips):
-        if not ips.is3d:
-            IPy.alert('stack3d required!')
-            return False
-        self.frame = myvi.Frame3D.figure(IPy.curapp, title='3D Canvas')
         self.buflut = ips.lut
         ips.lut = ips.lut.copy()
         return True
@@ -59,23 +47,15 @@ class Surface3D(Filter):
     def preview(self, ips, para):
         ips.lut[:] = self.buflut
         ips.lut[:para['thr']] = [255,0,0]
-        ips.update()
-
-    def run(self, ips, snap, img, para = None):
-        imgs = ips.imgs
 
     def cancel(self, ips):
         ips.lut = self.buflut
-        ips.update()
 
-    def run(self, ips, snap, img, para = None):
+    def run(self, ips, imgs, para = None):
         ips.lut = self.buflut
-        print('------------', para['color'])
         cs = tuple([int(i/255.0) for i in para['color']])
-        vts, fs, ns, cs = myvi.build_surf3d(ips.imgs, para['ds'], para['thr'], para['step'], cs)
-        self.frame.viewer.add_surf_asyn(para['name'], vts, fs, ns, cs)
-        self.frame.Raise()
-        self.frame = None
+        vts, fs, ns, cs = surfutil.build_surf3d(ips.imgs, para['ds'], para['thr'], para['step'], cs)
+        self.app.show_mesh(Surface(vts, fs, ns, cs), para['name'])
 
 class ImageCube(Simple):
     modal = False
@@ -88,18 +68,12 @@ class ImageCube(Simple):
             (bool, 'box', 'show box'),
             ('color', 'color', 'box color', 'rgb')]
 
-    def load(self, para):
-        self.frame = myvi.Frame3D.figure(IPy.curapp, title='3D Canvas')
-        return True
-
     def run(self, ips, imgs, para = None):
         if para['surface']:
-            vts, fs, ns, cs = myvi.build_img_cube(imgs, para['ds'])
-            obj = self.frame.viewer.add_surf_asyn(para['name']+'-surface', vts, fs, ns, cs)
+            vts, fs, ns, cs = surfutil.build_img_cube(imgs, para['ds'])
+            self.app.show_mesh(Surface(vts, fs, ns, cs), para['name']+'-surface')
         if para['box']:
-            vts, fs, ns, cs = myvi.build_img_box(imgs, para['color'])
-            obj = self.frame.viewer.add_surf_asyn(para['name']+'-box', vts, fs, ns, cs, mode='grid')
-        self.frame.Raise()
-        self.frame = None
+            vts, fs, ns, cs = surfutil.build_img_box(imgs, para['color'])
+            self.app.show_mesh(Surface(vts, fs, ns, cs, mode='grid'), para['name']+'-box')
 
 plgs = [Show, Surface2D, Surface3D, ImageCube]

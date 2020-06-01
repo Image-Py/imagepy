@@ -8,8 +8,8 @@ def imread(path):
 def imsave(path,img):
 	np.savetxt(path,img)
 
-ReaderManager.add('dat', imread)
-WriterManager.add('dat', imsave)
+ReaderManager.add(name='dat', obj=imread)
+WriterManager.add(name='dat', obj=imsave)
 
 class OpenFile(fileio.Reader):
 	title = 'DAT Open'

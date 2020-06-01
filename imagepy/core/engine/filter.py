@@ -8,10 +8,7 @@ import wx
 import threading
 import numpy as np
 
-from ... import IPy
-from ...ui.panelconfig import ParaDialog
-from ...core.manager import TextLogManager, ImageManager, \
-WindowsManager, TaskManager, WidgetsManager, DocumentManager
+from ...core.manager import TaskManager, DocumentManager
 from time import time
 
 def process_channels(plg, ips, src, des, para):
@@ -29,7 +26,6 @@ def process_channels(plg, ips, src, des, para):
 def process_one(plg, ips, src, img, para, callafter=None):
     TaskManager.add(plg)
     start = time()
-    
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.complex128, np.float32, np.float64)
     if transint: 
@@ -42,10 +38,10 @@ def process_one(plg, ips, src, img, para, callafter=None):
     if not img is rst and not rst is None:
         imgrange = {np.uint8:(0,255), np.uint16:(0, 65535)}[img.dtype.type]
         np.clip(rst, imgrange[0], imgrange[1], out=img)
-    if 'auto_msk' in plg.note and not ips.get_msk() is None:
-        msk = True ^ ips.get_msk()
+    if 'auto_msk' in plg.note and not ips.mask('out') is None:
+        msk = ips.mask('out')
         img[msk] = src[msk]
-    IPy.set_info('%s: cost %.3fs'%(ips.title, time()-start))
+    plg.app.info('%s: cost %.3fs'%(ips.title, time()-start))
     ips.update()
     TaskManager.remove(plg)
     if not callafter is None:callafter()
@@ -73,10 +69,10 @@ def process_stack(plg, ips, src, imgs, para, callafter=None):
         if not i is rst and not rst is None:
             imgrange = {np.uint8:(0,255), np.uint16:(0,65535)}[i.dtype.type]
             np.clip(rst, imgrange[0], imgrange[1], out=i)
-        if 'auto_msk' in plg.note and not ips.get_msk() is None:
-            msk = True ^ ips.get_msk()
+        if 'auto_msk' in plg.note and not ips.mask() is None:
+            msk = ips.mask('out')
             i[msk] = src[msk]
-    IPy.set_info('%s: cost %.3fs'%(ips.title, time()-start))
+    plg.app.info('%s: cost %.3fs'%(ips.title, time()-start))
     ips.update()
     TaskManager.remove(plg)
     if not callafter is None:callafter()
@@ -91,25 +87,16 @@ class Filter:
     view = None
     prgs = (None, 1)
 
-    def __init__(self, ips=None):
-        if ips==None:ips = IPy.get_ips()
-        self.dialog = None
-        self.ips = ips
+    def __init__(self, ips=None): pass
         
     def progress(self, i, n):
         self.prgs = (i, n)
 
-    def show(self, temp=ParaDialog):
-        self.dialog = temp(WindowsManager.get(), self.title)
-        self.dialog.init_view(self.view, self.para, 'preview' in self.note, modal=self.modal)
-
-        self.dialog.on_help = lambda : IPy.show_md(self.title, DocumentManager.get(self.title))
-        self.dialog.set_handle(lambda x:self.preview(self.ips, x))
-
-        self.dialog.on_ok = lambda : self.ok(self.ips)
-        self.dialog.on_cancel = lambda : self.cancel(self.ips)
-        if self.modal: return self.dialog.ShowModal() == wx.ID_OK
-        self.dialog.Show()
+    def show(self):
+        preview = lambda para, ips=self.ips: self.preview(ips, para) or ips.update()
+        return self.app.show_para(self.title, self.view, self.para, preview, 
+            on_ok=lambda : self.ok(self.ips), on_cancel=lambda : self.cancel(self.ips) or self.ips.update(), 
+            preview='preview' in self.note, modal=self.modal)
     
     def run(self, ips, snap, img, para = None):
         return 255-img
@@ -117,27 +104,21 @@ class Filter:
     def check(self, ips):
         note = self.note
         if ips == None:
-            IPy.alert('No image opened!')
+            return self.app.alert('No image opened!')
             return False
         elif 'req_roi' in note and ips.roi == None:
-            IPy.alert('No Roi found!')
-            return False
+            return self.app.alert('No Roi found!')
         elif not 'all' in note:
-            if ips.get_imgtype()=='rgb' and not 'rgb' in note:
-                IPy.alert('Do not surport rgb image')
-                return False
-            elif ips.get_imgtype()=='8-bit' and not '8-bit' in note:
-                IPy.alert('Do not surport 8-bit image')
-                return False
-            elif ips.get_imgtype()=='16-bit' and not '16-bit' in note:
-                IPy.alert('Do not surport 16-bit uint image')
-                return False
-            elif ips.get_imgtype()=='32-int' and not 'int' in note:
-                IPy.alert('Do not surport 32-bit int uint image')
-                return False
-            elif 'float' in ips.get_imgtype() and not 'float' in note:
-                IPy.alert('Do not surport float image')
-                return False
+            if ips.dtype==np.uint8 and ips.channels==3 and not 'rgb' in note:
+                return self.app.alert('Do not surport rgb image')
+            elif ips.dtype==np.uint8 and ips.channels==1 and not '8-bit' in note:
+                return self.app.alert('Do not surport 8-bit image')
+            elif ips.dtype==np.uint16 and not '16-bit' in note:
+                return self.app.alert('Do not surport 16-bit uint image')
+            elif ips.dtype in [np.int32, np.int64] and not 'int' in note:
+                return self.app.alert('Do not surport int image')
+            elif ips.dtype in [np.float32, np.float64] and not 'float' in note:
+                return self.app.alert('Do not surport float image')
         return True
         
     def preview(self, ips, para):
@@ -148,38 +129,33 @@ class Filter:
     def ok(self, ips, para=None, callafter=None):
         if para == None:
             para = self.para
-            if not 'not_slice' in self.note and ips.get_nslices()>1:
+            if not 'not_slice' in self.note and ips.slices>1:
                 if para == None:para = {}
             if para!=None and 'stack' in para:del para['stack']
-        win = WidgetsManager.getref('Macros Recorder')
-        if ips.get_nslices()==1 or 'not_slice' in self.note:
+        # = WidgetsManager.getref('Macros Recorder')
+        if ips.slices==1 or 'not_slice' in self.note:
             # process_one(self, ips, ips.snap, ips.img, para)
-            if IPy.uimode() == 'no':
-                process_one(self, ips, ips.snap, ips.img, para, callafter)
-            else: threading.Thread(target = process_one, args = 
+            threading.Thread(target = process_one, args = 
                 (self, ips, ips.snap, ips.img, para, callafter)).start()
-            if win!=None: win.write('{}>{}'.format(self.title, para))
-        elif ips.get_nslices()>1:
+            # if win!=None: win.write('{}>{}'.format(self.title, para))
+            self.app.record_macros('{}>{}'.format(self.title, para))
+        elif ips.slices>1:
             has, rst = 'stack' in para, None
             if not has:
-                rst = IPy.yes_no('Run every slice in current stacks?')
+                rst = self.app.yes_no('Run every slice in current stacks?')
             if 'auto_snap' in self.note and self.modal:ips.reset()
             if has and para['stack'] or rst == 'yes':
                 para['stack'] = True
                 #process_stack(self, ips, ips.snap, ips.imgs, para)
-                if IPy.uimode() == 'no':
-                    process_stack(self, ips, ips.snap, ips.imgs, para, callafter)
-                else: threading.Thread(target = process_stack, args = 
+                threading.Thread(target = process_stack, args = 
                     (self, ips, ips.snap, ips.imgs, para, callafter)).start()
-                if win!=None: win.write('{}>{}'.format(self.title, para))
+                self.app.record_macros('{}>{}'.format(self.title, para))
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
                 #process_one(self, ips, ips.snap, ips.img, para)
-                if IPy.uimode() == 'no':
-                    process_one(self, ips, ips.snap, ips.img, para, callafter)
-                else: threading.Thread(target = process_one, args = 
+                threading.Thread(target = process_one, args = 
                     (self, ips, ips.snap, ips.img, para, callafter)).start()
-                if win!=None: win.write('{}>{}'.format(self.title, para))
+                self.app.record_macros('{}>{}'.format(self.title, para))
             elif rst == 'cancel': pass
         #ips.update()
         
@@ -188,11 +164,11 @@ class Filter:
             ips.img[:] = ips.snap
             ips.update()
             
-    def start(self, para=None, callafter=None):
-        ips = self.ips
-        if not self.check(ips):return
-        if not self.load(ips):return
-        if 'auto_snap' in self.note:ips.snapshot()
+    def start(self, app, para=None, callafter=None):
+        self.app, self.ips = app, app.get_img()
+        if not self.check(self.ips):return
+        if not self.load(self.ips):return
+        if 'auto_snap' in self.note:self.ips.snapshot()
         
         if para!=None:
             self.ok(self.ips, para, callafter)
@@ -203,9 +179,8 @@ class Filter:
             else: self.ok(self.ips, para, callafter)
         elif self.modal:
             if self.show():
-                self.ok(ips, None, callafter)
-            else:self.cancel(ips)
-            self.dialog.Destroy()
+                self.ok(self.ips, None, callafter)
+            else:self.cancel(self.ips)
         else: self.show()
 
     def __del__(self):

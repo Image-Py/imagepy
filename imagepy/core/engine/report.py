@@ -4,10 +4,10 @@ Created on Thu Dec 29 01:48:23 2016
 @author: yxl
 """
 import wx
-from imagepy import IPy
-from imagepy.core.manager import WidgetsManager, TaskManager, ImageManager
-from imagepy.core.manager import ReaderManager, ViewerManager, TableManager
-from imagepy.ui.propertygrid import GridDialog
+from imagepy.core.manager import TaskManager
+from sciapp import Source
+from imagepy.core.manager import ReaderManager
+#from imagepy.ui.propertygrid import GridDialog
 from imagepy.core.util import xlreport
 from time import time
 import openpyxl as pyxl
@@ -50,13 +50,13 @@ class Report:
         if rst != 5100: return
         filt = '|'.join(['%s files (*.%s)|*.%s'%('XLSX', 'xlsx', 'xlsx')])
         if not IPy.getpath('Save..', filt, 'save', para): return
-        win = WidgetsManager.getref('Macros Recorder')
+        win = Source.manager('widget').get('obj', name='Macros Recorder')
         if win!=None: win.write('{}>{}'.format(self.title, para))
         self.runasyn(wb, info, key, para, callafter)
 
 def show_rpt(data, title):
     wx.CallAfter(Report(title, data).start)
     
-ViewerManager.add('rpt', show_rpt)
+# ViewerManager.add('rpt', show_rpt)
 def read_rpt(path): return path
-ReaderManager.add('rpt', read_rpt, tag='rpt')
+ReaderManager.add(name='rpt', obj=read_rpt, tag='rpt')

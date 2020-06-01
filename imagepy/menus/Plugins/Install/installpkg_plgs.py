@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from imagepy import IPy
 from imagepy.core.engine import Free
 import subprocess, sys
 import pandas as pd
@@ -22,7 +21,7 @@ class List(Free):
         p = subprocess.Popen('%s -m pip list'%sys.executable, 
         stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True)  
         lst = str(p.stdout.read(), encoding='utf-8').replace('\r\n', '\n').split('\n')
-        IPy.show_table(pd.DataFrame([[i] for i in lst], columns=['Packages']), 'Packages')
+        self.app.show_table(pd.DataFrame([[i] for i in lst], columns=['Packages']), 'Packages')
 
 
 plgs = [Install, List]

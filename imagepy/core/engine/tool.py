@@ -3,8 +3,6 @@
 Created on Sat Dec  3 03:55:51 2016
 @author: yxl
 """
-from ... import IPy
-from ...core.manager import ToolsManager
 
 class Tool:
     title = 'Tool'
@@ -23,8 +21,6 @@ class Tool:
         ips = IPy.get_ips()
         if not ips is None and not ips.tool is None:
             ips.tool = None
-            ips.update()
-        ToolsManager.set(self)
         
     def mouse_down(self, ips, x, y, btn, **key): pass
     def mouse_up(self, ips, x, y, btn, **key): pass

@@ -16,9 +16,9 @@ class Rotate(Filter):
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         a = para['ang']/180.0*np.pi
-        o = np.array(ips.size)*0.5
+        o = np.array(ips.shape)*0.5
         if ips.roi!=None:
-            box = ips.roi.get_box()
+            box = ips.roi.box
             o = np.array([box[1]+box[3],box[0]+box[2]])*0.5
         trans = np.array([[np.cos(a),-np.sin(a)],[np.sin(a),np.cos(a)]])
         offset = o-trans.dot(o)
@@ -33,9 +33,9 @@ class Scale(Filter):
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
         k = 1/para['zoom']
-        o = np.array(ips.size)*0.5
+        o = np.array(ips.shape)*0.5
         if ips.roi!=None:
-            box = ips.roi.get_box()
+            box = ips.roi.box
             o = np.array([box[1]+box[3],box[0]+box[2]])*0.5
         trans = np.array([[k,0],[0,k]])
         offset = o-trans.dot(o)

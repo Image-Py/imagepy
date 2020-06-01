@@ -10,7 +10,7 @@ class Plugin(Filter):
 	view = [(list, 'mode', ['nearest', 'mean'], str, 'replace by', 'pix')]
 
 	def run(self, ips, snap, img, para = None):
-		msk = ips.get_msk()
+		msk = ips.mask()
 		if self.para['mode']=='nearest':
 			rr, cc = ndimg.distance_transform_edt(msk, return_distances=False, return_indices=True)
 			img[:] = snap[rr, cc]

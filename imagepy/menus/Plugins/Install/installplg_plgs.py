@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from imagepy import IPy, root_dir
 from imagepy.core.engine import Free
 import os, subprocess, zipfile, shutil
 
@@ -12,14 +11,14 @@ if sys.version_info[0]==2:
 else: 
     from urllib.request import urlretrieve
     from io import BytesIO as StringIO
-
+'''
 path_plgs = os.path.join(root_dir, 'plugins')
 path_cache = os.path.join(path_plgs, 'cache')
 if not os.path.exists(path_plgs):
     os.mkdir(path_plgs)
 if not os.path.exists(path_cache):
     os.mkdir(path_cache)
-
+'''
 def Schedule(a,b,c, plg):
     per = 100.0 * a * b / c
     if per > 100 : per = 100

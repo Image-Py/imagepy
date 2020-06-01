@@ -1,4 +1,3 @@
-from imagepy import IPy
 from imagepy.core.manager import ColorManager, LanguageManager
 from imagepy.core.engine import Free
 
@@ -10,7 +9,7 @@ class Language(Free):
 	#process
 	def run(self, para = None):
 		LanguageManager.set(self.title)
-		IPy.curapp.reload_plugins()
+		self.app.reload_plugins()
 
 	def __call__(self):
 		return self

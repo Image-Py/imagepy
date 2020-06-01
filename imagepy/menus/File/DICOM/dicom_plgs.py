@@ -7,7 +7,7 @@ from imagepy.core.manager import ReaderManager, WriterManager
 def imread(path):
 	return pydicom.read_file(path, force=True).pixel_array
 
-ReaderManager.add('dcm', imread)
+ReaderManager.add(name='dcm', obj=imread)
 
 class OpenFile(fileio.Reader):
 	title = 'DCM Open'

@@ -1,7 +1,5 @@
 from imagepy.core.engine import Simple
-from imagepy import IPy
 from skimage import data, io, segmentation, color
-from imagepy.core.manager import ImageManager
 from skimage.future import graph
 import numpy as np
 
@@ -21,8 +19,7 @@ class RagThreshold(Simple):
     def cancel(self, ips): ips.swap()
 
     def preview(self, ips, para):
-        print(para)
-        lab = ImageManager.get(para['lab']).img
+        lab = self.app.get_img(para['lab']).img
         connect = ['4-connected', '8-connected'].index(para['connect']) + 1
         g = graph.rag_mean_color(ips.snap, lab, connect, para['mode'], para['sigma'])
         lab = graph.cut_threshold(lab, g, para['thresh'])
@@ -30,11 +27,11 @@ class RagThreshold(Simple):
 
     def run(self, ips, imgs, para = None):
         if not para['stack']: 
-            imgs, labs = [ips.img], [ImageManager.get(para['lab']).img]
+            imgs, labs = [ips.img], [self.app.get_img(para['lab']).img]
         else:
-            labs = ImageManager.get(para['lab']).imgs
+            labs = self.app.get_img(para['lab']).imgs
             if len(imgs) != len(labs): 
-                labs = [ImageManager.get(para['lab']).img] * len(imgs)
+                labs = [self.app.get_img(para['lab']).img] * len(imgs)
         for i in range(len(imgs)):
             img, lab = imgs[i], labs[i]
             connect = ['4-connected', '8-connected'].index(para['connect']) + 1
@@ -60,7 +57,7 @@ class NormalCut(Simple):
     def cancel(self, ips): ips.swap()
 
     def preview(self, ips, para):
-        lab = ImageManager.get(para['lab']).img
+        lab = self.app.get_img(para['lab']).img
         connect = ['4-connected', '8-connected'].index(para['connect']) + 1
         g = graph.rag_mean_color(ips.snap, lab, connect, para['mode'], para['sigma'])
         lab = graph.cut_normalized(lab, g, para['thresh'], para['num'])
@@ -68,11 +65,11 @@ class NormalCut(Simple):
 
     def run(self, ips, imgs, para = None):
         if not para['stack']: 
-            imgs, labs = [ips.img], [ImageManager.get(para['lab']).img]
+            imgs, labs = [ips.img], [self.app.get_img(para['lab']).img]
         else:
-            labs = ImageManager.get(para['lab']).imgs
+            labs = self.app.get_img(para['lab']).imgs
             if len(imgs) != len(labs): 
-                labs = [ImageManager.get(para['lab']).img] * len(imgs)
+                labs = [self.app.get_img(para['lab']).img] * len(imgs)
         for i in range(len(imgs)):
             img, lab = imgs[i], labs[i]
             connect = ['4-connected', '8-connected'].index(para['connect']) + 1
@@ -82,15 +79,15 @@ class NormalCut(Simple):
             self.progress(i, len(imgs))
 
 def _weight_mean_color(graph, src, dst, n):
-    diff = graph.node[dst]['mean color'] - graph.node[n]['mean color']
+    diff = graph.nodes[dst]['mean color'] - graph.nodes[n]['mean color']
     diff = np.linalg.norm(diff)
     return {'weight': diff}
 
 def merge_mean_color(graph, src, dst):
-    graph.node[dst]['total color'] += graph.node[src]['total color']
-    graph.node[dst]['pixel count'] += graph.node[src]['pixel count']
-    graph.node[dst]['mean color'] = (graph.node[dst]['total color'] /
-                                     graph.node[dst]['pixel count'])
+    graph.nodes[dst]['total color'] += graph.nodes[src]['total color']
+    graph.nodes[dst]['pixel count'] += graph.nodes[src]['pixel count']
+    graph.nodes[dst]['mean color'] = (graph.nodes[dst]['total color'] /
+                                     graph.nodes[dst]['pixel count'])
 
 class MergeHierarchical(Simple):
     title = 'RAG Merge Hierarchical'
@@ -108,7 +105,7 @@ class MergeHierarchical(Simple):
     def cancel(self, ips): ips.swap()
 
     def preview(self, ips, para):
-        lab = ImageManager.get(para['lab']).img
+        lab = self.app.get_img(para['lab']).img
         connect = ['4-connected', '8-connected'].index(para['connect']) + 1
         g = graph.rag_mean_color(ips.snap, lab, connect, para['mode'], para['sigma'])
         lab = graph.merge_hierarchical(lab, g, thresh=para['thresh'], rag_copy=False,
@@ -117,11 +114,11 @@ class MergeHierarchical(Simple):
 
     def run(self, ips, imgs, para = None):
         if not para['stack']: 
-            imgs, labs = [ips.img], [ImageManager.get(para['lab']).img]
+            imgs, labs = [ips.img], [self.app.get_img(para['lab']).img]
         else:
-            labs = ImageManager.get(para['lab']).imgs
+            labs = self.app.get_img(para['lab']).imgs
             if len(imgs) != len(labs): 
-                labs = [ImageManager.get(para['lab']).img] * len(imgs)
+                labs = [self.app.get_img(para['lab']).img] * len(imgs)
         for i in range(len(imgs)):
             img, lab = imgs[i], labs[i]
             connect = ['4-connected', '8-connected'].index(para['connect']) + 1

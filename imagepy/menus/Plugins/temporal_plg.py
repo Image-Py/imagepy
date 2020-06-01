@@ -5,7 +5,6 @@ Created on Sun Jan 22 12:56:00 2020
 from imagepy.core.engine import Simple
 import numpy as np
 from imagepy.core.manager import ColorManager
-from imagepy import IPy
 
 def color_code(img, lut):
     idx = np.linspace(0,255,len(img)).astype(int)

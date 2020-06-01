@@ -1,12 +1,12 @@
 import wx, joblib, os, shutil, os.path as osp
 from glob import glob
-from imagepy.core.manager import RoiManager, ImageManager, ReaderManager, ViewerManager
+#from imagepy.core.manager import RoiManager, ImageManager, ReaderManager, ViewerManager
 from . import classify_plgs as manager
 from .predict_plg import Plugin as FCL
-from imagepy import IPy
+#from imagepy import IPy
 
-ReaderManager.add('fcl', lambda x:x, 'fcl')
-ViewerManager.add('fcl', lambda x,n:wx.CallAfter(FCL(path=x).start))
+#ReaderManager.add('fcl', lambda x:x, 'fcl')
+#ViewerManager.add('fcl', lambda x,n:wx.CallAfter(FCL(path=x).start))
 
 class Plugin( wx.Panel ):
 	title = 'Feature Classify Panel'

@@ -4,7 +4,6 @@ Created on Sun Jan 23 11:53:00 2020
 """
 from imagepy.core.engine import Simple
 import numpy as np
-from imagepy import IPy
 from scipy.optimize import curve_fit
 from skimage.exposure import histogram_matching
 import matplotlib.pyplot as plt 

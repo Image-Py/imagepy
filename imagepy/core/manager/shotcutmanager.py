@@ -1,6 +1,9 @@
-import os
+from sciapp import Manager
 from ... import root_dir
+import os
 
+ShotcutManager = Manager(path=os.path.join(root_dir,'data/shotcut.cfg'))
+'''
 class ShotcutManager:
     shotcuts = {}
     filename = os.path.join(root_dir,'data/shotcut.cfg')
@@ -39,4 +42,4 @@ if __name__ == '__main__':
     ShotcutManager.rm('c')
     print(ShotcutManager.shotcuts)
     ShotcutManager.write()
-    
+'''

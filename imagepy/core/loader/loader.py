@@ -6,8 +6,9 @@ Created on Fri Jan  6 23:45:59 2017
 """
 import os, sys
 from ..engine import Macros, MkDown, Widget, WorkFlow, Report
-from ..manager import ToolsManager, PluginsManager, WidgetsManager, DocumentManager
-from ... import IPy, root_dir
+from ..manager import DocumentManager
+from sciapp import Source
+from ... import root_dir
 from codecs import open
 
 def getpath(root, path):
@@ -27,56 +28,56 @@ def extend_plugins(path, lst, err):
             pt = os.path.join(root_dir,path)
             print(pt+'/'+i)
             rst.append(Report(i[:-4], pt+'/'+i))
-            PluginsManager.add(rst[-1])
+            Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
         elif i[-3:] == '.mc':
             pt = os.path.join(root_dir, path)
             f = open(pt+'/'+i, 'r', 'utf-8')
             cmds = f.readlines()
             f.close()
             rst.append(Macros(i[:-3], [getpath(pt, i) for i in cmds]))
-            PluginsManager.add(rst[-1])
+            Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
         elif i[-3:] == '.wf':
             pt = os.path.join(root_dir,path)
             f = open(pt+'/'+i, 'r', 'utf-8')
             cmds = f.read()
             f.close()
             rst.append(WorkFlow(i[:-3], cmds))
-            PluginsManager.add(rst[-1])
+            Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
         elif i[-3:] == '.md':
             f = open(os.path.join(root_dir,path)+'/'+i, 'r', 'utf-8')
             cont = f.read()
             f.close()
             rst.append(MkDown(i[:-3], cont))
-            PluginsManager.add(rst[-1])
+            Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
         elif i[-6:] in ['wgt.py', 'gts.py']:
-            try:
-                rpath = path.replace('/', '.').replace('\\','.')
-                #rpath = rpath[rpath.index('imagepy.'):]
-                plg = __import__('imagepy.'+ rpath+'.'+i[:-3],'','',[''])
-                if hasattr(plg, 'wgts'):
-                    rst.extend([j if j=='-' else Widget(j) for j in plg.wgts])
-                    for p in plg.wgts:
-                        if not isinstance(p, str):WidgetsManager.add(p)
-                else: 
-                    rst.append(Widget(plg.Plugin))
-                    WidgetsManager.add(plg.Plugin)
-            except Exception as  e:
-                err.append((path, i, sys.exc_info()[1]))
+            #try:
+            rpath = path.replace('/', '.').replace('\\','.')
+            #rpath = rpath[rpath.index('imagepy.'):]
+            plg = __import__('imagepy.'+ rpath+'.'+i[:-3],'','',[''])
+            if hasattr(plg, 'wgts'):
+                rst.extend([j if j=='-' else Widget(j) for j in plg.wgts])
+                for p in plg.wgts:
+                    print(p)
+                    if not isinstance(p, str):Source.manager('widget').add(obj=p, name=p.title)
+            else: 
+                rst.append(Widget(plg.Plugin))
+                Source.manager('widget').add(obj=plg.Plugin, name=plg.Plugin.title)
+            #except Exception as  e:
+            #    err.append((path, i, sys.exc_info()[1]))
         else:
-            try:
-                rpath = path.replace('/', '.').replace('\\','.')
-                #rpath = rpath[rpath.index('imagepy.'):]
-                plg = __import__('imagepy.'+ rpath+'.'+i[:-3],'','',[''])
-                if hasattr(plg, 'plgs'):
-                    rst.extend([j for j in plg.plgs])
-                    for p in plg.plgs:
-                        if not isinstance(p, str):PluginsManager.add(p)
-                else: 
-                    rst.append(plg.Plugin)
-                    PluginsManager.add(plg.Plugin)
-            except Exception as  e:
-                err.append((path, i, sys.exc_info()[1]))
-
+            #try:
+            rpath = path.replace('/', '.').replace('\\','.')
+            #rpath = rpath[rpath.index('imagepy.'):]
+            plg = __import__('imagepy.'+ rpath+'.'+i[:-3],'','',[''])
+            if hasattr(plg, 'plgs'):
+                rst.extend([j for j in plg.plgs])
+                for p in plg.plgs:
+                    if not isinstance(p, str): Source.manager('plugin').add(obj=p, name=p.title)
+            else: 
+                rst.append(plg.Plugin)
+                Source.manager('plugin').add(obj=plg.Plugin, name=plg.Plugin.title)
+            #except Exception as  e:
+            #    err.append((path, i, sys.exc_info()[1]))
     return rst
             
 def sort_plugins(catlog, lst):
@@ -111,8 +112,6 @@ def build_plugins(path, err=False):
     pg = __import__('imagepy.'+rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):
-        if 'Personal Information' in pg.catlog:
-            print(subtree)
         subtree = sort_plugins(pg.catlog, subtree)
     subtree = extend_plugins(path, subtree, err)
     
@@ -133,18 +132,18 @@ def extend_tools(path, lst, err):
             rst.append((Macros(i[:-3], [getpath(pt, i) for i in cmds]),  
                 os.path.join(root_dir, path)+'/'+i[:-3]+'.gif'))
         else:
-            try:
-                rpath = path.replace('/', '.').replace('\\','.')
-                #rpath = rpath[rpath.index('imagepy.'):]
-                
-                plg = __import__('imagepy.'+rpath+'.'+i,'','',[''])
-                if hasattr(plg, 'plgs'): 
-                    for i,j in plg.plgs: rst.append((i, path+'/'+j))
-                else: rst.append((plg.Plugin, 
-                    os.path.join(root_dir, path)+'/'+i.split('_')[0]+'.gif'))
-            except Exception as e:
-                err.append((path, i, sys.exc_info()[1]))
-    for i in rst:ToolsManager.add(i[0])
+            #try:
+            rpath = path.replace('/', '.').replace('\\','.')
+            #rpath = rpath[rpath.index('imagepy.'):]
+            
+            plg = __import__('imagepy.'+rpath+'.'+i,'','',[''])
+            if hasattr(plg, 'plgs'): 
+                for i,j in plg.plgs: rst.append((i, path+'/'+j))
+            else: rst.append((plg.Plugin, 
+                os.path.join(root_dir, path)+'/'+i.split('_')[0]+'.gif'))
+            #except Exception as e:
+            #    err.append((path, i, sys.exc_info()[1]))
+    for i in rst:Source.manager('tool').add(obj=i[0], name=i[0].title)
     return rst
             
 def sort_tools(catlog, lst):
@@ -197,7 +196,7 @@ def extend_widgets(path, lst, err):
             rst.append(plg.Plugin)
         except Exception as e:
             err.append((path, i, sys.exc_info()[1]))
-    for i in rst:WidgetsManager.add(i)
+    for i in rst:Source.manager('widget').add(obj=i, name=i.name)
     return rst
             
 def sort_widgets(catlog, lst):

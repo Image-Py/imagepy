@@ -1,7 +1,5 @@
-from imagepy.ui.workflowwindow import WorkFlowPanel
 import threading, wx, os, wx.lib.agw.aui as aui
-from imagepy.core.manager import ReaderManager, ViewerManager
-from imagepy import IPy
+from imagepy.core.manager import ReaderManager
 
 def parse(cont):
 	ls = cont.split('\n')
@@ -42,7 +40,7 @@ class WorkFlow:
 def show_wf(data, title):
 	wx.CallAfter(WorkFlow(title, data).start)
 
-ViewerManager.add('wf', show_wf)
+# ViewerManager.add('wf', show_wf)
 
 def read_wf(path):
 	f = open(path, encoding='utf-8')
@@ -51,4 +49,4 @@ def read_wf(path):
 	print(cont)
 	return cont
 
-ReaderManager.add('wf', read_wf, tag='wf')
+ReaderManager.add(name='wf', obj=read_wf, tag='wf')

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import wx, os
 from imagepy.core.engine import Free
-from imagepy.core.manager import ShotcutManager, PluginsManager
-from imagepy import IPy, root_dir
+from imagepy.core.manager import ShotcutManager
+from sciapp import Source
+from imagepy import root_dir
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):
@@ -35,7 +36,7 @@ class Plugin( wx.Panel ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY,
                             pos = wx.DefaultPosition, size = wx.Size( 500,300 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-
+        self.app = parent
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
         bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
         self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, "Search:", 
@@ -64,8 +65,8 @@ class Plugin( wx.Panel ):
     
     #def list_plg(self, lst, items
     def load(self):
-        lst = list(PluginsManager.plgs.values())
-        self.plgs = [[i.title, ShotcutManager.get(i.title)] for i in lst]
+        lst = Source.manager('plugin').gets(item='name')
+        self.plgs = [[i, ShotcutManager.get(item='shotcut', name=i)] for i in lst]
         for i in self.plgs:
             if i[1]==None:i[1]=''
         self.plgs.sort()
@@ -96,7 +97,7 @@ class Plugin( wx.Panel ):
         
     def on_run(self, event):
         if self.active != event.GetIndex():
-            return IPy.alert('please double click to activate an item')
+            return self.app.alert('please double click to activate an item')
         code = event.GetKeyCode()
         title = self.buf[event.GetIndex()][0]
         txt = self.buf[event.GetIndex()][1]
@@ -116,10 +117,9 @@ class Plugin( wx.Panel ):
         if len(txt)>0 and txt[-1]=='-':txt=txt[:-1]
         self.buf[event.GetIndex()][1] = txt
         self.lst_plgs.RefreshItem(event.GetIndex())
-        if txt=='':ShotcutManager.rm(title)
-        ShotcutManager.set(title, txt)
+        ShotcutManager.remove(name=title)
+        if txt!='': ShotcutManager.add(name=title, shotcut=txt)
         #PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
         
     def close(self):
-        print('close')
-        ShotcutManager.write()
+        ShotcutManager.write(os.path.join(root_dir,'data/shotcut.cfg'))

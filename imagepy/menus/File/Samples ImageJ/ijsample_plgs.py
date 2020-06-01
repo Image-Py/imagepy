@@ -1,13 +1,7 @@
 from skimage.io import imread
-import sys
-if sys.version_info[0]==2:
-    from urllib2 import urlopen
-    from cStringIO import StringIO
-else: 
-    from urllib.request import urlopen
-    from io import BytesIO as StringIO
+from urllib.request import urlopen
+from io import BytesIO as StringIO
 
-from imagepy import IPy
 from imagepy.core.engine import Free
 
 class IJImg(Free):
@@ -21,9 +15,9 @@ class IJImg(Free):
 			response = urlopen('http://imagej.net/images/'+self.name)
 			stream = StringIO(response.read())
 			img = imread(stream)
-			IPy.show_img([img], self.title)
+			self.app.show_img([img], self.title)
 		except Exception as e:
-			IPy.write('Open url failed!\tErrof:%s'%sys.exc_info()[1])
+			self.app.write('Open url failed!\tErrof:%s'%sys.exc_info()[1])
         
 plgs = [IJImg(*i) for i in [('Leaf 36K', 'leaf.jpg'), ('Lena 68K', 'lena.jpg'), ('MRI Head 47K', 'mri.gif'),
 			('AuPbSn 40 56K', 'AuPbSn40.jpg'), ('Blob 356K', 'blobs.gif'), ('Baboon 56K', 'baboon.jpg'),

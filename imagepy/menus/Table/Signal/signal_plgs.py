@@ -6,7 +6,7 @@ import scipy.ndimage as nimg
 
 class Statistic(Table):
 	title = 'Signal Uniform Filter'
-	note = ['snap', 'only_num', 'col_msk', 'preview']
+	note = ['auto_snap', 'only_num', 'auto_msk', 'preview']
 
 	para = {'size':2}
 		

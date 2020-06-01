@@ -9,7 +9,6 @@ from ..draw import paint
 from .roi import ROI
 from .polygonroi import PolygonRoi
 from ..manager import RoiManager
-from imagepy import IPy
 
 class OvalRoi(ROI):
     dtype = 'rect'

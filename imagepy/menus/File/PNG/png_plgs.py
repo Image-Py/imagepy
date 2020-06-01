@@ -2,8 +2,8 @@ from imagepy.core.util import fileio
 from skimage.io import imread, imsave
 from imagepy.core.manager import ReaderManager, WriterManager
 
-ReaderManager.add('png', imread)
-WriterManager.add('png', imsave)
+ReaderManager.add(name='png', obj=imread)
+WriterManager.add(name='png', obj=imsave)
 
 class OpenFile(fileio.Reader):
 	title = 'PNG Open'

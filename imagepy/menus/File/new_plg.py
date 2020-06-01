@@ -4,13 +4,8 @@ Created on Mon Dec  5 02:38:04 2016
 
 @author: yxl
 """
-
-import wx,os
-from imagepy.ui.canvasframe import CanvasFrame
-import numpy as np
-from imagepy import IPy
-
 from imagepy.core.engine import Free
+import numpy as np
 
 class Plugin(Free):
     title = 'New'
@@ -28,7 +23,7 @@ class Plugin(Free):
         slices = para['slice']
         shape = (h,w,channels) if channels!=1 else (h,w)
         imgs = [np.zeros(shape, dtype=np.uint8) for i in range(slices)]
-        IPy.show_img(imgs, para['name'])
+        self.app.show_img(imgs, para['name'])
 
 if __name__ == '__main__':
     print(Plugin.title)

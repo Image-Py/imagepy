@@ -6,7 +6,6 @@ Created on Sun Dec 11 23:43:44 2016
 from imagepy.core.engine import Simple
 import numpy as np
 from imagepy.core.pixel import bliter
-from imagepy import IPy
 
 class Plugin(Simple):
     title = 'Canvas Size'
@@ -19,15 +18,15 @@ class Plugin(Simple):
             (list, 'ver', ['top', 'center', 'bottom'], str, 'Vertical', '')]
             
     def load(self, ips):
-        sp = ips.size
+        sp = ips.shape
         self.para['w'] = sp[1]
         self.para['h'] = sp[0]
         return True
 
     def run(self, ips, imgs, para = None):
-        old = ips.size
+        old = ips.shape
         shp = (para['w'], para['h'])
-        chns = ips.get_nchannels()
+        chns = ips.channels
         if chns>1:shp = (shp[1], shp[0], chns)
         
         if para['hor'] == 'left':c=0
@@ -37,7 +36,7 @@ class Plugin(Simple):
         if para['hor'] == 'right':c=shp[1]-old[1]
         if para['ver'] == 'bottom':r=shp[0]-old[0]
             
-        if ips.is3d:
+        if ips.slices>1:
             s = list(imgs.shape)
             s[1], s[2] = shp[0], shp[1]
             rst = np.zeros(s, dtype=ips.dtype)
@@ -52,8 +51,9 @@ class Plugin(Simple):
                 bliter.blit(rst[-1], imgs[i], c, r)
         ips.roi = None
         ips.set_imgs(rst)
-        if ips.backimg is None: return
+        '''
+        if ips.back is None: return
         nbc = np.zeros(shp, dtype=np.uint8)
         bliter.blit(nbc, ips.backimg, c, r)
         ips.backimg = nbc
-
+        '''

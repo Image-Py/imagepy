@@ -7,7 +7,6 @@ import wx
 from ..draw import paint
 from .roi import ROI
 from ..manager import RoiManager
-from imagepy import IPy
 import numpy as np
 
 class PointRoi(ROI):

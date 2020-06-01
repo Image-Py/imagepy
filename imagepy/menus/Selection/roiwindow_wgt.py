@@ -1,7 +1,8 @@
 import wx
-from imagepy.core.manager import RoiManager, ImageManager
+#from imagepy.core.manager import RoiManager, ImageManager
 from imagepy.core.engine import Macros
-from imagepy import IPy
+from sciapp.object import ROI, mark2shp
+#from imagepy import IPy
 
 class VirtualListCtrl(wx.ListCtrl):
 	def __init__(self, parent, title, data=[]):
@@ -33,7 +34,7 @@ class Plugin(wx.Panel):
 	
 	def __init__( self, parent ):
 		wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(-1,-1), style = wx.TAB_TRAVERSAL )
-		
+		self.app = parent
 		sizer = wx.BoxSizer( wx.HORIZONTAL )
 		
 		self.note_book = wx.Notebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.NB_LEFT|wx.NB_TOP )
@@ -228,92 +229,93 @@ class Plugin(wx.Panel):
 		self.UpdateData()
 
 	def on_add(self, event):
-		Macros('', ['ROI Add>None']).start(callafter=self.UpdateData)
+		Macros('', ['ROI Add>None']).start(self.app, callafter=self.UpdateData)
 
 	def on_add_nameless(self, event):
 		ips = ImageManager.get()
-		if ips is None: return IPy.alert('No image opened!')
-		if ips.roi is None: return IPy.alert('No Roi found!')
-		Macros('', ['ROI Add>{"name":"%s-roi"}'%ips.title]).start(callafter=self.UpdateData)
+		if ips is None: return self.app.alert('No image opened!')
+		if ips.roi is None: return self.app.alert('No Roi found!')
+		Macros('', ['ROI Add>{"name":"%s-roi"}'%ips.title]).start(self.app, callafter=self.UpdateData)
 
 	def on_load(self, event):
 		idx = self.lst_rois.GetFirstSelected()
-		if idx==-1: return IPy.alert('No ROI Selected!')
+		if idx==-1: return self.app.alert('No ROI Selected!')
 		name = self.lst_rois.OnGetItemText(idx, 0)
-		Macros('', ['ROI Load>{"name":"%s"}'%name]).start()
+		Macros('', ['ROI Load>{"name":"%s"}'%name]).start(self.app)
 
 	def on_remove(self, event):
 		idx = self.lst_rois.GetFirstSelected()
-		if idx==-1: return IPy.alert('No ROI Selected!')
+		if idx==-1: return self.app.alert('No ROI Selected!')
 		name = self.lst_rois.OnGetItemText(idx, 0)
-		Macros('', ['ROI Remove>{"name":"%s"}'%name]).start(callafter=self.UpdateData)
+		Macros('', ['ROI Remove>{"name":"%s"}'%name]).start(self.app, callafter=self.UpdateData)
 
 	def on_open(self, event):
-		Macros('', ['ROI Open>None']).start()
+		Macros('', ['ROI Open>None']).start(self.app)
 
 	def on_save(self, event):
-		Macros('', ['ROI Save>None']).start()
+		Macros('', ['ROI Save>None']).start(self.app)
 
 	def on_inflate(self, event):
-		Macros('', ['ROI Inflate>None']).start()
+		Macros('', ['ROI Inflate>None']).start(self.app)
 
 	def on_shrink(self, event):
-		Macros('', ['ROI Shrink>None']).start()
+		Macros('', ['ROI Shrink>None']).start(self.app)
 
 	def on_convex(self, event):
-		Macros('', ['ROI Convex Hull>None']).start()
+		Macros('', ['ROI Convex Hull>None']).start(self.app)
 		
 	def on_box(self, event):
-		Macros('', ['ROI Bound Box>None']).start()
+		Macros('', ['ROI Bound Box>None']).start(self.app)
 
 	def on_clip(self, event):
-		Macros('', ['ROI Clip>None']).start()
+		Macros('', ['ROI Clip>None']).start(self.app)
 
 	def on_invert(self, event):
-		Macros('', ['ROI Invert>None']).start()
+		Macros('', ['ROI Invert>None']).start(self.app)
 
 	def on_intersect(self, event):
 		idx = self.lst_rois.GetFirstSelected()
-		if idx==-1: return IPy.alert('No ROI Selected!')
+		if idx==-1: return self.app.alert('No ROI Selected!')
 		name = self.lst_rois.OnGetItemText(idx, 0)
-		Macros('', ['ROI Intersect>{"name":"%s"}'%name]).start()
+		Macros('', ['ROI Intersect>{"name":"%s"}'%name]).start(self.app)
 
 	def on_union(self, event):
 		idx = self.lst_rois.GetFirstSelected()
-		if idx==-1: return IPy.alert('No ROI Selected!')
+		if idx==-1: return self.app.alert('No ROI Selected!')
 		name = self.lst_rois.OnGetItemText(idx, 0)
-		Macros('', ['ROI Union>{"name":"%s"}'%name]).start()
+		Macros('', ['ROI Union>{"name":"%s"}'%name]).start(self.app)
 
 	def on_difference(self, event):
 		idx = self.lst_rois.GetFirstSelected()
-		if idx==-1: return IPy.alert('No ROI Selected!')
+		if idx==-1: return self.app.alert('No ROI Selected!')
 		name = self.lst_rois.OnGetItemText(idx, 0)
-		Macros('', ['ROI Difference>{"name":"%s"}'%name]).start()
+		Macros('', ['ROI Difference>{"name":"%s"}'%name]).start(self.app)
 
 	def on_symdiff(self, event):
 		idx = self.lst_rois.GetFirstSelected()
-		if idx==-1: return IPy.alert('No ROI Selected!')
+		if idx==-1: return self.app.alert('No ROI Selected!')
 		name = self.lst_rois.OnGetItemText(idx, 0)
-		Macros('', ['ROI Symmetric Diff>{"name":"%s"}'%name]).start()
+		Macros('', ['ROI Symmetric Diff>{"name":"%s"}'%name]).start(self.app)
 
 	def on_clear(self, event):
-		Macros('', ['Clear>None']).start()
+		Macros('', ['Clear>None']).start(self.app)
 
 	def on_clearout(self, event):
-		Macros('', ['Clear Out>None']).start()
+		Macros('', ['Clear Out>None']).start(self.app)
 
 	def on_sketch(self, event):
-		Macros('', ['Sketch>None']).start()
+		Macros('', ['Sketch>None']).start(self.app)
 
 	def on_update(self, event):
 		self.UpdateData()
 
 	def on_setting(self, event):
-		Macros('', ['ROI Setting>None']).start()
+		Macros('', ['ROI Setting>None']).start(self.app)
 
 	def UpdateData(self):
-		names = RoiManager.get_titles()
-		types = [RoiManager.get(i).dtype for i in names]
+		names = self.app.manager('roi').gets('name')
+		objs = self.app.manager('roi').gets('obj')
+		types = [ROI(mark2shp(i)).roitype for i in objs]
 		self.lst_rois.SetValue(list(zip(names, types)))
 
 	def __del__( self ):

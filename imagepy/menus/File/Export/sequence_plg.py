@@ -7,8 +7,7 @@ Created on Mon Dec  5 04:34:09 2016
 import wx
 from skimage.io import imsave
 from imagepy.core.engine import Simple
-from imagepy.core.manager import WriterManager, ViewerManager
-from imagepy import IPy, root_dir
+from imagepy.core.manager import WriterManager
 
 class Plugin(Simple):
     title = 'Save Sequence'

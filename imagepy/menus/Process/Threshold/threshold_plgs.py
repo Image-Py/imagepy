@@ -3,7 +3,6 @@
 Created on Fri Nov 18 22:56:50 2016
 @author: yxl
 """
-from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Filter
 import scipy.ndimage as ndimg

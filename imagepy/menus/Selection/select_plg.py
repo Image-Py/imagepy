@@ -4,11 +4,9 @@ Created on Sun Dec 18 22:31:12 2016
 
 @author: yxl
 """
-from imagepy.core.manager import RoiManager
 from imagepy.core.engine import Simple, Free
-from imagepy.core.roi import RectangleRoi
-from imagepy.core.roi import roiio
-from imagepy import IPy
+from sciapp.object import ROI, geom2shp, geom_flatten, Rectangle, geom_union, mark2shp
+import json, time
 
 class SelectAll(Simple):
     """SelectAll: derived from imagepy.core.engine.Simple """
@@ -16,7 +14,7 @@ class SelectAll(Simple):
     note = ['all']
 
     def run(self, ips, imgs, para = None):
-        ips.roi = RectangleRoi(0,0,ips.size[1],ips.size[0])
+        ips.roi = ROI(Rectangle([0, 0, ips.shape[1], ips.shape[0]]))
 
 class SelectNone(Simple):
     """SelectNone: derived from imagepy.core.engine.Simple """
@@ -25,6 +23,7 @@ class SelectNone(Simple):
 
     def run(self, ips, imgs, para = None):
         ips.roi = None
+        time.sleep(0.1)
         
 class Add2Manager(Simple):
     """Add2Manager: derived from imagepy.core.engine.Simple """
@@ -34,43 +33,41 @@ class Add2Manager(Simple):
     view = [(str, 'name', 'Name', '')]
 
     def run(self, ips, imgs, para = None):
-        RoiManager.add(para['name'], ips.roi)
+        self.app.manager('roi').add(obj=ips.roi.to_mark(), name=para['name'])
         
 class RemoveFManager(Simple):
-    """Add2Manager: derived from imagepy.core.engine.Simple """
     title = 'ROI Remove'
     note = ['all']
     para = {'name':''}
 
     def load(self, ips):
-        titles = list(RoiManager.rois.keys())
+        titles = self.app.manager('roi').gets('name')
         if len(titles)==0: 
-            IPy.alert('No roi in manager!')
+            self.app.alert('No roi in manager!')
             return False
         self.para['name'] = titles[0]
         RemoveFManager.view = [(list, 'name', titles, str, 'Name', '')]
         return True
 
     def run(self, ips, imgs, para = None):
-        RoiManager.remove(para['name'])
+        self.app.manager('roi').remove(name=para['name'])
 
 class LoadRoi(Simple):
-    """LoadRoi: derived from imagepy.core.engine.Simple """
     title = 'ROI Load'
     note = ['all']
     para = {'name':''}
     
     def load(self, ips):
-        titles = list(RoiManager.rois.keys())
+        titles = self.app.manager('roi').gets('name')
         if len(titles)==0: 
-            IPy.alert('No roi in manager!')
+            self.app.alert('No roi in manager!')
             return False
         self.para['name'] = titles[0]
         LoadRoi.view = [(list, 'name', titles, str, 'Name', '')]
         return True
 
     def run(self, ips, imgs, para = None):
-        ips.roi = RoiManager.get(para['name'])
+        ips.roi = mark2shp(self.app.manager('roi').get(name=para['name']))
         
 class Inflate(Simple):
     """Inflate: derived from imagepy.core.engine.Simple """
@@ -80,7 +77,8 @@ class Inflate(Simple):
     view = [(int, 'r', (1,100),0, 'radius', 'pix')]
 
     def run(self, ips, imgs, para = None):
-        ips.roi = ips.roi.buffer(para['r'])
+        geom = ips.roi.to_geom().buffer(para['r'])
+        ips.roi = ROI(geom2shp(geom_flatten(geom)))
         
 class Shrink(Simple):
     """Shrink: derived from imagepy.core.engine.Simple """
@@ -90,7 +88,8 @@ class Shrink(Simple):
     view = [(int, 'r', (1,100),0, 'radius', 'pix')]
 
     def run(self, ips, imgs, para = None):
-        ips.roi = ips.roi.buffer(-para['r'])
+        geom = ips.roi.to_geom().buffer(-para['r'])
+        ips.roi = ROI(geom2shp(geom_flatten(geom)))
         
 class Convex(Simple):
     """Convex: derived from imagepy.core.engine.Simple """
@@ -98,7 +97,8 @@ class Convex(Simple):
     note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
-        ips.roi = ips.roi.convex()
+        geom = ips.roi.to_geom().convex_hull
+        ips.roi = ROI(geom2shp(geom_flatten(geom)))
         
 class Box(Simple):
     """Box: derived from imagepy.core.engine.Simple """
@@ -106,7 +106,8 @@ class Box(Simple):
     note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
-        ips.roi = ips.roi.bounds()
+        a,b,c,d = ips.roi.to_geom().bounds
+        ips.roi = ROI(Rectangle([a,b,c-a,d-b]))
         
 class Clip(Simple):
     """Clip: derived from imagepy.core.engine.Simple """
@@ -114,8 +115,9 @@ class Clip(Simple):
     note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
-        rect = RectangleRoi(0,0,ips.size[1],ips.size[0])
-        ips.roi = ips.roi.clip(rect)
+        rect = Rectangle([0, 0, ips.shape[1], ips.shape[0]])
+        geom = rect.to_geom().intersection(geom_flatten(ips.roi.to_geom()))
+        ips.roi = ROI(geom2shp(geom_flatten(geom)))
         
 class Invert(Simple):
     """Invert: derived from imagepy.core.engine.Simple """
@@ -123,8 +125,9 @@ class Invert(Simple):
     note = ['all', 'req_roi']
     
     def run(self, ips, imgs, para = None):
-        rect = RectangleRoi(0,0,ips.size[1],ips.size[0])
-        ips.roi = ips.roi.invert(rect)
+        rect = Rectangle([0, 0, ips.shape[1], ips.shape[0]])
+        geom = rect.to_geom().difference(geom_flatten(ips.roi.to_geom()))
+        ips.roi = ROI(geom2shp(geom_flatten(geom)))
         
 class Save(Simple):
     """Save: save roi as a wkt file """
@@ -133,13 +136,12 @@ class Save(Simple):
     para={'path':''}
 
     def show(self):
-        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in ['roi', 'wkt']])
-        return IPy.getpath('Save..', filt, 'save', self.para)
+        self.para['path'] = self.app.getpath('ROI Save', ['roi'], 'save')
+        return not self.para['path'] is None
 
     def run(self, ips, imgs, para = None):
-        file = para['path']
-        if file[-3:] == 'wkt':roiio.savewkt(ips.roi, file)
-        if file[-3:] == 'roi':roiio.saveroi(ips.roi, file)
+        with open(para['path'], 'w') as f:
+            f.write(json.dumps(ips.roi.to_mark()))
 
 class Open(Simple):
     """Save: save roi as a wkt file """
@@ -148,14 +150,12 @@ class Open(Simple):
     para={'path':''}
 
     def show(self):
-        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in ['roi', 'wkt']])
-        return IPy.getpath('Save..', filt, 'open', self.para)
+        self.para['path'] = self.app.getpath('ROI Save', ['roi'], 'open')
+        return not self.para['path'] is None
 
     def run(self, ips, imgs, para = None):
-        file = para['path']
-
-        if file[-3:] == 'wkt':ips.roi = roiio.readwkt(file)
-        if file[-3:] == 'roi':ips.roi = roiio.readroi(file)
+        with open(para['path']) as f:
+            ips.roi = ROI(mark2shp(json.loads(f.read())))
        
 class Intersect(Simple):
     """Union: derived from imagepy.core.engine.Simple """
@@ -164,16 +164,18 @@ class Intersect(Simple):
     para = {'name':''}
     
     def load(self, ips):
-        titles = list(RoiManager.rois.keys())
+        titles = self.app.manager('roi').gets('name')
         if len(titles)==0: 
-            IPy.alert('No roi in manager!')
+            self.app.alert('No roi in manager!')
             return False
         self.para['name'] = titles[0]
         self.view = [(list, 'name', titles, str, 'Name', '')]
         return True
 
     def run(self, ips, imgs, para = None):
-        ips.roi = ips.roi.intersect(RoiManager.get(para['name']))
+        obj = mark2shp(self.app.manager('roi').get(name=para['name'])).to_geom()
+        roi = geom_flatten(ips.roi.to_geom())
+        ips.roi = ROI(geom2shp(geom_flatten(roi.intersection(obj))))
 
 class Union(Simple):
     """Union: derived from imagepy.core.engine.Simple """
@@ -182,16 +184,18 @@ class Union(Simple):
     para = {'name':''}
     
     def load(self, ips):
-        titles = list(RoiManager.rois.keys())
+        titles = self.app.manager('roi').gets('name')
         if len(titles)==0: 
-            IPy.alert('No roi in manager!')
+            self.app.alert('No roi in manager!')
             return False
         self.para['name'] = titles[0]
         self.view = [(list, 'name', titles, str, 'Name', '')]
         return True
 
     def run(self, ips, imgs, para = None):
-        ips.roi = ips.roi.union(RoiManager.get(para['name']))
+        obj = mark2shp(self.app.manager('roi').get(name=para['name'])).to_geom()
+        roi = geom_flatten(ips.roi.to_geom())
+        ips.roi = ROI(geom2shp(geom_flatten(roi.union(obj))))
 
 class Diff(Simple):
     """Diff: derived from imagepy.core.engine.Simple """
@@ -200,34 +204,38 @@ class Diff(Simple):
     para = {'name':''}
     
     def load(self, ips):
-        titles = list(RoiManager.rois.keys())
+        titles = self.app.manager('roi').gets('name')
         if len(titles)==0: 
-            IPy.alert('No roi in manager!')
+            self.app.alert('No roi in manager!')
             return False
         self.para['name'] = titles[0]
         self.view = [(list, 'name', titles, str, 'Name', '')]
         return True
 
     def run(self, ips, imgs, para = None):
-        ips.roi = ips.roi.diff(RoiManager.get(para['name']))
+        print(self.app.manager('roi').get(name=para['name']))
+        obj = mark2shp(self.app.manager('roi').get(name=para['name'])).to_geom()
+        roi = geom_flatten(ips.roi.to_geom())
+        ips.roi = ROI(geom2shp(geom_flatten(roi.difference(obj))))
 
 class SymDiff(Simple):
-    """Diff: derived from imagepy.core.engine.Simple """
     title = 'ROI Symmetric Diff'
     note = ['all', 'req_roi']
     para = {'name':''}
     
     def load(self, ips):
-        titles = list(RoiManager.rois.keys())
+        titles = self.app.manager('roi').gets('name')
         if len(titles)==0: 
-            IPy.alert('No roi in manager!')
+            self.app.alert('No roi in manager!')
             return False
         self.para['name'] = titles[0]
         self.view = [(list, 'name', titles, str, 'Name', '')]
         return True
 
     def run(self, ips, imgs, para = None):
-        ips.roi = ips.roi.symmetric_diff(RoiManager.get(para['name']))
+        obj = mark2shp(self.app.manager('roi').get(name=para['name'])).to_geom()
+        roi = geom_flatten(ips.roi.to_geom())
+        ips.roi = ROI(geom2shp(geom_flatten(roi.symmetric_difference(obj))))
 
 class Setting(Free):
     title = 'ROI Setting'

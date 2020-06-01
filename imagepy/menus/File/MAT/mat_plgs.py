@@ -1,11 +1,10 @@
 from imagepy.core.util import fileio
 from scipy.io import savemat, loadmat
 from imagepy.core.manager import ReaderManager, WriterManager
-from imagepy import IPy
 import os
 
-ReaderManager.add('mat', lambda path: loadmat(path)['img'])
-WriterManager.add('mat', lambda path, img: savemat(path, {'img':img}))
+ReaderManager.add(name='mat', obj=lambda path: loadmat(path)['img'])
+WriterManager.add(name='mat', obj=lambda path, img: savemat(path, {'img':img}))
 
 class OpenFile(fileio.Reader):
 	title = 'Mat Open'

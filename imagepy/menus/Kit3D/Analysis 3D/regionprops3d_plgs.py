@@ -1,4 +1,3 @@
-from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Simple, Filter
 from scipy.ndimage import label, generate_binary_structure

@@ -7,10 +7,10 @@ Created on Sat Jan  7 01:00:02 2017
 
 from imagepy.core.engine import Free
 import wx,os
-from imagepy import IPy, root_dir
+from imagepy import root_dir
 from imagepy.core.loader import loader
 from wx.py.editor import EditorFrame
-from imagepy.ui.mkdownwindow import HtmlPanel, md2html
+from sciwx.text import MDPad
 from imagepy.core.manager import DocumentManager
 from glob import glob
 
@@ -21,6 +21,7 @@ class Plugin ( wx.Panel ):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size( 500,300 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        self.app = parent
         bSizer1 = wx.BoxSizer( wx.HORIZONTAL )
         
         self.tre_plugins = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, 
@@ -45,7 +46,7 @@ class Plugin ( wx.Panel ):
         bSizer4.Add( self.m_staticText3, 0, wx.ALL, 5 )
         bSizer3.Add( bSizer4, 0, wx.EXPAND, 5 )
         
-        self.txt_info = HtmlPanel( self )
+        self.txt_info = MDPad( self )
         bSizer3.Add( self.txt_info, 1, wx.ALL|wx.EXPAND, 5 )
         
         
@@ -94,14 +95,14 @@ class Plugin ( wx.Panel ):
     # Virtual event handlers, overide them in your derived class
     def on_run( self, event ):
         plg = self.tre_plugins.GetItemPyData(event.GetItem())
-        if hasattr(plg, 'start'):plg().start()
+        if hasattr(plg, 'start'):plg().start(self.app)
     
     def on_select( self, event ):
         plg = self.tre_plugins.GetItemData(event.GetItem())
         if plg!=None:
             self.plg = plg
             name = self.tre_plugins.GetItemText(event.GetItem())
-            self.txt_info.SetValue((md2html(DocumentManager.get(name)), ''))
+            self.txt_info.set_cont(DocumentManager.get(name=name))
         
     def on_source(self, event):
         ## TODO: should it be absolute path ?

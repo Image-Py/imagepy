@@ -5,6 +5,7 @@ Created on Sat Jan 14 23:23:30 2017
 """
 import pickle, os
 from ... import root_dir
+
 class ConfigManager:
     cfg = {}
     filename = os.path.join(root_dir, "preference.cfg")

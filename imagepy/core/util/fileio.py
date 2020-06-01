@@ -1,7 +1,7 @@
 import os
-from ..manager import ViewerManager, ConfigManager
+from ..manager import ConfigManager
 from ..manager import ReaderManager, WriterManager
-from ... import IPy, root_dir
+from ... import root_dir
 from ..engine import Free, Simple, Macros
 import numpy as np
 
@@ -14,8 +14,7 @@ def show_img(img, title):
         img = img[:,:,:3].copy()
     IPy.show_img([img], title)
 
-ViewerManager.add('img', show_img)
-ViewerManager.add('imgs', IPy.show_img)
+# ViewerManager.add('imgs', IPy.show_img)
 recent = ConfigManager.get('recent')
 if recent==None : recent = []
 
@@ -38,14 +37,15 @@ def add_recent(path):
         rlist.pop(-1)
 
     ConfigManager.set('recent', recent)
-    IPy.curapp.reload_plugins()
+    #IPy.curapp.reload_plugins()
 
 class Reader(Free):
     para = {'path':''}
+    tag, note = None, None
 
     def show(self):
-        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
-        return IPy.getpath('Open..', filt, 'open', self.para)
+        self.para['path'] = self.app.getpath('Open..', self.filt, 'open', '')
+        return not self.para['path'] is None
 
     #process
     def run(self, para = None):
@@ -53,32 +53,32 @@ class Reader(Free):
 
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        read = ReaderManager.get(fe[1:], None)
-        if read is None:
+        reader = ReaderManager.gets(name=fe[1:], tag=self.tag, note=self.note)
+        print(fe, self.tag, self.note, reader)
+        '''
+        if len(reader) == 0:
             a, b = os.path.splitext(fn)
             fn, fe = a, b+fe
-            read = ReaderManager.get(fe[1:], None)
-        if read is None: 
-            return IPy.alert('No reader found for %s'%fe[1:])
-        view = ViewerManager.get(fe[1:])
-
-        #group, read = (True, read[0]) if isinstance(read, tuple) else (False, read)
-        obj = read(para['path'])
-        # if not group: img = [img]
-        view(obj, fn)
+            reader = ReaderManager.gets(name=fe[1:], tag=self.tag, note=self.note)
+        if len(reader) is None: 
+            return self.app.alert('No reader found for %s'%fe[1:])
+        # ext, read, tag, note = reader
+        '''
+        self.app.show(self.tag, reader[0](para['path']))
 
 class Writer(Simple):
     note = ['all']
-    para={'path':root_dir}
+    para={'path':''}
 
     def show(self):
-        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
-        return IPy.getpath('Save..', filt, 'save', self.para)
+        self.para['path'] = self.app.getpath('Save..', self.filt, 'save', '')
+        return not self.para['path'] is None
 
     #process
     def run(self, ips, imgs, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        write = WriterManager.get(fe[1:], 'img')
-        write2 = write or WriterManager.get(fe[1:], 'imgs')
-        write2(para['path'], imgs if write is None else ips.img)
+        writer = WriterManager.get(ext=fe[1:], tag='img')
+        if len(writer)==1: return writer[0][1](para['path'], ips.img)
+        writer = WriterManager.get(fe[1:], 'imgs')
+        if len(writer)==1: return writer[0][1](para['path'], imgs)

@@ -1,6 +1,5 @@
 from imagepy.core.engine import Free
 from imagepy.core.manager import ConfigManager
-from imagepy import IPy
 
 class ImageJStyle(Free):
     title = 'Pay Tribute To ImageJ'

@@ -1,9 +1,8 @@
 import numpy as np
-from imagepy import IPy
-from imagepy.core import ImagePlus
 from imagepy.core.engine import Free, Tool
 from scipy.ndimage import label
 from scipy.signal import convolve2d
+from sciapp.object import Image
 
 def generate(scr, size):
     row, col = scr.shape
@@ -55,6 +54,6 @@ class Plugin(Free):
     def run(self, para = None):
         first = generate(np.zeros((para['height'], para['width'])), para['size'])
         imgs = [first.copy() for i in range(para['slice'])]
-        ips = ImagePlus(imgs, para['name'])
+        ips = Image(imgs, para['name'])
         ips.tool = Painter(para['size'])
-        IPy.show_ips(ips)
+        self.app.show_img(ips)

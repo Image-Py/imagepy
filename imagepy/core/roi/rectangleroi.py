@@ -8,7 +8,6 @@ from ..draw import paint
 from .polygonroi import PolygonRoi
 from .roi import ROI
 from ..manager import RoiManager
-from imagepy import IPy
 
 class RectangleRoi(ROI):
     dtype = 'rect'
