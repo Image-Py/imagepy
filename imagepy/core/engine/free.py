@@ -20,7 +20,7 @@ class Free:
         print('this is a plugin')
         
     def runasyn(self, para, callback=None):
-        self.app.manager('task').add(self,title, self)
+        self.app.manager('task').add(self.title, self)
         start = time()
         self.run(para)
         self.app.info('%s: cost %.3fs'%(self.title, time()-start))
