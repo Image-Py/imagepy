@@ -25,6 +25,6 @@ datas = ['face', 'ascent', '-', 'binary_blobs', 'brick', 'astronaut',
     'camera', 'cell', 'checkerboard', 'chelsea', 'clock', 'coffee', 'coins',
     'colorwheel', 'grass', 'gravel', 'horse', 'hubble_deep_field', 
     'immunohistochemistry', 'microaneurysms', 'moon', 'page', 
-    'text', 'retina', 'rocket', 'rough_wall', 'shepp_logan_phantom', 'stereo_motorcycle']
+    'text', 'retina', 'rocket', 'shepp_logan_phantom', 'stereo_motorcycle']
 
 plgs = [i if i=='-' else Data(i) for i in datas]
