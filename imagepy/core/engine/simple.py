@@ -48,7 +48,7 @@ class Simple:
         self.app.record_macros('{}>{}'.format(self.title, para))
 
     def runasyn(self,  ips, imgs, para = None, callback = None):
-        self.app.manager('task').add(self,title, self)
+        self.app.manager('task').add(self.title, self)
         start = time()
         self.run(ips, imgs, para)
         self.app.info('%s: cost %.3fs'%(ips.title, time()-start))
