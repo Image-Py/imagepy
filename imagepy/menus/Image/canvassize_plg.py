@@ -5,7 +5,13 @@ Created on Sun Dec 11 23:43:44 2016
 """
 from imagepy.core.engine import Simple
 import numpy as np
-from imagepy.core.pixel import bliter
+
+def make_slice(a, b, mode=1):
+    aa, bb = sorted([a, b])
+    if mode == 0: sb = slice(0, aa)
+    if mode == 1: sb = slice((bb-aa)//2, (bb-aa)//2+aa)
+    if mode == 2: sb = slice(bb-aa, bb)
+    return (slice(None), sb)[::(-1,1)[a<b]]
 
 class Plugin(Simple):
     title = 'Canvas Size'
@@ -18,42 +24,19 @@ class Plugin(Simple):
             (list, 'ver', ['top', 'center', 'bottom'], str, 'Vertical', '')]
             
     def load(self, ips):
-        sp = ips.shape
-        self.para['w'] = sp[1]
-        self.para['h'] = sp[0]
+        self.para['h'], self.para['w'] = ips.shape
         return True
 
     def run(self, ips, imgs, para = None):
-        old = ips.shape
-        shp = (para['w'], para['h'])
-        chns = ips.channels
-        if chns>1:shp = (shp[1], shp[0], chns)
-        
-        if para['hor'] == 'left':c=0
-        if para['ver'] == 'top':r=0
-        if para['hor'] == 'center':c=(shp[1]-old[1])//2
-        if para['ver'] == 'center':r=(shp[0]-old[0])//2
-        if para['hor'] == 'right':c=shp[1]-old[1]
-        if para['ver'] == 'bottom':r=shp[0]-old[0]
-            
-        if ips.slices>1:
-            s = list(imgs.shape)
-            s[1], s[2] = shp[0], shp[1]
-            rst = np.zeros(s, dtype=ips.dtype)
-            for i in range(len(imgs)):
-                self.progress(i, len(imgs))
-                bliter.blit(rst[i], imgs[i], c, r)
-        else:
-            rst = []
-            for i in range(len(imgs)):
-                self.progress(i, len(imgs))
-                rst.append(np.zeros(shp, ips.dtype))
-                bliter.blit(rst[-1], imgs[i], c, r)
-        ips.roi = None
-        ips.set_imgs(rst)
-        '''
-        if ips.back is None: return
-        nbc = np.zeros(shp, dtype=np.uint8)
-        bliter.blit(nbc, ips.backimg, c, r)
-        ips.backimg = nbc
-        '''
+        (o_r, o_c), n, n_r, n_c = ips.shape, ips.channels, para['h'], para['w']
+        key = {'left':0, 'center':1, 'right':2, 'top':0, 'bottom':1}
+        or_sli, nr_sli = make_slice(o_r, n_r, key[para['ver']])
+        oc_sli, nc_sli = make_slice(o_c, n_c, key[para['hor']])
+        shp = (ips.slices, n_r, n_c, ips.channels)[:3+(ips.channels>1)]
+        if ips.isarray: buf = np.zeros(shp, dtype=ips.dtype)
+        else: buf = [np.zeros(shp[1:], dtype=ips.dtype) for i in range(shp[0])]
+
+        for i in range(ips.slices):
+            self.progress(i, ips.slices)
+            buf[i][nr_sli, nc_sli] = imgs[i][or_sli, oc_sli]
+        ips.set_imgs(buf)

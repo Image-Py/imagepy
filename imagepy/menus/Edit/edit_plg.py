@@ -4,7 +4,6 @@ Created on Sat Nov 26 01:26:25 2016
 @author: yxl
 """
 import numpy as np
-from imagepy.core.pixel import bliter
 from imagepy.core.engine import Simple, Tool, Filter
 from sciapp import Source
 

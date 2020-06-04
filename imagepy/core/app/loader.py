@@ -25,7 +25,6 @@ def extend_plugins(path, lst, err):
             rst.append(i)
         elif i[-3:] == 'rpt':
             pt = os.path.join(root_dir,path)
-            print(pt+'/'+i)
             rst.append(Report(i[:-4], pt+'/'+i))
             Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
         elif i[-3:] == '.mc':
@@ -56,7 +55,6 @@ def extend_plugins(path, lst, err):
             if hasattr(plg, 'wgts'):
                 rst.extend([j if j=='-' else Widget(j) for j in plg.wgts])
                 for p in plg.wgts:
-                    print(p)
                     if not isinstance(p, str):Source.manager('widget').add(obj=p, name=p.title)
             else: 
                 rst.append(Widget(plg.Plugin))
@@ -195,7 +193,7 @@ def extend_widgets(path, lst, err):
             rst.append(plg.Plugin)
         except Exception as e:
             err.append((path, i, sys.exc_info()[1]))
-    for i in rst:Source.manager('widget').add(obj=i, name=i.name)
+    for i in rst:Source.manager('widget').add(obj=i, name=i.title)
     return rst
             
 def sort_widgets(catlog, lst):

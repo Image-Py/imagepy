@@ -65,9 +65,7 @@ class Plugin ( wx.Panel ):
         self.load()
         
     def addnode(self, parent, data):
-        print('aaa', data)
         for i in data:
-            print(i)
             if i=='-':continue
             if isinstance(i, tuple):
                 item = self.tre_plugins.AppendItem(parent, i[0].title)

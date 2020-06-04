@@ -19,8 +19,6 @@ class Macros(dict):
             name = ''.join(list(filter(str.isalnum, i)))
             exec("self.run_%s = lambda para=None, plg=Source.manager('plugin').get(i):plg().start(cmds['app'], para)"%name)
 
-        print(self)
-
 class Plugin(wx.Panel):
     title = 'Command Line'
     single = None
