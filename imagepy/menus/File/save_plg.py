@@ -11,7 +11,7 @@ class SaveImage(fileio.Writer):
 	title = 'Save'
 
 	def load(self, ips):
-		self.filt = [i[0] for i in sorted(Source.manager('writer').names())]
+		self.filt = [i for i in sorted(Source.manager('writer').names())]
 		return True
 
 class WindowCapture(fileio.Writer):

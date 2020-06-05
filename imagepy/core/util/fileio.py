@@ -44,7 +44,7 @@ class Reader(Free):
 
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        reader = Source.manager('reader').gets(name=fe[1:], tag=self.tag, note=self.note)
+        reader = Source.manager('reader').gets(name=fe[1:], tag=self.tag)
         print(fe, self.tag, self.note, reader)
         '''
         if len(reader) == 0:
@@ -55,7 +55,7 @@ class Reader(Free):
             return self.app.alert('No reader found for %s'%fe[1:])
         # ext, read, tag, note = reader
         '''
-        self.app.show(self.tag, reader[0](para['path']))
+        self.app.show(self.tag, reader[0][1](para['path']), fn)
 
 class Writer(Simple):
     note = ['all']
