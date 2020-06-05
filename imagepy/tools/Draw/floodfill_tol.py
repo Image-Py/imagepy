@@ -7,7 +7,7 @@ Created on Wed Oct 19 17:35:09 2016
 
 from imagepy.core.engine import Tool
 import numpy as np
-from imagepy.core.manager import ColorManager
+from sciapp import Source
 # from imagepy.core.draw.fill import floodfill
 from skimage.morphology import flood_fill, flood
 
@@ -19,7 +19,7 @@ class Plugin(Tool):
         
     def mouse_down(self, ips, x, y, btn, **key):
         
-        img, color = ips.img, ColorManager.get_front()
+        img, color = ips.img, Source.manager('color').get('front')
         if int(y)<0 or int(x)<0: return
         if int(y)>=img.shape[0] or int(x)>=img.shape[1]: return 
 

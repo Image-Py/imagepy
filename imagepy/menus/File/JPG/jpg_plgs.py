@@ -1,11 +1,11 @@
 from imagepy.core.util import fileio
 from imageio import imread, imsave
-from imagepy.core.manager import ReaderManager, WriterManager
+from sciapp import Source
 
-ReaderManager.add('jpg', imread)
-WriterManager.add('jpg', imsave)
-ReaderManager.add('jpeg', imread)
-WriterManager.add('jpeg', imsave)
+Source.manager('reader').add(name='jpg', obj=imread)
+Source.manager('writer').add(name='jpg', obj=imsave)
+Source.manager('reader').add(name='jpeg', obj=imread)
+Source.manager('writer').add(name='jpeg', obj=imsave)
 
 class OpenFile(fileio.Reader):
 	title = 'JPG Open'

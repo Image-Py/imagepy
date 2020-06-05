@@ -1,11 +1,7 @@
 from imagepy.core.engine import Filter, Simple
-from imagepy.core.manager import ImageManager
 from imagepy.ipyalg.graph import sknw
 from skimage.morphology import skeletonize_3d
 from itertools import combinations
-
-from imagepy.core import myvi
-from imagepy import IPy
 import networkx as nx
 import numpy as np
 import pandas as pd

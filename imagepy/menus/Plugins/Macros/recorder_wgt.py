@@ -61,15 +61,12 @@ class Plugin ( wx.Panel ):
 		self.Bind( wx.EVT_TOOL, self.on_runlines, id = self.tol_runlines.GetId() )
 
 
-		self.recording = True
-	
-	def __del__(self):
-		print('Recoder closed!')
-	
+		self.recording = True	
 	
 	# Virtual event handlers, overide them in your derived class
 	def on_open( self, event ):
-		dialog=wx.FileDialog(None,'wxpython Notebook(o)',style=wx.FD_OPEN)
+		filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in ['mc']])
+		dialog=wx.FileDialog(None, 'Open  Macros', '', '', filt, style=wx.FD_OPEN)
 		if dialog.ShowModal()==wx.ID_OK:
 			self.file=dialog.GetPath()
 			file=open(self.file)
@@ -78,9 +75,9 @@ class Plugin ( wx.Panel ):
 		dialog.Destroy()
 	
 	def on_save( self, event ):
-		print('save')
 		if self.file=='':
-			dialog=wx.FileDialog(None,'wxpython Notebook(s)',style=wx.FD_SAVE)
+			filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in ['mc']])
+			dialog=wx.FileDialog(None,'Save Macros', '', '', filt, style=wx.FD_SAVE)
 			if dialog.ShowModal()==wx.ID_OK:
 				self.file=dialog.GetPath()
 				self.txt_cont.SaveFile(self.file)
@@ -102,7 +99,7 @@ class Plugin ( wx.Panel ):
 	
 	def on_run( self, event ):
 		cmds = self.txt_cont.GetValue().split('\n')
-		Macros(None, cmds).start()
+		Macros(None, cmds).start(self.GetParent().GetParent())
 	
 	def on_record( self, event ):
 		self.recording = True
@@ -112,7 +109,7 @@ class Plugin ( wx.Panel ):
 	
 	def on_runlines( self, event ):
 		cmds = self.txt_cont.GetStringSelection().split('\n')
-		Macros(None, cmds).start()
+		Macros(None, cmds).start(self.GetParent().GetParent())
 
 	def write(self, cont):
 		if not self.recording: return

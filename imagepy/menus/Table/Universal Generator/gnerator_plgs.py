@@ -1,7 +1,6 @@
 from imagepy.core.engine import Free
 import numpy as np
 import pandas as pd
-from imagepy import IPy
 
 class One(Free):
 	title = 'Unit Matrix'
@@ -11,7 +10,7 @@ class One(Free):
 	def run(self, para=None):
 		data = np.eye(para['size'])
 		dataframe = pd.DataFrame(data)
-		IPy.show_table(dataframe, 'Eye[%s,%s]'%data.shape)
+		self.app.show_table(dataframe, 'Eye[%s,%s]'%data.shape)
 
 class Random01(Free):
 	title = 'Uniform Random'
@@ -26,7 +25,7 @@ class Random01(Free):
 		data *= para['high']-para['low']
 		data -= para['low']
 		dataframe = pd.DataFrame(data)
-		IPy.show_table(dataframe, 'Random01[%s,%s]'%data.shape)
+		self.app.show_table(dataframe, 'Random01[%s,%s]'%data.shape)
 
 class RandomN(Free):
 	title = 'Gaussian Random'
@@ -41,7 +40,7 @@ class RandomN(Free):
 		data *= para['std']
 		data += para['mean']
 		dataframe = pd.DataFrame(data)
-		IPy.show_table(dataframe, 'RandomN[%s,%s]'%data.shape)
+		self.app.show_table(dataframe, 'RandomN[%s,%s]'%data.shape)
 
 class Calendar(Free):
 	title = 'Calendar'
@@ -59,6 +58,6 @@ class Calendar(Free):
 			a = i.replace('   ', ' None ').strip()
 			table.append(a.replace('  ', ' ').split(' '))
 		dataframe = pd.DataFrame(table, columns=titles)
-		IPy.show_table(dataframe, ls[0].strip())
+		self.app.show_table(dataframe, ls[0].strip())
 
 plgs = [One, Random01, RandomN, Calendar]

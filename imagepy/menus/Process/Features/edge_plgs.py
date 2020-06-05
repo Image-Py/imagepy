@@ -12,6 +12,6 @@ class Canny(Filter):
 
     def run(self, ips, snap, img, para = None):
         return feature.canny(snap, sigma=para['sigma'], low_threshold=para[
-            'low_threshold'], high_threshold=para['high_threshold'], mask=ips.get_msk())*255
+            'low_threshold'], high_threshold=para['high_threshold'], mask=ips.mask())*255
 
 plgs = [Canny]

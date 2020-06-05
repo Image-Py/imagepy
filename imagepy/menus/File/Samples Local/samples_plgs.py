@@ -1,4 +1,3 @@
-from imagepy import IPy
 from imagepy.core.engine import Free
 from skimage import data
 from scipy import misc
@@ -14,19 +13,18 @@ class Data(Free):
     def run(self, para = None):
         img = self.data()
         if isinstance(img, tuple):
-            return IPy.show_img(list(img), self.title)
+            return self.app.show_img(list(img), self.title)
         if img.dtype == np.bool: 
             img.dtype = np.uint8
             img *= 255
-        IPy.show_img([img], self.title)
+        self.app.show_img([img], self.title)
 
-    def __call__(self):
-        return self
+    def __call__(self): return self
 
 datas = ['face', 'ascent', '-', 'binary_blobs', 'brick', 'astronaut', 
     'camera', 'cell', 'checkerboard', 'chelsea', 'clock', 'coffee', 'coins',
     'colorwheel', 'grass', 'gravel', 'horse', 'hubble_deep_field', 
     'immunohistochemistry', 'microaneurysms', 'moon', 'page', 
-    'text', 'retina', 'rocket', 'rough_wall', 'shepp_logan_phantom', 'stereo_motorcycle']
+    'text', 'retina', 'rocket', 'shepp_logan_phantom', 'stereo_motorcycle']
 
 plgs = [i if i=='-' else Data(i) for i in datas]

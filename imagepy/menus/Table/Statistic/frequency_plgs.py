@@ -1,7 +1,6 @@
 from imagepy.core.engine import Table
 import pandas as pd
 import numpy as np
-from imagepy import IPy
 
 class Count(Table):
 	title = 'Values Frequency'
@@ -12,7 +11,7 @@ class Count(Table):
 		for i in para['cn']:
 			df = pd.DataFrame(data[i].value_counts())
 			df.columns = ['%s-vf'%i]
-			IPy.show_table(df, '%s-values-frequency'%i)
+			self.app.show_table(df, '%s-values-frequency'%i)
 
 class Frequency(Table):
 	title = 'Table Bins Frequency'
@@ -37,6 +36,6 @@ class Frequency(Table):
 			if para['fre']:vs['frequency'] = hist/hist.sum()
 			if para['weight']:vs['weight'] = np.histogram(data[i], bins, rg, weights=data[i])[0]
 			df = pd.DataFrame(vs, columns = [i for i in ['bins', 'count', 'frequency', 'weight'] if i in vs])
-			IPy.show_table(df, '%s-frequency'%i)
+			self.app.show_table(df, '%s-frequency'%i)
 
 plgs = [Count, Frequency]

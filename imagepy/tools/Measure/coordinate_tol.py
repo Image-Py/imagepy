@@ -8,7 +8,7 @@ Created on Thu Feb  2 23:04:46 2017
 import wx
 from imagepy.core.engine import Tool
 from .setting import Setting
-from imagepy import IPy
+#from imagepy import IPy
 import pandas as pd
 
 class Coordinate:

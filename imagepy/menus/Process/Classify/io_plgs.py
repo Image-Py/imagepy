@@ -1,7 +1,6 @@
 from imagepy.core.engine import Filter, Simple
-from imagepy.core.manager import ColorManager
-from imagepy.core import ImagePlus
-from imagepy import IPy
+from sciapp import Source
+# from imagepy.core import ImagePlus
 import numpy as np
 
 class BuildMark(Simple):
@@ -22,7 +21,7 @@ class BuildMark(Simple):
         newips.back = ips
         idx = ['None', 'Max', 'Min', 'Mask', '2-8mix', '4-6mix', '5-5mix', '6-4mix', '8-2mix']
         modes = ['set', 'max', 'min', 'msk', 0.2, 0.4, 0.5, 0.6, 0.8]
-        newips.lut = ColorManager.get_lut(para['cm'])
+        newips.lut = Source.manager('colormap').get(para['cm'])
         newips.chan_mode = modes[idx.index(para['mode'])]
         #newips.range = (0, para['n'])
         IPy.show_ips(newips)

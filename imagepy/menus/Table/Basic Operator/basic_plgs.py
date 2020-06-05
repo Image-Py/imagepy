@@ -1,17 +1,16 @@
 from imagepy.core.engine import Table
-from imagepy import IPy
 
 class Transpose(Table):
 	title = 'Table Transpose'
 
 	def run(self, tps, snap, data, para = None):
-		tps.set_data(data.T)
+		tps.data = data.T
 
 class Corp(Table):
 	title = 'Table Corp'
 	note = ['req_sel']
 	def run(self, tps, snap, data, para):
-		tps.set_data(data.loc[tps.rowmsk, tps.colmsk])
+		tps.data = tps.subtab()
 
 class Duplicate(Table):
 	title = 'Table Duplicate'
@@ -23,8 +22,7 @@ class Duplicate(Table):
 		return True
 
 	def run(self, tps, snap, data, para = None):
-		newdata = data.loc[tps.rowmsk, tps.colmsk]
-		IPy.show_table(para['name'], newdata)
+		self.app.show_table(tps.subtab(), para['name'])
 
 class DeleteRow(Table):
 	title = 'Delete Rows'
@@ -47,9 +45,8 @@ class AppendRow(Table):
 			(bool, 'fill', 'fill by last row')]
 
 	def run(self, tps, snap, data, para = None):
-		newdata = data.reindex(index=range(data.shape[0]+para['count']), \
+		tps.data = data.reindex(index=range(data.shape[0]+para['count']), \
 			method=[None,'pad'][para['fill']])
-		tps.set_data(newdata)
 
 class AddCol(Table):
 	title = 'Add Column'
@@ -58,8 +55,6 @@ class AddCol(Table):
 			('any', 'value', 'value')]
 
 	def run(self, tps, snap, data, para = None):
-		ctype = data.columns.dtype.type
-		data[ctype(para['name'])] = para['value']
-		print(data.info())
+		data[para['name']] = para['value']
 
 plgs = [Transpose, Duplicate, Corp, '-', DeleteRow, DeleteCol, AppendRow, AddCol]

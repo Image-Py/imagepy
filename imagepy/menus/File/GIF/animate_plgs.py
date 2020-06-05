@@ -1,13 +1,12 @@
 from imagepy.core.util import fileio
 from imagepy.core.engine import Simple
-from imagepy import IPy, root_dir
 import os, imageio
 import numpy as np
 
 class SaveAnimate(Simple):
 	title = 'GIF Animate Save'
 	note = ['all']
-	para={'path':root_dir, 'dur':0.2}
+	para={'path':'', 'dur':0.2}
 	view = [(int, 'dur', (0.01, 10), 2, 'duration', 's')]
 
 	def load(self, ips):

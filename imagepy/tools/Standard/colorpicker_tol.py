@@ -5,7 +5,7 @@ Created on Wed Oct 19 17:35:09 2016
 @author: yxl
 """
 from imagepy.core.engine import Tool
-from imagepy.core.manager import ColorManager
+from sciapp import Source
 
 class Plugin(Tool):
     """ColorPicker class plugin with events callbacks"""

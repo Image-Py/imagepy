@@ -7,7 +7,6 @@ Created on Wed Dec  7 23:03:28 2016
 from imagepy.core.engine import Simple
 import scipy.ndimage as ndimg
 import numpy as np
-from imagepy import IPy
 
 class Plugin(Simple):
     title = 'Resize'
@@ -22,24 +21,42 @@ class Plugin(Simple):
     
     def run(self, ips, imgs, para = None):
         kx, ky, kz = [para[i] for i in ('ky','kx','kz')]
-        size = np.round([ips.width*kx, ips.height*ky])
-        w, h = size.astype(np.uint16)
-        if ips.is3d:
-            if ips.get_nchannels()>1:
+        size = np.round([ips.slices*kz, ips.shape[1]*kx, ips.shape[0]*ky])
+        n, w, h = size.astype(np.uint16)
+
+        buf = np.zeros((n, w, h, ips.channels), dtype=ips.dtype)
+        if kz==1:
+            for i in range(ips.slices):
+                img = imgs[i].reshape(ips.shape+(-1,))
+                for c in range(ips.channels):
+                    ndimg.zoom(img[:,:,c], (ky, kx), output=buf[i,:,:,c], order=para['order'])
+        else: 
+            for c in range(ips.channels):
+                imgsc = [i.reshape(i.shape[:2]+(-1,))[:,:,c] for i  in imgs]
+                ndimg.zoom(imgsc, (kz, kx, ky), order=para['order'], output=buf[:,:,:,c])
+
+        if ips.channels == 1: buf.shape = (buf.shape[:3])
+        if n == 1: buf = [buf.reshape(buf.shape[1:])]
+        ips.set_imgs(buf)
+        '''
+        else: 
+
+        if ips.slice>1:
+            if ips.channels>1:
                 new = np.zeros(np.multiply(imgs.shape, 
                     (kz, kx, ky, 1)).round().astype(np.uint32), dtype=imgs.dtype)
-                for i in range(ips.get_nchannels()):
+                for i in range(ips.channels):
                     ndimg.zoom(imgs[:,:,:,i], (kz, kx, ky), output=new[:,:,:,i], order=para['order'])
             else :
                 new = ndimg.zoom(imgs, (kz, kx, ky), order=para['order'])
         else:
-            if ips.get_nchannels()>1:
+            if ips.channels>1:
                 new = []
                 for i in range(len(imgs)):
                     self.progress(i, len(imgs))
                     arr = np.zeros(np.multiply(imgs[i].shape, 
                         (kx, ky, 1)).round().astype(np.uint32),  dtype=imgs[i].dtype)
-                    for n in range(ips.get_nchannels()):
+                    for n in range(ips.channels:
                         ndimg.zoom(imgs[i][:,:,n], (kx, ky), output=arr[:,:,n], order=para['order'])
                     new.append(arr)
             else :
@@ -63,3 +80,4 @@ class Plugin(Simple):
             nbc = ndimg.zoom(backimg, (kz, kx))
             print(nbc.dtype)
         ips.backimg = nbc
+        '''

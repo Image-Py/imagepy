@@ -6,9 +6,8 @@ Created on Sat Oct 15 14:42:55 2016
 
 from imagepy.core.util import fileio
 from skimage.io import imread
-from imagepy.core.manager import ReaderManager, ViewerManager
+from sciapp import Source
 from imagepy.core.engine import Free
-from imagepy import IPy
 from glob import glob
 import wx, os
     
@@ -17,14 +16,14 @@ class Plugin(Free):
     para = {'path':'', 'start':0, 'end':0, 'step':1, 'title':'sequence'}
 
     def load(self):
-        self.filt = sorted(ReaderManager.get())
+        self.filt = Source.manager('reader').names()
         return True
 
     def show(self):
         filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
-        rst = IPy.getpath('Import sequence', filt, 'open', self.para)
-        if not rst: return rst
-
+        rst = self.app.getpath('Import sequence', self.filt, 'open')
+        if rst is None: return rst
+        self.para['path'] = rst
         files = self.getfiles(self.para['path'])
         nfs = len(files)
         self.para['end'] = nfs-1
@@ -32,7 +31,7 @@ class Plugin(Free):
                      (int, 'start', (0, nfs-1), 0, 'Start', '0~{}'.format(nfs-1)),
                      (int, 'end',   (0, nfs-1), 0, 'End', '0~{}'.format(nfs-1)),
                      (int, 'step',  (0, nfs-1), 0, 'Step', '')]
-        return IPy.get_para('Import sequence', self.view, self.para)
+        return self.app.show_para('Import sequence', self.view, self.para)
 
     def getfiles(self, name):
         p,f = os.path.split(name)
@@ -54,20 +53,14 @@ class Plugin(Free):
     def run(self, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        read = ReaderManager.get(fe[1:])
-        view = ViewerManager.get(fe[1:])
-        
-        try:
-            img = read(para['path'])
-        except:
-            IPy.alert('unknown img format!')
-            return
-        
+        read = Source.manager('reader').get(name=fe[1:])
+        try: img = read(para['path'])
+        except: return self.app.alert('unknown img format!')
         files = self.getfiles(para['path'])
         files.sort()
         imgs = self.readimgs(files[para['start']:para['end']+1:para['step']], 
                              read, img.shape, img.dtype)
-        view(imgs, para['title'])
+        self.app.show('imgs', imgs, para['title'])
 
 if __name__ == '__main__':
     print(Plugin.title)

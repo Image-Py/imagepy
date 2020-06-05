@@ -1,5 +1,3 @@
-from imagepy import IPy
-
 class MkDown:
 	def __init__(self, title, cont, url=''):
 		self.title = title

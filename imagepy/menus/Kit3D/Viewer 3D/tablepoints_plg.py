@@ -1,8 +1,6 @@
 from imagepy.core.engine import Table
-from imagepy.core.manager import ColorManager
-from imagepy.core import myvi
+from sciapp import Source
 import numpy as np
-from imagepy import IPy
 
 class Plugin(Table):
 	title = 'Table Point Cloud'

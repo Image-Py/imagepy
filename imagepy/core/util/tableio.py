@@ -1,7 +1,7 @@
 import os
-from ..manager import ViewerManager, ReaderManager, WriterManager
-from ... import IPy, root_dir
+from ... import root_dir
 from ..engine import Free, Table, Macros
+from sciapp import Source
 import numpy as np
 
 class Reader(Free):
@@ -16,7 +16,7 @@ class Reader(Free):
 
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        read = ReaderManager.get(fe[1:], tag = 'tab')
+        read = Source.manager('reader').get(fe[1:], tag = 'tab')
 
         table = read(para['path'])
         ViewerManager.get(fe[1:])(table, fn)
@@ -33,5 +33,5 @@ class Writer(Table):
     def run(self, tps, snap, data, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        write = WriterManager.get(fe[1:], tag='tab')
+        write = Source.manager('writer').get(fe[1:], tag='tab')
         write(para['path'], data)

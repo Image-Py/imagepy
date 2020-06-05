@@ -2,7 +2,6 @@ import wx,os,sys
 import numpy as np
 import io# urllib2 urllib.request, urllib.error, urllib.parse
 from skimage.io import imread
-from imagepy import IPy
 from imagepy.core.engine import Free
 
 class Plugin(Free):

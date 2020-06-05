@@ -9,7 +9,7 @@ import wx
 from shapely.geometry import Polygon, Point
 from imagepy.core.engine import Tool
 from .setting import Setting
-from imagepy import IPy
+#from imagepy import IPy
 import pandas as pd
     
 class Area:

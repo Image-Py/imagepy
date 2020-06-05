@@ -1,10 +1,9 @@
-from imagepy import IPy
 import numpy as np
 from imagepy.core.engine import Simple
 from skimage.measure import regionprops
-from imagepy.core.mark import GeometryMark
 from scipy.ndimage import label, generate_binary_structure
 from imagepy.ipyalg.graph.connect import connect_graph, mapidx
+from sciapp.object import mark2shp
 import pandas as pd
 
 # center, area, l, extent, cov
@@ -28,7 +27,7 @@ class Plugin(Simple):
         for i in range(len(imgs)):
             if para['labled']: buf = imgs[i]
             else: label(imgs[i], generate_binary_structure(2, 1), output=buf)
-            conarr = connect(buf, 1 if para['con']=='4-connect' else 2, not self.para['nozero'])
+            conarr = connect_graph(buf, 1 if para['con']=='4-connect' else 2, not self.para['nozero'])
             conmap = mapidx(conarr)
 
             ls = regionprops(buf)
@@ -48,5 +47,5 @@ class Plugin(Simple):
             neibs = [conmap[i.label] if i.label in conmap else [] for i in ls]
             dt.extend([[len(i) for i in neibs], neibs])
             data.extend(list(zip(*dt)))
-        ips.mark = GeometryMark(mark)
-        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-region')
+        ips.mark = mark2shp(mark)
+        self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-region')

@@ -1,6 +1,5 @@
 from imagepy.core.engine import Simple
 import pandas as pd
-from imagepy import IPy
 
 class GrayStatistic(Simple):
     title = 'Gray Points Statistic'
@@ -18,8 +17,8 @@ class GrayStatistic(Simple):
             (bool, 'kurt', 'kurt')]
 
     def load(self, ips):
-        if ips.roi is None or ips.roi.dtype != 'point':
-            IPy.alert('need a point roi')
+        if ips.roi is None or ips.roi.roitype != 'point':
+            self.app.alert('need a point roi')
             return False
         return True
 
@@ -43,8 +42,8 @@ class GrayStatistic(Simple):
         if para['kurt']:rst['kurt'] = data[['V']].kurt()
 
         if para['lst']:
-            IPy.show_table(data, ips.title+'-pts color')
-        IPy.show_table(pd.DataFrame(rst), ips.title+'-pts color statistic')
+            self.app.show_table(data, ips.title+'-pts color')
+        self.app.show_table(pd.DataFrame(rst), ips.title+'-pts color statistic')
 
 class ColorStatistic(Simple):
     title = 'Color Points Statistic'

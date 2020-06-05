@@ -6,10 +6,9 @@ Created on Mon Dec 26 22:05:43 2016
 import numpy as np
 from scipy.ndimage import label, generate_binary_structure
 from skimage.segmentation import find_boundaries
-from imagepy import IPy
-from imagepy.core import ImagePlus
 from imagepy.core.engine import Filter, Simple
 from imagepy.ipyalg.graph import connect, render
+from sciapp.object import Image
 
 class Label(Simple):
     title = 'Label Image'
@@ -27,7 +26,7 @@ class Label(Simple):
             strc = generate_binary_structure(2, con)
             lab, n = label(imgs[i], strc, output = np.int32)
             labels.append(lab)
-        IPy.show_img(labels, ips.title+'-label') 
+        self.app.show_img(labels, ips.title+'-label') 
 
 class Boundaries(Simple):
     title = 'Mark Boundaries'
@@ -47,7 +46,7 @@ class Boundaries(Simple):
             bound.dtype = np.uint8
             bound *= 255
             labels.append(bound)
-        IPy.show_img(labels, ips.title+'-boundary') 
+        self.app.show_img(labels, ips.title+'-boundary') 
 
 class Render(Simple):
     title = 'Label Render'
@@ -74,8 +73,8 @@ class Render(Simple):
             for j in cmap: lut[j] = cmap[j]
             labels.append(lut[imgs[i]])
 
-        ips = ImagePlus(labels, ips.title+'-render')
+        ips = Image(labels, ips.title+'-render')
         ips.range = (0, para['colors'])
-        IPy.show_ips(ips) 
+        self.app.show_img(ips) 
 
 plgs = [Label, Boundaries, Render]

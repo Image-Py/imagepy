@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 from skimage import feature
 from imagepy.core.engine import Filter
-from imagepy.core.roi import PointRoi
+from sciapp.object import Points, ROI
 
 class Harris(Filter):
 	title = 'Harris'
@@ -13,7 +13,7 @@ class Harris(Filter):
 	def run(self, ips, snap, img, para = None):
 		cimg = feature.corner_harris(img, sigma=para['sigma'], k=para['k'])
 		pts = feature.corner_peaks(cimg, min_distance=1)
-		self.ips.roi = PointRoi([tuple(i[::-1]) for i in pts])
+		ips.roi = ROI([Points(pts[:,::-1])])
 
 class Kitchen(Filter):
 	title = 'Kitchen Rosenfeld'
@@ -24,7 +24,7 @@ class Kitchen(Filter):
 	def run(self, ips, snap, img, para = None):
 		cimg = feature.corner_kitchen_rosenfeld(img, mode='constant', cval=para['cval'])
 		pts = feature.corner_peaks(cimg, min_distance=1)
-		self.ips.roi = PointRoi([tuple(i[::-1]) for i in pts])
+		ips.roi = ROI([Points(pts[:,::-1])])
 
 class Moravec(Filter):
 	title = 'Moravec'
@@ -35,7 +35,7 @@ class Moravec(Filter):
 	def run(self, ips, snap, img, para = None):
 		cimg = feature.corner_moravec(img, window_size=para['size'])
 		pts = feature.corner_peaks(cimg, min_distance=1)
-		self.ips.roi = PointRoi([tuple(i[::-1]) for i in pts])
+		ips.roi = ROI([Points(pts[:,::-1])])
 
 class Tomasi(Filter):
 	title = 'Tomasi'
@@ -46,6 +46,6 @@ class Tomasi(Filter):
 	def run(self, ips, snap, img, para = None):
 		cimg = feature.corner_shi_tomasi(img, sigma=para['sigma'])
 		pts = feature.corner_peaks(cimg, min_distance=1)
-		self.ips.roi = PointRoi([tuple(i[::-1]) for i in pts])
+		ips.roi = ROI([Points(pts[:,::-1])])
 
 plgs = [Harris, Kitchen, Moravec, Tomasi]

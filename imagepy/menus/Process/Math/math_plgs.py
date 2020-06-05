@@ -61,7 +61,7 @@ class Sqrt(Filter):
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     
     def run(self, ips, snap, img, para = None):
-        np.sqrt(snap, out=img)
+        np.sqrt(snap, out=img, casting='unsafe')
         
 class Gamma(Filter):
     """Garmma_plg: derived from imagepy.core.engine.Filter """

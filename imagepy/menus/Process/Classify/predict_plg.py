@@ -1,11 +1,10 @@
 from imagepy.core.engine import Simple
-from imagepy.core import ImagePlus
-from imagepy import IPy
+# from imagepy.core import ImagePlus
 from glob import glob
 import os.path as osp
 import joblib
 from imagepy.ipyalg import feature
-from imagepy.core.manager import ReaderManager, ViewerManager
+from sciapp import Source
 
 class Plugin(Simple):
 	title = 'Feature Predictor'

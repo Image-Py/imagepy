@@ -1,13 +1,13 @@
 from imagepy.core.util import fileio
 import pydicom
-from imagepy.core.manager import ReaderManager, WriterManager
+from sciapp import Source
 
 
 
 def imread(path):
 	return pydicom.read_file(path, force=True).pixel_array
 
-ReaderManager.add('dcm', imread)
+Source.manager('reader').add(name='dcm', obj=imread)
 
 class OpenFile(fileio.Reader):
 	title = 'DCM Open'

@@ -1,30 +1,19 @@
 from imagepy.core.engine import Free
-from imagepy import IPy
-import wx
 
 class Widgets(Free):
 	"""ImageKiller: derived from imagepy.core.engine.Free"""
 	title = 'Widgets'
 	asyn = False
 
-	#process
 	def run(self, para = None):
-		app = IPy.curapp
-		info = app.auimgr.GetPane(app.widgets)
-		info.Show(not info.IsShown())
-		app.auimgr.Update()
+		self.app.switch_widget()
 
 class ToolBar(Free):
-	"""ImageKiller: derived from imagepy.core.engine.Free"""
 	title = 'Toolbar'
 	asyn = False
 	
-	#process
 	def run(self, para = None):
-		app = IPy.curapp
-		info = app.auimgr.GetPane(app.toolbar)
-		info.Show(not info.IsShown())
-		app.auimgr.Update()
+		self.app.switch_toolbar()
 
 class TableWindow(Free):
 	"""ImageKiller: derived from imagepy.core.engine.Free"""
@@ -33,10 +22,6 @@ class TableWindow(Free):
 	
 	#process
 	def run(self, para = None):
-		if IPy.uimode() != 'ipy': return
-		app = IPy.curapp
-		info = app.auimgr.GetPane(app.tablenbwrap)
-		info.Show(not info.IsShown())
-		app.auimgr.Update()
+		self.app.switch_table()
 
 plgs = [Widgets, ToolBar, TableWindow]

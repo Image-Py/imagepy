@@ -1,6 +1,5 @@
 from imagepy.core.engine import Filter
 from skimage.measure import marching_cubes_lewiner, mesh_surface_area
-from imagepy import IPy
 import numpy as np
 import pandas as pd
 

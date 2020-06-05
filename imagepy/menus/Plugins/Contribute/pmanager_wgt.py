@@ -5,9 +5,10 @@ Created on Sat Jan  7 16:01:14 2017
 @author: yxl
 """
 import wx, os, glob, shutil, random
-from imagepy import IPy, root_dir
-from imagepy.core.manager import PluginsManager
-from imagepy.ui.mkdownwindow import HtmlPanel, md2html
+from imagepy import root_dir
+from sciapp import Source
+from sciwx.text import MDPad
+#from imagepy.ui.mkdownwindow import HtmlPanel, md2html
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):
@@ -83,7 +84,7 @@ class Plugin( wx.Panel ):
         self.lst_plgs.SetColumnWidth(1,100)
         self.lst_plgs.SetColumnWidth(2,60)
         self.lst_plgs.SetColumnWidth(3,60)
-        self.htmlpanel = HtmlPanel(self)
+        self.htmlpanel = MDPad(self)
         bSizer1.Add( self.lst_plgs, 1, wx.LEFT|wx.RIGHT|wx.EXPAND, 5 )
         bSizer1.Add( bSizer3, 0, wx.EXPAND, 5 )
         sizer.Add(bSizer1, 0, wx.ALL|wx.EXPAND, 0)
@@ -135,13 +136,13 @@ class Plugin( wx.Panel ):
         cont = f.read()
         f.close()
         cont = '\n'.join([i.strip() for i in cont.split('\n')])
-        self.htmlpanel.SetValue((md2html(cont), ''))
+        self.htmlpanel.set_cont(cont)
 
     def on_install(self, event):
         i = self.lst_plgs.GetFirstSelected()
         if i==-1: return
         path = self.buf[i][-1]['path']
-        PluginsManager.get('Install Plugins')().start(
+        Source.manager('plugin').get('Install Plugins')().start(
             {'repo':self.buf[i][-1]['path']}, self.load)
 
     def on_remove(self, event):

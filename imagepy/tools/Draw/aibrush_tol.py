@@ -1,11 +1,11 @@
 from imagepy.core.engine import Tool
 import numpy as np
 from time import time
-from imagepy.core.manager import ColorManager
+from sciapp import Source
 from skimage.morphology import flood_fill, flood
 from skimage.draw import line, circle
 from skimage.segmentation import felzenszwalb
-from imagepy.core.mark import GeometryMark
+# from imagepy.core.mark import GeometryMark
 from scipy.ndimage import binary_fill_holes, binary_dilation, binary_erosion
 
 def fill_normal(img, r, c, color, con, tor):

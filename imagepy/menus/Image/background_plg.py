@@ -1,51 +1,35 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Dec  1 01:22:19 2016
-@author: yxl
-"""
-from imagepy.core.manager import ImageManager
-from imagepy import IPy
 import numpy as np
+from sciapp.object import Image
 from imagepy.core.engine import Simple
 
 class SetBackground(Simple):
-    """Calculator Plugin derived from imagepy.core.engine.Simple """
     title = 'Set Background'
     note = ['all']
-    para = {'img':None,'op':'Mean', 'k':0.5, 'kill':False}
+    para = {'img':None,'mode':'msk', 'k':0.5, 'kill':False}
     view = [('img','img', 'background', '8-bit'),
-            (list, 'op', ['Mean', 'Clip'], str, 'mode', ''),
-            (float, 'k', (0,1), 1, 'blender', ''),
+            (list, 'mode', ['set', 'min', 'max', 'msk', 'ratial'], str, 'mode', ''),
+            (float, 'k', (0, 1), 1, 'ratial', ''),
             (bool, 'kill', 'kill')]
     
     def run(self, ips, imgs, para = None):
-        if para['kill']:
-            ips.backimg = None
+        if para['kill']: ips.mode, ips.back = 'set', None
         else:
-            print(ImageManager.get())
-            img = ImageManager.get(para['img']).img
-            if img.dtype != np.uint8 or img.shape[:2] != ips.img.shape[:2]:
-                IPy.alert('a background image must be 8-bit and with the same size')
-                return
-            ips.backimg = img
-            ips.backmode = (para['k'], para['op'])
-        ips.update()
+            ips.back = self.app.get_img(para['img'])
+            ips.mode = para['k'] if para['mode']=='ratial' else para['mode']
         
 class BackgroundSelf(Simple):
-    """Calculator Plugin derived from imagepy.core.engine.Simple """
     title = 'Background Self'
-    note = ['8-bit', 'rgb']
-    para = {'op':'Mean', 'k':0.5, 'kill':False}
-    view = [(list, 'op', ['Mean', 'Clip'], str, 'mode', ''),
-            (float, 'k', (0,1), 1, 'blender', ''),
-            (bool, 'kill', 'kill')]
+    note = ['all']
+    para = {'mode':'msk', 'k':0.5}
+    view = [(list, 'mode', ['set', 'min', 'max', 'msk', 'ratial'], str, 'mode', ''),
+            (float, 'k', (0, 1), 1, 'ratial', '')]
     
     def run(self, ips, imgs, para = None):
-        if para['kill']:
-            ips.backimg = None
-        else:
-            ips.backimg = ips.img.copy()
-            ips.backmode = (para['k'], para['op'])
-        ips.update()
+        if ips.isarray: imgs = imgs.copy()
+        else: imgs = [i.copy() for i in imgs]
+        back = Image(imgs)
+        back.cn, back.rg = ips.cn, ips.rg
+        ips.back = back
+        ips.mode = para['k'] if para['mode']=='ratial' else para['mode']
 
 plgs = [SetBackground, BackgroundSelf]

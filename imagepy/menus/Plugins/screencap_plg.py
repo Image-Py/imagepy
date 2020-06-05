@@ -1,4 +1,3 @@
-from imagepy import IPy
 from imagepy.core.engine import Free
 import time, wx, numpy as np
 
@@ -18,4 +17,4 @@ class Plugin(Free):
 		mem.Blit(0, 0, size[0], size[1], screen, 0, 0)
 		arr = np.zeros((size[1], size[0], 3), dtype=np.uint8)
 		bmp.CopyToBuffer(arr)
-		IPy.show_img([arr], 'Screen Capture')
+		self.app.show_img([arr], 'Screen Capture')

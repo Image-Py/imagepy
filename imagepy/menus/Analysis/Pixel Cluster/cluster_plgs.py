@@ -2,7 +2,6 @@ import scipy.ndimage as ndimg
 import numpy as np
 from imagepy.core.engine import Filter, Simple
 import pandas as pd
-from imagepy import IPy
 
 def colorselect(img, pts, k, usecov=True):
     pts = img[pts].T
@@ -45,23 +44,22 @@ class ColorCluster(Filter):
     
     def preview(self, ips, para):
         snap, img = ips.snap, ips.img
-        pts = np.where(ips.get_msk())
+        pts = np.where(ips.mask())
         img[:] = snap
         msk = colorselect(img, pts, para['sigma'], para['cov'])
         if para['within']:msk = within(msk, pts)
         img[msk] = (255,0,0)
-        ips.update()
 
     def run(self, ips, snap, img, para = None):
         img[:] = snap
-        pts = np.where(ips.get_msk())
+        pts = np.where(ips.mask())
         msk = colorselect(snap, pts, para['sigma'], para['cov'])
         if para['within']:msk = within(msk, pts)
         if para['msk'] == 'red':img[msk]=(255,0,0)
         if para['msk'] == 'dark out':img[~msk]//=3
         if para['new']:
             msk = np.multiply(msk,255,dtype=np.uint8)
-            IPy.show_img([msk], ips.title+'-colormsk')
+            self.app.show_img([msk], ips.title+'-colormsk')
 
 class ColorCluster3D(Simple):
     title = 'Color Cluster 3D'
@@ -89,7 +87,7 @@ class GrayCluster(Filter):
 
     def preview(self, ips, para):
         snap, img = ips.snap, ips.img
-        pts = np.where(ips.get_msk())
+        pts = np.where(ips.mask())
         pts = img[pts].T
         mean = pts.mean()
         std = np.std(pts)
@@ -109,13 +107,13 @@ class GrayCluster(Filter):
 
     def run(self, ips, snap, img, para = None):
         ips.lut = self.buflut
-        pts = np.where(ips.get_msk())
+        pts = np.where(ips.mask())
         msk = grayselect(snap, pts, para['sigma'], para['cov'])
         if para['within']:msk = within(msk, pts)
         if para['msk'] == 'clear out':img[~msk]=ips.range[0]
         if para['new']:
             msk = np.multiply(msk,255,dtype=np.uint8)
-            IPy.show_img([msk], ips.title+'-graymsk')
+            self.app.show_img([msk], ips.title+'-graymsk')
 
 class GrayCluster3D(Simple):
     title = 'Gray Cluster 3D'
@@ -129,8 +127,8 @@ class GrayCluster3D(Simple):
             (list, 'msk', ['clear out', 'nothing'], str, 'mask', '')]
     
     def load(self, ips):
-        if ips.roi is None or ips.roi.dtype != 'point':
-            IPy.alert('need a point roi')
+        if ips.roi is None or ips.roi.roitype != 'point':
+            self.app.alert('need a point roi')
             return False
         self.buflut = ips.lut
         ips.lut = ips.lut.copy()
@@ -165,7 +163,5 @@ class GrayCluster3D(Simple):
         if para['new']:
             msk = np.multiply(msk,255,dtype=np.uint8)
             IPy.show_img(msk, ips.title+'-graymsk')
-
-
 
 plgs = [GrayCluster, ColorCluster, '-', GrayCluster3D, ColorCluster3D]

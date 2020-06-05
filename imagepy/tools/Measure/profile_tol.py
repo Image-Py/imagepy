@@ -6,7 +6,7 @@ Created on Fri Feb  3 22:21:32 2017
 """
 
 import wx
-from imagepy import IPy
+#from imagepy import IPy
 from imagepy.core.engine import Tool
 import numpy as np
 import pandas as pd

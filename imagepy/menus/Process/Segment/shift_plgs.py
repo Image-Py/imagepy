@@ -1,5 +1,4 @@
 from imagepy.core.engine import Filter, Simple
-from imagepy import IPy
 from skimage import data, io, segmentation, color
 
 class SLIC(Filter):
@@ -73,7 +72,7 @@ class SLICLab(Simple):
                 para['compactness'], para['max_iter'], para['sigma']).astype('int32'))
             rst[-1] += 1
             self.progress(i, len(imgs))
-        IPy.show_img(rst, ips.title+'-sliclab')
+        self.app.show_img(rst, ips.title+'-sliclab')
 
 class QuickshiftLab(Simple):
     title = 'Quickshift Label'
@@ -103,7 +102,7 @@ class QuickshiftLab(Simple):
                 para['max_dist'], para['sigma']).astype('int32'))
             rst[-1] += 1
             self.progress(i, len(imgs))
-        IPy.show_img(rst, ips.title+'-quickshiftlab')
+        self.app.show_img(rst, ips.title+'-quickshiftlab')
 
 class FelzenszwalbLab(Simple):
     title = 'Felzenszwalb Label'
@@ -131,6 +130,6 @@ class FelzenszwalbLab(Simple):
                 para['sigma'], para['min_size']).astype('int32'))
             rst[-1] += 1
             self.progress(i, len(imgs))
-        IPy.show_img(rst, ips.title+'-felzenszwalblab')
+        self.app.show_img(rst, ips.title+'-felzenszwalblab')
         
 plgs = [SLIC, Quickshift, Felzenszwalb, '-', SLICLab, QuickshiftLab, FelzenszwalbLab]

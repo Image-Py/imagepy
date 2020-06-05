@@ -4,10 +4,8 @@ Created on Sat Nov 26 01:26:25 2016
 @author: yxl
 """
 import numpy as np
-from imagepy.core.pixel import bliter
 from imagepy.core.engine import Simple, Tool, Filter
-from imagepy.core.roi.rectangleroi import RectangleRoi
-from imagepy.core.manager import ClipBoardManager, ColorManager
+from sciapp import Source
 
 class PasteMove(Tool):
     def __init__(self):
@@ -26,7 +24,7 @@ class PasteMove(Tool):
     def mouse_up(self, ips, x, y, btn, **key):
         if self.moving == True:
             self.moving = False
-            ci = ClipBoardManager.img
+            ci = self.app.manager('xxxxxx')
             img = ips.img
             #ips.roi.draged(ci.shape[1]/2,ci.shape[0]/2, ips.size[1]/2, ips.size[0]/2, True)
             #ips.roi = IPy.clipboard[1].affine(np.eye(2), ((np.array(ips.size)-ci.shape[:2])[::-1]/2))          
@@ -69,14 +67,14 @@ class Clear(Filter):
     note = ['req_roi', 'all', 'auto_snap', 'not_channel']
 
     def run(self, ips, snap, img, para=None):
-        img[ips.get_msk()] = ColorManager.get_back(ips.channels!=3)
+        img[ips.mask()] = ColorManager.get_back(ips.channels!=3)
         
 class ClearOut(Filter):
     title = 'Clear Out'
     note = ['req_roi', 'all', 'auto_snap', 'not_channel']
 
     def run(self, ips, snap, img, para=None):
-        img[ips.get_msk('out')] = ColorManager.get_back(ips.channels!=3)
+        img[ips.mask('out')] = ColorManager.get_back(ips.channels!=3)
         
 class Copy(Simple):
     title = 'Copy'
@@ -99,14 +97,14 @@ class Sketch(Filter):
     view = [(int, 'width', (0,30), 0,  'width', 'pix')]
 
     def run(self, ips, snap, img, para = None):
-        img[ips.get_msk(para['width'])] = ColorManager.get_front(ips.channels!=3)
+        img[ips.mask(para['width'])] = ColorManager.get_front(ips.channels!=3)
         
 class Fill(Filter):
     title = 'Fill'
     note = ['req_roi', 'all', 'auto_snap', 'not_channel']
 
     def run(self, ips, snap, img, para=None):
-        img[ips.get_msk()] = ColorManager.get_front(ips.channels!=3)
+        img[ips.mask()] = ColorManager.get_front(ips.channels!=3)
         
 class Undo(Simple):
     title = 'Undo'

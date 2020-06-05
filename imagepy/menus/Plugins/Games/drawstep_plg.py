@@ -5,7 +5,7 @@ from imagepy.ipyalg import distance_transform_edt
 import numpy as np
 from imagepy.ipyalg.graph import sknw
 from imagepy.core.engine import Simple
-from imagepy import IPy
+
 
 def draw_pixs(img, xs, ys, color=None):
     mskx = (xs>=0) * (xs<img.shape[1])

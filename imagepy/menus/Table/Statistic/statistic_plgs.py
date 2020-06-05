@@ -1,10 +1,9 @@
 from imagepy.core.engine import Table
 import pandas as pd
-from imagepy import IPy
 
 class Statistic(Table):
 	title = 'Table Statistic'
-	note = ['snap', 'only_num', 'row_msk', 'col_msk']
+	note = ['snap', 'only_num', 'auto_msk']
 
 	para = {'axis':'Column', 'sum':True, 'mean':True,'max':False, 
 		'min':False,'var':False,'std':False,'skew':False,'kurt':False}
@@ -31,7 +30,7 @@ class Statistic(Table):
 		if para['kurt']:rst['kurt'] = snap.kurt(axis=axis)
 		cols = ['sum', 'mean', 'min', 'max', 'var', 'std', 'skew', 'kurt']
 		cols = [i for i in cols if i in rst]
-		IPy.show_table(pd.DataFrame(rst, columns=cols).T, tps.title+'-statistic')
+		self.app.show_table(pd.DataFrame(rst, columns=cols).T, tps.title+'-statistic')
 
 class GroupStatistic(Table):
 	title = 'Group Statistic'
@@ -68,6 +67,6 @@ class GroupStatistic(Table):
 		if para['std']:rst.append(post(gp.std(), 'std'))
 		if para['skew']:rst.append(post(gp.skew(), 'skew'))
 
-		IPy.show_table(pd.concat(rst, axis=1), tps.title+'-statistic')
+		self.app.show_table(pd.concat(rst, axis=1), tps.title+'-statistic')
 
 plgs = [Statistic, GroupStatistic]

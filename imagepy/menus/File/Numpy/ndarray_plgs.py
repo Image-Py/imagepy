@@ -1,11 +1,10 @@
 from imagepy.core.util import fileio
 import numpy as np
-from imagepy.core.manager import ReaderManager, WriterManager
-from imagepy import IPy
+from sciapp import Source
 import os
 
-ReaderManager.add('npy', np.load)
-WriterManager.add('npy', np.save)
+Source.manager('reader').add(name='npy', obj=np.load)
+Source.manager('writer').add(name='npy', obj=np.save)
 
 class OpenFile(fileio.Reader):
 	title = 'Numpy Open'

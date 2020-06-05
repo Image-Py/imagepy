@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from numpy.linalg import norm
 from .setting import Setting
-from imagepy import IPy
+#from imagepy import IPy
 
 class Distance:
     """Define the distance class"""

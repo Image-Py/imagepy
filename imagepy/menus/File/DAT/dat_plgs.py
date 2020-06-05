@@ -1,6 +1,6 @@
 from imagepy.core.util import fileio
 import numpy as np
-from imagepy.core.manager import ReaderManager, WriterManager
+from sciapp import Source
 
 def imread(path):
 	return np.loadtxt(path,dtype=float)
@@ -8,8 +8,8 @@ def imread(path):
 def imsave(path,img):
 	np.savetxt(path,img)
 
-ReaderManager.add('dat', imread)
-WriterManager.add('dat', imsave)
+Source.manager('reader').add(name='dat', obj=imread)
+Source.manager('writer').add(name='dat', obj=imsave)
 
 class OpenFile(fileio.Reader):
 	title = 'DAT Open'

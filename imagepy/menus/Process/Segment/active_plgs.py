@@ -1,7 +1,6 @@
 import numpy as np
 from scipy.ndimage import binary_dilation
 from imagepy.core.engine import Filter
-from imagepy import IPy
 from skimage import img_as_float
 from skimage.segmentation import chan_vese, morphological_chan_vese, \
     morphological_geodesic_active_contour, inverse_gaussian_gradient, \
@@ -63,7 +62,7 @@ class MorphChanVese(Filter):
         (c1, c2), img[:] = ips.range, snap
         if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
         else: img[binary_dilation(msk) ^ msk] = c2
-        if para['sub']: IPy.show_img(stackimg, ips.title+'-sub')
+        if para['sub']: self.app.show_img(stackimg, ips.title+'-sub')
 
 class MorphGeoChanVese(Filter):
     title = 'Bound Snake Fit'
@@ -103,7 +102,7 @@ class MorphGeoChanVese(Filter):
         (c1, c2), img[:] = ips.range, snap
         if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
         else: img[binary_dilation(msk) ^ msk] = c2
-        if para['sub']: IPy.show_img(stackimg, ips.title+'-sub')
+        if para['sub']: self.app.show_img(stackimg, ips.title+'-sub')
 
 class MorphGeoRoi(Filter):
     title = 'ROI Snake Fit'
@@ -122,7 +121,7 @@ class MorphGeoRoi(Filter):
     def preview(self, ips, para):
         snap, img = ips.snap, ips.img
         gimage = inverse_gaussian_gradient(img_as_float(snap))
-        init = ips.get_msk('out')
+        init = ips.mask('out')
         msk = morphological_geodesic_active_contour(gimage, para['iter'], 
             init_level_set=init, smoothing=para['smooth'], 
             threshold='auto' if para['auto'] else para['thr'], balloon=para['balloon']) > 0
@@ -135,7 +134,7 @@ class MorphGeoRoi(Filter):
         stackimg = []
         callback = lambda x: stackimg.append((x*255).astype(np.uint8)) if para['sub'] else 0
         gimage = inverse_gaussian_gradient(img_as_float(snap))
-        init = ips.get_msk('out')
+        init = ips.mask('out')
         msk = morphological_geodesic_active_contour(gimage, para['iter'], 
             init_level_set=init, smoothing=para['smooth'], 
             threshold='auto' if para['auto'] else para['thr'], 
@@ -143,7 +142,7 @@ class MorphGeoRoi(Filter):
         (c1, c2), img[:] = ips.range, snap
         if para['out'] == 'mask': img[~msk], img[msk] = c1, c2
         else: img[binary_dilation(msk) ^ msk] = c2
-        if para['sub']: IPy.show_img(stackimg, ips.title+'-sub')
+        if para['sub']: self.app.show_img(stackimg, ips.title+'-sub')
 
 class RandomWalker(Filter):
     title = 'Random Walker'
