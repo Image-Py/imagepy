@@ -1,7 +1,8 @@
 import sys
 sys.path.append('../../')
 from skimage.data import astronaut, camera
-from sciwx.canvas import Canvas, Image, MCanvas
+from sciapp.object import Image
+from sciwx.canvas import ICanvas, MCanvas
 import wx
 
 def image_canvas_test():
@@ -10,7 +11,7 @@ def image_canvas_test():
     obj.cn = 0
 
     frame = wx.Frame(None, title='gray test')
-    canvas = Canvas(frame, autofit=True)
+    canvas = ICanvas(frame, autofit=True)
     canvas.set_img(obj)
     frame.Show()
 

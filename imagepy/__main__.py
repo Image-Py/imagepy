@@ -1,10 +1,9 @@
 import wx, sys
 sys.path.append('../')
-from imagepy.core.app import ImagePy
-from imagepy.core.app import loader
+from imagepy.core.app import loader, ImagePy
 
-from sciapp.action import ImgAction, Tool, DefaultTool
 '''
+from sciapp.action import ImgAction, Tool, DefaultTool
 from sciwx.plugins.curve import Curve
 from sciwx.plugins.channels import Channels
 from sciwx.plugins.histogram import Histogram

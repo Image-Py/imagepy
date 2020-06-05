@@ -191,7 +191,7 @@ class Canvas (wx.Panel):
         if max(self.GetClientSize())>20:
             self.initBuffer()
         if len(self.images)+len(self.marks)==0: return
-        self.update()
+        if self.conbox[2] - self.conbox[0] > 1: self.update()
 
     def on_idle(self, event):
         need = sum([i.dirty for i in self.images])

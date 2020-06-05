@@ -2,7 +2,7 @@ import sys
 sys.path.append('../../')
 from skimage.data import astronaut, camera
 from numpy.fft import fft2, fftshift
-from sciwx.canvas import Canvas as Canvas
+from sciwx.canvas import ICanvas as Canvas
 from sciapp.object import Image
 import wx
 
@@ -45,6 +45,7 @@ if __name__ == '__main__':
     #complex_test()
     frame = wx.Frame(None, title='blend')
     canvas = Canvas(frame, autofit=True)
+    
     image = Image()
     image.img = camera()
     image.pos = (0,0)
@@ -57,3 +58,4 @@ if __name__ == '__main__':
     canvas.images.append(image)
     frame.Show()
     app.MainLoop()
+    

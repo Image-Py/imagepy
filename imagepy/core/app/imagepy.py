@@ -15,7 +15,7 @@ from .source import *
 
 class ImagePy(wx.Frame, App):
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'SciApp', 
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', 
                             size = wx.Size(-1,-1), pos = wx.DefaultPosition, 
                             style = wx.RESIZE_BORDER|wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
         App.__init__(self)
@@ -59,7 +59,7 @@ class ImagePy(wx.Frame, App):
     def load_tool(self, data, default=None):
         for i, (name, tols) in enumerate(data[1]):
             self.toolbar.add_tools(name, tols, i==0)
-        if not default is None: self.toolbar.add_pop('P', default)
+        if not default is None: self.toolbar.add_pop('./tools/drop.gif', default)
         self.toolbar.Layout()
 
     def load_widget(self, data):

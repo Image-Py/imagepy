@@ -144,6 +144,7 @@ class Image:
             self.rg = [(0, 255)] * self.channels
         else: 
             self.rg = self.get_updown('all', 'all', step=512)
+        print(self.cn, self.rg, '==========')
 
     def snapshot(self):
         if self.snap is None:

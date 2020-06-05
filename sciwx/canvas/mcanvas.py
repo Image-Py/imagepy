@@ -21,6 +21,7 @@ class ICanvas(Canvas):
         if not b and not isarr: self.images[0] = img
         if b and isarr: self.images[0].back.img = img
         if not b and isarr: self.images[0].img = img
+        [self.images[0], self.images[0].back][b].reset()
         self.update()
 
     def set_log(self, log, b=False):
@@ -194,8 +195,8 @@ class MCanvas(wx.Panel):
     def name(self): return self.canvas.image.name
 
     def set_imgs(self, imgs, b=False):
-        if b: self.canvas.back.imgs = imgs
-        else: self.canvas.image.imgs = imgs
+        if b: self.canvas.back.set_imgs(imgs)
+        else: self.canvas.image.set_imgs(imgs)
         self.canvas.update_box()
         self.update()
 
