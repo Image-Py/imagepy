@@ -47,7 +47,7 @@ def process_one(plg, ips, src, img, para, callafter=None):
     if not callafter is None:callafter()
     
 def process_stack(plg, ips, src, imgs, para, callafter=None):
-    Source.manager('task').add(plt.title, plg)
+    Source.manager('task').add(plg.title, plg)
     start = time()
 
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)

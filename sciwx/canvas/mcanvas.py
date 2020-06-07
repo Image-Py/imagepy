@@ -9,7 +9,7 @@ class ICanvas(Canvas):
     def __init__(self, parent, autofit=False):
         Canvas.__init__(self, parent, autofit)
         self.images.append(Image())
-        self.images[0].back = Image()
+        self.images[0].back = None
         self.Bind(wx.EVT_IDLE, self.on_idle)
 
     def get_obj_tol(self):
@@ -190,6 +190,9 @@ class MCanvas(wx.Panel):
         
     @property
     def image(self): return self.canvas.image
+
+    @property
+    def back(self): return self.canvas.back
 
     @property
     def name(self): return self.canvas.image.name

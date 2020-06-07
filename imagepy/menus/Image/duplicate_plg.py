@@ -32,7 +32,7 @@ class Duplicate(Simple):
             new.roi = ROI(mark2shp(ips.roi.to_mark()))
             offset(new.roi, new.roi.box[0]*-1, new.roi.box[1]*-1)
             new.roi.dirty = True
-        if not ips.back is None:
+        if not ips.back is None and not ips.back.imgs is None:
             back = [i[sli].copy() for i in ips.back.imgs]
             if ips.isarray: back = np.array(back)
             back = Image(back, ips.back.name+'-duplicate')

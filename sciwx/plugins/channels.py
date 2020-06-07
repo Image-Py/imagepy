@@ -170,8 +170,8 @@ class Channels( wx.Panel ):
 	def on_setback(self, event):
 		name = self.com_back.GetValue()
 		if name is None: return
-		ImageManager.get().back = ImageManager.get(name)
-		curwin.ips.update()
+		self.app.get_img().back = self.app.get_img(name)
+		self.app.get_img().update()
 
 	def on_mode(self, event):
 		ips = self.app.get_img()
