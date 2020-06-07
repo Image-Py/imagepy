@@ -41,7 +41,9 @@ class Statistic(Simple):
         etitles = ['PartID', 'StartID', 'EndID', 'Length']
         k, unit = ips.unit
         comid = 0
-        for g in nx.connected_components(ips.data):
+        # for g in nx.connected_components(ips.data):
+        #     for idx in g.nodes():
+        for g in [ips.data.subgraph(c).copy() for c in nx.connected_components(ips.data)]:
             for idx in g.nodes():
                 o = g.nodes[idx]['o']
                 print(idx, g.degree(idx))
@@ -72,7 +74,7 @@ class Sumerise(Simple):
         titles = ['PartID', 'Noeds', 'Edges', 'TotalLength', 'Density', 'AveConnect']
         k, unit = ips.unit
         
-        gs = nx.connected_components(ips.data, False) if para['parts'] else [ips.data]
+        gs = [ips.data.subgraph(c).copy() for c in nx.connected_components(ips.data)] if para['parts'] else [ips.data]
         comid, datas = 0, []
         for g in gs:
             sl = 0
@@ -81,6 +83,8 @@ class Sumerise(Simple):
             datas.append([comid, g.number_of_nodes(), g.number_of_edges(), round(sl*k, 2), 
                 round(nx.density(g), 2), round(nx.average_node_connectivity(g),2)][1-para['parts']:])
             comid += 1
+        # print('======datas=========', datas)
+        # print('======columns=========', titles[1-para['parts']:])
         self.app.show_table(pd.DataFrame(datas, columns=titles[1-para['parts']:]), ips.title+'-graph')
 
 class CutBranch(Filter):
