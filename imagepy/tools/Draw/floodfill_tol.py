@@ -5,13 +5,12 @@ Created on Wed Oct 19 17:35:09 2016
 @author: yxl
 """
 
-from imagepy.core.engine import Tool
+from sciapp.action import ImageTool
 import numpy as np
-from sciapp import Source
 # from imagepy.core.draw.fill import floodfill
 from skimage.morphology import flood_fill, flood
 
-class Plugin(Tool):
+class Plugin(ImageTool):
     title = 'Flood Fill'
     para = {'tor':10, 'con':'8-connect'}
     view = [(int, 'tor', (0,1000), 0, 'torlorance', 'value'),
@@ -19,7 +18,7 @@ class Plugin(Tool):
         
     def mouse_down(self, ips, x, y, btn, **key):
         
-        img, color = ips.img, Source.manager('color').get('front')
+        img, color = ips.img, self.app.manager('color').get('front')
         if int(y)<0 or int(x)<0: return
         if int(y)>=img.shape[0] or int(x)>=img.shape[1]: return 
 

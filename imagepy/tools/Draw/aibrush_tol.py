@@ -1,11 +1,11 @@
-from imagepy.core.engine import Tool
+from sciapp.action import ImageTool
 import numpy as np
 from time import time
 from sciapp import Source
 from skimage.morphology import flood_fill, flood
 from skimage.draw import line, circle
 from skimage.segmentation import felzenszwalb
-# from imagepy.core.mark import GeometryMark
+from sciapp.util import mark2shp
 from scipy.ndimage import binary_fill_holes, binary_dilation, binary_erosion
 
 def fill_normal(img, r, c, color, con, tor):
@@ -128,7 +128,7 @@ out fill:                   | right ctrl + alt
 scale and move:             | wheel
 '''
 
-class Plugin(Tool):
+class Plugin(ImageTool):
     title = 'AI Brush'
     
     para = {'win':48, 'tor':10, 'con':'8-connect', 'ms':30, 'r':2, 'color':(255,0,128)}
@@ -154,7 +154,7 @@ class Plugin(Tool):
             return
 
         self.oldp = self.pickp = (y, x)
-        color = ColorManager.get_front()
+        color = self.app.manager('color').get('front')
         x = int(round(min(max(x,0), ips.img.shape[1])))
         y = int(round(min(max(y,0), ips.img.shape[0])))
         color = (np.mean(color), color)[ips.img.ndim==3]
@@ -199,21 +199,21 @@ class Plugin(Tool):
         if btn==1 and (y,x)==self.pickp and key['ctrl']:
             x = int(round(min(max(x,0), ips.img.shape[1])))
             y = int(round(min(max(y,0), ips.img.shape[0])))
-            ColorManager.set_front(ips.img[y, x])
+            self.app.manager('color').add('front', ips.img[y, x])
         self.status = None
         ips.mark = None
         ips.update()
     
     def make_mark(self, x, y):
         wins = self.para['win']
-        rect = {'type':'rectangle', 'body':(x, y, wins*2, wins*2), 'color':self.para['color']}
+        rect = {'type':'rectangle', 'body':(x-wins, y-wins, wins*2, wins*2), 'color':self.para['color']}
         mark = {'type':'layer', 'body':[rect]}
         r = 2 if self.status=='local_brush' else self.para['r']/2
         mark['body'].append({'type':'circle', 'body':(x, y, r), 'color':self.para['color']})
 
         mark['body'].append({'type':'text', 'body':(x-wins, y-wins, 
             'S:%s W:%s'%(self.para['ms'], self.para['win'])), 'pt':False, 'color':self.para['color']})
-        return GeometryMark(mark)
+        return mark2shp(mark)
 
     def mouse_move(self, ips, x, y, btn, **key):
         if self.status == None and ips.mark != None:
@@ -221,7 +221,7 @@ class Plugin(Tool):
             ips.update()
         if not self.status in ['local_pen','local_brush',
             'local_sketch','local_in','local_out','move']:  return
-        img, color = ips.img, ColorManager.get_front()
+        img, color = ips.img, self.app.manager('color').get('front')
         x = int(round(min(max(x,0), img.shape[1])))
         y = int(round(min(max(y,0), img.shape[0])))
         
@@ -230,7 +230,6 @@ class Plugin(Tool):
             key['canvas'].move(x-self.oldp[0], y-self.oldp[1])
             self.oldp = x, y
             ips.update()
-            print('move')
             return
 
         rs, cs = line(*[int(round(i)) for i in self.oldp + (y, x)])
@@ -246,7 +245,7 @@ class Plugin(Tool):
             sc = (max(0,c-w), min(img.shape[1], c+w))
             r, c = min(r, w), min(c, w)
             backclip = imgclip = img[slice(*sr), slice(*sc)]
-            if not ips.back is None: 
+            if not ips.back.img is None: 
                 backclip = ips.back.img[slice(*sr), slice(*sc)]
 
             if self.status == 'local_pen':

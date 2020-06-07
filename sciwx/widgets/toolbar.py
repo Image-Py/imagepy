@@ -46,6 +46,7 @@ class ToolBar(wx.Panel):
         btn.SetBackgroundColour(wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVECAPTION ) )
 
     def on_config(self, evt, tol):
+        if not hasattr(tol, 'view'): return
         self.app.show_para(tol.title, tol.view, tol.para)
         tol.config()
 

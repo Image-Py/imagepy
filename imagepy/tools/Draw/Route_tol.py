@@ -4,15 +4,17 @@ Created on Wed Oct 19 17:35:09 2016
 
 @author: yxl
 """
-import wx
 from imagepy.core.engine import Tool,Filter
 import numpy as np
+from sciapp.util import mark2shp
+from sciapp.action import ImageTool
 #from imagepy.core.manager import ColorManager
 #from imagepy.core.roi import lineroi
 #from imagepy.core.mark import GeometryMark
 from skimage.graph import route_through_array
 import scipy.ndimage as ndimg
-def route_through(ips, snap,poins,para):
+
+def route_through(ips, snap, poins,para):
     para['max']=True
     para['lcost']=2
     img = snap.astype('float32')
@@ -27,7 +29,7 @@ def route_through(ips, snap,poins,para):
             routes.append(indices)
     return routes
 
-class Plugin(Tool):
+class Plugin(ImageTool):
     title = 'Route Toolk'
     note = ['auto_snap','8-bit', '16-bit','int', 'float','2int', 'preview']
     para = {'fully connected':True, 'lcost':0, 'max':False, 'geometric':True, 'type':'ROI'}
@@ -36,13 +38,14 @@ class Plugin(Tool):
             (bool, 'fully connected', 'fully connected'),
             (bool, 'geometric', 'geometric'),
             (list, 'type', ['white line', 'ROI'], str, 'output', '')]
+
     def __init__(self):
         self.curobj = None
         self.doing = 'Nothing'
         #初始化线条缓存
         # self.helper = AnchorLine()
         self.odx,self.ody = 0, 0
-        self.cursor = wx.CURSOR_CROSS
+        self.cursor = 'cross'
         self.buf=[]
 
     def mouse_down(self, ips, x, y, btn, **key):
@@ -75,7 +78,7 @@ class Plugin(Tool):
             if self.doing=='Nothing':
                 if len(self.buf) == 0:
                     self.doing ='draw'
-            elif self.doing=='draw' and self.cursor==wx.CURSOR_HAND:
+            elif self.doing=='draw' and self.cursor=='hand':
                 a=self.in_points(x,y,lim)
                 if a!=(-1,-1):
                     # print('doing to move')
@@ -93,7 +96,7 @@ class Plugin(Tool):
                 self.doing='Nothing'
                 self.draw(ips)
                 return
-            if self.doing=='draw' and self.cursor==wx.CURSOR_CROSS:
+            if self.doing=='draw' and self.cursor=='cross':
                 self.addpoint((x,y))
                 self.draw(ips)
         elif btn == 3:
@@ -109,11 +112,11 @@ class Plugin(Tool):
                 self.doing='down'
 
     def mouse_up(self, ips, x, y, btn, **key):
-
         if self.doing == 'move' and btn == 1:
             self.doing = 'draw'
         elif self.doing == 'all_move' and  btn ==2:
             self.doing = self.do_old
+
     def mouse_move(self, ips, x, y, btn, **key):
         if len(self.buf)==0:return
         lim = 5.0/key['canvas'].scale  
@@ -125,10 +128,10 @@ class Plugin(Tool):
                 self.draw(ips)
         elif btn==None:
             #鼠标变成一个十字架
-            self.cursor = wx.CURSOR_CROSS
+            self.cursor = 'cross'
             a=self.in_points(x,y,lim)
             if a!=(-1,-1):
-                self.cursor = wx.CURSOR_HAND
+                self.cursor = 'hand'
         if self.doing == 'all_move':
             x,y = key['canvas'].to_panel_coor(x,y)
             key['canvas'].move(x-self.oldp[0], y-self.oldp[1])
@@ -136,6 +139,7 @@ class Plugin(Tool):
             ips.update()
             # print('move')
         self.odx, self.ody = x, y
+
     def in_points(self,x,y,range):
         for i in self.buf:
             if ((i[0]>x-range) and (i[0]<x+range)) and  ((i[1]>y-range) and (i[1]<y+range)):
@@ -143,17 +147,23 @@ class Plugin(Tool):
                 return i
         #返回没有找到
         return (-1,-1)
+
     def mouse_wheel(self, ips, x, y, d, **key):pass
+
     def pop(self):
         a = self.buf
         self.buf = []
         return a
+
     def change(self,location,val):
         self.buf[location]=val
+
     def delete(self,location):
         self.buf.pop(location)
+
     def addpoint(self, p):
         self.buf.append(p)
+
     def draw(self,ips):
         mark = {'type':'layers', 'body':{}}
         layer = {'type':'layer', 'body':[]}
@@ -164,7 +174,7 @@ class Plugin(Tool):
             for line in lines:lst.append([(j,i) for i,j in line])
             layer['body'].append({'type':'lines', 'body':lst})
         mark['body'][0] = layer
-        ips.mark = GeometryMark(mark)
+        ips.mark = mark2shp(mark)
         ips.update()     
         
     def mouse_wheel(self, ips, x, y, d, **key):
