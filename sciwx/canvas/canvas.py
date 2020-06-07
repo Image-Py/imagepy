@@ -162,6 +162,8 @@ class Canvas (wx.Panel):
                     winbox=self.winbox, oribox=self.oribox, conbox=self.conbox)
         dc.UnMask()
         
+        self.dc = dc
+
         counter[1] += time()-start
         if counter[0] == 50:
             print('frame rate:',int(50/max(0.001,counter[1])))
@@ -259,6 +261,41 @@ class Canvas (wx.Panel):
         y += -self.oribox[1] * self.scale + self.conbox[1]
         if self.up: y = (self.winbox[3]-self.winbox[1]) - y
         return x, y
+
+    def save_buffer(self, path):
+        dcSource = self.dc
+        # based largely on code posted to wxpython-users by Andrea Gavana 2006-11-08
+        size = dcSource.Size
+
+        # Create a Bitmap that will later on hold the screenshot image
+        # Note that the Bitmap must have a size big enough to hold the screenshot
+        # -1 means using the current default colour depth
+        bmp = wx.Bitmap(size.width, size.height)
+
+        # Create a memory DC that will be used for actually taking the screenshot
+        memDC = wx.MemoryDC()
+
+        # Tell the memory DC to use our Bitmap
+        # all drawing action on the memory DC will go to the Bitmap now
+        memDC.SelectObject(bmp)
+
+        # Blit (in this case copy) the actual screen on the memory DC
+        # and thus the Bitmap
+        memDC.Blit( 0, # Copy to this X coordinate
+            0, # Copy to this Y coordinate
+            size.width, # Copy this width
+            size.height, # Copy this height
+            dcSource, # From where do we copy?
+            0, # What's the X offset in the original DC?
+            0  # What's the Y offset in the original DC?
+            )
+
+        # Select the Bitmap out of the memory DC by selecting a new
+        # uninitialized Bitmap
+        memDC.SelectObject(wx.NullBitmap)
+
+        img = bmp.ConvertToImage()
+        img.SaveFile(path, wx.BITMAP_TYPE_PNG)
 
     def __del__(self):
         # self.img = self.back = None
