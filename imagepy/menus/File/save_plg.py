@@ -19,6 +19,6 @@ class WindowCapture(fileio.Writer):
 	filt = ['PNG']
 
 	def run(self, ips, imgs, para = None):
-		WindowsManager.get().canvas.save_buffer(para['path'])
+		self.app.get_img_win().canvas.save_buffer(para['path'])
 
 plgs = [SaveImage, WindowCapture]

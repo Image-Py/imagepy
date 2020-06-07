@@ -69,7 +69,7 @@ class Writer(Simple):
     def run(self, ips, imgs, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        writer = Source.manager('writer').get(ext=fe[1:], tag='img')
+        writer = Source.manager('writer').gets(name=fe[1:])
         if len(writer)==1: return writer[0][1](para['path'], ips.img)
         writer = Source.manager('writer').get(fe[1:], 'imgs')
         if len(writer)==1: return writer[0][1](para['path'], imgs)

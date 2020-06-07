@@ -59,7 +59,7 @@ class ImagePy(wx.Frame, App):
     def load_tool(self, data, default=None):
         for i, (name, tols) in enumerate(data[1]):
             self.toolbar.add_tools(name, tols, i==0)
-        if not default is None: self.toolbar.add_pop('./tools/drop.gif', default)
+        if not default is None: self.toolbar.add_pop('./imagepy/tools/drop.gif', default)
         self.toolbar.Layout()
 
     def load_widget(self, data):
