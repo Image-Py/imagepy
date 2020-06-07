@@ -161,8 +161,6 @@ class Canvas (wx.Panel):
                 drawmark(dc, self.to_panel_coor, i, k=self.scale, cur=0,
                     winbox=self.winbox, oribox=self.oribox, conbox=self.conbox)
         dc.UnMask()
-        
-        self.dc = dc
 
         counter[1] += time()-start
         if counter[0] == 50:
@@ -263,7 +261,7 @@ class Canvas (wx.Panel):
         return x, y
 
     def save_buffer(self, path):
-        dcSource = self.dc
+        dcSource = wx.BufferedDC(wx.ClientDC(self), self.buffer)
         # based largely on code posted to wxpython-users by Andrea Gavana 2006-11-08
         size = dcSource.Size
 
