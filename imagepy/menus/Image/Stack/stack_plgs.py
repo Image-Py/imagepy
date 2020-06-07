@@ -11,8 +11,10 @@ class SetSlice(Simple):
     
     #parameter
     para = {'num':0}
-    view = [(int, 'num', (0,999), 0, 'Num', '')]
 
+    def load(self, ips):
+        self.view = [(int, 'num', (0, ips.slices-1), 0, 'Num', '0~%d'%(ips.slices-1))]
+        return True
     #process
     def run(self, ips, imgs, para = None):
         if para['num']>=0 and para['num']<ips.slices:
@@ -57,8 +59,15 @@ class Sub(Simple):
     note = ['all']
 
     para = {'start':0, 'end':10}
+
+
     view = [(int, 'start', (0,1e8), 0, 'start', 'slice'),
             (int, 'end', (0,1e8), 0, 'end', 'slice')]
+
+    def load(self, ips):
+        self.view = [(int, 'start', (0,ips.slices-1), 0, 'start', '0~%d'%(ips.slices-1)),
+                     (int, 'end', (0,ips.slices-1), 0, 'end', '0~%d'%(ips.slices-1))]
+        return True
 
     def run(self, ips, imgs, para = None):
         s, e = para['start'], para['end']

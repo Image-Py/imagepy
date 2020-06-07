@@ -178,7 +178,7 @@ class MCanvas(wx.Panel):
         self.set_mode = self.canvas.set_mode
         self.set_tool = self.canvas.set_tool
 
-        self.chans, self.pages, self.cn = -1, -1, -1
+        self.chans, self.pages, self.cn, self.cur = -1, -1, -1, -1
 
     def set_img(self, img, b=False):
         self.canvas.set_img(img, b)
@@ -207,22 +207,23 @@ class MCanvas(wx.Panel):
     def slider(self):
         slices = self.image.slices
         channels = self.image.channels
-        if slices != self.pages:
+        if slices != self.pages or self.image.cur != self.cur:
             print('set slices')
             if slices==1 and self.sli_page.Shown:
                 self.sli_page.Hide()
             if slices>1 and not self.sli_page.Shown:
                 self.sli_page.Show()
-            self.sli_page.SetScrollbar(0, 0, slices-1, 0)
-            self.pages = slices
+            self.sli_page.SetScrollbar(self.image.cur, 0, slices-1, 0, True)
+            self.pages, self.cur = slices, self.image.cur
         if channels != self.chans or self.cn != self.image.cn:
             print('set channels')
             if not isinstance(self.image.cn, int) and self.sli_chan.Shown:
                 self.sli_chan.Hide()
             if isinstance(self.image.cn, int) and channels>1:
                 if not self.sli_chan.Shown: self.sli_chan.Show()
+                self.sli_chan.SetValue(self.image.cn)
             self.sli_chan.SetMax(channels-1)
-            self.chans, self.cn = channels, self.canvas.image.cn
+            self.chans, self.cn = channels, self.image.cn
 
     def update(self):
         if self.image.img is None: return
@@ -241,8 +242,8 @@ class MCanvas(wx.Panel):
     
     def on_idle(self, event):
         image, info = self.image, self.lab_info.GetLabel()
-        imgs = image.slices, image.channels, image.cn
-        selfs = self.pages ,self.chans, self.cn
+        imgs = image.slices, image.channels, image.cn, image.cur
+        selfs = self.pages ,self.chans, self.cn, self.cur
         if imgs != selfs or info!=self.image.info: 
             self.update()
 
