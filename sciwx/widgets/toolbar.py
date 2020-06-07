@@ -1,4 +1,5 @@
 import wx
+from .paradialog import ParaDialog
 
 def make_logo(obj):
     if isinstance(obj, str) and len(obj)>1:
@@ -34,7 +35,7 @@ class ToolBar(wx.Panel):
         self.curbtn = None
 
     def on_tool(self, evt, tol):
-        tol().start(self.app)
+        tol.start(self.app)
         evt.Skip()
         btn = evt.GetEventObject()
         #print(self.GetBackgroundColour())
@@ -44,9 +45,26 @@ class ToolBar(wx.Panel):
         self.curbtn = btn
         btn.SetBackgroundColour(wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVECAPTION ) )
 
+    def on_config(self, evt, tol):
+        self.app.show_para(tol.title, tol.view, tol.para)
+        tol.config()
+
+    def on_help(self, evt, tol):
+        pass
+
+    def on_info(self, event, tol):
+        pass
+
     def bind(self, btn, tol):
+        obj = tol()
         btn.SetBackgroundColour(self.GetBackgroundColour())
-        btn.Bind( wx.EVT_LEFT_DOWN, lambda e, obj=tol: self.on_tool(e, obj))
+        btn.Bind( wx.EVT_LEFT_DOWN, lambda e, obj=obj: self.on_tool(e, obj))
+
+        #btn.Bind( wx.EVT_RIGHT_DOWN, lambda x, p=data[0]: IPy.show_md(p.title, DocumentManager.get(p.title)))
+        #btn.Bind( wx.EVT_ENTER_WINDOW, 
+        #          lambda x, p='"{}" Tool'.format(data[0].title): set_info(p))        
+        #if not isinstance(data[0], Macros) and issubclass(data[0], Tool):
+        btn.Bind(wx.EVT_LEFT_DCLICK, lambda e, obj=obj: self.on_config(e, obj))
             
     def add_tool(self, logo, tool):
         btn = wx.BitmapButton(self, wx.ID_ANY, make_logo(logo), 

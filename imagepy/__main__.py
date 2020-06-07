@@ -2,17 +2,6 @@ import wx, sys
 sys.path.append('../')
 from imagepy.core.app import loader, ImagePy
 
-'''
-from sciapp.action import ImgAction, Tool, DefaultTool
-from sciwx.plugins.curve import Curve
-from sciwx.plugins.channels import Channels
-from sciwx.plugins.histogram import Histogram
-from sciwx.plugins.viewport import ViewPort
-from sciwx.plugins.filters import Gaussian, Undo
-from sciwx.plugins.pencil import Pencil
-from sciwx.plugins.io import Open, Save
-'''
-
 def extend_plgs(plg):
     if isinstance(plg, tuple):
         return (plg[0].title, extend_plgs(plg[1]))

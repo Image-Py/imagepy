@@ -1,5 +1,4 @@
-from imagepy.core.engine import Tool
-from sciapp import Source
+from sciapp.action import ImageTool
 from skimage.draw import line, circle
 
 def drawline(img, oldp, newp, w, value):
@@ -10,7 +9,7 @@ def drawline(img, oldp, newp, w, value):
     xs = (ox.reshape((-1,1))+cx).clip(0, img.shape[1]-1)
     img[ys.ravel(), xs.ravel()] = value
 
-class Plugin(Tool):
+class Plugin(ImageTool):
     title = 'Pencil'
     
     para = {'width':1}
@@ -31,7 +30,7 @@ class Plugin(Tool):
     def mouse_move(self, ips, x, y, btn, **key):
         if not self.status:return
         w = self.para['width']
-        value = Source.manager('color').get('front')
+        value = self.app.manager('color').get('front')
         drawline(ips.img, self.oldp, (y, x), w, value)
         self.oldp = (y, x)
         ips.update()

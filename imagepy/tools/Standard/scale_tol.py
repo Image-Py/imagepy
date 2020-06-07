@@ -1,12 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Oct 19 17:35:09 2016
+from sciapp.action import ImageTool
 
-@author: yxl
-"""
-from imagepy.core.engine import Tool
-
-class Plugin(Tool):
+class Plugin(ImageTool):
     title = 'Scope'
     def __init__(self):
         self.ox, self.oy = 0, 0

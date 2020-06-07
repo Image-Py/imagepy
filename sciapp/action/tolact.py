@@ -4,6 +4,10 @@ class Tool(SciAction):
     title = 'Base Tool'
     default = None
     cursor = 'arrow'
+    view = None
+    para = None
+
+    def config(self): pass
     def mouse_down(self, canvas, x, y, btn, **key): pass
     def mouse_up(self, canvas, x, y, btn, **key): pass
     def mouse_move(self, canvas, x, y, btn, **key): pass

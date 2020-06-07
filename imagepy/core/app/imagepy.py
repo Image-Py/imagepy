@@ -40,6 +40,10 @@ class ImagePy(wx.Frame, App):
         self.Bind(wx.EVT_CLOSE, self.on_close)
         self.Bind(aui.EVT_AUI_PANE_CLOSE, self.on_pan_close)
 
+    def source(self):
+        self.manager('color').add('front', (255, 255, 255))
+        self.manager('color').add('back', (0, 0, 0))
+
     def init_status(self):
         self.stapanel = stapanel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         sizersta = wx.BoxSizer( wx.HORIZONTAL )

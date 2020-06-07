@@ -1,5 +1,6 @@
 from .tolact import ShapeTool
 from sciapp.object import *
+from sciapp.util import geom_union
 from numpy.linalg import norm
 import numpy as np
 
@@ -239,7 +240,7 @@ class BaseEditor(ShapeTool):
 				else: shp.body.remove(obj)
 				shp.dirty = True
 			if key['shift'] and not key['alt'] and not key['ctrl']:
-				layer = geom2shp(union(shp.to_geom()))
+				layer = geom2shp(geom_union(shp.to_geom()))
 				shp.body = layer.body
 				shp.dirty = True
 			if not (key['shift'] or key['alt'] or key['ctrl']):
