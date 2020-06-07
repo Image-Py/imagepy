@@ -17,6 +17,7 @@ class Surface:
 		self.visible = True
 		self.width = 1
 		self.update = False
+		self.color = (0,0,0)
 		self.set_style(**key)
 
 	def set_style(self, **key):
@@ -35,10 +36,12 @@ class MarkText(Surface):
 		self.os = os
 		self.h = h
 		self.box = None
+		self.alpha = 1
 		self.visible = True
 		self.width = 1
 		self.mode = 'grid'
 		self.update = False
+		self.color = (0,0,0)
 
 class MeshSet:
 	def __init__(self, name='meshset', objs=None):

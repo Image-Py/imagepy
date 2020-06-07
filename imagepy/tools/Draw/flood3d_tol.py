@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Oct 19 17:35:09 2016
-
-@author: yxl
-"""
-
 from sciapp.action import ImageTool
 import numpy as np
 from skimage.morphology import flood_fill, flood

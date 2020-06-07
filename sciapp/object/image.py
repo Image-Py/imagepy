@@ -7,7 +7,7 @@ def get_updown(imgs, slices='all', chans='all', step=1):
     if isinstance(slices, int): imgs = [imgs[slices]]
     if step<=1: step = int(1/step+0.5)
     else: step = int(min(imgs[0].shape[:2])/step+0.5)
-    s = slice(None, None, max(step,1))
+    s = slice(None, None, max(step, 1))
     s = (s,s,c)[:imgs[0].ndim]
     mins = [i[s].min(axis=(0,1)) for i in imgs]
     maxs = [i[s].max(axis=(0,1)) for i in imgs]
@@ -144,11 +144,12 @@ class Image:
             self.rg = [(0, 255)] * self.channels
         else: 
             self.rg = self.get_updown('all', 'all', step=512)
-        print(self.cn, self.rg, '==========')
 
     def snapshot(self):
-        if self.snap is None:
-            self.snap = self.img.copy()
+        dif = self.snap is None
+        dif = dif or self.snap.shape != self.img.shape
+        dif = dif or self.snap.dtype != self.img.dtype
+        if dif: self.snap = self.img.copy()
         else: self.snap[:] = self.img
 
     def swap(self):

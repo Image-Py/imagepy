@@ -239,7 +239,7 @@ class ImagePy(wx.Frame, App):
         if mesh is None:
             canvas = self.meshnb.add_canvas()
             canvas.mesh.name = 'Surface'
-        elif hasattr(mesh, 'ns'):
+        elif hasattr(mesh, 'vts'):
             canvas = self.get_mesh_win()
             if canvas is None:
                 canvas = self.meshnb.add_canvas()

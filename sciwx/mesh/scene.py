@@ -81,10 +81,10 @@ class Scene:
                 }
 			''')
 		for i in self.objs:
-			if isinstance(self.objs[i], Surface): 
-				self.ctx_obj(self.ctx, self.prog_suf, self.objs[i], i)
 			if isinstance(self.objs[i], MarkText): 
 				self.ctx_txt(self.ctx, self.prog_txt, self.objs[i], i)
+			elif isinstance(self.objs[i], Surface): 
+				self.ctx_obj(self.ctx, self.prog_suf, self.objs[i], i)
 
 	@property
 	def objs(self): return self.meshset.objs
@@ -111,10 +111,10 @@ class Scene:
 
 	def add_surf(self, name, obj):
 		if not self.ctx is None:
-			if isinstance(obj, Surface):
-				self.ctx_obj(self.ctx, self.prog_suf, obj, name)
 			if isinstance(obj, MarkText):
 				self.ctx_txt(self.ctx, self.prog_txt, obj, name)
+			elif isinstance(obj, Surface):
+				self.ctx_obj(self.ctx, self.prog_suf, obj, name)
 		self.objs[name] = obj
 		self.count_box()
 
@@ -151,8 +151,8 @@ class Scene:
 		#self.ctx.enable(ModernGL.CULL_FACE)
 		self.ctx.enable(moderngl.BLEND)
 		for i in self.objs: 
-			prog = self.prog_suf if isinstance(self.objs[i], Surface) else self.prog_txt
-			draw = self.draw_obj if isinstance(self.objs[i], Surface) else self.draw_txt
+			prog = self.prog_txt if isinstance(self.objs[i], MarkText) else self.prog_suf
+			draw = self.draw_txt if isinstance(self.objs[i], MarkText) else self.draw_obj
 			draw(i, self.objs[i], self.ctx, prog, self.mvp, self.light, self.bright, self.scatter)
 
 	def count_box(self):

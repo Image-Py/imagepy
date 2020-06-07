@@ -126,24 +126,24 @@ class App():
         return self.wtab_manager.get(name)
 
     def add_mesh(self, mesh):
-        mesh.name = self.mesh_manager.name('name', obj=tab, name=mesh.name)
-        self.mesh_manager.add(obj=mesh, name=mesh.name)
+        if not self.mesh_manager.has(mesh.name, obj=mesh):
+            mesh.name = self.mesh_manager.name(mesh.name)
+        self.mesh_manager.add(mesh.name, mesh)
 
     def remove_mesh(self, mesh):
-        print('remove', mesh.name)
         self.mesh_manager.remove(obj=mesh)
 
     def add_mesh_win(self, win):
-        self.wmesh_manager.add(obj=win, name=win.name, check=False)
+        self.wmesh_manager.add(win.name, win)
 
     def remove_mesh_win(self, win):
         self.wmesh_manager.remove(obj=win)
 
     def get_mesh(self, name=None):
-        return self.mesh_manager.get(name=name)
+        return self.mesh_manager.get(name)
     
     def get_mesh_name(self):
-        return self.mesh_manager.gets('name')
+        return self.mesh_manager.names()
     
     def get_mesh_win(self, name=None):
-        return self.wmesh_manager.get(name=name)
+        return self.wmesh_manager.get(name)

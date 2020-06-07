@@ -5,6 +5,8 @@ from itertools import combinations
 import networkx as nx
 import numpy as np
 import pandas as pd
+from sciapp.object import Surface, MarkText
+from sciapp.util import surfutil
 norm = np.linalg.norm
 
 class Skeleton3D(Simple):
@@ -28,19 +30,12 @@ class Show3DGraph(Simple):
 	title = 'Show Graph 3D'
 	note = ['8-bit', 'stack3d']
 
-	para = {'r':1, 'ncolor':(255,0,0), 'lcolor':(0,0,255)}
+	para = {'r':1, 'ncolor':(255,0,0), 'lcolor':(0,0,255), 'pcolor':(0,255,0)}
 	view = [(int, 'r', (1,100), 0, 'radius', 'pix'),
 			('color', 'ncolor', 'node', 'rgb'),
-			('color', 'lcolor', 'line', 'rgb')]
+			('color', 'lcolor', 'line', 'rgb'),
+			('color', 'pcolor', 'path', 'rgb')]
 
-	def load(self, ips):
-		if not isinstance(ips.data, nx.MultiGraph):
-			IPy.alert("Please build graph!");
-			return False;
-		self.frame = myvi.Frame3D.figure(IPy.curapp, title='3D Canvas')
-		return True;
-
-	#process
 	def run(self, ips, imgs, para = None):
 		balls, ids, rs, graph = [], [], [], ips.data
 		for idx in graph.nodes():
@@ -62,44 +57,37 @@ class Show3DGraph(Simple):
 
 		rs = [para['r']] * len(balls)
 		cs = tuple(np.array(para['ncolor'])/255.0)
-		vts, fs, ns, cs = myvi.build_balls(balls, rs, cs)
-		self.frame.viewer.add_surf_asyn('balls', vts, fs, ns, cs)
+		vts, fs, ns, cs = surfutil.build_balls(balls, rs, cs)
+		self.app.show_mesh(Surface(vts, fs, ns, cs), 'balls')
 
-		vts, fs, pos, h, color = myvi.build_marks(['ID:%s'%i for i in ids], balls, para['r'], para['r'], (1,1,1))
-		self.frame.viewer.add_mark_asyn('txt', vts, fs, pos, h, color)
+		vts, fs, pos, h, color = surfutil.build_marks(['ID:%s'%i for i in ids], balls, para['r'], para['r'], (1,1,1))
+		self.app.show_mesh(MarkText(vts, fs, pos, h, color), 'txt')
 
 		cs = tuple(np.array(para['lcolor'])/255.0)
-		vts, fs, ns, cs = myvi.build_lines(xs, ys, zs, cs)
-		self.frame.viewer.add_surf_asyn('paths', vts, fs, ns, cs, mode='grid')
-		vts, fs, ns, cs = myvi.build_lines(lxs, lys, lzs, (0,1,0))
-		self.frame.viewer.add_surf_asyn('lines', vts, fs, ns, cs, mode='grid')
-		self.frame.Raise()
-		self.frame = None
+		vts, fs, ns, cs = surfutil.build_lines(xs, ys, zs, cs)
+		self.app.show_mesh(Surface(vts, fs, ns, cs, mode='grid'), 'path')
+
+		cs = tuple(np.array(para['pcolor'])/255.0)
+		vts, fs, ns, cs = surfutil.build_lines(lxs, lys, lzs, cs)
+		self.app.show_mesh(Surface(vts, fs, ns, cs, mode='grid'), 'lines')
+
 
 class Show3DGraphR(Simple):
 	title = 'Show Graph R 3D'
 	note = ['8-bit', 'stack3d']
 
-	para = {'dis':None, 'ncolor':(255,0,0), 'lcolor':(0,0,255)}
+	para = {'dis':None, 'ncolor':(255,0,0), 'lcolor':(0,0,255), 'pcolor':(0,255,0)}
 	view = [('img', 'dis', 'distance', 'map'),
 			('color', 'ncolor', 'node', 'rgb'),
-			('color', 'lcolor', 'line', 'rgb')]
-
-	def load(self, ips):
-		if not isinstance(ips.data, nx.MultiGraph):
-			IPy.alert("Please build graph!");
-			return False;
-		self.frame = myvi.Frame3D.figure(IPy.curapp, title='3D Canvas')
-		return True;
-
+			('color', 'lcolor', 'line', 'rgb'),
+			('color', 'pcolor', 'path', 'rgb')]
 	#process
 	def run(self, ips, imgs, para = None):
-		dis = ImageManager.get(para['dis']).imgs
+		dis = self.app.get_img(para['dis']).imgs
 		balls, ids, rs, graph = [], [], [], ips.data
 		for idx in graph.nodes():
 			ids.append(idx)
 			balls.append(graph.nodes[idx]['o'])
-
 
 		xs, ys, zs = [], [], []
 		v1s, v2s = [], []
@@ -113,27 +101,31 @@ class Show3DGraphR(Simple):
 				xs.append(pts[:,0])
 				ys.append(pts[:,1])
 				zs.append(pts[:,2])
+
 		rs1 = dis[list(np.array(v1s).astype(np.int16).T)]
 		rs2 = dis[list(np.array(v2s).astype(np.int16).T)]
 		rs1 = list(np.clip(rs1, 2, 1e4)*0.5)
 		rs2 = list(np.clip(rs2, 2, 1e4)*0.5)
 		rs = dis[list(np.array(balls).astype(np.int16).T)]
 		rs = list(np.clip(rs, 2, 1e4))
-		cs = tuple(np.array(para['ncolor'])/255.0)
-		vts, fs, ns, cs = myvi.build_balls(balls, rs, cs)
-		self.frame.viewer.add_surf_asyn('balls', vts, fs, ns, cs)
-		meansize = sum(rs)/len(rs)
-		vts, fs, pos, h, color = myvi.build_marks(['ID:%s'%i for i in ids], balls, rs, meansize, (1,1,1))
-		self.frame.viewer.add_mark_asyn('txt', vts, fs, pos, h, color)
 
-		css = tuple(np.array(para['lcolor'])/255.0)
-		vts, fs, ns, cs = myvi.build_lines(xs, ys, zs, css)
-		self.frame.viewer.add_surf_asyn('paths', vts, fs, ns, cs, mode='grid')
-		#vts, fs, ns, cs = myvi.build_lines(lxs, lys, lzs, (0,1,0))
-		vts, fs, ns, cs = myvi.build_arrows(v1s, v2s, rs1, rs2, 0, 0, css)
-		self.frame.viewer.add_surf_asyn('lines', vts, fs, ns, cs)
-		self.frame.Raise()
-		self.frame = None
+		print(balls, rs1, rs2, rs)
+
+		cs = tuple(np.array(para['ncolor'])/255.0)
+		vts, fs, ns, cs = surfutil.build_balls(balls, rs, cs)
+		self.app.show_mesh(Surface(vts, fs, ns, cs), 'balls')
+
+		meansize = sum(rs)/len(rs)
+		vts, fs, pos, h, color = surfutil.build_marks(['ID:%s'%i for i in ids], balls, rs, meansize, (1,1,1))
+		self.app.show_mesh(MarkText(vts, fs, pos, h, color), 'txt')
+
+		cs = tuple(np.array(para['lcolor'])/255.0)
+		vts, fs, ns, cs = surfutil.build_lines(xs, ys, zs, cs)
+		self.app.show_mesh(Surface(vts, fs, ns, cs, mode='grid'), 'path')
+
+		cs = tuple(np.array(para['pcolor'])/255.0)
+		vts, fs, ns, cs = surfutil.build_arrows(v1s, v2s, rs1, rs2, 0, 0, cs)
+		self.app.show_mesh(Surface(vts, fs, ns, cs), 'lines')
 
 class Statistic(Simple):
 	title = 'Graph Statistic 3D'

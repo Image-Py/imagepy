@@ -38,20 +38,21 @@ class ToRGB(Simple):
     note = ['all']
 
     def run(self, ips, imgs, para = None):
-        if ips.imgtype == 'rgb': return
-        n = ips.get_nslices()
-        if ips.is3d:
+        if ips.dtype == np.uint8 and ips.channels == 3: return
+        n = ips.slices
+
+        if ips.isarray:
             imgrgb = np.zeros(ips.size+(n,), dtype=np.uint8)
             if ips.dtype == np.uint8: img8 = imgs
             else:
-                minv, maxv = ips.get_updown()
+                minv, maxv = ips.range
                 k = 255.0/(max(1e-8, maxv-minv))
                 bf = np.clip(imgs, minv, maxv)
                 img8 = ((bf - minv) * k).astype(np.uint8)
             rgb = ips.lut[img8]
         else:
             rgb = []
-            minv, maxv = ips.get_updown()
+            minv, maxv = ips.range
             for i in range(n):
                 self.progress(i, len(imgs))
                 if ips.dtype==np.uint8:
