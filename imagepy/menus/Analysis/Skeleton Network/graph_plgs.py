@@ -31,7 +31,7 @@ class Statistic(Simple):
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):
-            IPy.alert("Please build graph!");
+            self.app.alert("Please build graph!");
             return False;
         return True;
 

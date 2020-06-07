@@ -67,14 +67,20 @@ class Clear(Filter):
     note = ['req_roi', 'all', 'auto_snap', 'not_channel']
 
     def run(self, ips, snap, img, para=None):
-        img[ips.mask()] = ColorManager.get_back(ips.channels!=3)
+        color = self.app.manager('color').get('back')
+        color = np.array([color]).ravel()
+        if ips.channels != len(color): color = color.mean()
+        img[ips.mask()] = color
         
 class ClearOut(Filter):
     title = 'Clear Out'
     note = ['req_roi', 'all', 'auto_snap', 'not_channel']
 
     def run(self, ips, snap, img, para=None):
-        img[ips.mask('out')] = ColorManager.get_back(ips.channels!=3)
+        color = self.app.manager('color').get('back')
+        color = np.array([color]).ravel()
+        if ips.channels != len(color): color = color.mean()
+        img[ips.mask('out')] = color
         
 class Copy(Simple):
     title = 'Copy'
@@ -97,14 +103,20 @@ class Sketch(Filter):
     view = [(int, 'width', (0,30), 0,  'width', 'pix')]
 
     def run(self, ips, snap, img, para = None):
-        img[ips.mask(para['width'])] = ColorManager.get_front(ips.channels!=3)
+        color = self.app.manager('color').get('front')
+        color = np.array([color]).ravel()
+        if ips.channels != len(color): color = color.mean()
+        img[ips.mask(para['width'])] = color
         
 class Fill(Filter):
     title = 'Fill'
     note = ['req_roi', 'all', 'auto_snap', 'not_channel']
 
     def run(self, ips, snap, img, para=None):
-        img[ips.mask()] = ColorManager.get_front(ips.channels!=3)
+        color = self.app.manager('color').get('front')
+        color = np.array([color]).ravel()
+        if ips.channels != len(color): color = color.mean()
+        img[ips.mask()] = color
         
 class Undo(Simple):
     title = 'Undo'

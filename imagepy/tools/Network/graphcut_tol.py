@@ -1,14 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Oct 19 17:35:09 2016
-@author: yxl
-"""
-from imagepy.core.engine import Tool
+from sciapp.action import ImageTool
+from sciapp.object import mark2shp
 import numpy as np
-import wx
-from numba import jit
 
-@jit(nopython=True)
 def floodfill(img, x, y):
     buf = np.zeros((131072,2), dtype=np.uint16)
     color = img[int(y), int(x)]
@@ -53,36 +46,30 @@ def cut(img, lines):
                 floodfill(img, xx, yy)
         ox, oy = i
 
-class Mark():
-    def __init__(self, line):
-        self.line = line
-
-    def draw(self, dc, f, **key):
-        dc.SetPen(wx.Pen((255,0,0), width=2, style=wx.SOLID))
-        dc.DrawLines([f(*i) for i in self.line])
-
-class Plugin(Tool):
+class Plugin(ImageTool):
     title = 'Graph Cut'
     def __init__(self):
         self.status = 0
+        self.line = {'type':'line', 'body':[]}
             
     def mouse_down(self, ips, x, y, btn, **key):
         if btn==1:
             ips.snapshot()
             self.status = 1
-            self.cur = [(x, y)]
-            ips.mark = Mark(self.cur)
+            self.line['body'] = [(x, y)]
+            ips.mark = mark2shp(self.line)
             ips.update()
     
     def mouse_up(self, ips, x, y, btn, **key):
         ips.mark = None
         self.status = 0
-        cut(ips.img, self.cur)
+        cut(ips.img, self.line['body'])
         ips.update()
     
     def mouse_move(self, ips, x, y, btn, **key):
         if self.status==1:
-            self.cur.append((x, y))
+            self.line['body'].append((x, y))
+            ips.mark = mark2shp(self.line)
             ips.update()
         
     def mouse_wheel(self, ips, x, y, d, **key):
