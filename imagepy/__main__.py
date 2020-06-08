@@ -47,7 +47,7 @@ if __name__ == '__main__':
     #                             ('Channels', Channels)]),
     #                             ('Navigator', [('Viewport', ViewPort)])])
     
-    #frame.show_img([camera()], 'camera')
-    #frame.show_img([astronaut()], 'astronaut')
+    frame.show_img([camera()], 'camera')
+    frame.show_img([astronaut()], 'astronaut')
     frame.Show()
     app.MainLoop()

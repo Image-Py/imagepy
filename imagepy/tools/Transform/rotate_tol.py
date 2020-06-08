@@ -1,9 +1,13 @@
 import wx
 import numpy as np
-from imagepy.core.engine import Tool, Filter
+from sciapp.action import ImageTool
+from sciapp.util import mark2shp, geom2shp
+from sciapp.object import ROI
+from imagepy.core.engine import Filter
+from shapely.affinity import affine_transform
 import scipy.ndimage as nimg
 
-class RotateTool(Tool):
+class RotateTool(ImageTool):
     """RotateTool class derived from imagepy.core.engine.Tool"""
     def __init__(self, plg):
         self.plg = plg
@@ -22,12 +26,13 @@ class RotateTool(Tool):
     def mouse_move(self, ips, x, y, btn, **key):
         lim = 5.0/key['canvas'].scale
         if btn==None:
-            self.cursor = wx.CURSOR_CROSS
+            self.cursor = 'cross'
             if abs(x-self.para['ox'])<lim and abs(y-self.para['oy']<lim):
                 self.cursor = wx.CURSOR_HAND
         elif self.moving:
             self.para['ox'], self.para['oy'] = x, y
-            self.plg.dialog.reset()
+            # self.plg.dialog.reset()
+            self.plg.make_mark()
             ips.update()
         else:
             dx, dy = x-self.para['ox'], y-self.para['oy']
@@ -35,7 +40,8 @@ class RotateTool(Tool):
             if dy<0: ang = np.pi*2-ang
             ang = int(ang/np.pi*180)
             self.para['ang'] = ang
-            self.plg.dialog.reset()
+            #self.plg.dialog.reset()
+            self.plg.make_mark()
             ips.update()
 
 class Plugin(Filter):
@@ -52,28 +58,30 @@ class Plugin(Filter):
         
     def load(self, ips):
         self.bufroi = ips.roi
-        self.para['oy'], self.para['ox'] = np.array(ips.size)/2
+        self.para['oy'], self.para['ox'] = np.array(ips.shape)/2
         if ips.roi!=None:
-            box = ips.roi.get_box()
+            box = ips.roi.box
             if box[0]!=box[2] and box[1]!=box[3]:
                 self.para['oy'] = int((box[1]+box[3])/2)
                 self.para['ox'] = int((box[0]+box[2])/2)
-        ips.mark = self
+        self.make_mark()
         ips.update()
-        ips.tool = RotateTool(self)
+        win = self.app.get_img_win()
+        win.canvas.tool = RotateTool(self)
         return True
         
     def cancel(self, ips):
         Filter.cancel(self, ips)
         ips.roi = self.bufroi
+        win = self.app.get_img_win()
         ips.mark = None
-        ips.tool = None
-        ips.update()
+        win.canvas.tool = None
         
     def ok(self, ips, para=None):
         Filter.ok(self, ips, para)
+        win = self.app.get_img_win()
         ips.mark = None
-        ips.tool = None
+        win.canvas.tool = None
         
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))
@@ -84,6 +92,19 @@ class Plugin(Filter):
         a = self.para['ang']*np.pi/180
         dc.DrawCircle((sox+np.cos(a)*40, soy+np.sin(a)*40), 3)
         
+    def make_mark(self):
+        a = self.para['ang']/180.0*np.pi
+        mark = {'type':'layer', 'color':(0,255,0), 'body':[
+            {'type':'circle', 'fcolor':(255,255,255), 'fill':True, 'body':(self.para['ox'], self.para['oy'], 5)},
+            {'type':'circle', 'body':(self.para['ox'], self.para['oy'], 50)},
+            {'type':'circle', 'fcolor':(255,255,255), 'fill':True, 'body':(self.para['ox']+np.cos(a)*50, 
+                self.para['oy']+np.sin(a)*50, 3)}]}
+        self.ips.mark = mark2shp(mark)
+
+    def preview(self, ips, para):
+        Filter.preview(self, ips, para)
+        self.make_mark()
+
     def run(self, ips, img, buf, para = None):
         if para == None: para = self.para
         a = para['ang']/180.0*np.pi
@@ -93,4 +114,6 @@ class Plugin(Filter):
         if self.para['img']:
             nimg.affine_transform(img, trans, output=buf, offset=offset)
         if self.para['msk'] and self.bufroi!=None:
-            ips.roi = self.bufroi.affine(trans, o[::-1]-trans.dot(o[::-1]))
+            m, o = trans, o[::-1]-trans.dot(o[::-1])
+            mat = [m[0,0], m[0,1], m[1,0], m[1,1], o[0], o[1]]
+            ips.roi = ROI(geom2shp(affine_transform(self.bufroi.to_geom(), mat)))

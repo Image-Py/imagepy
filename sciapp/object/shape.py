@@ -311,7 +311,6 @@ class Layers:
     def __init__(self, body=None, **key):
         Shape.__init__(self, body, **key)
         
-
     @property
     def box(self):
         if len(self.body)==0: return None
@@ -321,7 +320,7 @@ class Layers:
     def to_mark(self):
         body = dict(zip(self.body.keys(), [i.to_mark() for i in self.body.values()]))
         return Shape.to_mark(self, body)
-    
+
 def mark2shp(mark):
     style = mark.copy()
     style.pop('body')
@@ -368,7 +367,11 @@ def geom_union(obj):
 
 if __name__ == '__main__':
     import json
-    txt = mark2shp({'type':'texts', 'body':[(0,0,'a'),(1,1,'b')]})
+
+    mark = {'type': 'layer', 'body': [{'type': 'circle', 'body': (256, 256, 5)}, {'type': 'cirlce', 'body': (256, 256, 50)}, {'type': 'circle', 'body': (306.0, 256.0, 3)}]}
+
+    a = mark2shp(mark)
+    print(a)
     #import geonumpy.io as gio
     #shp = gio.read_shp('C:/Users/54631/Documents/projects/huangqu/demo/shape/province.shp')
     #feas = json.loads(shp.to_json())['features']

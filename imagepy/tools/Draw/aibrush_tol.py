@@ -245,7 +245,7 @@ class Plugin(ImageTool):
             sc = (max(0,c-w), min(img.shape[1], c+w))
             r, c = min(r, w), min(c, w)
             backclip = imgclip = img[slice(*sr), slice(*sc)]
-            if not ips.back.img is None: 
+            if not ips.back is None: 
                 backclip = ips.back.img[slice(*sr), slice(*sc)]
 
             if self.status == 'local_pen':

@@ -55,11 +55,12 @@ class ParaDialog (wx.Dialog):
         self.reset(para)
         self.add_confirm(modal)
         self.pack()
-        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        wx.Dialog.Bind(self, wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        #wx.Dialog.Bind(self, wx.EVT_IDLE, lambda e: self.reset())
         print('bind close')
     
     def OnDestroy( self, event ):
-        self.set_handle(None)
+        self.handle = print
         self.on_cancel = self.on_ok = self.on_help = None
         del self.ctrl_dic
 
