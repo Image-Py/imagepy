@@ -9,10 +9,9 @@ def merge(a, b):
     x2, y2 = max(a[2],b[2]), max(a[3],b[3])
     return [x1, y1, x2, y2]
 
-default_style = {'color':(255,255,0), 'fcolor':(255,255,255), 
-    'fill':False, 'lw':1, 'tcolor':(255,0,0), 'size':8}
-
 class Shape:
+    default = {'color':(255,255,0), 'fcolor':(255,255,255), 
+    'fill':False, 'lw':1, 'tcolor':(255,0,0), 'size':8}
     dtype = 'shape'
     def __init__(self, body=None, **key):
         self.name = 'shape'
@@ -20,6 +19,7 @@ class Shape:
         self.color = key['color'] if 'color' in key else None
         self.fcolor = key['fcolor'] if 'fcolor' in key else None
         self.lstyle = key['lstyle'] if 'lstyle' in key else None
+        self.tcolor = key['tcolor'] if 'tcolor' in key else None
         self.lw = key['lw'] if 'lw' in key else None
         self.r = key['r'] if 'r' in key else None
         self.fill = key['fill'] if 'fill' in key else None
@@ -306,7 +306,7 @@ class Layer(Shape):
     def to_geom(self):
         return geom.GeometryCollection([i.to_geom() for i in self.body])
 
-class Layers:
+class Layers(Shape):
     dtype = 'layers'
     def __init__(self, body=None, **key):
         Shape.__init__(self, body, **key)
@@ -369,7 +369,6 @@ if __name__ == '__main__':
     import json
 
     mark = {'type': 'layer', 'body': [{'type': 'circle', 'body': (256, 256, 5)}, {'type': 'cirlce', 'body': (256, 256, 50)}, {'type': 'circle', 'body': (306.0, 256.0, 3)}]}
-
     a = mark2shp(mark)
     print(a)
     #import geonumpy.io as gio

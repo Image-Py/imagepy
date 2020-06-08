@@ -66,7 +66,6 @@ def pick_obj(shp, x, y, lim, types='all'):
 		if d<minl: obj, minl = shp, d
 	return obj, minl
 
-
 def pick_point(shp, x, y, lim, types='all'):
 	m, obj, minl = None, None, lim
 	if not (types=='all' or shp.dtype in types): 

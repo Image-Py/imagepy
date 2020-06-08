@@ -4,6 +4,9 @@ import numpy as np
 import shapely.geometry as geom
 
 class ROI(Layer):
+	default = {'color':(255,255,0), 'fcolor':(255,255,255), 
+    'fill':False, 'lw':1, 'tcolor':(255,0,0), 'size':8}
+
 	def __init__(self, body=None, **key):
 		if isinstance(body, Layer):  body = body.body
 		if not body is None and not isinstance(body, list):

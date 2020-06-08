@@ -1,6 +1,6 @@
 from imagepy.core.engine import Simple, Free
 from sciapp import Source
-from sciapp.object.shape import default_style
+from sciapp.object import Shape
 from sciapp.util import mark2shp
 import json
 
@@ -44,7 +44,7 @@ class Open(Simple):
 
 class Setting(Free):
     title = 'Mark Setting'
-    para = default_style.copy()
+    para = Shape.default.copy()
     view = [('color', 'color', 'line', 'color'),
             ('color', 'fcolor', 'face', 'color'),
             ('color', 'tcolor', 'text', 'color'),
@@ -53,7 +53,7 @@ class Setting(Free):
             (bool, 'fill', 'solid fill')]
 
     def run(self, para=None):
-        for i in para: default_style[i] = para[i]
+        for i in para: Shape.default[i] = para[i]
         Source.manager('config').add('mark_style', para)
 
 plgs = [Open, Save, Clear, '-', Setting]

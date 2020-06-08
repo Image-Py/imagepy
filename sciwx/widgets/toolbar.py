@@ -36,7 +36,7 @@ class ToolBar(wx.Panel):
 
     def on_tool(self, evt, tol):
         tol.start(self.app)
-        evt.Skip()
+        # evt.Skip()
         btn = evt.GetEventObject()
         #print(self.GetBackgroundColour())
         #print(btn.GetClassDefaultAttributes().colFg)

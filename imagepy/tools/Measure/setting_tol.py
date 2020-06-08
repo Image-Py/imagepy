@@ -1,16 +1,18 @@
-import wx
-import numpy as np
-from imagepy.core.engine import Tool
-from imagepy.tools.Measure.setting import Setting
+from sciapp.action import ImageTool
+from sciapp.action.meaact import Measure
+from imagepy.core.engine import Free
+from sciapp import Source
 
-class Plugin(Tool):
+class Plugin(Free):
     title = 'Measure Setting'
-    para = Setting
+    para = Measure.default.copy()
     view = [('color', 'color', 'line', 'color'),
-            ('color', 'tcolor', 'text', 'color')]
+            ('color', 'fcolor', 'face', 'color'),
+            ('color', 'tcolor', 'text', 'color'),
+            (int, 'lw', (1,10), 0, 'width', 'pix'),
+            (int, 'size', (1,30), 0, 'text', 'size'),
+            (bool, 'fill', 'solid fill')]
 
-    def __init__(self):
-        pass
-
-    def mouse_down(self, ips, x, y, btn, **key):
-        pass
+    def run(self, para=None):
+        for i in para: Measure.default[i] = para[i]
+        Source.manager('config').add('mea_style', para)

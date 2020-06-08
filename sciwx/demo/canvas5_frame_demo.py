@@ -21,6 +21,6 @@ def canvas_note_test():
 
 if __name__ == '__main__':
     app = wx.App()
-    # canvas_frame_test()
+    canvas_frame_test()
     canvas_note_test()
     app.MainLoop()

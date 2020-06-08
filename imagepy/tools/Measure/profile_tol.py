@@ -11,7 +11,6 @@ from imagepy.core.engine import Tool
 import numpy as np
 import pandas as pd
 from numpy.linalg import norm
-from .setting import Setting
 from math import ceil
 
 class Profile:

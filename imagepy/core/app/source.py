@@ -11,10 +11,21 @@ Source.manager('macros')
 Source.manager('config')
 
 Source.manager('config').read(osp.join(root_dir, 'data/config.json'))
-from sciapp.object.shape import default_style
+
+from sciapp.object import Shape
 mark_style = Source.manager('config').get('mark_style')
 if not mark_style is None:
-	for i in mark_style: default_style[i] = mark_style[i]
+	for i in mark_style: Shape.default[i] = mark_style[i]
+
+from sciapp.object import ROI
+mark_style = Source.manager('config').get('roi_style')
+if not mark_style is None:
+	for i in mark_style: ROI.default[i] = mark_style[i]
+
+from sciapp.action.meaact import Measure
+mark_style = Source.manager('config').get('mea_style')
+if not mark_style is None:
+	for i in mark_style: Measure.default[i] = mark_style[i]
 
 Source.manager('colormap').remove()
 

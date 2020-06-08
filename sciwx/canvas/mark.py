@@ -319,8 +319,11 @@ def draw_layer(pts, dc, f, **key):
 	pen, brush = dc.GetPen(), dc.GetBrush()
 	width, color = pen.GetWidth(), pen.GetColour()
 	fcolor, style = brush.GetColour(), brush.GetStyle()
+	tcolor = dc.GetTextForeground()
 	if pts.color: 
 		pen.SetColour(pts.color)
+	if pts.tcolor:
+		dc.SetTextForeground(pts.tcolor)
 	if pts.fcolor: 
 		brush.SetColour(pts.fcolor)
 	if pts.lw != None: 
@@ -335,6 +338,7 @@ def draw_layer(pts, dc, f, **key):
 
 	for i in pts.body:draw(i, dc, f, **key)
 
+	dc.SetTextForeground(tcolor)
 	pen.SetWidth(width)
 	pen.SetColour(color)
 	brush.SetColour(fcolor)
@@ -373,9 +377,8 @@ def draw_layers(pts, dc, f, **key):
 
 draw_dic['layers'] = draw_layers
 
-from sciapp.object.shape import default_style
-
 def drawmark(dc, f, body, **key):
+	default_style = body.default
 	pen, brush, font = dc.GetPen(), dc.GetBrush(), dc.GetFont()
 	pen.SetColour(default_style['color'])
 	brush.SetColour(default_style['fcolor'])
@@ -385,13 +388,6 @@ def drawmark(dc, f, body, **key):
 	font.SetPointSize(default_style['size'])
 	dc.SetPen(pen); dc.SetBrush(brush); dc.SetFont(font);
 	draw(body, dc, f, **key)
-
-class GeometryMark:
-	def __init__(self, body):
-		self.body = body
-
-	def draw(self, dc, f, **key):
-		drawmark(dc, f, self.body, key)
 
 if __name__ == '__main__':
 	pass

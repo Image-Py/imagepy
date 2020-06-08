@@ -1,15 +1,9 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec 18 22:31:12 2016
-
-@author: yxl
-"""
 from imagepy.core.engine import Simple, Free
+from sciapp import Source
 from sciapp.object import ROI, geom2shp, geom_flatten, Rectangle, geom_union, mark2shp
 import json, time
 
 class SelectAll(Simple):
-    """SelectAll: derived from imagepy.core.engine.Simple """
     title = 'Select All'
     note = ['all']
 
@@ -17,7 +11,6 @@ class SelectAll(Simple):
         ips.roi = ROI(Rectangle([0, 0, ips.shape[1], ips.shape[0]]))
 
 class SelectNone(Simple):
-    """SelectNone: derived from imagepy.core.engine.Simple """
     title = 'Select None'
     note = ['all']
 
@@ -26,7 +19,6 @@ class SelectNone(Simple):
         time.sleep(0.1)
         
 class Add2Manager(Simple):
-    """Add2Manager: derived from imagepy.core.engine.Simple """
     title = 'ROI Add'
     note = ['all', 'req_roi']
     para = {'name':''}
@@ -70,7 +62,6 @@ class LoadRoi(Simple):
         ips.roi = mark2shp(self.app.manager('roi').get(name=para['name']))
         
 class Inflate(Simple):
-    """Inflate: derived from imagepy.core.engine.Simple """
     title = 'ROI Inflate'
     note = ['all', 'req_roi']
     para = {'r':5}
@@ -81,7 +72,6 @@ class Inflate(Simple):
         ips.roi = ROI(geom2shp(geom_flatten(geom)))
         
 class Shrink(Simple):
-    """Shrink: derived from imagepy.core.engine.Simple """
     title = 'ROI Shrink'
     note = ['all', 'req_roi']
     para = {'r':5}
@@ -92,7 +82,6 @@ class Shrink(Simple):
         ips.roi = ROI(geom2shp(geom_flatten(geom)))
         
 class Convex(Simple):
-    """Convex: derived from imagepy.core.engine.Simple """
     title = 'ROI Convex Hull'
     note = ['all', 'req_roi']
     
@@ -101,7 +90,6 @@ class Convex(Simple):
         ips.roi = ROI(geom2shp(geom_flatten(geom)))
         
 class Box(Simple):
-    """Box: derived from imagepy.core.engine.Simple """
     title = 'ROI Bound Box'
     note = ['all', 'req_roi']
     
@@ -110,7 +98,6 @@ class Box(Simple):
         ips.roi = ROI(Rectangle([a,b,c-a,d-b]))
         
 class Clip(Simple):
-    """Clip: derived from imagepy.core.engine.Simple """
     title = 'ROI Clip'
     note = ['all', 'req_roi']
     
@@ -120,7 +107,6 @@ class Clip(Simple):
         ips.roi = ROI(geom2shp(geom_flatten(geom)))
         
 class Invert(Simple):
-    """Invert: derived from imagepy.core.engine.Simple """
     title = 'ROI Invert'
     note = ['all', 'req_roi']
     
@@ -130,7 +116,6 @@ class Invert(Simple):
         ips.roi = ROI(geom2shp(geom_flatten(geom)))
         
 class Save(Simple):
-    """Save: save roi as a wkt file """
     title = 'ROI Save'
     note = ['all', 'req_roi']
     para={'path':''}
@@ -144,7 +129,6 @@ class Save(Simple):
             f.write(json.dumps(ips.roi.to_mark()))
 
 class Open(Simple):
-    """Save: save roi as a wkt file """
     title = 'ROI Open'
     note = ['all']
     para={'path':''}
@@ -158,7 +142,6 @@ class Open(Simple):
             ips.roi = ROI(mark2shp(json.loads(f.read())))
        
 class Intersect(Simple):
-    """Union: derived from imagepy.core.engine.Simple """
     title = 'ROI Intersect'
     note = ['all', 'req_roi']
     para = {'name':''}
@@ -178,7 +161,6 @@ class Intersect(Simple):
         ips.roi = ROI(geom2shp(geom_flatten(roi.intersection(obj))))
 
 class Union(Simple):
-    """Union: derived from imagepy.core.engine.Simple """
     title = 'ROI Union'
     note = ['all', 'req_roi']
     para = {'name':''}
@@ -198,7 +180,6 @@ class Union(Simple):
         ips.roi = ROI(geom2shp(geom_flatten(roi.union(obj))))
 
 class Diff(Simple):
-    """Diff: derived from imagepy.core.engine.Simple """
     title = 'ROI Difference'
     note = ['all', 'req_roi']
     para = {'name':''}
@@ -239,17 +220,17 @@ class SymDiff(Simple):
 
 class Setting(Free):
     title = 'ROI Setting'
-
-    def load(self):
-        Setting.para = {'color':RoiManager.get_color(),
-                     'lw':RoiManager.get_lw()}
-        Setting.view = [('color', 'color', 'roi', 'color'),
-                     (int, 'lw', (1,5), 0, 'line width', 'pix')]
-        return True
+    para = ROI.default.copy()
+    view = [('color', 'color', 'line', 'color'),
+            ('color', 'fcolor', 'face', 'color'),
+            ('color', 'tcolor', 'text', 'color'),
+            (int, 'lw', (1,10), 0, 'width', 'pix'),
+            (int, 'size', (1,30), 0, 'text', 'size'),
+            (bool, 'fill', 'solid fill')]
 
     def run(self, para=None):
-        RoiManager.set_color(para['color'])
-        RoiManager.set_lw(para['lw'])
+        for i in para: ROI.default[i] = para[i]
+        Source.manager('config').add('roi_style', para)
 
 plgs = [SelectAll, SelectNone, 
         '-', Inflate, Shrink, Convex, Box, Clip, Invert, 
