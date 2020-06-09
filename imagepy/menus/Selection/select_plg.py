@@ -50,7 +50,7 @@ class LoadRoi(Simple):
     para = {'name':''}
     
     def load(self, ips):
-        titles = self.app.manager('roi').gets('name')
+        titles = self.app.manager('roi').names()
         if len(titles)==0: 
             self.app.alert('No roi in manager!')
             return False
