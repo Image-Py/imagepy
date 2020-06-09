@@ -1,6 +1,7 @@
-import wx, sys
+import wx, sys, os
 sys.path.append('../')
 from imagepy.core.app import loader, ImagePy
+from imagepy import root_dir
 
 def extend_plgs(plg):
     if isinstance(plg, tuple):
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     
     app = wx.App(False)
 
-    bitmap = wx.Bitmap('data/logolong.png', wx.BITMAP_TYPE_PNG)
+    bitmap = wx.Bitmap(os.path.join(root_dir, 'data/logolong.png'), wx.BITMAP_TYPE_PNG)
     shadow = wx.Colour(255,255,255)
     # SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT, 3000, None, -1)
     
