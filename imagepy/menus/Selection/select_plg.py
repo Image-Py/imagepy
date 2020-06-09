@@ -147,7 +147,7 @@ class Intersect(Simple):
     para = {'name':''}
     
     def load(self, ips):
-        titles = self.app.manager('roi').gets('name')
+        titles = self.app.manager('roi').names()
         if len(titles)==0: 
             self.app.alert('No roi in manager!')
             return False
@@ -166,7 +166,7 @@ class Union(Simple):
     para = {'name':''}
     
     def load(self, ips):
-        titles = self.app.manager('roi').gets('name')
+        titles = self.app.manager('roi').names()
         if len(titles)==0: 
             self.app.alert('No roi in manager!')
             return False
@@ -185,7 +185,7 @@ class Diff(Simple):
     para = {'name':''}
     
     def load(self, ips):
-        titles = self.app.manager('roi').gets('name')
+        titles = self.app.manager('roi').names()
         if len(titles)==0: 
             self.app.alert('No roi in manager!')
             return False
@@ -205,7 +205,7 @@ class SymDiff(Simple):
     para = {'name':''}
     
     def load(self, ips):
-        titles = self.app.manager('roi').gets('name')
+        titles = self.app.manager('roi').names()
         if len(titles)==0: 
             self.app.alert('No roi in manager!')
             return False
