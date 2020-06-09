@@ -5,12 +5,8 @@ import os, subprocess, zipfile, shutil
 import zipfile, sys, urllib
 path = 'https://github.com/Image-Py/imagepy/archive/master.zip'
 
-if sys.version_info[0]==2:
-    from urllib import urlretrieve
-    from cStringIO import StringIO
-else: 
-    from urllib.request import urlretrieve
-    from io import BytesIO as StringIO
+from urllib.request import urlretrieve
+from io import BytesIO as StringIO
 '''
 path_plgs = os.path.join(root_dir, 'plugins')
 path_cache = os.path.join(path_plgs, 'cache')
@@ -28,7 +24,6 @@ def Schedule(a,b,c, plg):
 class Install(Free):
     title = 'Install Plugins'
     para = {'repo':'https://github.com/Image-Py/IBook'}
-    prgs = (0, 100)
     view = [('lab', None, 'input a zipfile url or github url as http://github.com/username/project'),
             (str, 'repo', 'package', '')]
 
@@ -55,7 +50,7 @@ class Install(Free):
         os.rename(os.path.join(path_cache, folder), destpath)
         zipf.close()
         IPy.set_info('installing requirement liberies')
-        self.prgs = (None, 1)
+        self.prgs = None
         cmds = [sys.executable, '-m', 'pip', 'install', '-r', '%s/requirements.txt'%destpath]
         subprocess.call(cmds)
         IPy.reload_plgs(True, True, True, True)

@@ -2,7 +2,7 @@ import wx, numpy as np
 from .boxutil import cross, multiply, merge, lay, mat, like
 from .imutil import mix_img
 from .mark import drawmark
-from sciapp.object import Image, mark2shp, Layer, json2shp
+from sciapp.object import Image, Shape, mark2shp, Layer, json2shp
 from sciapp.action import Tool, DefaultTool
 from time import time
 
@@ -101,7 +101,8 @@ class Canvas (wx.Panel):
     def update_box(self):
         box = [1e10, 1e10, -1e10, -1e10]
         for i in self.images: box = merge(box, i.box)
-        for i in self.marks.values(): box = merge(box, i.box)
+        shapes = [i for i in self.marks.values() if isinstance(i, Shape)]
+        for i in shapes: box = merge(box, i.box)
         if box[2]<=box[0]: box[0], box[2] = box[0]-1e-3, box[2]+1e-3
         if box[1]<=box[3]: box[1], box[3] = box[1]-1e-3, box[3]+1e-3
         if self.winbox and self.oribox == box: return
@@ -156,7 +157,8 @@ class Canvas (wx.Panel):
         for i in self.marks.values():
             if i is None: continue
             if callable(i):
-                i(dc, self.to_panel_coor, k = self.scale)
+                i(dc, self.to_panel_coor, k=self.scale, cur=0,
+                    winbox=self.winbox, oribox=self.oribox, conbox=self.conbox)
             else:
                 drawmark(dc, self.to_panel_coor, i, k=self.scale, cur=0,
                     winbox=self.winbox, oribox=self.oribox, conbox=self.conbox)
@@ -195,12 +197,12 @@ class Canvas (wx.Panel):
 
     def on_idle(self, event):
         need = sum([i.dirty for i in self.images])
-        need += sum([i.dirty for i in self.marks.values()])
-        
+        shapes = [i for i in self.marks.values() if isinstance(i, Shape)]
+        need += sum([i.dirty for i in shapes])
         if need==0: return
         else:
             for i in self.images: i.dirty = False
-            for i in self.marks.values(): i.dirty = False
+            for i in shapes: i.dirty = False
             return self.update()
 
     def on_paint(self, event):

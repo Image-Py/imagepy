@@ -4,6 +4,7 @@ sys.path.append('../../../')
 import wx.lib.agw.aui as aui
 from sciwx.widgets import MenuBar, ToolBar, ChoiceBook, ParaDialog
 from sciwx.canvas import CanvasNoteBook
+from sciwx.widgets import ProgressBar
 from sciwx.grid import GridNoteBook
 from sciwx.mesh import Canvas3DNoteBook
 from sciwx.text import MDNoteFrame, TextNoteFrame
@@ -24,6 +25,9 @@ class ImagePy(wx.Frame, App):
         self.auimgr.SetManagedWindow( self )
         self.SetSizeHints( wx.Size(1024,768) )
         
+        logopath = os.path.join(root_dir, 'data/logo.ico')
+        self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
+
         self.init_menu()
         self.init_tool()
         self.init_canvas()
@@ -52,8 +56,9 @@ class ImagePy(wx.Frame, App):
         self.txt_info = wx.StaticText( stapanel, wx.ID_ANY, "ImagePy  v0.2", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.txt_info.Wrap( -1 )
         sizersta.Add( self.txt_info, 1, wx.ALIGN_BOTTOM|wx.BOTTOM|wx.LEFT|wx.RIGHT, 2 )
-        self.pro_bar = wx.Gauge( stapanel, wx.ID_ANY, 100, wx.DefaultPosition, wx.Size( 100,15 ), wx.GA_HORIZONTAL )
-        sizersta.Add( self.pro_bar, 0, wx.ALIGN_BOTTOM|wx.BOTTOM|wx.LEFT|wx.RIGHT, 2 )
+        #self.pro_bar = wx.Gauge( stapanel, wx.ID_ANY, 100, wx.DefaultPosition, wx.Size( 100,15 ), wx.GA_HORIZONTAL )
+        self.pro_bar = ProgressBar(stapanel)
+        sizersta.Add( self.pro_bar, 0, wx.ALL, 2 )
         stapanel.SetSizer(sizersta)
         self.auimgr.AddPane( stapanel,  aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True )
             .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True )
@@ -82,11 +87,28 @@ class ImagePy(wx.Frame, App):
         self.auimgr.AddPane(self.toolbar, aui.AuiPaneInfo() .Left()  .PinButton( True )
             .CaptionVisible( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ).MaxSize(wx.Size( 32,-1 ))
             . BottomDockable( True ).TopDockable( False ).Layer( 10 ) )
-        
+
+    def set_background(self, img):
+        class ImgArtProvider(aui.AuiDefaultDockArt):
+            def __init__(self, img):
+                aui.AuiDefaultDockArt.__init__(self)
+                self.bitmap = wx.Bitmap(img, wx.BITMAP_TYPE_PNG)
+
+            def DrawBackground(self, dc, window, orient, rect):
+                aui.AuiDefaultDockArt.DrawBackground(self, dc, window, orient, rect)
+                
+                memDC = wx.MemoryDC()
+                memDC.SelectObject(self.bitmap)
+                w, h = self.bitmap.GetWidth(), self.bitmap.GetHeight()
+                dc.Blit((rect[2]-w)//2, (rect[3]-h)//2, w, h, memDC, 0, 0, wx.COPY, True)
+        self.canvasnb.GetAuiManager().SetArtProvider(ImgArtProvider(img))
+
     def init_canvas(self):
         self.canvasnbwrap = wx.Panel(self)
         sizer = wx.BoxSizer( wx.VERTICAL )
-        self.canvasnb = CanvasNoteBook( self.canvasnbwrap)
+        self.canvasnb = CanvasNoteBook(self.canvasnbwrap)
+        self.set_background(root_dir+'/data/watermark.png')
+
         sizer.Add( self.canvasnb, 1, wx.EXPAND |wx.ALL, 0 )
         self.canvasnbwrap.SetSizer( sizer )
         self.canvasnbwrap.Layout()
@@ -123,6 +145,18 @@ class ImagePy(wx.Frame, App):
             BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
         self.meshnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_new_mesh)
         self.meshnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close_mesh)
+
+    def add_task(self, task):
+        self.task_manager.add(task.title, task)
+        tasks = self.task_manager.gets()
+        tasks = [(p.title, lambda t=p:p.prgs) for n,p,t in tasks]
+        self.pro_bar.SetValue(tasks)
+
+    def remove_task(self, task):
+        self.task_manager.remove(obj=task)
+        tasks = self.task_manager.gets()
+        tasks = [(p.title, lambda t=p:p.prgs) for n,p,t in tasks]
+        self.pro_bar.SetValue(tasks)
 
     def init_widgets(self):
         self.widgets = ChoiceBook(self)
@@ -358,25 +392,6 @@ class ImagePy(wx.Frame, App):
         dialog.Bind('parameter', on_handle)
         dialog.Bind('commit', on_ok)
         return dialog.show()
-
-class P:
-    def __init__(self, name):
-        self.name = name
-
-    def start(self):
-        print(self.name)
-
-    def __call__(self):
-        return self
-        
-data = ('menu', [
-        ('File', [('Open', P('O')),
-                  '-',
-                  ('Close', P('C'))]),
-        ('Edit', [('Copy', P('C')),
-                  ('A', [('B', P('B')),
-                         ('C', P('C'))]),
-                  ('Paste', P('P'))])])
 
 if __name__ == '__main__':
     import numpy as np

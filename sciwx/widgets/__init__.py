@@ -3,6 +3,7 @@ from .cmappanel import CMapPanel
 from .colormap import CMapSelPanel, CMapSelCtrl
 from .curvepanel import CurvePanel
 from .histpanel import HistPanel
+from .progressbar import ProgressBar
 from .normal import *
 from .toolbar import ToolBar
 from .menubar import MenuBar

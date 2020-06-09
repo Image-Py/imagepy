@@ -1,4 +1,4 @@
-import wx
+import wx, numpy as np
 from numpy import ndarray
 import wx.lib.agw.aui as aui
 from .canvas import Canvas
@@ -52,18 +52,25 @@ class ICanvas(Canvas):
     @property
     def back(self): return self.images[0].back
 
-    def on_idle(self, event):
-        '''
-        roi = None if not 'roi' in self.marks else self.marks['roi']
-        mark = None if not 'mark' in self.marks else self.marks['mark']
-        imark, cur = self.image.mark, self.image.cur
-        if not imark is None and imark.dtype=='layers': 
-            imark = imark.body[cur] if cur in imark.body else None
+    def draw_ruler(self, dc, f, **key):
+        dc.SetPen(wx.Pen((255,255,255), width=2, style=wx.SOLID))
+        conbox, winbox, oribox = key['conbox'], key['winbox'], key['oribox']
+        x1 = max(conbox[0], winbox[0])+5
+        x2 = min(conbox[2], winbox[2])-5
+        pixs = (x2-x1+10)*(oribox[2]-oribox[0])/10.0/(conbox[2]-conbox[0])
+        h = min(conbox[3], winbox[3])-5
+        dc.DrawLineList([(x1,h,x2,h)])
+        dc.DrawLineList([(i,h,i,h-5) for i in np.linspace(x1, x2, 11)])
+        dc.SetTextForeground((255,255,255))
+        k, unit = self.image.unit
+        text = 'Unit = %.1f %s'%(k*pixs, unit)
+        dw, dh = dc.GetTextExtent(text)
+        dc.DrawText(text, (x2-dw, h-10-dh))
 
-        if not (roi is self.image.roi and mark is imark): 
-            print(roi is self.image.roi, mark is imark)
-            self.image.dirty = True
-        '''
+    def on_idle(self, event):
+        if self.image.unit == (1, 'pix'):
+            if 'unit' in self.marks: del self.marks['unit']
+        else: self.marks['unit'] = self.draw_ruler
         if self.image.roi is None:
             if 'roi' in self.marks: del self.marks['roi']
         else: self.marks['roi'] = self.image.roi
@@ -74,7 +81,6 @@ class ICanvas(Canvas):
                 self.marks['mark'] = self.image.mark.body[self.image.cur]
             elif 'mark' in self.marks: del self.marks['mark']
         else: self.marks['mark'] = self.image.mark
-
         Canvas.on_idle(self, event)
 
 class VCanvas(Canvas):

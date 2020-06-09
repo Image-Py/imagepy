@@ -1,12 +1,9 @@
 from .shpbase import pick_obj, pick_point, drag, offset
 from . import ImageTool, ShapeTool
 from ..object import Point, Line, Polygon, Layer, Points, Texts
+from ..object.roi import *
 import numpy as np
 from numpy.linalg import norm
-
-class Measure(Layer): 
-    default = {'color':(255,255,0), 'fcolor':(255,255,255), 
-    'fill':False, 'lw':1, 'tcolor':(255,0,0), 'size':8}
 
 def mark(shp, types = 'all'):
     pts = []
@@ -19,44 +16,6 @@ def mark(shp, types = 'all'):
         for i in shp.body:
             pts.extend(mark(i, types))
     return pts
-
-def measure(shp):
-    txt = []
-    if shp.dtype == 'layer':
-        for i in shp.body:
-            txt.extend(measure(i))
-    if not hasattr(shp, 'mtype'): return txt
-    if shp.mtype=='coordinate':
-        txt.append(tuple(shp.body)+('%.2f,%.2f'%tuple(shp.body),))
-    if shp.mtype=='distance':
-        for s,e in zip(shp.body[:-1], shp.body[1:]):
-            p = ((s[0]+e[0])/2, (s[1]+e[1])/2)
-            l = ((s[0]-e[0])**2+(s[1]-e[1])**2)**0.5
-            txt.append(p+('%.2f'%l,))
-    if shp.mtype=='angle':
-        pts = np.array(shp.body)
-        v1 = pts[:-2]-pts[1:-1]
-        v2 = pts[2:]-pts[1:-1]
-        a = np.sum(v1*v2, axis=1)*1.0
-        a/=norm(v1,axis=1)*norm(v2,axis=1)
-        ang = np.arccos(a)/np.pi*180
-        for v, p in zip(ang, shp.body[1:-1]):
-            txt.append(tuple(p[:2])+('%.2f'%v,))
-    if shp.mtype=='slope':
-        pts = np.array(shp.body)
-        mid = (pts[:-1]+pts[1:])/2
-
-        dxy = (pts[:-1]-pts[1:])
-        dxy[:,1][dxy[:,1]==0] = 1
-        l = norm(dxy, axis=1)*-np.sign(dxy[:,1])
-        ang = np.arccos(dxy[:,0]/l)/np.pi*180
-        for v, p in zip(ang, mid):
-            txt.append(tuple(p[:2])+('%.2f'%v,))
-    if shp.mtype=='area':
-        geom = shp.to_geom()
-        o = geom.centroid
-        txt.append((o.x, o.y)+('%.2f'%geom.area,))
-    return txt
 
 class BaseEditor(ShapeTool):
     def __init__(self, dtype='all'):
@@ -79,11 +38,7 @@ class BaseEditor(ShapeTool):
             if key['alt'] and not key['ctrl']:
                 if obj is None: del shp.body[:]
                 else: shp.body.remove(obj)
-                txt = measure(shp)
-                if len(txt)>0:
-                    rms = [i for i in shp.body if isinstance(i, Texts)]
-                    for i in rms: shp.body.remove(i)
-                    shp.body.append(Texts(txt))
+                shp.measure_mark()
                 shp.dirty = True
             if not (key['shift'] or key['alt'] or key['ctrl']):
                 key['canvas'].fit()
@@ -122,11 +77,7 @@ class BaseEditor(ShapeTool):
             shp.dirty = True
         if not self.pick_obj is None and not self.pick_m is None:
             drag(self.pick_m, self.pick_obj, x, y)
-            txt = measure(shp)
-            if len(txt)>0:
-                rms = [i for i in shp.body if isinstance(i, Texts)]
-                for i in rms: shp.body.remove(i)
-                shp.body.append(Texts(txt))
+            shp.measure_mark()
             pts = mark(self.pick_m)
             if len(pts)>0:
                 pts = np.vstack(pts)
@@ -139,27 +90,13 @@ class BaseEditor(ShapeTool):
             if len(pts)>0:
                 pts = np.vstack(pts)
                 key['canvas'].marks['anchor'] = Points(pts, color=(255,0,0))
-            txt = measure(shp)
-            if len(txt)>0:
-                rms = [i for i in shp.body if isinstance(i, Texts)]
-                for i in rms: shp.body.remove(i)
-                shp.body.append(Texts(txt))
+            shp.measure_mark()
             self.p = x, y
             self.pick_m.dirty = shp.dirty = True
 
     def mouse_wheel(self, shp, x, y, d, **key):
         if d>0: key['canvas'].zoomout(x, y, coord='data')
         if d<0: key['canvas'].zoomin(x, y, coord='data')
-
-class Coordinate(Point): mtype = 'coordinate'
-
-class Distance(Line): mtype = 'distance'
-
-class Area(Polygon): mtype = 'area'
-
-class Angle(Line): mtype = 'angle'
-
-class Slope(Line): mtype = 'slope'
 
 class BaseMeasure(ImageTool):
     def __init__(self, base): 
@@ -195,9 +132,7 @@ class PointEditor(BaseEditor):
             BaseEditor.mouse_down(self, shp, x, y, btn, **key)
         if btn==1 and not key['alt'] and not key['ctrl']:
             shp.body.append(Coordinate([x,y]))
-            txt = measure(shp)
-            if isinstance(shp.body[0], Texts): shp.body.pop(0)
-            shp.body.insert(0, Texts(txt))
+            shp.measure_mark()
             shp.dirty = True
 
 class LineEditor(BaseEditor):
@@ -222,10 +157,7 @@ class LineEditor(BaseEditor):
             self.obj.body = np.vstack((self.obj.body, [(x,y)]))
             self.obj.dirty, shp.dirty, self.obj = True, True, None
             del key['canvas'].marks['buffer']
-        txt = measure(shp)
-        if len(txt)>0:
-            if isinstance(shp.body[0], Texts): shp.body.pop(0)
-            shp.body.insert(0, Texts(txt))
+        shp.measure_mark()
         shp.dirty = True
 
 class AreaEditor(BaseEditor):
@@ -249,10 +181,7 @@ class AreaEditor(BaseEditor):
         if btn==3 and not self.obj is None :
             body = np.vstack((self.obj.body, [(x,y)]))
             shp.body[-1] = Area(body)
-            txt = measure(shp)
-            if len(txt)>0:
-                if isinstance(shp.body[0], Texts): shp.body.pop(0)
-                shp.body.insert(0, Texts(txt))
+            shp.measure_mark()
             self.obj, shp.dirty = None, True
             del key['canvas'].marks['buffer']
         shp.dirty = True

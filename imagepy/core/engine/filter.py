@@ -9,7 +9,7 @@ import threading
 import numpy as np
 
 from sciapp import Source
-from time import time
+from time import time, sleep
 
 def process_channels(plg, ips, src, des, para):
     if ips.channels>1 and not 'not_channel' in plg.note:
@@ -24,7 +24,7 @@ def process_channels(plg, ips, src, des, para):
     return des
 
 def process_one(plg, ips, src, img, para, callafter=None):
-    Source.manager('task').add(plg.title, plg)
+    plg.app.add_task(plg)
     start = time()
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.complex128, np.float32, np.float64)
@@ -43,13 +43,12 @@ def process_one(plg, ips, src, img, para, callafter=None):
         img[msk] = src[msk]
     plg.app.info('%s: cost %.3fs'%(ips.title, time()-start))
     ips.update()
-    Source.manager('task').remove(plg)
+    plg.app.remove_task(plg)
     if not callafter is None:callafter()
     
 def process_stack(plg, ips, src, imgs, para, callafter=None):
-    Source.manager('task').add(plg.title, plg)
+    plg.app.add_task(plg)
     start = time()
-
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
     transfloat = '2float' in plg.note and not ips.dtype in (np.complex128, np.float32, np.float64)
     if transint: 
@@ -74,7 +73,7 @@ def process_stack(plg, ips, src, imgs, para, callafter=None):
             i[msk] = src[msk]
     plg.app.info('%s: cost %.3fs'%(ips.title, time()-start))
     ips.update()
-    Source.manager('task').remove(plg)
+    plg.app.remove_task(plg)
     if not callafter is None:callafter()
     
 
@@ -85,12 +84,11 @@ class Filter:
     'all, 8-bit, 16-bit, int, rgb, float, not_channel, not_slice, req_roi, auto_snap, auto_msk, preview, 2int, 2float'
     para = None
     view = None
-    prgs = (None, 1)
+    prgs = None
 
     def __init__(self, ips=None): pass
         
-    def progress(self, i, n):
-        self.prgs = (i, n)
+    def progress(self, i, n): self.prgs = int(i*100/n)
 
     def show(self):
         preview = lambda para, ips=self.ips: self.preview(ips, para) or ips.update()

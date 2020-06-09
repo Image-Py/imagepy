@@ -13,7 +13,7 @@ class Table:
     para = None
     'req_sel, req_row, req_col, auto_snap, auto_msk, msk_not, num_only, preview'
     view = None
-    prgs = (None, 1)
+    prgs = None
     modal = True
     asyn = True
 
@@ -21,8 +21,7 @@ class Table:
         
         self.dialog = None
     
-    def progress(self, i, n):
-        self.prgs = (i, n)
+    def progress(self, i, n): self.prgs = int(i*100/n)
 
     def load(self, tps):return True
         
@@ -53,12 +52,12 @@ class Table:
         if win!=None: win.write('{}>{}'.format(self.title, para))
 
     def runasyn(self,  tps, snap, data, para = None, callback = None):
-        self.app.manager('task').add(self,title, self)
+        self.app.add_task(self)
         start = time()
         self.run(tps, data, snap, para)
         self.app.set_info('%s: cost %.3fs'%(tps.title, time()-start))
         tps.update()
-        self.app.manager('task').remove(self)
+        self.app.remove_task(self)
         if callback!=None:callback()
 
     def check(self, tps):

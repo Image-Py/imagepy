@@ -10,11 +10,10 @@ class Free:
     title = 'Free'
     view = None
     para = None
-    prgs = (None, 1)
+    prgs = None
     asyn = True
 
-    def progress(self, i, n):
-        self.prgs = (i, n)
+    def progress(self, i, n): self.prgs = int(i*100/n)
 
     def run(self, para=None):
         print('this is a plugin')

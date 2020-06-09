@@ -87,7 +87,6 @@ class ToolBar(wx.Panel):
 
     def active_set(self, name):
         for n, tools in self.toolset:
-            print('select', name, n)
             for btn in tools:
                 if n==name: btn.Show()
                 if n!=name: btn.Hide()

@@ -17,13 +17,12 @@ class Simple:
     para = None
     'all, 8-bit, 16-bit, rgb, float, req_roi, stack, stack2d, stack3d, preview'
     view = None
-    prgs = (None, 1)
+    prgs = None
     modal = True
 
     def __init__(self): pass
     
-    def progress(self, i, n):
-        self.prgs = (i, n)
+    def progress(self, i, n): self.prgs = int(i*100/n)
 
     def load(self, ips):return True
         
@@ -48,12 +47,12 @@ class Simple:
         self.app.record_macros('{}>{}'.format(self.title, para))
 
     def runasyn(self,  ips, imgs, para = None, callback = None):
-        self.app.manager('task').add(self.title, self)
+        self.app.add_task(self)
         start = time()
         self.run(ips, imgs, para)
         self.app.info('%s: cost %.3fs'%(ips.title, time()-start))
         ips.update()
-        self.app.manager('task').remove(self)
+        self.app.remove_task(self)
         if callback!=None:callback()
 
     def check(self, ips):

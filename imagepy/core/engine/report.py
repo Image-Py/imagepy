@@ -19,7 +19,7 @@ class Report:
     def __call__(self): return self
 
     def runasyn(self,  wb, info, key, para = None, callback = None):
-        Source.manager('task').add(self)
+        self.app.add_task(self)
         for i in para: 
             if i in key and key[i][0] == 'img':
                 ips = ImageManager.get(para[i])
@@ -33,7 +33,7 @@ class Report:
         xlreport.fill_value(wb, info, para)
         wb.save(para['path'])
         self.app.set_info('%s: cost %.3fs'%(self.title, time()-start))
-        Source.manager('task').remove(self)
+        self.app.remove_task(self)
         if callback!=None:callback()
 
     def start(self, para=None, callafter=None):

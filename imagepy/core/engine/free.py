@@ -10,21 +10,20 @@ class Free:
     title = 'Free'
     view = None
     para = None
-    prgs = (None, 1)
+    prgs = None
     asyn = True
 
-    def progress(self, i, n):
-        self.prgs = (i, n)
+    def progress(self, i, n): self.prgs = int(i*100/n)
 
     def run(self, para=None):
         print('this is a plugin')
         
     def runasyn(self, para, callback=None):
-        self.app.manager('task').add(self.title, self)
+        self.app.add_task(self)
         start = time()
         self.run(para)
         self.app.info('%s: cost %.3fs'%(self.title, time()-start))
-        self.app.manager('task').remove(self)
+        self.app.remove_task(self)
         if callback!=None:callback()
 
     def load(self):return True

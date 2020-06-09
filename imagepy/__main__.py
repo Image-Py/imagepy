@@ -25,29 +25,30 @@ def extend_wgts(wgt):
 
 if __name__ == '__main__':
     from skimage.data import camera, astronaut
+    import wx.lib.agw.advancedsplash as AS
     
     app = wx.App(False)
+
+    bitmap = wx.Bitmap('data/logolong.png', wx.BITMAP_TYPE_PNG)
+    shadow = wx.Colour(255,255,255)
+    # SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT, 3000, None, -1)
+    
+    asp = AS.AdvancedSplash(None, bitmap=bitmap, timeout=1000,
+        agwStyle=AS.AS_TIMEOUT |
+        AS.AS_CENTER_ON_PARENT |
+        AS.AS_SHADOW_BITMAP,
+        shadowcolour=shadow)
+
+    
     frame = ImagePy(None)
     
     frame.load_menu(extend_plgs(loader.build_plugins('menus')))
-    #frame.load_menu(('menu',[('File',[('Open', Open),
-    #                                  ('Save', Save)]),
-    #                         ('Filters', [('Gaussian', Gaussian),
-    #                                      ('Undo', Undo)])]))
 
     frame.load_tool(extend_tols(loader.build_tools('tools')), 'Transform')
-    #frame.load_tool(('tools',[('standard', [('P', Pencil),
-    #                                        ('D', DefaultTool)]),
-    #                          ('draw', [('X', Pencil),
-    #                                    ('X', Pencil)])]), 'draw')
 
     frame.load_widget(extend_wgts(loader.build_widgets('widgets')))
-    # ('widgets', [('Histogram', [('Histogram', Histogram),
-    #                             ('Curve', Curve),
-    #                             ('Channels', Channels)]),
-    #                             ('Navigator', [('Viewport', ViewPort)])])
     
-    frame.show_img([camera()], 'camera')
-    frame.show_img([astronaut()], 'astronaut')
+    #frame.show_img([camera()], 'camera')
+    #frame.show_img([astronaut()], 'astronaut')
     frame.Show()
     app.MainLoop()

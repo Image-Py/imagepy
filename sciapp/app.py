@@ -64,6 +64,7 @@ class App():
         self.wtab_manager = Manager()
         self.mesh_manager = Manager()
         self.wmesh_manager = Manager()
+        self.task_manager = Manager()
         self.managers = {}
 
     def manager(self, name, value=None):
@@ -147,3 +148,9 @@ class App():
     
     def get_mesh_win(self, name=None):
         return self.wmesh_manager.get(name)
+
+    def add_task(self, task):
+        self.task_manager.add(task.title, task)
+
+    def remove_task(self, task):
+        self.task_manager.remove(obj=task)
