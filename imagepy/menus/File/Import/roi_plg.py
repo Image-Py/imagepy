@@ -19,8 +19,9 @@ class Plugin(Free):
             (int, 'height', (1, 3000), 0,  'height', 'pix')]
 
     def load(self):
-        filt = '|'.join(['%s files (*.%s)|*.%s' % (i.upper(), i, i) for i in ["zip"]])
-        return IPy.getpath(self.title, filt, 'open', self.para)
+        filt = ['zip']
+        self.para['path'] = self.app.getpath(self.title, filt, 'open', self.para['name'])
+        return not self.para['path'] is None
 
     def run(self, para=None):
         ls = read_roi.read_roi_zip(para['path'])
@@ -40,4 +41,4 @@ class Plugin(Free):
             except Exception:
                 ind = int(i.split("-")[-1])
             img[rs, cs] = ind
-        IPy.show_img([img], para['name'])
+        self.app.show_img([img], para['name'])
