@@ -10,4 +10,4 @@ class Plugin(Free):
 	asyn = False
 
 	def run(self, para = None):
-		IPy.curapp.Close()
+		self.app.Close()
