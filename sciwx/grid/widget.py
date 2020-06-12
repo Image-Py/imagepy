@@ -11,7 +11,7 @@ class MGrid(wx.Panel):
         self.lab_info = wx.StaticText( self, wx.ID_ANY,
             'information', wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lab_info.Wrap( -1 )
-        # self.lab_info.Hide()
+        self.Bind(wx.EVT_IDLE, self.on_idle)
         sizer.Add( self.lab_info, 0, wx.EXPAND, 0 )
         
         self.grid = Grid(self)
@@ -25,6 +25,10 @@ class MGrid(wx.Panel):
 
     @property
     def name(self): return self.grid.table.name
+
+    def on_idle(self, event):
+        if self.lab_info.GetLabel() != self.table.info:
+            self.lab_info.SetLabel(self.table.info)
 
 class GridFrame(wx.Frame):
     def __init__(self, parent=None):
@@ -41,10 +45,10 @@ class GridFrame(wx.Frame):
         self.Bind(wx.EVT_IDLE, self.on_idle)
 
     def on_idle(self, event):
-        if self.GetTitle()!=self.grid.table.title:
-            self.SetTitle(self.grid.table.title)
+        if self.GetTitle()!=self.grid.table.name:
+            self.SetTitle(self.grid.table.name)
     
-    def set_title(self, tab): self.SetTitle(tab.title)
+    def set_title(self, tab): self.SetTitle(tab.name)
 
     def on_valid(self, event): event.Skip()
 

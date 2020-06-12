@@ -7,7 +7,7 @@ from sciapp import Source
 def imread(path):
 	return pydicom.read_file(path, force=True).pixel_array
 
-Source.manager('reader').add(name='dcm', obj=imread)
+Source.manager('reader').add('dcm', imread)
 
 class OpenFile(fileio.Reader):
 	title = 'DCM Open'

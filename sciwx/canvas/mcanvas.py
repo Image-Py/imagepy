@@ -31,7 +31,7 @@ class ICanvas(Canvas):
     def set_rg(self, rg, b=False):
         if b: self.back.rg = rg
         else: self.image.rg = rg
-    
+        
     def set_lut(self, lut, b=False):
         if b: self.back.lut = lut
         else: self.image.lut = lut
@@ -188,6 +188,7 @@ class MCanvas(wx.Panel):
 
     def set_img(self, img, b=False):
         self.canvas.set_img(img, b)
+        self.canvas.update_box()
         self.update()
 
     def set_cn(self, cn, b=False):
@@ -253,8 +254,7 @@ class MCanvas(wx.Panel):
         image, info = self.image, self.lab_info.GetLabel()
         imgs = image.slices, image.channels, image.cn, image.cur
         selfs = self.pages ,self.chans, self.cn, self.cur
-        if imgs != selfs or info!=self.image.info: 
-            self.update()
+        if imgs != selfs or info!=self.image.info: self.update()
 
     def __del__(self):
         print('canvas panel del')

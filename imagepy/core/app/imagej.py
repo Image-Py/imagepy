@@ -3,18 +3,19 @@ import time, threading
 sys.path.append('../../../')
 import wx.lib.agw.aui as aui
 from sciwx.widgets import MenuBar, ToolBar, ChoiceBook, ParaDialog
-from sciwx.canvas import CanvasNoteBook
+from sciwx.canvas import CanvasFrame
 from sciwx.widgets import ProgressBar
-from sciwx.grid import GridNoteBook
-from sciwx.mesh import Canvas3DNoteBook
+from sciwx.grid import GridFrame
+from sciwx.mesh import Canvas3DFrame
 from sciwx.text import MDNoteFrame, TextNoteFrame
 from sciwx.plot import PlotFrame
 from skimage.data import camera
 from sciapp import App, Source
 from sciapp.object import Image
 from imagepy import root_dir
+from .source import *
 
-class ImagePy(wx.Frame, App):
+class ImageJ(wx.Frame, App):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', 
                             size = wx.Size(-1,-1), pos = wx.DefaultPosition, 
@@ -22,19 +23,17 @@ class ImagePy(wx.Frame, App):
         App.__init__(self)
         self.auimgr = aui.AuiManager()
         self.auimgr.SetManagedWindow( self )
-        self.SetSizeHints( wx.Size(1024,768) )
+        self.SetSizeHints( wx.Size(600,-1) )
         
         logopath = os.path.join(root_dir, 'data/logo.ico')
         self.SetIcon(wx.Icon(logopath, wx.BITMAP_TYPE_ICO))
 
         self.init_menu()
         self.init_tool()
-        self.init_canvas()
-        self.init_table()
-        self.init_mesh()
         self.init_widgets()
         self.init_text()
         self.init_status()
+        self.Fit()
 
         self.Layout()
         self.auimgr.Update()
@@ -80,12 +79,12 @@ class ImagePy(wx.Frame, App):
         
     def init_tool(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
-        self.toolbar = ToolBar(self, True)
+        self.toolbar = ToolBar(self, False)
         self.toolbar.Fit()
 
-        self.auimgr.AddPane(self.toolbar, aui.AuiPaneInfo() .Left()  .PinButton( True )
-            .CaptionVisible( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ).MaxSize(wx.Size( 32,-1 ))
-            . BottomDockable( True ).TopDockable( False ).Layer( 10 ) )
+        self.auimgr.AddPane(self.toolbar, aui.AuiPaneInfo() .Top()  .PinButton( True ).PaneBorder( False )
+            .CaptionVisible( False ).Dock().FloatingSize( wx.DefaultSize ).MinSize(wx.Size( -1,34 )).DockFixed( True )
+            . BottomDockable( False ).TopDockable( False ).Layer( 10 ) )
 
     def set_background(self, img):
         class ImgArtProvider(aui.AuiDefaultDockArt):
@@ -102,49 +101,6 @@ class ImagePy(wx.Frame, App):
                 dc.Blit((rect[2]-w)//2, (rect[3]-h)//2, w, h, memDC, 0, 0, wx.COPY, True)
         self.canvasnb.GetAuiManager().SetArtProvider(ImgArtProvider(img))
 
-    def init_canvas(self):
-        self.canvasnbwrap = wx.Panel(self)
-        sizer = wx.BoxSizer( wx.VERTICAL )
-        self.canvasnb = CanvasNoteBook(self.canvasnbwrap)
-        self.set_background(root_dir+'/data/watermark.png')
-
-        sizer.Add( self.canvasnb, 1, wx.EXPAND |wx.ALL, 0 )
-        self.canvasnbwrap.SetSizer( sizer )
-        self.canvasnbwrap.Layout()
-        self.auimgr.AddPane( self.canvasnbwrap, aui.AuiPaneInfo() .Center() .CaptionVisible( False ).PinButton( True ).Dock()
-            .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ). BottomDockable( True ).TopDockable( False )
-            .LeftDockable( True ).RightDockable( True ) )
-        self.canvasnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_new_img)
-        self.canvasnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close_img)
-
-    def init_table(self):
-        self.tablenbwrap = wx.Panel(self)
-        sizer = wx.BoxSizer( wx.VERTICAL )
-        self.tablenb = GridNoteBook( self.tablenbwrap)
-        sizer.Add( self.tablenb, 1, wx.EXPAND |wx.ALL, 0 )
-        self.tablenbwrap.SetSizer( sizer )
-        self.tablenbwrap.Layout()
-
-        self.auimgr.AddPane( self.tablenbwrap, aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock().Hide()
-            .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Tables') . 
-            BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
-        self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_new_tab)
-        self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close_tab)
-
-    def init_mesh(self):
-        self.meshnbwrap = wx.Panel(self)
-        sizer = wx.BoxSizer( wx.VERTICAL )
-        self.meshnb = Canvas3DNoteBook( self.meshnbwrap)
-        sizer.Add( self.meshnb, 1, wx.EXPAND |wx.ALL, 0 )
-        self.meshnbwrap.SetSizer( sizer )
-        self.meshnbwrap.Layout()
-
-        self.auimgr.AddPane( self.meshnbwrap, aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Float().Hide()
-            .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Meshes') . 
-            BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
-        self.meshnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_new_mesh)
-        self.meshnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close_mesh)
-
     def add_task(self, task):
         self.task_manager.add(task.title, task)
         tasks = self.task_manager.gets()
@@ -159,8 +115,8 @@ class ImagePy(wx.Frame, App):
 
     def init_widgets(self):
         self.widgets = ChoiceBook(self)
-        self.auimgr.AddPane( self.widgets, aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
-            .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ).Layer( 10 ) )
+        self.auimgr.AddPane( self.widgets, aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True ).Hide()
+            .Float().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,300 ) ).Layer( 10 ) )
 
     def init_text(self):
         self.mdframe = MDNoteFrame(self, 'Sci Document')
@@ -173,31 +129,31 @@ class ImagePy(wx.Frame, App):
             event.GetPane().window.close()
 
     def on_new_img(self, event):
-        self.add_img(self.canvasnb.canvas().image)
-        self.add_img_win(self.canvasnb.canvas())
+        self.add_img(event.GetEventObject().canvas.image)
+        self.add_img_win(event.GetEventObject().canvas)
 
     def on_close_img(self, event):
-        canvas = event.GetEventObject().GetPage(event.GetSelection())
-        self.remove_img_win(canvas)
-        self.remove_img(canvas.image)
+        self.remove_img_win(event.GetEventObject().canvas)
+        self.remove_img(event.GetEventObject().canvas.image)
+        event.Skip()
 
     def on_new_tab(self, event):
-        self.add_tab(self.tablenb.grid().table)
-        self.add_tab_win(self.tablenb.grid())
+        self.add_tab(event.GetEventObject().grid.table)
+        self.add_tab_win(event.GetEventObject().grid)
 
     def on_close_tab(self, event):
-        grid = event.GetEventObject().GetPage(event.GetSelection())
-        self.remove_tab_win(grid)
-        self.remove_tab(grid.table)
+        self.remove_tab_win(event.GetEventObject().grid)
+        self.remove_tab(event.GetEventObject().grid.table)
+        event.Skip()
         
     def on_new_mesh(self, event):
-        self.add_mesh(self.meshnb.canvas().mesh)
-        self.add_mesh_win(self.meshnb.canvas())
+        self.add_mesh(event.GetEventObject().canvas.mesh)
+        self.add_mesh_win(event.GetEventObject().canvas)
 
     def on_close_mesh(self, event):
-        canvas3d = event.GetEventObject().GetPage(event.GetSelection())
-        self.remove_mesh(canvas3d.mesh)
-        self.remove_mesh_win(canvas3d)
+        self.remove_mesh(event.GetEventObject().canvas.mesh)
+        self.remove_mesh_win(event.GetEventObject().canvas)
+        event.Skip()
         
     def set_info(self, value):
         self.txt_info.SetLabel(value)
@@ -222,30 +178,28 @@ class ImagePy(wx.Frame, App):
         sys.exit()
 
     def _show_img(self, img, title=None):
-        canvas = self.canvasnb.add_canvas()
-        self.remove_img(canvas.image)
-        self.remove_img_win(canvas)
+        cframe = CanvasFrame(self, True)
+        canvas = cframe.canvas
         if not title is None:
             canvas.set_imgs(img)
             canvas.image.name = title
         else: canvas.set_img(img)
-        self.add_img(canvas.image)
-        self.add_img_win(canvas)
+        cframe.Bind(wx.EVT_ACTIVATE, self.on_new_img)
+        cframe.Bind(wx.EVT_CLOSE, self.on_close_img)
+        cframe.Show()
 
     def show_img(self, img, title=None):
         wx.CallAfter(self._show_img, img, title)
 
     def _show_table(self, tab, title):
-        grid = self.tablenb.add_grid()
-        self.remove_tab(grid.table)
-        self.remove_tab_win(grid)
+        cframe = GridFrame(self)
+        grid = cframe.grid
         grid.set_data(tab)
-        grid.table.name = title
-        info = self.auimgr.GetPane(self.tablenbwrap)
-        info.Show(True)
-        self.auimgr.Update()
-        self.add_tab(grid.table)
-        self.add_tab_win(grid)
+        if not title is None:
+            grid.table.name = title
+        cframe.Bind(wx.EVT_ACTIVATE, self.on_new_tab)
+        cframe.Bind(wx.EVT_CLOSE, self.on_close_tab)
+        cframe.Show()
 
     def show_table(self, tab, title=None):
         wx.CallAfter(self._show_table, tab, title)
@@ -270,23 +224,26 @@ class ImagePy(wx.Frame, App):
 
     def _show_mesh(self, mesh=None, title=None):
         if mesh is None:
-            canvas = self.meshnb.add_canvas()
+            cframe = Canvas3DFrame(self)
+            canvas = cframe.canvas
             canvas.mesh.name = 'Surface'
+
         elif hasattr(mesh, 'vts'):
             canvas = self.get_mesh_win()
             if canvas is None:
-                canvas = self.meshnb.add_canvas()
+                cframe = Canvas3DFrame(self)
+                canvas = cframe.canvas
                 canvas.mesh.name = 'Surface'
             canvas.add_surf(title, mesh)
         else:
-            canvas = self.meshnb.add_canvas()
+            cframe = Canvas3DFrame(self)
+            canvas = cframe.canvas
             canvas.set_mesh(mesh)
+        canvas.GetParent().Show()
+        canvas.GetParent().Bind(wx.EVT_ACTIVATE, self.on_new_mesh)
+        canvas.GetParent().Bind(wx.EVT_CLOSE, self.on_close_mesh)
         self.add_mesh(canvas.mesh)
         self.add_mesh_win(canvas)
-
-        info = self.auimgr.GetPane(self.meshnbwrap)
-        info.Show(True)
-        self.auimgr.Update()
 
     def show_mesh(self, mesh=None, title=None):
         wx.CallAfter(self._show_mesh, mesh, title)
@@ -397,7 +354,7 @@ if __name__ == '__main__':
     import pandas as pd
 
     app = wx.App(False)
-    frame = ImagePy(None)
+    frame = ImageJ(None)
     frame.Show()
     frame.show_img([np.zeros((512, 512), dtype=np.uint8)], 'zeros')
     #frame.show_img(None)

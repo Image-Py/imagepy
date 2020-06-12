@@ -110,7 +110,6 @@ class RegionFilter(Filter):
             (float, 'solid', (-1, 1,), 1, 'solidity', 'ratio'),
             (float, 'e', (-100,100), 1, 'eccentricity', 'ratio')]
 
-    #process
     def run(self, ips, snap, img, para = None):
         k, unit = ips.unit
         strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)

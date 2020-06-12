@@ -36,7 +36,7 @@ class ToolBar(wx.Panel):
 
     def on_tool(self, evt, tol):
         tol.start(self.app)
-        # evt.Skip()
+        evt.Skip()
         btn = evt.GetEventObject()
         #print(self.GetBackgroundColour())
         #print(btn.GetClassDefaultAttributes().colFg)
@@ -97,6 +97,7 @@ class ToolBar(wx.Panel):
         btn = wx.BitmapButton(self, wx.ID_ANY, make_logo(logo), 
                 wx.DefaultPosition, (32,32), wx.BU_AUTODRAW|wx.RAISED_BORDER )
         btn.Bind(wx.EVT_LEFT_DOWN, self.menu_drop)
+        btn.SetBackgroundColour(self.GetBackgroundColour())
         self.GetSizer().Add(btn, 0, wx.ALL, 1)
         self.active_set(default)
 

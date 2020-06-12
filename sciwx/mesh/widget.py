@@ -23,13 +23,11 @@ class Canvas3DFrame(wx.Frame):
 		self.set_bright = self.canvas.set_bright
 		self.add_surf_asyn = self.canvas.add_surf_asyn
 		self.add_surf = self.canvas.add_surf
-		self.add_mark_asyn = self.canvas.add_mark_asyn
-		self.add_mark = self.canvas.add_mark
 		self.set_mesh = self.canvas.set_mesh
 
 	def on_idle(self, event):
-		if self.GetTitle()!=self.canvas.meshset.title:
-			self.SetTitle(self.canvas.meshset.title)
+		if self.GetTitle()!=self.canvas.mesh.name:
+			self.SetTitle(self.canvas.mesh.name)
 
 	def set_title(self, tab): self.SetTitle(tab.title)
 

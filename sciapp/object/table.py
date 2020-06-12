@@ -70,6 +70,10 @@ class Table():
     def select(self, rs=[], cs=[], byidx=False):
         if byidx: rs, cs = self.df.index[rs], self.df.columns[cs]
         self.rowmsk, self.colmsk = rs, cs
+
+    @property
+    def info(self):
+        return '%sx%s %.2fM'%(*self.shape, self.nbytes/1024/1024)
         
 if __name__ == '__main__':
     import numpy as np
