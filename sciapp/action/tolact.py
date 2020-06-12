@@ -55,7 +55,7 @@ class ImageTool(DefaultTool):
 
 class ShapeTool(DefaultTool):
     default = None
-    title = 'Image Tool'
+    title = 'Shape Tool'
 
     def start(self, app): 
         self.app = app
