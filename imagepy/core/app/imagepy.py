@@ -355,18 +355,24 @@ class ImagePy(wx.Frame, App):
         tag = tag or 'img'
         if tag=='img':
             self.show_img([cont], title)
-        if tag=='imgs':
+        elif tag=='imgs':
             self.show_img(cont, title)
-        if tag=='macros':
+        elif tag=='tab':
+            self.show_table(cont, title)
+        elif tag=='macros':
             self.run_macros(cont)
+        else: self.alert('no view for %s!'%tag)
 
     def info(self, cont): 
         wx.CallAfter(self.txt_info.SetLabel, cont)
 
-    def alert(self, info, title='ImagePy'):
+    def _alert(self, info, title='ImagePy'):
         dialog=wx.MessageDialog(self, info, title, wx.OK)
         dialog.ShowModal() == wx.ID_OK
         dialog.Destroy()
+
+    def alert(self, info, title='ImagePy'):
+        wx.CallAfter(self._alert, info, title)
 
     def yes_no(self, info, title='ImagePy'):
         dialog = wx.MessageDialog(self, info, title, wx.YES_NO | wx.CANCEL)

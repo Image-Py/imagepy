@@ -327,7 +327,7 @@ class FloatSlider(wx.Panel):
         self.spin = wx.SpinButton( self, wx.ID_ANY, wx.DefaultPosition, wx.Size([20,-1][self.linux],-1),  [0, wx.SP_HORIZONTAL][self.linux])
         self.spin.SetRange(0, 255)
         self.spin.SetValue(128)
-        subsizer.Add( self.spin, 0, wx.ALIGN_CENTER|wx.BOTTOM|wx.EXPAND, 5 )
+        subsizer.Add( self.spin, 0, wx.BOTTOM|wx.EXPAND, 5 )
         self.lab_unit = wx.StaticText( self, wx.ID_ANY, unit, wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lab_unit.Wrap( -1 )
         subsizer.Add( self.lab_unit, 0, wx.ALIGN_CENTER|wx.BOTTOM|wx.LEFT, 5 )

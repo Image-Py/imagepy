@@ -7,14 +7,14 @@ from imagepy.core.util import fileio
 from sciapp import Source
 from imagepy.core.engine import Simple
 
-class SaveImage(fileio.Writer):
+class SaveImage(fileio.ImageWriter):
 	title = 'Save'
 
 	def load(self, ips):
 		self.filt = [i for i in sorted(Source.manager('writer').names())]
 		return True
 
-class WindowCapture(fileio.Writer):
+class WindowCapture(fileio.ImageWriter):
 	title = 'Save With Mark'
 	filt = ['PNG']
 

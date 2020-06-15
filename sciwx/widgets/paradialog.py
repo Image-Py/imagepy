@@ -33,13 +33,13 @@ class ParaDialog (wx.Dialog):
     def add_confirm(self, modal):
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         self.btn_ok = wx.Button( self, wx.ID_OK, 'OK', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
-        sizer.Add( self.btn_ok, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+        sizer.Add( self.btn_ok, 0, wx.ALL, 5 )
 
         self.btn_cancel = wx.Button( self, wx.ID_CANCEL, 'Cancel', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
-        sizer.Add( self.btn_cancel, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+        sizer.Add( self.btn_cancel, 0, wx.ALL, 5 )
 
         self.btn_help = wx.Button( self, wx.ID_HELP, 'Help', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
-        sizer.Add( self.btn_help, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+        sizer.Add( self.btn_help, 0, wx.ALL, 5 )
         self.lst.Add(sizer, 0, wx.ALIGN_RIGHT, 5 )
         self.btn_help.Bind(wx.EVT_BUTTON, lambda e: self.on_help and self.on_help())
         if not modal:

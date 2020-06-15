@@ -3,33 +3,30 @@ from scipy.io import savemat, loadmat
 from sciapp import Source
 import os
 
-Source.manager('reader').add(name='mat', obj=lambda path: loadmat(path)['img'])
-Source.manager('writer').add(name='mat', obj=lambda path, img: savemat(path, {'img':img}))
+Source.manager('reader').add('mat', lambda path: loadmat(path)['img'], 'img')
+Source.manager('writer').add('mat', lambda path, img: savemat(path, {'img':img}), 'img')
+Source.manager('reader').add('mat', lambda path: loadmat(path)['img'], 'imgs')
+Source.manager('writer').add('mat', lambda path, img: savemat(path, {'img':img}), 'imgs')
 
 class OpenFile(fileio.Reader):
 	title = 'Mat Open'
+	tag = 'img'
 	filt = ['Mat']
 
-class SaveFile(fileio.Writer):
+class SaveFile(fileio.ImageWriter):
 	title = 'Mat Save'
-	filt = ['mat']
+	tag = 'img'
+	filt = ['Mat']
 
 class Open3D(fileio.Reader):
 	title = 'Mat 3D Open'
+	tag = 'imgs'
 	filt = ['Mat']
 
-	def run(self, para = None):
-		imgs = loadmat(para['path'])['img']
-		fp, fn = os.path.split(para['path'])
-		fn, fe = os.path.splitext(fn) 
-		IPy.show_img(imgs, fn)
-
-class Save3D(fileio.Writer):
+class Save3D(fileio.ImageWriter):
 	title = 'Mat 3D Save'
-	filt = ['mat']
+	tag = 'imgs'
+	filt = ['Mat']
 	note = ['8-bit', 'rgb', 'stack']
-
-	def run(self, ips, imgs, para = None):
-		savemat(para['path'], {'img':imgs})
 
 plgs = [OpenFile, SaveFile, '-', Open3D, Save3D]

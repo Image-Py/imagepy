@@ -1,7 +1,7 @@
 import os
 from sciapp import Source
 from ... import root_dir
-from ..engine import Free, Simple, Macros
+from ..engine import Free, Simple, Table, Macros
 import numpy as np
 
 
@@ -32,10 +32,11 @@ def add_recent(path):
 
 class Reader(Free):
     para = {'path':''}
-    tag, note = None, None
+    tag = None
 
     def show(self):
-        self.para['path'] = self.app.getpath('Open..', self.filt, 'open', '')
+        filt = [i.lower() for i in self.filt]
+        self.para['path'] = self.app.getpath('Open..', filt, 'open', '')
         return not self.para['path'] is None
 
     #process
@@ -44,32 +45,42 @@ class Reader(Free):
 
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        reader = Source.manager('reader').gets(name=fe[1:], tag=self.tag)
-        print(fe, self.tag, self.note, reader)
-        '''
-        if len(reader) == 0:
-            a, b = os.path.splitext(fn)
-            fn, fe = a, b+fe
-            reader = ReaderManager.gets(name=fe[1:], tag=self.tag, note=self.note)
-        if len(reader) is None: 
-            return self.app.alert('No reader found for %s'%fe[1:])
-        # ext, read, tag, note = reader
-        '''
-        self.app.show(self.tag, reader[0][1](para['path']), fn)
+        readers = Source.manager('reader').gets(name=fe[1:], tag=self.tag)
+        if len(readers)==0: 
+            return self.app.alert('no reader found for %s file'%fe[1:])
+        self.app.show(self.tag, readers[0][1](para['path']), fn)
 
-class Writer(Simple):
+class ImageWriter(Simple):
+    tag = 'img'
     note = ['all']
     para={'path':''}
 
     def show(self):
-        self.para['path'] = self.app.getpath('Save..', self.filt, 'save', '')
+        filt = [i.lower() for i in self.filt]
+        self.para['path'] = self.app.getpath('Save..', filt, 'save', '')
         return not self.para['path'] is None
 
     #process
     def run(self, ips, imgs, para = None):
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        writer = Source.manager('writer').gets(name=fe[1:])
-        if len(writer)==1: return writer[0][1](para['path'], ips.img)
-        writer = Source.manager('writer').get(fe[1:], 'imgs')
-        if len(writer)==1: return writer[0][1](para['path'], imgs)
+        writer = Source.manager('writer').gets(name=fe[1:].lower(), tag=self.tag)
+        if len(writer)==1: writer[0][1](para['path'], ips.img if self.tag=='img' else imgs)
+
+class TableWriter(Table):
+    tag = 'tab'
+    note = ['all']
+    para={'path':''}
+
+    def show(self):
+        filt = [i.lower() for i in self.filt]
+        self.para['path'] = self.app.getpath('Save..', filt, 'save', '')
+        return not self.para['path'] is None
+
+    #process
+    def run(self, tps, snap, data, para = None):
+        fp, fn = os.path.split(para['path'])
+        fn, fe = os.path.splitext(fn)
+
+        writer = Source.manager('writer').gets(name=fe[1:], tag=self.tag)
+        if len(writer)==1: return writer[0][1](para['path'], data)

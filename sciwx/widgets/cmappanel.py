@@ -30,6 +30,7 @@ class CMapPanel(wx.Panel):
 
     def init_buf(self):
         box = self.GetClientSize()
+        if min(box)==0: return
         self.buffer = wx.Bitmap(box.width, box.height)
         
     @classmethod

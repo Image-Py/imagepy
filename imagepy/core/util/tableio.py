@@ -1,3 +1,4 @@
+'''
 import os
 from ... import root_dir
 from ..engine import Free, Table, Macros
@@ -35,3 +36,4 @@ class Writer(Table):
         fn, fe = os.path.splitext(fn)
         write = Source.manager('writer').get(fe[1:], tag='tab')
         write(para['path'], data)
+'''

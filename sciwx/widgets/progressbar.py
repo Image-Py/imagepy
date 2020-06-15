@@ -31,19 +31,21 @@ class ProgressBar ( wx.Panel ):
 		span, c, t = 30, 0, 0
 		while True:
 			time.sleep(0.1)
-			if len(self.progress)==0 and self.IsShown(): self.Hide()
-			if len(self.progress)>0 and not self.IsShown(): self.Show()
-			if len(self.progress)==0: continue
-			t = (t + 1)%span
-			if t==0: self.cur = (self.cur + 1)%len(self.progress)
-			name, f = self.progress[self.cur]
-			wx.CallAfter(self.lab_name.SetLabel, name)
-			if f() is None:
-				c = (c + 5)%200
-				wx.CallAfter(self.gau_bar.SetValue, 100-abs(c-100))
-			else: wx.CallAfter(self.gau_bar.SetValue, f())
-			self.Layout()
-			self.GetParent().Layout()
+			try:
+				if len(self.progress)==0 and self.IsShown(): self.Hide()
+				if len(self.progress)>0 and not self.IsShown(): self.Show()
+				if len(self.progress)==0: continue
+				t = (t + 1)%span
+				if t==0: self.cur = (self.cur + 1)%len(self.progress)
+				name, f = self.progress[self.cur]
+				wx.CallAfter(self.lab_name.SetLabel, name)
+				if f() is None:
+					c = (c + 5)%200
+					wx.CallAfter(self.gau_bar.SetValue, 100-abs(c-100))
+				else: wx.CallAfter(self.gau_bar.SetValue, f())
+				self.Layout()
+				self.GetParent().Layout()
+			except: pass
 
 if __name__ == '__main__':
 	app = wx.App()

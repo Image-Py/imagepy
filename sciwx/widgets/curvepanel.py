@@ -35,6 +35,7 @@ class CurvePanel(wx.Panel):
             
     def init_buf(self):
         box = self.GetClientSize()
+        if min(box)==0: return
         self.buffer = wx.Bitmap(box.width, box.height)
         
     def on_size(self, event):

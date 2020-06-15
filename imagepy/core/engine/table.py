@@ -48,8 +48,7 @@ class Table:
             threading.Thread(target = self.runasyn, 
                 args = (tps, tps.data, tps.snap, para, callafter)).start()
         else: self.runasyn(tps, tps.data, tps.snap, para, callafter)
-        win = Source.get('widget').get('obj', name='Macros Recorder')
-        if win!=None: win.write('{}>{}'.format(self.title, para))
+        self.app.record_macros('{}>{}'.format(self.title, para))
 
     def runasyn(self,  tps, snap, data, para = None, callback = None):
         self.app.add_task(self)

@@ -29,6 +29,7 @@ class ViewPort(wx.Panel):
 
     def init_buf(self):
         self.box = box = self.GetClientSize()
+        if min(box)==0: return
         self.buffer = wx.Bitmap(box.width, box.height)
         self.update()
         
