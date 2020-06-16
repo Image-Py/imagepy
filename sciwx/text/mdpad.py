@@ -18,7 +18,7 @@ class MDPad(wx.Panel):
         self.title = title
 
     def set_cont(self, value, url=''):
-        # self.wv.SetPage(md2html(value), url)
+        return self.wv.SetPage(md2html(value), url)
         # I do not know why use SetPage the js would not run, So I write a file here
         here = osp.split(osp.abspath(__file__))
         for n in range(1,10):

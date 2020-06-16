@@ -83,10 +83,12 @@ class App():
         if not self.img_manager.has(img.name, obj=img):
             img.name = self.img_manager.name(img.name)
         self.img_manager.add(img.name, img)
+        print(self.img_manager.objs, 'open')
 
     def remove_img(self, img):
         print('remove', img.name)
         self.img_manager.remove(obj=img)
+        print(self.img_manager.objs, 'close')
 
     def add_img_win(self, win):
         self.wimg_manager.add(win.name, win)

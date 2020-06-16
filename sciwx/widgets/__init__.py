@@ -9,4 +9,5 @@ from .toolbar import ToolBar
 from .menubar import MenuBar
 from .viewport import ViewPort
 from .choicebook import ChoiceBook
+from .workflow import WorkFlowPanel
 from . import util

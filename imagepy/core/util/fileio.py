@@ -48,7 +48,9 @@ class Reader(Free):
         readers = Source.manager('reader').gets(name=fe[1:], tag=self.tag)
         if len(readers)==0: 
             return self.app.alert('no reader found for %s file'%fe[1:])
-        self.app.show(self.tag, readers[0][1](para['path']), fn)
+        if not self.tag is None:
+            self.app.show(self.tag, readers[0][1](para['path']), fn)
+        else: self.app.show(readers[0][2], readers[0][1](para['path']), fn)
 
 class ImageWriter(Simple):
     tag = 'img'

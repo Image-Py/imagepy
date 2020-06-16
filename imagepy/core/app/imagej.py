@@ -2,12 +2,12 @@ import wx, os, sys
 import time, threading
 sys.path.append('../../../')
 import wx.lib.agw.aui as aui
-from sciwx.widgets import MenuBar, ToolBar, ChoiceBook, ParaDialog
+from sciwx.widgets import MenuBar, ToolBar, ChoiceBook, ParaDialog, WorkFlowPanel
 from sciwx.canvas import CanvasFrame
 from sciwx.widgets import ProgressBar
 from sciwx.grid import GridFrame
 from sciwx.mesh import Canvas3DFrame
-from sciwx.text import MDNoteFrame, TextNoteFrame
+from sciwx.text import MDFrame, TextNoteFrame
 from sciwx.plot import PlotFrame
 from skimage.data import camera
 from sciapp import App, Source
@@ -58,6 +58,13 @@ class ImageJ(wx.Frame, App):
         self.pro_bar = ProgressBar(stapanel)
         sizersta.Add( self.pro_bar, 0, wx.ALL, 2 )
         stapanel.SetSizer(sizersta)
+        class OpenDrop(wx.FileDropTarget):
+            def __init__(self, app): 
+                wx.FileDropTarget.__init__(self)
+                self.app = app
+            def OnDropFiles(self, x, y, path):
+                self.app.run_macros(["Open>{'path':'%s'}"%i.replace('\\', '/') for i in path])
+        stapanel.SetDropTarget(OpenDrop(self))
         self.auimgr.AddPane( stapanel,  aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True )
             .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True )
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
@@ -118,9 +125,9 @@ class ImageJ(wx.Frame, App):
         self.auimgr.AddPane( self.widgets, aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True ).Hide()
             .Float().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,300 ) ).Layer( 10 ) )
 
-    def init_text(self):
-        self.mdframe = MDNoteFrame(self, 'Sci Document')
-        self.txtframe = TextNoteFrame(self, 'Sci Text')
+    def init_text(self): return
+        #self.mdframe = MDNoteFrame(self, 'Sci Document')
+        #self.txtframe = TextNoteFrame(self, 'Sci Text')
 
     def on_pan_close(self, event):
         if event.GetPane().window in [self.toolbar, self.widgets]:
@@ -133,6 +140,7 @@ class ImageJ(wx.Frame, App):
         self.add_img_win(event.GetEventObject().canvas)
 
     def on_close_img(self, event):
+        event.GetEventObject().Bind(wx.EVT_ACTIVATE, None)
         self.remove_img_win(event.GetEventObject().canvas)
         self.remove_img(event.GetEventObject().canvas.image)
         event.Skip()
@@ -209,11 +217,27 @@ class ImageJ(wx.Frame, App):
         fig.figure.title = title
         return fig
 
-    def show_md(self, cont, title='Document'):
-        page = self.mdframe.add_page()
-        page.set_cont(cont)
-        self.mdframe.Show()
+    def _show_md(self, cont, title='ImagePy'):
+        mdframe = MDFrame(self)
+        mdframe.set_cont(cont)
+        mdframe.mdpad.title = title
+        mdframe.Show(True)
+
+    def show_md(self, cont, title='ImagePy'):
+        wx.CallAfter(self._show_md, cont, title)
         
+    def _show_workflow(self, cont, title='ImagePy'):
+        pan = WorkFlowPanel(self)
+        pan.SetValue(cont)
+        info = aui.AuiPaneInfo(). DestroyOnClose(True). Left(). Caption(title)  .PinButton( True ) \
+            .Resizable().FloatingSize( wx.DefaultSize ).Dockable(False).Float().Top().Layer( 5 ) 
+        pan.Bind(None, lambda x:self.run_macros(['%s>None'%x]))
+        self.auimgr.AddPane(pan, info)
+        self.auimgr.Update()
+
+    def show_workflow(self, cont, title='ImagePy'):
+        wx.CallAfter(self._show_workflow, cont, title)
+
     def _show_txt(self, cont, title='ImagePy'):
         page = self.txtframe.add_notepad()
         page.append(cont)
@@ -302,6 +326,7 @@ class ImageJ(wx.Frame, App):
         def one(cmds, after): 
             cmd = cmds.pop(0)
             title, para = cmd.split('>')
+            print(title, para)
             plg = Source.manager('plugin').get(name=title)()
             after = lambda cmds=cmds: one(cmds, one)
             if len(cmds)==0: after = callafter
@@ -316,8 +341,12 @@ class ImageJ(wx.Frame, App):
             self.show_img(cont, title)
         elif tag=='tab':
             self.show_table(cont, title)
-        elif tag=='macros':
+        elif tag=='mc':
             self.run_macros(cont)
+        elif tag=='md':
+            self.show_md(cont, title)
+        elif tag=='wf':
+            self.show_workflow(cont, title)
         else: self.alert('no view for %s!'%tag)
 
     def info(self, cont): 

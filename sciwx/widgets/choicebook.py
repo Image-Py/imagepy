@@ -1,14 +1,15 @@
 import wx
 
 class ChoiceBook(wx.ScrolledWindow):
-	def __init__(self, parent):
+	def __init__(self, parent, app=None):
 		wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+		self.app = app or parent
 		self.SetSizer(wx.BoxSizer( wx.VERTICAL ))
 
 	def add_wgts(self, name, wgts):
 		book = wx.Choicebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.CHB_DEFAULT )
 		for name, wgt in wgts:
-			book.AddPage(wgt(book, self.GetParent()), name, False )
+			book.AddPage(wgt(book, self.app), name, False )
 		self.GetSizer().Add( book, 0, wx.EXPAND |wx.ALL, 0 )
 		self.Layout()
 		self.GetSizer().Fit(self)

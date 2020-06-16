@@ -27,25 +27,10 @@ def extend_plugins(path, lst, err):
             pt = os.path.join(root_dir,path)
             rst.append(Report(i[:-4], pt+'/'+i))
             Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
-        elif i[-3:] == '.mc':
-            pt = os.path.join(root_dir, path)
-            f = open(pt+'/'+i, 'r', 'utf-8')
-            cmds = f.readlines()
-            f.close()
-            rst.append(Macros(i[:-3], [getpath(pt, i) for i in cmds]))
-            Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
-        elif i[-3:] == '.wf':
-            pt = os.path.join(root_dir,path)
-            f = open(pt+'/'+i, 'r', 'utf-8')
-            cmds = f.read()
-            f.close()
-            rst.append(WorkFlow(i[:-3], cmds))
-            Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
-        elif i[-3:] == '.md':
-            f = open(os.path.join(root_dir,path)+'/'+i, 'r', 'utf-8')
-            cont = f.read()
-            f.close()
-            rst.append(MkDown(i[:-3], cont))
+        elif i[-3:] in {'.md', '.mc', '.wf'}:
+            p = os.path.join(os.path.join(root_dir,path), i).replace('\\','/')
+            opener = Macros(i[:-3], ['Open>{"path":"%s"}'%p])
+            rst.append(opener)
             Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
         elif i[-6:] in ['wgt.py', 'gts.py']:
             #try:
