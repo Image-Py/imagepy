@@ -77,7 +77,7 @@ class Histogram(Simple):
         else:
             img = ips.lookup() if msk is None else ips.lookup()[msk]
             hist = np.histogram(img, np.arange(257))[0]
-        show_hist(IPy.curapp, ips.title+'-Histogram', hist)
+        show_hist(self.app, ips.title+'-Histogram', hist)
 
 
 class Frequence(Simple):
