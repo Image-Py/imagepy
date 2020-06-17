@@ -11,6 +11,7 @@ import pandas as pd
 
 from skimage.graph import route_through_array
 from sciapp.object import mark2shp, Circles
+from sciwx.widgets.histpanel import HistPanel
 
 class HistogramFrame(wx.Frame):
     def __init__(self, parent, title, hist):
@@ -27,7 +28,7 @@ class HistogramFrame(wx.Frame):
         sizer = wx.BoxSizer( wx.VERTICAL )
         rgb = ['Red', 'Green', 'Blue']
         for i in (0,1,2):
-            histc = HistCanvas(panel)
+            histc = HistPanel(panel)
             histc.SetValue(hist[i])
             txt = wx.StaticText( panel, wx.ID_ANY, 'Channel:'+ rgb[i], wx.DefaultPosition, wx.DefaultSize, 0 )
             sizer.Add( txt, 0, wx.LEFT|wx.RIGHT, 8 )
@@ -45,7 +46,7 @@ class HistogramFrame(wx.Frame):
         back = wx.BoxSizer( wx.VERTICAL )
         back.Add(panel, 1, wx.EXPAND)
         sizer = wx.BoxSizer( wx.VERTICAL )
-        histc = HistCanvas(panel)
+        histc = HistPanel(panel)
         histc.SetValue(hist)
         txt = wx.StaticText( panel, wx.ID_ANY, 'Channel:'+'Gray', wx.DefaultPosition, wx.DefaultSize, 0 )
         sizer.Add( txt, 0, wx.LEFT|wx.RIGHT, 8 )
