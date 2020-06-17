@@ -71,7 +71,7 @@ class Histogram(Simple):
 
     def run(self, ips, imgs, para = None):
         msk = ips.mask('in')
-        if ips.imgtype == 'rgb':
+        if ips.channels == 3:
             img = ips.img if msk is None else ips.img[msk]
             hist = [np.histogram(img.ravel()[i::3], np.arange(257))[0] for i in (0,1,2)]
         else:
