@@ -9,6 +9,7 @@ from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
 from sciapp.object import mark2shp
 import pandas as pd
+from sciapp import Source
 
 # center, area, l, extent, cov
 class RegionCounter(Simple):
@@ -194,6 +195,6 @@ class PropertyMarker(Filter):
         else: ps = ps / ps.max()
         idx[1:] = ps * 245 + 10
         img[:] = idx[lab]
-        ips.lut = ColorManager.get_lut(para['cm'])
+        ips.lut = Source.manager('colormap').get(para['cm'])
 
 plgs = [RegionCounter, RegionFilter, PropertyMarker]
