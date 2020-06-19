@@ -46,7 +46,7 @@ class CanvasFrame(wx.Frame, App):
         return toolbar
 
     def add_menubar(self):
-        menubar = MenuBar()
+        menubar = MenuBar(self)
         self.SetMenuBar(menubar)
         return menubar
 
@@ -107,7 +107,7 @@ class CanvasNoteFrame(wx.Frame, App):
         return toolbar 
 
     def add_menubar(self):
-        menubar = MenuBar()
+        menubar = MenuBar(self)
         self.SetMenuBar(menubar)
         return menubar
         
