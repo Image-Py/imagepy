@@ -54,7 +54,7 @@ def parse(path):
 class Plugin( wx.Panel ):
     title = 'Plugins Manager'
     single = None
-    def __init__( self, parent,):
+    def __init__( self, parent, app=None):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size( 600,300 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
@@ -64,7 +64,7 @@ class Plugin( wx.Panel ):
         self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, "Search:", 
                                             wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText1.Wrap( -1 )
-        bSizer2.Add( self.m_staticText1, 0, wx.ALIGN_CENTER|wx.ALL|wx.EXPAND, 5 )
+        bSizer2.Add( self.m_staticText1, 0, wx.ALL|wx.EXPAND, 5 )
         self.txt_search = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, 
                                        wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer2.Add( self.txt_search, 1, wx.ALL, 5 )
@@ -99,6 +99,7 @@ class Plugin( wx.Panel ):
         self.btn_install.Bind(wx.EVT_BUTTON, self.on_install)
         self.btn_uninstall.Bind(wx.EVT_BUTTON, self.on_remove)
         self.chk_has.Bind( wx.EVT_CHECKBOX, self.on_check)
+        self.app = app
         self.load()
     
     #def list_plg(self, lst, items
@@ -143,13 +144,13 @@ class Plugin( wx.Panel ):
         if i==-1: return
         path = self.buf[i][-1]['path']
         Source.manager('plugin').get('Install Plugins')().start(
-            {'repo':self.buf[i][-1]['path']}, self.load)
+            self.app, {'repo':self.buf[i][-1]['path']}, self.load)
 
     def on_remove(self, event):
         i = self.lst_plgs.GetFirstSelected()
         if i==-1: return
         shutil.rmtree(self.buf[i][-1]['folder'])
-        IPy.reload_plgs(True, True, True, True)
+        self.app.load_all()
         self.load()
 
     def on_check(self, event): self.load()

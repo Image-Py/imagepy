@@ -7,7 +7,7 @@ from sciwx.canvas import CanvasFrame
 from sciwx.widgets import ProgressBar
 from sciwx.grid import GridFrame
 from sciwx.mesh import Canvas3DFrame
-from sciwx.text import MDFrame, TextNoteFrame
+from sciwx.text import MDFrame, TextFrame
 from sciwx.plot import PlotFrame
 from skimage.data import camera
 from sciapp import App, Source
@@ -72,10 +72,18 @@ class ImageJ(wx.Frame, App):
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
         
     def _load_all(self):
-        self.load_menu(load_plugins())
+        plgs, errplg = load_plugins()
+        self.load_menu(plgs)
         dtool = Source.manager('tools').get('default')
-        self.load_tool(load_tools(), dtool or 'Transform')
-        self.load_widget(load_widgets())
+        tols, errtol = load_tools()
+        self.load_tool(tols, dtool or 'Transform')
+        wgts, errwgt = load_widgets()
+        self.load_widget(wgts)
+        err = errplg + errtol + errwgt
+        if len(err)>0: 
+            err = [('File', 'Name', 'Error')] + err
+            cont = '\n'.join(['%-30s\t%-20s\t%s'%i for i in err])
+            self.show_txt(cont, 'loading error log')
 
     def load_all(self):
         wx.CallAfter(self._load_all)
@@ -253,9 +261,7 @@ class ImageJ(wx.Frame, App):
         wx.CallAfter(self._show_workflow, cont, title)
 
     def _show_txt(self, cont, title='ImagePy'):
-        page = self.txtframe.add_notepad()
-        page.append(cont)
-        self.txtframe.Show()
+        TextFrame(self, title, cont).Show()
 
     def show_txt(self, cont, title='ImagePy'):
         wx.CallAfter(self._show_txt, cont, title)

@@ -5,7 +5,7 @@ import os.path as osp
 class Plugin ( wx.Panel ):
 	title = 'Macros Recorder'
 
-	def __init__( self, parent ):
+	def __init__( self, parent, app=None):
 		wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(300, 200), style = wx.TAB_TRAVERSAL )
 		bSizer1 = wx.BoxSizer( wx.VERTICAL )
 		

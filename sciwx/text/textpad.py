@@ -12,8 +12,8 @@ class TextPad(wx.Panel):
         self.text.SetValue(cont)
         sizer.Add( self.text, 1, wx.ALL|wx.EXPAND, 1 )
         self.SetSizer( sizer )
-        
         self.Bind(wx.EVT_RIGHT_DOWN,self.OnRClick)
+        self.set_cont = self.text.SetValue
 
     def OnOpen(self,event):
         dialog=wx.FileDialog(self,'wxpython Notebook(o)',style=wx.FD_OPEN)
@@ -69,7 +69,6 @@ class TextFrame(wx.Frame):
         self.title = title
         self.textpad = TextPad(self, cont, title)
         self.append = self.textpad.append
-        self.append(cont)
         ### Create menus (name:event) k-v pairs 
         menus = [
                 ## File 
@@ -135,7 +134,7 @@ class TextNoteBook(wx.lib.agw.aui.AuiNotebook):
     def set_background(self, img):
         self.GetAuiManager().SetArtProvider(ImgArtProvider(img))
 
-    def add_notepad(self, textpad=None):
+    def add_page(self, textpad=None):
         if textpad is None: textpad = TextPad(self)
         self.AddPage(textpad, 'Text', True, wx.NullBitmap )
         return textpad
