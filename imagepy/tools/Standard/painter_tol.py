@@ -2,7 +2,7 @@ from sciapp.action import ImageTool
 from skimage.draw import line, circle
 
 def drawline(img, oldp, newp, w, value):
-    if img.ndim == 2: value = sum(value)/3
+    if img.ndim == 2 and hasattr(value, '__iter__'): value = sum(value)/3
     oy, ox = line(*[int(round(i)) for i in oldp+newp])
     cy, cx = circle(0, 0, w/2+1e-6)
     ys = (oy.reshape((-1,1))+cy).clip(0, img.shape[0]-1)
