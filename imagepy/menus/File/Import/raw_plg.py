@@ -1,4 +1,4 @@
-import wx,os,sys
+import os,sys
 import numpy as np
 import io# urllib2 urllib.request, urllib.error, urllib.parse
 from skimage.io import imread
@@ -31,8 +31,3 @@ class Plugin(Free):
             return
         img.shape = sp
         self.app.show_img([img], fn)
-
-if __name__ == '__main__':
-    print(Plugin.title)
-    app = wx.App(False)
-    Plugin().run()

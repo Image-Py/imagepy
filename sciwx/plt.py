@@ -5,7 +5,7 @@ from .text import MDFrame, TextFrame
 from .plot import PlotFrame
 from .mesh import Canvas3DFrame
 from .widgets import ParaDialog
-from .mesh.geoutil import *
+from sciapp.util.surfutil import *
 
 app = None
 

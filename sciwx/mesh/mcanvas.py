@@ -43,7 +43,7 @@ class MCanvas3D(wx.Panel):
         tsizer.Add( self.btn_stl, 0, wx.ALIGN_CENTER|wx.ALL, 0 )
         #pan = wx.Panel(self.toolbar, size=(50, 50))
         self.btn_color = wx.ColourPickerCtrl( self.toolbar, wx.ID_ANY, wx.Colour( 128, 128, 128 ), wx.DefaultPosition, [(33, 38), (-1, -1)][platform.system() in ['Windows', 'Linux']], wx.CLRP_DEFAULT_STYLE )
-        tsizer.Add( self.btn_color, 0, wx.ALIGN_CENTER|wx.ALL|(0, wx.EXPAND)[platform.system() in ['Windows', 'Linux']], 0 )
+        tsizer.Add( self.btn_color, 0, wx.ALL|(0, wx.EXPAND)[platform.system() in ['Windows', 'Linux']], 0 )
         tsizer.Add(wx.StaticLine( self.toolbar, wx.ID_ANY,  wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL), 0, wx.ALL|wx.EXPAND, 2 )
         self.cho_light = wx.Choice( self.toolbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, ['force light', 'normal light', 'weak light', 'off light'], 0 )
         self.cho_light.SetSelection( 1 )

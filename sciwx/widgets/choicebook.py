@@ -18,6 +18,9 @@ class ChoiceBook(wx.ScrolledWindow):
 		for name, wgts in data[1]:
 			self.add_wgts(name, wgts)
 
+	def clear(self):
+		self.DestroyChildren()
+
 if __name__ == '__main__':
 	app = wx.App()
 	frame = wx.Frame(None)

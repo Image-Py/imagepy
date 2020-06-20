@@ -13,8 +13,8 @@ import numpy as np
 
 def dem_test():
     cnf = Canvas3DFrame(None)
-    vts, fs, ns, cs = geoutil.build_surf2d(moon(), ds=1, k=0.3, sigma=2)
-    cnf.add_surf('dem', vts, fs, ns, cs)
+    vts, fs, ns, cs = surfutil.build_surf2d(moon(), ds=1, k=0.3, sigma=2)
+    cnf.add_surf('dem', Surface(vts, fs, ns, cs))
     cnf.Show()
 
 def ball_test():
@@ -101,9 +101,10 @@ def surface2d_test():
     cnf = Canvas3DFrame(None)
     x, y = np.ogrid[-2:2:20j, -2:2:20j]  
     z = x * np.exp( - x**2 - y**2)
-    vts, fs, ns, cs = geoutil.build_surf2d(z, ds=1, k=20, sigma=2)
-    cs[:] = geoutil.auto_lookup(vts[:,2], geoutil.linear_color('jet'))/255
-    cnf.add_surf('dem', vts, fs, ns, cs)
+    vts, fs, ns, cs = surfutil.build_surf2d(z, ds=1, k=20, sigma=2)
+    cs[:] = surfutil.auto_lookup(vts[:,2], surfutil.linear_color('jet'))/255
+    dem = Surface(vts, fs, ns, cs)
+    cnf.add_surf('dem', dem)
     cnf.Show()
 
 def arrow_test():
@@ -142,8 +143,8 @@ def volume_test():
     
 if __name__ == '__main__':
     app = wx.App()
-    balls_mark_rest()
     '''
+    balls_mark_rest()
     dem_test()
     ball_test()
     random_ball_test()
@@ -157,4 +158,5 @@ if __name__ == '__main__':
     cube_surf_test()
     volume_test()
     '''
+    dem_test()
     app.MainLoop()

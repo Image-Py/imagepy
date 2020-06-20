@@ -3,6 +3,7 @@ sys.path.append('../../')
 
 from skimage.data import astronaut, camera
 from sciwx import plt
+print(plt, '=========')
 
 import numpy as np
 import pandas as pd
@@ -22,9 +23,9 @@ if __name__ == '__main__':
     ax = fg.add_subplot()
     ax.plot(np.random.rand(100))
 
-    mesh = plt.meshshow()
-    vts, fs, ns, cs = plt.build_ball((100,100,100),50, (1,0,0))
-    mesh.add_surf('ball',vts, fs, ns, cs)
+    #mesh = plt.meshshow()
+    #vts, fs, ns, cs = plt.build_ball((100,100,100),50, (1,0,0))
+    #mesh.add_surf('ball',vts, fs, ns, cs)
 
     plt.parashow({'c':(255,0,0)}, [('color', 'c', 'select', 'color')], False)
     plt.show()

@@ -173,7 +173,6 @@ def extend_widgets(path, lst, err):
     for i in lst:
         try:
             rpath = path.replace('/', '.').replace('\\','.')
-            #rpath = rpath[rpath.index('imagepy.'):]
             plg = __import__('imagepy.'+rpath+'.'+i,'','',[''])
             rst.append(plg.Plugin)
         except Exception as e:

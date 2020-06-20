@@ -1,6 +1,6 @@
 import wx, wx.lib.agw.aui as aui
 from .mcanvas import MCanvas
-from ..widgets import ToolBar, MenuBar
+from ..widgets import ToolBar, MenuBar, ParaDialog
 from sciapp import App
 
 class CanvasFrame(wx.Frame, App):
@@ -46,9 +46,17 @@ class CanvasFrame(wx.Frame, App):
         return toolbar
 
     def add_menubar(self):
-        menubar = MenuBar()
+        menubar = MenuBar(self)
         self.SetMenuBar(menubar)
         return menubar
+
+    def show_para(self, title, view, para, on_handle=None, on_ok=None, on_cancel=None, preview=False, modal=True):
+        dialog = ParaDialog(self, title)
+        dialog.init_view(view, para, preview, modal=modal, app=self)
+        dialog.Bind('cancel', on_cancel)
+        dialog.Bind('parameter', on_handle)
+        dialog.Bind('commit', on_ok)
+        return dialog.show()
 
 class CanvasNoteBook(wx.lib.agw.aui.AuiNotebook):
     def __init__(self, parent):

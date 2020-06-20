@@ -9,7 +9,7 @@ from skimage.io import imread
 from sciapp import Source
 from imagepy.core.engine import Free
 from glob import glob
-import wx, os
+import os.path as osp
     
 class Plugin(Free):
     title = 'Import Sequence'
@@ -34,7 +34,7 @@ class Plugin(Free):
         return self.app.show_para('Import sequence', self.view, self.para)
 
     def getfiles(self, name):
-        p,f = os.path.split(name)
+        p,f = osp.split(name)
         s = p+'/*.'+name.split('.')[-1]
         return glob(s)
 
@@ -51,8 +51,8 @@ class Plugin(Free):
 
     #process
     def run(self, para = None):
-        fp, fn = os.path.split(para['path'])
-        fn, fe = os.path.splitext(fn)
+        fp, fn = osp.split(para['path'])
+        fn, fe = osp.splitext(fn)
         read = Source.manager('reader').get(name=fe[1:])
         try: img = read(para['path'])
         except: return self.app.alert('unknown img format!')

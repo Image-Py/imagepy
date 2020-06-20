@@ -27,6 +27,9 @@ class MenuBar(wx.MenuBar):
 
     def on_menu(self, event):
         print('here')
+
+    def clear(self):
+        while self.GetMenuCount()>0: self.Remove(0)
         
 
 if __name__ == '__main__':

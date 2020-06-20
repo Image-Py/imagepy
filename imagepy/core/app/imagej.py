@@ -13,7 +13,8 @@ from skimage.data import camera
 from sciapp import App, Source
 from sciapp.object import Image
 from imagepy import root_dir
-from .source import *
+from .startup import load_plugins, load_tools, load_widgets
+#from .source import *
 
 class ImageJ(wx.Frame, App):
     def __init__( self, parent ):
@@ -33,6 +34,7 @@ class ImageJ(wx.Frame, App):
         self.init_widgets()
         self.init_text()
         self.init_status()
+        self._load_all()
         self.Fit()
 
         self.Layout()
@@ -69,16 +71,28 @@ class ImageJ(wx.Frame, App):
             .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True )
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
         
+    def _load_all(self):
+        self.load_menu(load_plugins())
+        dtool = Source.manager('tools').get('default')
+        self.load_tool(load_tools(), dtool or 'Transform')
+        self.load_widget(load_widgets())
+
+    def load_all(self):
+        wx.CallAfter(self._load_all)
+
     def load_menu(self, data):
+        self.menubar.clear()
         self.menubar.load(data)
 
     def load_tool(self, data, default=None):
+        self.toolbar.clear()
         for i, (name, tols) in enumerate(data[1]):
             self.toolbar.add_tools(name, tols, i==0)
         if not default is None: self.toolbar.add_pop(os.path.join(root_dir, 'tools/drop.gif'), default)
         self.toolbar.Layout()
 
     def load_widget(self, data):
+        self.widgets.clear()
         self.widgets.load(data)
         
     def init_menu(self):
@@ -164,7 +178,7 @@ class ImageJ(wx.Frame, App):
         event.Skip()
         
     def set_info(self, value):
-        self.txt_info.SetLabel(value)
+        wx.CallAfter(self.txt_info.SetLabel, value)
 
     def set_progress(self, value):
         v = max(min(value, 100), 0)

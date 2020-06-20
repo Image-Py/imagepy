@@ -2,6 +2,7 @@ import wx
 from .paradialog import ParaDialog
 
 def make_logo(obj):
+    bmp = None
     if isinstance(obj, str) and len(obj)>1:
         bmp = wx.Bitmap(obj)
     if isinstance(obj, str) and len(obj)==1:
@@ -17,6 +18,7 @@ def make_logo(obj):
         w, h = dc.GetTextExtent(obj)
         dc.DrawText(obj, 8-w//2, 8-h//2)
         rgb = bytes(768)
+        dc.SelectObject(wx.NullBitmap)
         bmp.CopyToBuffer(rgb)
         a = memoryview(rgb[::3]).tolist()
         a = bytes([255-i for i in a])
@@ -65,6 +67,11 @@ class ToolBar(wx.Panel):
         #if not isinstance(data[0], Macros) and issubclass(data[0], Tool):
         btn.Bind(wx.EVT_LEFT_DCLICK, lambda e, obj=obj: self.on_config(e, obj))
             
+    def clear(self):
+        del self.toolset[:]
+        self.GetSizer().Clear()
+        self.DestroyChildren()
+
     def add_tool(self, logo, tool):
         btn = wx.BitmapButton(self, wx.ID_ANY, make_logo(logo), 
             wx.DefaultPosition, (32,32), wx.BU_AUTODRAW|wx.RAISED_BORDER )

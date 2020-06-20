@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from imagepy.core.draw import paint
 from imagepy.core.engine import Tool
-import wx
 
 # this is a simple tool implements a pencial
 class Plugin(Tool):
@@ -16,7 +15,7 @@ class Plugin(Tool):
         self.sta = 0
         self.paint = paint.Paint()
         self.paint.color = 255
-        self.cursor = wx.CURSOR_CROSS
+        self.cursor = 'cross'
         
     # do it when mouse_down
     def mouse_down(self, ips, x, y, btn, **key):

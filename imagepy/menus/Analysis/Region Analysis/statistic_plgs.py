@@ -5,8 +5,6 @@ Created on Tue Dec 27 01:06:59 2016
 """
 import numpy as np
 from scipy import ndimage
-import wx
-
 from imagepy.core.engine import Simple, Filter
 from sciapp.object import mark2shp
 import pandas as pd
@@ -93,29 +91,6 @@ class RegionStatistic(Simple):
         self.app.show_table(pd.DataFrame(data, columns=titles), inten.title+'-pixels')
         inten.mark = mark2shp(mark)
         inten.update()
-
-class RGMark:
-    def __init__(self, data):
-        self.xy, self.msk = data
-
-    def draw(self, dc, f, **key):
-        dc.SetTextForeground((255,255,0))
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
-                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        dc.SetFont(font)
-
-        dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))
-        dc.SetBrush(wx.Brush((0,255,0)))
-        pos = [f(*(i[1], i[0])) for i in self.xy[self.msk]]
-        for i in pos:dc.DrawCircle(int(i[0]), int(i[1]), 2)
-
-
-        dc.SetPen(wx.Pen((255,0,0), width=1, style=wx.SOLID))
-        dc.SetBrush(wx.Brush((255,0,0)))
-        pos = [f(*(i[1], i[0])) for i in self.xy[~self.msk]]
-        for i in pos:dc.DrawCircle(int(i[0]), int(i[1]), 2)
-
-
 
 class IntensityFilter(Filter):
     title = 'Intensity Filter'
