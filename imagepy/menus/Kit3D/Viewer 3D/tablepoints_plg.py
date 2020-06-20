@@ -27,7 +27,7 @@ class Plugin(Table):
 	def run(self, tps, snap, data, para = None):
 		pts = np.array(data[[para['x'], para['y'], para['z']]])
 		rs = data[para['rs']]*para['r'] if para['rs'] != 'None' else [para['r']]*len(pts)
-		cm = ColorManager.get_lut(para['cm'])/255.0
+		cm = Source.manager('colormap').get(para['cm'])/255.0
 		clip = lambda x : (x-x.min())/(x.max()-x.min())*255
 		if para['cs'] == 'None': cs = [np.array(para['c'])/255.0]*len(pts)
 		else: cs = cm[clip(data[para['cs']]).astype(np.uint8)]

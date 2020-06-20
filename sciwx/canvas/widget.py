@@ -93,10 +93,10 @@ class CanvasNoteBook(wx.lib.agw.aui.AuiNotebook):
     def on_close(self, event): pass
 
 class CanvasNoteFrame(wx.Frame, App):
-    def __init__(self, parent):
+    def __init__(self, parent, title = 'CanvasNoteFrame'):
         App.__init__(self)
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY,
-                            title = 'CanvasNoteFrame',
+                            title = title,
                             pos = wx.DefaultPosition,
                             size = wx.Size( 800, 600 ),
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
@@ -115,7 +115,7 @@ class CanvasNoteFrame(wx.Frame, App):
         return toolbar 
 
     def add_menubar(self):
-        menubar = MenuBar()
+        menubar = MenuBar(self)
         self.SetMenuBar(menubar)
         return menubar
         
