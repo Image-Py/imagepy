@@ -60,10 +60,8 @@ class ToolBar(wx.Panel):
         obj = tol()
         btn.SetBackgroundColour(self.GetBackgroundColour())
         btn.Bind( wx.EVT_LEFT_DOWN, lambda e, obj=obj: self.on_tool(e, obj))
-
         #btn.Bind( wx.EVT_RIGHT_DOWN, lambda x, p=data[0]: IPy.show_md(p.title, DocumentManager.get(p.title)))
-        #btn.Bind( wx.EVT_ENTER_WINDOW, 
-        #          lambda x, p='"{}" Tool'.format(data[0].title): set_info(p))        
+        btn.Bind( wx.EVT_ENTER_WINDOW, lambda x, p='%s Tool'%obj.title: self.app.set_info(p))        
         #if not isinstance(data[0], Macros) and issubclass(data[0], Tool):
         btn.Bind(wx.EVT_LEFT_DCLICK, lambda e, obj=obj: self.on_config(e, obj))
             

@@ -3,7 +3,7 @@ from .boxutil import cross, multiply, merge, lay, mat, like
 from .imutil import mix_img
 from .mark import drawmark
 from sciapp.object import Image, Shape, mark2shp, Layer, json2shp
-from sciapp.action import Tool, DefaultTool
+from sciapp.action import ImageTool, ShapeTool
 from time import time
 
 class Canvas (wx.Panel):
@@ -53,10 +53,12 @@ class Canvas (wx.Panel):
         obj, tol = self.get_obj_tol()
         btn, tool = me.GetButton(), self.tool or tol
         ld, rd, md = me.LeftIsDown(), me.RightIsDown(), me.MiddleIsDown()
-        if me.Moving() and not (ld or md or rd): pass
         sta = [me.AltDown(), me.ControlDown(), me.ShiftDown()]
         others = {'alt':sta[0], 'ctrl':sta[1],
             'shift':sta[2], 'px':px, 'py':py, 'canvas':self}
+        if me.Moving() and not (ld or md or rd): 
+            for i in (ImageTool, ShapeTool):
+                if isinstance(tool, i): i.mouse_move(tool, obj, x, y, btn)
         if me.ButtonDown():
             self.SetFocus()
             tool.mouse_down(obj, x, y, btn, **others)

@@ -8,6 +8,7 @@ class Tool(SciAction):
     para = None
 
     def config(self): pass
+    def mouse_hover(self, canvas, x, y, btn, **key): pass
     def mouse_down(self, canvas, x, y, btn, **key): pass
     def mouse_up(self, canvas, x, y, btn, **key): pass
     def mouse_move(self, canvas, x, y, btn, **key): pass
@@ -20,7 +21,7 @@ class DefaultTool(Tool):
     title = 'Move And Scale'
     def __init__(self): 
         self.oldxy = None
-        
+
     def mouse_down(self, obj, x, y, btn, **key):
         if btn==1: self.oldxy = key['px'], key['py']
         if btn==3: key['canvas'].fit()
@@ -48,6 +49,13 @@ class ImageTool(DefaultTool):
     default = None
     title = 'Image Tool'
 
+    def mouse_move(self, img, x, y, btn, **key):
+        if self.app is None: return
+        r, c = int(y), int(x)
+        if (r>0) & (c>0) & (r<img.shape[0]) & (c<img.shape[1]):
+            s = 'x:%d y:%d  value:%s'%(x, y, img.img[r,c])
+            self.app.set_info(s)
+
     def start(self, app): 
         self.app = app
         ImageTool.default = self
@@ -56,6 +64,9 @@ class ImageTool(DefaultTool):
 class ShapeTool(DefaultTool):
     default = None
     title = 'Shape Tool'
+
+    def mouse_move(self, img, x, y, btn, **key):
+        if self.app: self.app.set_info('%d, %d'%(x, y))
 
     def start(self, app): 
         self.app = app
