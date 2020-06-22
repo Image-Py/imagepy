@@ -1,0 +1,35 @@
+Windows Style::窗口样式
+	Shown in ImagePy style when next setup!::ImagePy布局将在下次启动时展示！
+
+Pay Tribute To ImageJ::ImageJ布局风格
+
+Elegant ImagePy Style::ImagePy布局风格
+
+Kill Image::关闭图像
+	name::图像名称
+	close all images::关闭所有图像
+	OK::确认
+	cancel::取消
+	Help::帮助
+
+Kill Table::关闭表格
+	name::表格名称
+	close all tables::关闭所有表格
+
+Widgets::控件列表
+
+Toolbar::工具栏
+
+Tables Window::表格窗口
+
+Macros Recorder::宏记录器
+
+Command Line::命令行
+
+Plugin List View::插件列表
+
+Plugin Tree View::插件树形图
+
+Tool Tree View::工具树形图
+
+Develop Tool Sute::开发工具集

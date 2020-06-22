@@ -3,7 +3,7 @@ numpy-stl
 openpyxl
 pandas
 pydicom
-pystackreg
+
 pypubsub
 read-roi
 scikit-image
