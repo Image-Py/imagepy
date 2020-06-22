@@ -4,7 +4,9 @@ Copy::拷贝
 
 Paste::粘贴
 
-Sketch::草图
+Sketch::描边
+	width::宽度
+	pix::像素
 
 Fill::填充
 
