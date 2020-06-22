@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<noval:project xmlns:noval="http://www.novalide.com/noval.xsd" version="13" name="trans" id="B31C032E-B42D-11EA-A6A3-40E23058BB36">
+  <noval:file filePath="./imagepy/..." logicalFolder="imagepy"/>
+  <noval:file filePath="./sciapp/..." logicalFolder="sciapp"/>
+  <noval:file filePath="./sciwx/..." logicalFolder="sciwx"/>
+  <noval:file filePath="./setup.py"/>
+  <noval:file filePath="./imagepy/core/..." logicalFolder="imagepy/core"/>
+  <noval:file filePath="./imagepy/data/..." logicalFolder="imagepy/data"/>
+  <noval:file filePath="./imagepy/doc/..." logicalFolder="imagepy/doc"/>
+  <noval:file filePath="./imagepy/ipyalg/..." logicalFolder="imagepy/ipyalg"/>
+  <noval:file filePath="./imagepy/lang/..." logicalFolder="imagepy/lang"/>
+  <noval:file filePath="./imagepy/menus/..." logicalFolder="imagepy/menus"/>
+  <noval:file filePath="./imagepy/tools/..." logicalFolder="imagepy/tools"/>
+  <noval:file filePath="./imagepy/widgets/..." logicalFolder="imagepy/widgets"/>
+  <noval:file filePath="./imagepy/__init__.py" logicalFolder="imagepy"/>
+  <noval:file filePath="./imagepy/__main__.py" logicalFolder="imagepy"/>
+  <noval:file filePath="./imagepy/__pycache__/..." logicalFolder="imagepy/__pycache__"/>
+  <noval:file filePath="./imagepy/core/app/..." logicalFolder="imagepy/core/app"/>
+  <noval:file filePath="./imagepy/core/engine/..." logicalFolder="imagepy/core/engine"/>
+  <noval:file filePath="./imagepy/core/util/..." logicalFolder="imagepy/core/util"/>
+  <noval:file filePath="./imagepy/core/__init__.py" logicalFolder="imagepy/core"/>
+  <noval:file filePath="./imagepy/core/app/imagej.py" logicalFolder="imagepy/core/app"/>
+  <noval:file filePath="./imagepy/core/app/imagepy.py" logicalFolder="imagepy/core/app"/>
+  <noval:file filePath="./imagepy/core/app/loader.py" logicalFolder="imagepy/core/app"/>
+  <noval:file filePath="./imagepy/core/app/source.py" logicalFolder="imagepy/core/app"/>
+  <noval:file filePath="./imagepy/core/app/startup.py" logicalFolder="imagepy/core/app"/>
+  <noval:file filePath="./imagepy/core/app/__init__.py" logicalFolder="imagepy/core/app"/>
+  <noval:file filePath="./sciapp/action/..." logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/app.py" logicalFolder="sciapp"/>
+  <noval:file filePath="./sciapp/object/..." logicalFolder="sciapp/object"/>
+  <noval:file filePath="./sciapp/util/..." logicalFolder="sciapp/util"/>
+  <noval:file filePath="./sciapp/__init__.py" logicalFolder="sciapp"/>
+  <noval:file filePath="./sciapp/__pycache__/..." logicalFolder="sciapp/__pycache__"/>
+  <noval:file filePath="./sciapp/action/action.py" logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/action/free.py" logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/action/imgact.py" logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/action/meaact.py" logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/action/roiact.py" logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/action/shpact.py" logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/action/shpbase.py" logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/action/simple.py" logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/action/tolact.py" logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/action/__init__.py" logicalFolder="sciapp/action"/>
+  <noval:file filePath="./sciapp/action/__pycache__/..." logicalFolder="sciapp/action/__pycache__"/>
+  <noval:file filePath="./sciapp/object/image.py" logicalFolder="sciapp/object"/>
+  <noval:file filePath="./sciapp/object/roi.py" logicalFolder="sciapp/object"/>
+  <noval:file filePath="./sciapp/object/shape.py" logicalFolder="sciapp/object"/>
+  <noval:file filePath="./sciapp/object/surface.py" logicalFolder="sciapp/object"/>
+  <noval:file filePath="./sciapp/object/table.py" logicalFolder="sciapp/object"/>
+  <noval:file filePath="./sciapp/object/__init__.py" logicalFolder="sciapp/object"/>
+  <noval:file filePath="./sciapp/object/__pycache__/..." logicalFolder="sciapp/object/__pycache__"/>
+  <noval:file filePath="./sciapp/util/shputil.py" logicalFolder="sciapp/util"/>
+  <noval:file filePath="./sciapp/util/surfutil.py" logicalFolder="sciapp/util"/>
+  <noval:file filePath="./sciapp/util/__init__.py" logicalFolder="sciapp/util"/>
+  <noval:file filePath="./sciapp/util/__pycache__/..." logicalFolder="sciapp/util/__pycache__"/>
+  <noval:file filePath="./sciwx/app/..." logicalFolder="sciwx/app"/>
+  <noval:file filePath="./sciwx/canvas/..." logicalFolder="sciwx/canvas"/>
+  <noval:file filePath="./sciwx/demo/..." logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/grid/..." logicalFolder="sciwx/grid"/>
+  <noval:file filePath="./sciwx/mesh/..." logicalFolder="sciwx/mesh"/>
+  <noval:file filePath="./sciwx/plot/..." logicalFolder="sciwx/plot"/>
+  <noval:file filePath="./sciwx/plt.py" logicalFolder="sciwx"/>
+  <noval:file filePath="./sciwx/plugins/..." logicalFolder="sciwx/plugins"/>
+  <noval:file filePath="./sciwx/text/..." logicalFolder="sciwx/text"/>
+  <noval:file filePath="./sciwx/widgets/..." logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/__init__.py" logicalFolder="sciwx"/>
+  <noval:file filePath="./sciwx/__pycache__/..." logicalFolder="sciwx/__pycache__"/>
+  <noval:file filePath="./sciwx/app/imgapp.py" logicalFolder="sciwx/app"/>
+  <noval:file filePath="./sciwx/app/miniapp.py" logicalFolder="sciwx/app"/>
+  <noval:file filePath="./sciwx/app/__init__.py" logicalFolder="sciwx/app"/>
+  <noval:file filePath="./sciwx/canvas/boxutil.py" logicalFolder="sciwx/canvas"/>
+  <noval:file filePath="./sciwx/canvas/canvas.py" logicalFolder="sciwx/canvas"/>
+  <noval:file filePath="./sciwx/canvas/imutil.py" logicalFolder="sciwx/canvas"/>
+  <noval:file filePath="./sciwx/canvas/mark.py" logicalFolder="sciwx/canvas"/>
+  <noval:file filePath="./sciwx/canvas/mcanvas.py" logicalFolder="sciwx/canvas"/>
+  <noval:file filePath="./sciwx/canvas/test.py" logicalFolder="sciwx/canvas"/>
+  <noval:file filePath="./sciwx/canvas/vwidget.py" logicalFolder="sciwx/canvas"/>
+  <noval:file filePath="./sciwx/canvas/widget.py" logicalFolder="sciwx/canvas"/>
+  <noval:file filePath="./sciwx/canvas/__init__.py" logicalFolder="sciwx/canvas"/>
+  <noval:file filePath="./sciwx/canvas/__pycache__/..." logicalFolder="sciwx/canvas/__pycache__"/>
+  <noval:file filePath="./sciwx/demo/aipen_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/app_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/canvas1_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/canvas2_m_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/canvas3_image_obj.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/canvas4_tool.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/canvas5_frame_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/canvas6_frame_toolbar.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/canvas7_frame_menu.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/canvas7_frame_menu_tool.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/canvas9_image_roi.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/dialog_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/grid_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/markdown_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/mesh1_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/mesh2_mesh_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/mesh3_geoutil.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/plot_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/plt_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/shape_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/shape_edite_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/shape_frame_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/shape_measure_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/shape_roi_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/text_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/demo/widget_demo.py" logicalFolder="sciwx/demo"/>
+  <noval:file filePath="./sciwx/grid/grid.py" logicalFolder="sciwx/grid"/>
+  <noval:file filePath="./sciwx/grid/widget.py" logicalFolder="sciwx/grid"/>
+  <noval:file filePath="./sciwx/grid/__init__.py" logicalFolder="sciwx/grid"/>
+  <noval:file filePath="./sciwx/grid/__pycache__/..." logicalFolder="sciwx/grid/__pycache__"/>
+  <noval:file filePath="./sciwx/mesh/canvas.py" logicalFolder="sciwx/mesh"/>
+  <noval:file filePath="./sciwx/mesh/imgs/..." logicalFolder="sciwx/mesh/imgs"/>
+  <noval:file filePath="./sciwx/mesh/matutil.py" logicalFolder="sciwx/mesh"/>
+  <noval:file filePath="./sciwx/mesh/mcanvas.py" logicalFolder="sciwx/mesh"/>
+  <noval:file filePath="./sciwx/mesh/scene.py" logicalFolder="sciwx/mesh"/>
+  <noval:file filePath="./sciwx/mesh/widget.py" logicalFolder="sciwx/mesh"/>
+  <noval:file filePath="./sciwx/mesh/__init__.py" logicalFolder="sciwx/mesh"/>
+  <noval:file filePath="./sciwx/mesh/__pycache__/..." logicalFolder="sciwx/mesh/__pycache__"/>
+  <noval:file filePath="./sciwx/plot/plot.py" logicalFolder="sciwx/plot"/>
+  <noval:file filePath="./sciwx/plot/__init__.py" logicalFolder="sciwx/plot"/>
+  <noval:file filePath="./sciwx/plot/__pycache__/..." logicalFolder="sciwx/plot/__pycache__"/>
+  <noval:file filePath="./sciwx/plugins/channels.py" logicalFolder="sciwx/plugins"/>
+  <noval:file filePath="./sciwx/plugins/curve.py" logicalFolder="sciwx/plugins"/>
+  <noval:file filePath="./sciwx/plugins/filters.py" logicalFolder="sciwx/plugins"/>
+  <noval:file filePath="./sciwx/plugins/histogram.py" logicalFolder="sciwx/plugins"/>
+  <noval:file filePath="./sciwx/plugins/io.py" logicalFolder="sciwx/plugins"/>
+  <noval:file filePath="./sciwx/plugins/pencil.py" logicalFolder="sciwx/plugins"/>
+  <noval:file filePath="./sciwx/plugins/viewport.py" logicalFolder="sciwx/plugins"/>
+  <noval:file filePath="./sciwx/plugins/__init__.py" logicalFolder="sciwx/plugins"/>
+  <noval:file filePath="./sciwx/text/mdpad.py" logicalFolder="sciwx/text"/>
+  <noval:file filePath="./sciwx/text/mdutil.py" logicalFolder="sciwx/text"/>
+  <noval:file filePath="./sciwx/text/textpad.py" logicalFolder="sciwx/text"/>
+  <noval:file filePath="./sciwx/text/__init__.py" logicalFolder="sciwx/text"/>
+  <noval:file filePath="./sciwx/text/__pycache__/..." logicalFolder="sciwx/text/__pycache__"/>
+  <noval:file filePath="./sciwx/widgets/advanced.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/choicebook.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/cmappanel.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/colormap.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/curvepanel.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/histpanel.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/menubar.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/normal.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/paradialog.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/progressbar.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/propdialog.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/threpanel.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/toolbar.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/util.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/viewport.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/workflow.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/__init__.py" logicalFolder="sciwx/widgets"/>
+  <noval:file filePath="./sciwx/widgets/__pycache__/..." logicalFolder="sciwx/widgets/__pycache__"/>
+  <noval:file filePath="./imagepy/data/luts/..." logicalFolder="imagepy/data/luts"/>
+  <noval:file filePath="./imagepy/doc/English/..." logicalFolder="imagepy/doc/English"/>
+  <noval:file filePath="./imagepy/data/luts/Others/..." logicalFolder="imagepy/data/luts/Others"/>
+  <noval:file filePath="./imagepy/data/luts/__init__.py" logicalFolder="imagepy/data/luts"/>
+  <noval:file filePath="./imagepy/doc/English/plugins/..." logicalFolder="imagepy/doc/English/plugins"/>
+  <noval:file filePath="./imagepy/ipyalg/classify/..." logicalFolder="imagepy/ipyalg/classify"/>
+  <noval:file filePath="./imagepy/ipyalg/graph/..." logicalFolder="imagepy/ipyalg/graph"/>
+  <noval:file filePath="./imagepy/ipyalg/hydrology/..." logicalFolder="imagepy/ipyalg/hydrology"/>
+  <noval:file filePath="./imagepy/ipyalg/__init__.py" logicalFolder="imagepy/ipyalg"/>
+  <noval:file filePath="./imagepy/lang/Chinese/..." logicalFolder="imagepy/lang/Chinese"/>
+  <noval:file filePath="./imagepy/menus/Analysis/..." logicalFolder="imagepy/menus/Analysis"/>
+  <noval:file filePath="./imagepy/menus/Edit/..." logicalFolder="imagepy/menus/Edit"/>
+  <noval:file filePath="./imagepy/menus/File/..." logicalFolder="imagepy/menus/File"/>
+  <noval:file filePath="./imagepy/menus/Help/..." logicalFolder="imagepy/menus/Help"/>
+  <noval:file filePath="./imagepy/menus/Image/..." logicalFolder="imagepy/menus/Image"/>
+  <noval:file filePath="./imagepy/menus/Kit3D/..." logicalFolder="imagepy/menus/Kit3D"/>
+  <noval:file filePath="./imagepy/menus/Plugins/..." logicalFolder="imagepy/menus/Plugins"/>
+  <noval:file filePath="./imagepy/menus/Process/..." logicalFolder="imagepy/menus/Process"/>
+  <noval:file filePath="./imagepy/menus/Selection/..." logicalFolder="imagepy/menus/Selection"/>
+  <noval:file filePath="./imagepy/menus/Table/..." logicalFolder="imagepy/menus/Table"/>
+  <noval:file filePath="./imagepy/menus/Window/..." logicalFolder="imagepy/menus/Window"/>
+  <noval:file filePath="./imagepy/menus/__init__.py" logicalFolder="imagepy/menus"/>
+  <noval:file filePath="./imagepy/menus/Analysis/label_plg.py" logicalFolder="imagepy/menus/Analysis"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Pixel Cluster/..." logicalFolder="imagepy/menus/Analysis/Pixel Cluster"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Region Analysis/..." logicalFolder="imagepy/menus/Analysis/Region Analysis"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Skeleton Network/..." logicalFolder="imagepy/menus/Analysis/Skeleton Network"/>
+  <noval:file filePath="./imagepy/menus/Analysis/statistic_plg.py" logicalFolder="imagepy/menus/Analysis"/>
+  <noval:file filePath="./imagepy/menus/Analysis/__init__.py" logicalFolder="imagepy/menus/Analysis"/>
+  <noval:file filePath="./imagepy/menus/Edit/edit_plg.py" logicalFolder="imagepy/menus/Edit"/>
+  <noval:file filePath="./imagepy/menus/Edit/__init__.py" logicalFolder="imagepy/menus/Edit"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Pixel Cluster/cluster_plgs.py" logicalFolder="imagepy/menus/Analysis/Pixel Cluster"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Pixel Cluster/kmeans_plgs.py" logicalFolder="imagepy/menus/Analysis/Pixel Cluster"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Pixel Cluster/statistic_plgs.py" logicalFolder="imagepy/menus/Analysis/Pixel Cluster"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Pixel Cluster/__init__.py" logicalFolder="imagepy/menus/Analysis/Pixel Cluster"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Region Analysis/connect_plg.py" logicalFolder="imagepy/menus/Analysis/Region Analysis"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Region Analysis/regionprops_plgs.py" logicalFolder="imagepy/menus/Analysis/Region Analysis"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Region Analysis/statistic_plgs.py" logicalFolder="imagepy/menus/Analysis/Region Analysis"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Region Analysis/__init__.py" logicalFolder="imagepy/menus/Analysis/Region Analysis"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Skeleton Network/graph_plgs.py" logicalFolder="imagepy/menus/Analysis/Skeleton Network"/>
+  <noval:file filePath="./imagepy/menus/Analysis/Skeleton Network/__init__.py" logicalFolder="imagepy/menus/Analysis/Skeleton Network"/>
+  <noval:_runinfo>
+    <noval:DocumentTemplate>noval.python.project.viewer.PythonProjectTemplate</noval:DocumentTemplate>
+  </noval:_runinfo>
+  <noval:interpreter name="3.8" version="3.8.2" path="C:\Users\12957\AppData\Local\Programs\Python\Python38\python.exe"/>
+</noval:project>

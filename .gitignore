@@ -12,6 +12,7 @@ imagepy/plugins/
 # Distribution / packaging
 .Python
 env/
+.metadata/
 build/
 develop-eggs/
 dist/
