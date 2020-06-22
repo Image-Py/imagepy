@@ -7,7 +7,7 @@ Created on Fri Feb  3 22:21:32 2017
 
 import wx
 #from imagepy import IPy
-from imagepy.core.engine import Tool
+from sciapp.action import ImageTool
 import numpy as np
 import pandas as pd
 from numpy.linalg import norm
@@ -73,7 +73,7 @@ class Profile:
             rst.append(np.round(np.arccos(dxy[:,0]/l)/np.pi*180,1))
         IPy.show_table(pd.DataFrame(rst, columns=titles), title)
 
-class Plugin(Tool):
+class Plugin(ImageTool):
     """Define the profile class plugin with the event callback functions"""
     title = 'Profile'
     def __init__(self):

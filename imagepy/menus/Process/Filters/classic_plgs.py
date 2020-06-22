@@ -191,3 +191,11 @@ class USM(Filter):
 
 plgs = [Uniform, Gaussian, '-', Maximum, Minimum, Median, Percent, '-', 
     Prewitt, Sobel, Laplace, GaussianLaplace, DOG, '-', Variance, LaplaceSharp, USM]
+
+if __name__ == '__main__':
+    from skimage.data import camera, astronaut
+    from sciwx.app import ImageApp
+
+    ImageApp.start(
+        imgs = [('astronaut', astronaut())], 
+        plgs=[('U', USM), ('G', Gaussian)])

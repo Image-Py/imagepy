@@ -1,10 +1,10 @@
 import wx
-from imagepy.core.engine import Tool
+from sciapp.action import ImageTool
 #from imagepy.core import myvi
 #from imagepy import IPy
 import numpy as np
 
-class Plugin(Tool):
+class Plugin(ImageTool):
     title = 'Cursor 3D'
     para = {'r':1, 'color':(255,0,0)}
     view = [(int, 'r', (0,100), 0,  'radius', 'pix'),

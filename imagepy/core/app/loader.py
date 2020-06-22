@@ -5,7 +5,7 @@ Created on Fri Jan  6 23:45:59 2017
 @author: yxl
 """
 import os, sys
-from ..engine import Macros, MkDown, Widget, WorkFlow, Report
+from ..engine import Macros, MkDown, Widget, Report
 from sciapp import Source
 from ... import root_dir
 from codecs import open
@@ -203,15 +203,36 @@ def build_widgets(path, err='root'):
 
 def build_document(path):
     docs = []
-    for dirpath,dirnames,filenames in os.walk(path):
-        for filename in filenames:
-            if filename[-3:] != '.md': continue
-            docs.append(os.path.join(dirpath, filename))
-            f = open(docs[-1], encoding='utf-8')
-            cont = f.read()
-            f.close()
-            DocumentManager.add(filename[:-3], cont)
+    for lang in Source.manager('document').get('language'):
+        for dirpath, dirnames, filenames in os.walk(path+'/'+lang):
+            for filename in filenames:
+                if filename[-3:] != '.md': continue
+                docs.append(os.path.join(dirpath, filename))
+                f = open(docs[-1], encoding='utf-8')
+                cont = f.read()
+                f.close()
+                Source.manager('document').add(filename[:-3], cont, lang)
     return docs
+
+def build_dictionary(path):
+    for lang in Source.manager('dictionary').get('language'):
+        for dirpath, dirnames, filenames in os.walk(path+'/'+lang):
+            for filename in filenames:
+                if filename[-3:] != 'dic': continue
+                with open(os.path.join(dirpath, filename), encoding='utf-8') as f:
+                    lines = f.read().replace('\r','').split('\n')
+                dic = []
+                for line in lines:
+                    if line == '':
+                        dic[-1] = (dic[-1][0][0], dict(dic[-1]))
+                    elif line[0] == '\t':
+                        dic[-1].append(line[1:].split('::'))
+                    else:
+                        dic.append([line.split('::')])
+                if isinstance(dic[-1], list):
+                    dic[-1] = (dic[-1][0][0], dict(dic[-1]))
+                dic = dict(dic)
+                for i in dic: Source.manager('dictionary').add(i, dic[i], lang)
 
 if __name__ == "__main__":
     print (os.getcwd())

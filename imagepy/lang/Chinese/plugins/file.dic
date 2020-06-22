@@ -1,0 +1,13 @@
+New::新建图像
+	name::名称
+	width::宽度
+	height::高度
+	pix::像素
+	type::类型
+	slice::层数
+
+Open::打开图像
+
+Open Url::打开链接
+	Input the URL, eg. http://data.imagepy.org/testdata/yxdragon.jpg::输入链接, 例如 http://data.imagepy.org/testdata/yxdragon.jpg
+	Url::链接

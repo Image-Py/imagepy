@@ -13,7 +13,7 @@ class Plugin(Free):
     view = [(str, 'name', 'name', ''),
             (int, 'width',  (1,10240), 0,  'width', 'pix'),
             (int, 'height', (1,10240), 0,  'height', 'pix'),
-            (list, 'type', ['8-bit','RGB'], str, 'Type', ''),
+            (list, 'type', ['8-bit','RGB'], str, 'type', ''),
             (int, 'slice',  (1,2048), 0,  'slice', '')]
 
     #process

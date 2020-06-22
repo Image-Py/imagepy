@@ -19,7 +19,7 @@ class OpenUrl(Free):
     title = 'Open Url'
     para = {'url':'http://data.imagepy.org/testdata/yxdragon.jpg'}
     view = [('lab', None, 'Input the URL, eg. http://data.imagepy.org/testdata/yxdragon.jpg'),
-            (str, 'url', 'Url:', '')]
+            (str, 'url', 'Url', '')]
     
     def run(self, para = None):
         try:

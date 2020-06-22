@@ -1,5 +1,6 @@
 import numpy as np
-from imagepy.core.engine import Free, Tool
+from imagepy.core.engine import Free
+from sciapp.action import ImageTool
 from scipy.ndimage import label
 from scipy.signal import convolve2d
 from sciapp.object import Image
@@ -21,7 +22,7 @@ def run(scr):
     lut = [0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0]
     return np.array(lut, dtype=np.uint8)[cov.astype(np.uint8)]
 
-class Painter(Tool):
+class Painter(ImageTool):
     def __init__(self, size): self.size = size
     title = 'Life Painter'
         

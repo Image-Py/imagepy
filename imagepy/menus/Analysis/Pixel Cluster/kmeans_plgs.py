@@ -20,3 +20,11 @@ class K_mean(Filter):
 		img[:] = ms[vq(pts, ms)[0]].reshape(img.shape)
 
 plgs = [K_mean]
+
+if __name__ == '__main__':
+    from skimage.data import camera, astronaut
+    from sciwx.app import ImageApp
+
+    ImageApp.start(
+        imgs = [('astronaut', astronaut())], 
+        plgs=[('K', K_mean)])

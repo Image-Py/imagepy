@@ -4,7 +4,6 @@ Created on Fri Dec  2 23:48:33 2016
 @author: yxl
 """
 
-import wx
 import threading
 import numpy as np
 
@@ -93,7 +92,8 @@ class Filter:
     def show(self):
         preview = lambda para, ips=self.ips: self.preview(ips, para) or ips.update()
         return self.app.show_para(self.title, self.view, self.para, preview, 
-            on_ok=lambda : self.ok(self.ips), on_cancel=lambda : self.cancel(self.ips) or self.ips.update(), 
+            on_ok=lambda : self.ok(self.ips), on_help=self.on_help,
+            on_cancel=lambda : self.cancel(self.ips) or self.ips.update(), 
             preview='preview' in self.note, modal=self.modal)
     
     def run(self, ips, snap, img, para = None):
@@ -157,6 +157,11 @@ class Filter:
             elif rst == 'cancel': pass
         #ips.update()
         
+    def on_help(self):
+        lang = Source.manager('config').get('language')
+        doc = Source.manager('document').get(self.title, tag=lang)
+        self.app.show_md(doc or 'No Document!', self.title)
+
     def cancel(self, ips):
         if 'auto_snap' in self.note:
             ips.img[:] = ips.snap

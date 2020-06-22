@@ -32,7 +32,8 @@ class Table:
     def show(self):
         preview = lambda para, tps=self.tps: self.preview(tps, para) or tps.update()
         return self.app.show_para(self.title, self.view, self.para, preview, 
-            on_ok=lambda : self.ok(self.tps), on_cancel=lambda : self.cancel(self.tps) or self.tps.update(), 
+            on_ok=lambda : self.ok(self.tps), on_help=self.on_help,
+            on_cancel=lambda : self.cancel(self.tps) or self.tps.update(), 
             preview='preview' in self.note, modal=self.modal)
     
     def run(self, tps, snap, data, para = None):pass
@@ -41,6 +42,11 @@ class Table:
         if 'auto_snap' in self.note:
             tps.data[tps.snap.columns] = tps.snap
             tps.update()
+
+    def on_help(self):
+        lang = Source.manager('config').get('language')
+        doc = Source.manager('document').get(self.title, tag=lang)
+        self.app.show_md(doc or 'No Document!', self.title)
 
     def ok(self, tps, para=None, callafter=None):
         if para == None: para = self.para

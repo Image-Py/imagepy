@@ -38,7 +38,7 @@ class ToolBar(wx.Panel):
 
     def on_tool(self, evt, tol):
         tol.start(self.app)
-        evt.Skip()
+        # evt.Skip()
         btn = evt.GetEventObject()
         #print(self.GetBackgroundColour())
         #print(btn.GetClassDefaultAttributes().colFg)
@@ -54,17 +54,18 @@ class ToolBar(wx.Panel):
 
     def on_help(self, evt, tol): pass
 
-    def on_info(self, event, tol): pass
+    def on_info(self, event, tol): 
+        self.app.set_info('%s Tool'%tol.title)
 
     def bind(self, btn, tol):
         obj = tol()
         btn.SetBackgroundColour(self.GetBackgroundColour())
         btn.Bind( wx.EVT_LEFT_DOWN, lambda e, obj=obj: self.on_tool(e, obj))
-        #btn.Bind( wx.EVT_RIGHT_DOWN, lambda x, p=data[0]: IPy.show_md(p.title, DocumentManager.get(p.title)))
-        btn.Bind( wx.EVT_ENTER_WINDOW, lambda x, p='%s Tool'%obj.title: self.app.set_info(p))        
+        btn.Bind( wx.EVT_RIGHT_DOWN, lambda e, obj=obj: self.on_help(e, obj))
+        btn.Bind( wx.EVT_ENTER_WINDOW, lambda e, obj=obj: self.on_info(e, obj))
         #if not isinstance(data[0], Macros) and issubclass(data[0], Tool):
         btn.Bind(wx.EVT_LEFT_DCLICK, lambda e, obj=obj: self.on_config(e, obj))
-            
+
     def clear(self):
         del self.toolset[:]
         self.GetSizer().Clear()

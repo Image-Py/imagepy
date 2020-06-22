@@ -12,7 +12,7 @@ from skimage.data import camera
 from sciapp import App, Source
 from sciapp.object import Image
 from imagepy import root_dir
-from .startup import load_plugins, load_tools, load_widgets
+from .startup import load_plugins, load_tools, load_widgets, load_document, load_dictionary
 
 class ImagePy(wx.Frame, App):
     def __init__( self, parent ):
@@ -72,6 +72,8 @@ class ImagePy(wx.Frame, App):
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
         
     def _load_all(self):
+        load_document()
+        load_dictionary()
         plgs, errplg = load_plugins()
         self.load_menu(plgs)
         dtool = Source.manager('tools').get('default')
@@ -90,6 +92,9 @@ class ImagePy(wx.Frame, App):
 
     def load_menu(self, data):
         self.menubar.clear()
+        lang = Source.manager('config').get('language')
+        ls = Source.manager('dictionary').gets(tag=lang)
+        self.menubar.dic = dict([(i,j[i]) for i,j,_ in ls])
         self.menubar.load(data)
 
     def load_tool(self, data, default=None):
@@ -109,6 +114,11 @@ class ImagePy(wx.Frame, App):
     def init_tool(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.toolbar = ToolBar(self, True)
+        def on_help(evt, tol):
+            lang = Source.manager('config').get('language')
+            doc = Source.manager('document').get(tol.title, tag=lang)
+            self.show_md(doc or 'No Document!', tol.title)
+        self.toolbar.on_help = on_help
         self.toolbar.Fit()
 
         self.auimgr.AddPane(self.toolbar, aui.AuiPaneInfo() .Left()  .PinButton( True )
@@ -318,7 +328,7 @@ class ImagePy(wx.Frame, App):
         pan.SetValue(cont)
         info = aui.AuiPaneInfo(). DestroyOnClose(True). Left(). Caption(title)  .PinButton( True ) \
             .Resizable().FloatingSize( wx.DefaultSize ).Dockable(True).Dock().Top().Layer( 5 ) 
-        pan.Bind(None, pan.Bind(None, lambda x:self.run_macros(['%s>None'%x])))
+        pan.Bind(None, lambda x:self.run_macros(['%s>None'%x]))
         self.auimgr.AddPane(pan, info)
         self.auimgr.Update()
 
@@ -462,12 +472,16 @@ class ImagePy(wx.Frame, App):
         dialog.Destroy()
         return path
 
-    def show_para(self, title, view, para, on_handle=None, on_ok=None, on_cancel=None, preview=False, modal=True):
-        dialog = ParaDialog(self, title)
+    def show_para(self, title, view, para, on_handle=None, on_ok=None, 
+        on_cancel=None, on_help=None, preview=False, modal=True):
+        lang = Source.manager('config').get('language')
+        dic = Source.manager('dictionary').get(name=title, tag=lang)
+        dialog = ParaDialog(self, title, dic or {})
         dialog.init_view(view, para, preview, modal=modal, app=self)
         dialog.Bind('cancel', on_cancel)
         dialog.Bind('parameter', on_handle)
         dialog.Bind('commit', on_ok)
+        dialog.Bind('help', on_help)
         return dialog.show()
 
 if __name__ == '__main__':

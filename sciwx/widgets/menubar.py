@@ -1,9 +1,12 @@
 import wx
 
+def translate(v, dic): return dic[v] if v in dic else v
+
 class MenuBar(wx.MenuBar):
-    def __init__(self, app):
+    def __init__(self, app, dic={}):
         wx.MenuBar.__init__(self)
         self.app = app
+        self.dic = dic
         app.SetMenuBar(self)
 
     def parse(self, ks, vs, pt):
@@ -12,9 +15,9 @@ class MenuBar(wx.MenuBar):
             for kv in vs:
                 if kv == '-': menu.AppendSeparator()
                 else: self.parse(*kv, menu)
-            pt.Append(1, ks, menu)
+            pt.Append(1, translate(ks, self.dic), menu)
         else:
-            item = wx.MenuItem(pt, -1, ks)
+            item = wx.MenuItem(pt, -1, translate(ks, self.dic))
             f = lambda e, p=vs: p().start(self.app)
             self.Bind(wx.EVT_MENU, f, item)
             pt.Append(item)
@@ -25,8 +28,7 @@ class MenuBar(wx.MenuBar):
     def load(self, data):
         for k,v in data[1]: self.parse(k, v, self)
 
-    def on_menu(self, event):
-        print('here')
+    def on_menu(self, event): print('here')
 
     def clear(self):
         while self.GetMenuCount()>0: self.Remove(0)

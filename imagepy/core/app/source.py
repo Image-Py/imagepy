@@ -11,6 +11,8 @@ Source.manager('macros')
 Source.manager('config')
 
 Source.manager('config').read(osp.join(root_dir, 'data/config.json'))
+if Source.manager('config').get('language') is None:
+	Source.manager('config').add('language', 'english')
 
 from sciapp.object import Shape
 mark_style = Source.manager('config').get('mark_style')

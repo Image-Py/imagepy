@@ -4,6 +4,7 @@ Created on Sat Dec  3 03:57:53 2016
 @author: yxl
 """
 import threading
+from sciapp import Source
 from time import time
 
 class Free:
@@ -27,10 +28,15 @@ class Free:
         if callback!=None:callback()
 
     def load(self):return True
+
+    def on_help(self):
+        lang = Source.manager('config').get('language')
+        doc = Source.manager('document').get(self.title, tag=lang)
+        self.app.show_md(doc or 'No Document!', self.title)
         
     def show(self):
         if self.view==None:return True
-        return self.app.show_para(self.title, self.view, self.para, None)
+        return self.app.show_para(self.title, self.view, self.para, on_help=self.on_help)
         
     def start(self, app, para=None, callback=None):
         self.app = app

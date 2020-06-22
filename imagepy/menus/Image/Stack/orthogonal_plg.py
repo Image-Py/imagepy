@@ -6,7 +6,8 @@ Created on Sun Jan 15 03:19:34 2017
 
 import wx
 # from imagepy.core import ImagePlus
-from imagepy.core.engine import Tool, Simple
+from sciapp.action import ImageTool
+from imagepy.core.engine import  Simple
 
 class Cross:
     def __init__(self, w, h):
@@ -23,7 +24,7 @@ class Cross:
         dc.DrawLines([f(0,self.y),f(self.w,self.y)])
         dc.DrawLines([f(self.x,0),f(self.x,self.h)])
         
-class Orthogonal(Tool):        
+class Orthogonal(ImageTool):        
     title = 'Orthogonal View'
     def __init__(self):
         self.view1, self.view2 = None, None

@@ -12,11 +12,15 @@ widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl, 'path':PathCtrl,
 
 def add_widget(key, value): widgets[key] = value
 
+def translate(v, dic):
+    if isinstance(v, str): return dic[v] if v in dic else v
+    return [dic[i] if isinstance(i, str) and i in dic else i for i in v]
+
 class ParaDialog (wx.Dialog):
-    def __init__( self, parent, title):
-        wx.Dialog.__init__ (self, parent, -1, title, style = wx.DEFAULT_DIALOG_STYLE)
+    def __init__( self, parent, title, dic={}):
+        wx.Dialog.__init__ (self, parent, -1, translate(title, dic), style = wx.DEFAULT_DIALOG_STYLE)
         self.lst = wx.BoxSizer( wx.VERTICAL )
-        self.tus = []
+        self.tus, self.dic = [], dic
         self.on_ok = self.on_cancel = self.on_help = None
         self.handle = print
         self.ctrl_dic = {}
@@ -47,10 +51,10 @@ class ParaDialog (wx.Dialog):
             self.btn_cancel.Bind( wx.EVT_BUTTON, lambda e:self.commit('cancel'))
         #self.lst.Add()
 
-    def init_view(self, items, para, preview=False, modal=True, app=None):
+    def init_view(self, items, para, preview=False, modal=True, app=None, dic={}):
         self.para, self.modal = para, modal
         for item in items:
-            self.add_ctrl_(widgets[item[0]], item[1], item[2:], app=app)
+            self.add_ctrl_(widgets[item[0]], item[1], translate(item[2:], self.dic), app=app)
         if preview:self.add_ctrl_(Check, 'preview', ('preview',), app=app)
         self.reset(para)
         self.add_confirm(modal)
@@ -123,6 +127,7 @@ class ParaDialog (wx.Dialog):
         if tag == 'parameter': self.handle = f if not f is None else print
         if tag == 'commit': self.on_ok = f
         if tag == 'cancel': self.on_cancel = f
+        if tag == 'help': self.on_help = f
 
     def show(self):
         if self.modal: 

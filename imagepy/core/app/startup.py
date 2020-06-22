@@ -1,4 +1,4 @@
-import wx, sys
+import wx, sys, os
 from .source import *
 from sciapp import Source
 from imagepy.core.app import loader
@@ -61,6 +61,14 @@ def load_widgets():
         data[2].extend(wgts[2])
     return extend_wgts(data[:2]), data[2]
 
+def load_document():
+    Source.manager('document').add('language', os.listdir('doc'))
+    loader.build_document('doc/')
+
+def load_dictionary():
+    Source.manager('dictionary').add('language', os.listdir('lang'))
+    loader.build_dictionary('lang/')
+
 def start():
     from imagepy.core.app import ImagePy, ImageJ
     import wx.lib.agw.advancedsplash as AS
@@ -75,7 +83,8 @@ def start():
         AS.AS_SHADOW_BITMAP,
         shadowcolour=shadow)
     asp.Update()
-
+    load_document()
+    load_dictionary()
     uistyle = Source.manager('config').get('uistyle') or 'imagepy'
     frame = ImageJ(None) if uistyle == 'imagej' else ImagePy(None)
     frame.Show()

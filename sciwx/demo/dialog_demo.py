@@ -16,7 +16,8 @@ if __name__ == '__main__':
             ('color', 'c', 'which', 'you like')]
 
     app = wx.App()
-    pd = ParaDialog(None, 'Test')
+    dic = {'height':'高度', 'm':'米'}
+    pd = ParaDialog(None, 'Test', dic)
     pd.init_view(view, para, preview=True, modal=False)
     pd.pack()
     pd.ShowModal()

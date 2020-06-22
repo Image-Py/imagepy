@@ -8,7 +8,6 @@ class Tool(SciAction):
     para = None
 
     def config(self): pass
-    def mouse_hover(self, canvas, x, y, btn, **key): pass
     def mouse_down(self, canvas, x, y, btn, **key): pass
     def mouse_up(self, canvas, x, y, btn, **key): pass
     def mouse_move(self, canvas, x, y, btn, **key): pass

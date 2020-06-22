@@ -31,12 +31,18 @@ class Simple:
     def show(self):
         preview = lambda para, ips=self.ips: self.preview(ips, para) or ips.update()
         return self.app.show_para(self.title, self.view, self.para, preview, 
-            on_ok=lambda : self.ok(self.ips), on_cancel=lambda : self.cancel(self.ips) or self.ips.update(), 
+            on_ok=lambda : self.ok(self.ips), on_help=self.on_help,
+            on_cancel=lambda : self.cancel(self.ips) or self.ips.update(), 
             preview='preview' in self.note, modal=self.modal)
     
     def run(self, ips, imgs, para = None):pass
 
     def cancel(self, ips):pass
+
+    def on_help(self):
+        lang = Source.manager('config').get('language')
+        doc = Source.manager('document').get(self.title, tag=lang)
+        self.app.show_md(doc or 'No Document!', self.title)
 
     def ok(self, ips, para=None, callafter=None):
         if para == None: para = self.para
