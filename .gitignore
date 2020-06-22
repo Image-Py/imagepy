@@ -95,3 +95,4 @@ ENV/
 
 # Pycharm project
 .idea/
+*.nov

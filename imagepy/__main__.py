@@ -1,4 +1,4 @@
 import sys
-sys.path.append(r'C:\Users\12957\Desktop\imagepy\totrans\imagepy')
+sys.path.append(r'../')
 from core.app import startup
 startup.start()
