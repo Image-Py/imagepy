@@ -3,7 +3,7 @@ import pandas as pd
 
 class Statistic(Table):
 	title = 'Table Statistic'
-	note = ['snap', 'only_num', 'auto_msk']
+	note = ['auto_snap', 'num_only', 'auto_msk']
 
 	para = {'axis':'Column', 'sum':True, 'mean':True,'max':False, 
 		'min':False,'var':False,'std':False,'skew':False,'kurt':False}
@@ -20,6 +20,7 @@ class Statistic(Table):
 
 	def run(self, tps, snap, data, para=None):
 		rst, axis = {}, (0,1)[para['axis']=='Row']
+		print("snap = ", snap)
 		if para['sum']:rst['sum'] = snap.sum(axis=axis)
 		if para['mean']:rst['mean'] = snap.mean(axis=axis)
 		if para['max']:rst['max'] = snap.max(axis=axis)
