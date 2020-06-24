@@ -239,8 +239,7 @@ def build_dictionary(path):
         common = Source.manager('dictionary').get('common', tag=lang)
         if common is None: return
         objs = Source.manager('dictionary').gets(tag=lang)
-        for i in objs:
-            for j in common: i[1][j] = common[j]
+        for i in objs: i[1].update(common)
 
 if __name__ == "__main__":
     print (os.getcwd())

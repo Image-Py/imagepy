@@ -44,3 +44,26 @@ ROI Setting::选区设置
 	line width::线宽
 
 ROI Ctrl Panel::选区控制面板
+	Manage::管理
+	Add::添加
+	Load::加载
+	Update::更新
+	Remove::移除
+	Open::打开
+	Save::保存
+	Operate::几何运算
+	Inflate::扩张
+	Shrink::收缩
+	Convex::凸包
+	Bound::外接矩
+	Clip::裁剪
+	Invert::反向
+	Relationship::关系运算
+	Intersect::香蕉
+	Union::合并
+	Difference::减去
+	Sym Diff::抑或
+	Draw::绘图
+	Sketch::描边
+	Clear::清除内部
+	Clear Out::清除外部

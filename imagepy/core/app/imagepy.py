@@ -72,8 +72,14 @@ class ImagePy(wx.Frame, App):
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
         
     def _load_all(self):
-        load_document()
-        load_dictionary()
+        lang = Source.manager('config').get('language')
+        dic = Source.manager('dictionary').get('common', tag=lang) or {}
+        self.auimgr.GetPane(self.widgets).Caption('Widgets')
+        self.auimgr.GetPane(self.tablenbwrap).Caption('Table')
+        for i in self.auimgr.GetAllPanes():
+            i.Caption(dic[i.caption] if i.caption in dic else i.caption)
+        self.auimgr.Update()
+
         plgs, errplg = load_plugins()
         self.load_menu(plgs)
         dtool = Source.manager('tools').get('default')
@@ -177,11 +183,9 @@ class ImagePy(wx.Frame, App):
         sizer.Add( self.tablenb, 1, wx.EXPAND |wx.ALL, 0 )
         self.tablenbwrap.SetSizer( sizer )
         self.tablenbwrap.Layout()
-        lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get('common') or {}
-        title = dic['Table'] if 'Table' in dic else 'Table'
+        
         self.auimgr.AddPane( self.tablenbwrap, aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock().Hide()
-            .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption(title) . 
+            .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Table') . 
             BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
         self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_new_tab)
         self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close_tab)
@@ -214,10 +218,9 @@ class ImagePy(wx.Frame, App):
 
     def init_widgets(self):
         lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get('common') or {}
-        title = dic['Widgets'] if 'Widgets' in dic else 'Widgets'
+        dic = Source.manager('dictionary').get('common', tag=lang)
         self.widgets = ChoiceBook(self)
-        self.auimgr.AddPane( self.widgets, aui.AuiPaneInfo() .Right().Caption(title) .PinButton( True )
+        self.auimgr.AddPane( self.widgets, aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ).Layer( 10 ) )
 
     def init_text(self):
@@ -277,6 +280,10 @@ class ImagePy(wx.Frame, App):
         self.remove_mesh_win(canvas3d)
         
     def set_info(self, value):
+        lang = Source.manager('config').get('language')
+        dics = Source.manager('dictionary').gets(tag=lang) 
+        dic = dict(j for i in dics for j in i[1].items())
+        value = dic[value] if value in dic else value
         wx.CallAfter(self.txt_info.SetLabel, value)
 
     def set_progress(self, value):
@@ -392,17 +399,16 @@ class ImagePy(wx.Frame, App):
     def show_widget(self, panel, title='Widgets'):
         obj = self.manager('widget').get(panel.title)
         if obj is None:
-            pan = panel(self, self)
-            lang = Source.manager('config').get('language')
-            dic = Source.manager('dictionary').get(panel.title, tag=lang)
-            self.translate(dic)(pan)
-            self.manager('widget').add(obj=pan, name=panel.title)
-            title = dic[panel.title] if panel.title in dic else panel.title
-            self.auimgr.AddPane(pan, aui.AuiPaneInfo().Caption(title).Left().Layer( 15 ).PinButton( True )
+            obj = panel(self, self)
+            self.manager('widget').add(panel.title, obj)
+            self.auimgr.AddPane(obj, aui.AuiPaneInfo().Caption(title).Left().Layer( 15 ).PinButton( True )
                 .Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(True)) #.DestroyOnClose())
-        else: 
-            info = self.auimgr.GetPane(obj)
-            info.Show(True)
+        lang = Source.manager('config').get('language')
+        dic = Source.manager('dictionary').get(obj.title, tag=lang)
+        info = self.auimgr.GetPane(obj)
+        info.Show(True).Caption(dic[obj.title] if obj.title in dic else obj.title)
+        self.translate(dic)(obj)
+
         self.Layout()
         self.auimgr.Update()
 
@@ -541,6 +547,9 @@ class ImagePy(wx.Frame, App):
                 frame.SetTitle(lang(frame.GetTitle()))
             if isinstance(frame, wx.MessageDialog):
                 frame.SetMessage(lang(frame.GetMessage()))
+            if isinstance(frame, wx.Notebook):
+                for i in range(frame.GetPageCount()):
+                    frame.SetPageText(i, lang(frame.GetPageText(i)))
             if hasattr(frame, 'Layout'): frame.Layout()
         return trans
 

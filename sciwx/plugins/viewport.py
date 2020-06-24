@@ -16,7 +16,7 @@ class ViewPort ( wx.Panel ):
 		bSizer3.Add( self.viewport, 1, wx.EXPAND |wx.ALL, 5 )
 		
 		self.slider = wx.Slider( self, wx.ID_ANY, 6, 0, len(self.scales), wx.DefaultPosition, wx.DefaultSize, wx.SL_LEFT|wx.SL_VERTICAL|wx.SL_SELRANGE|wx.SL_INVERSE )
-		bSizer3.Add( self.slider, 0, wx.ALL|wx.EXPAND, 0 )
+		bSizer3.Add( self.slider, 0, wx.RIGHT|wx.EXPAND, 5 )
 		
 		
 		bSizer1.Add( bSizer3, 1, wx.EXPAND, 5 )

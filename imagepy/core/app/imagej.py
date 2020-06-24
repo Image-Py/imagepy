@@ -72,6 +72,13 @@ class ImageJ(wx.Frame, App):
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
         
     def _load_all(self):
+        lang = Source.manager('config').get('language')
+        dic = Source.manager('dictionary').get('common', tag=lang) or {}
+        self.auimgr.GetPane(self.widgets).Caption('Widgets')
+        for i in self.auimgr.GetAllPanes():
+            i.Caption(dic[i.caption] if i.caption in dic else i.caption)
+        self.auimgr.Update()
+        
         plgs, errplg = load_plugins()
         self.load_menu(plgs)
         dtool = Source.manager('tools').get('default')
@@ -90,18 +97,37 @@ class ImageJ(wx.Frame, App):
 
     def load_menu(self, data):
         self.menubar.clear()
-        self.menubar.load(data)
+        lang = Source.manager('config').get('language')
+        ls = Source.manager('dictionary').gets(tag=lang)
+        short = Source.manager('shortcut').gets()
+        acc = self.menubar.load(data, dict([i[:2] for i in short]))
+        self.translate(dict([(i,j[i]) for i,j,_ in ls]))(self.menubar)
+        self.SetAcceleratorTable(acc)
 
     def load_tool(self, data, default=None):
         self.toolbar.clear()
+        lang = Source.manager('config').get('language')
+        ls = Source.manager('dictionary').gets(tag=lang)
+        dic = dict([(i,j[i]) for i,j,_ in ls])
         for i, (name, tols) in enumerate(data[1]):
+            name = dic[name] if name in dic else name
             self.toolbar.add_tools(name, tols, i==0)
+        default = dic[default] if default in dic else default
         if not default is None: self.toolbar.add_pop(os.path.join(root_dir, 'tools/drop.gif'), default)
         self.toolbar.Layout()
 
     def load_widget(self, data):
         self.widgets.clear()
+        lang = Source.manager('config').get('language')
         self.widgets.load(data)
+        for cbk in self.widgets.GetChildren():
+            for i in range(cbk.GetPageCount()):
+                dic = Source.manager('dictionary').get(cbk.GetPageText(i), tag=lang) or {}
+                translate = self.translate(dic)
+                title = cbk.GetPageText(i)
+                cbk.SetPageText(i, dic[title] if title in dic else title)
+                self.translate(dic)(cbk.GetPage(i))
+        # self.translate(self.widgets)
         
     def init_menu(self):
         self.menubar = MenuBar(self)
@@ -109,6 +135,11 @@ class ImageJ(wx.Frame, App):
     def init_tool(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.toolbar = ToolBar(self, False)
+        def on_help(evt, tol):
+            lang = Source.manager('config').get('language')
+            doc = Source.manager('document').get(tol.title, tag=lang)
+            self.show_md(doc or 'No Document!', tol.title)
+        self.toolbar.on_help = on_help
         self.toolbar.Fit()
 
         self.auimgr.AddPane(self.toolbar, aui.AuiPaneInfo() .Top()  .PinButton( True ).PaneBorder( False )
@@ -186,6 +217,10 @@ class ImageJ(wx.Frame, App):
         event.Skip()
         
     def set_info(self, value):
+        lang = Source.manager('config').get('language')
+        dics = Source.manager('dictionary').gets(tag=lang) 
+        dic = dict(j for i in dics for j in i[1].items())
+        value = dic[value] if value in dic else value
         wx.CallAfter(self.txt_info.SetLabel, value)
 
     def set_progress(self, value):
@@ -241,6 +276,7 @@ class ImageJ(wx.Frame, App):
 
     def _show_md(self, cont, title='ImagePy'):
         mdframe = MDFrame(self)
+        mdframe.SetIcon(self.GetIcon())
         mdframe.set_cont(cont)
         mdframe.mdpad.title = title
         mdframe.Show(True)
@@ -295,13 +331,16 @@ class ImageJ(wx.Frame, App):
     def show_widget(self, panel, title='Widgets'):
         obj = self.manager('widget').get(panel.title)
         if obj is None:
-            pan = panel(self)
-            self.manager('widget').add(obj=pan, name=panel.title)
-            self.auimgr.AddPane(pan, aui.AuiPaneInfo().Caption(panel.title).Left().Layer( 15 ).PinButton( True )
+            obj = panel(self, self)
+            self.manager('widget').add(panel.title, obj)
+            self.auimgr.AddPane(obj, aui.AuiPaneInfo().Caption(title).Left().Layer( 15 ).PinButton( True )
                 .Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(True)) #.DestroyOnClose())
-        else: 
-            info = self.auimgr.GetPane(obj)
-            info.Show(True)
+        lang = Source.manager('config').get('language')
+        dic = Source.manager('dictionary').get(obj.title, tag=lang)
+        info = self.auimgr.GetPane(obj)
+        info.Show(True).Caption(dic[obj.title] if obj.title in dic else obj.title)
+        self.translate(dic)(obj)
+
         self.Layout()
         self.auimgr.Update()
 
@@ -396,14 +435,53 @@ class ImageJ(wx.Frame, App):
         dialog.Destroy()
         return path
 
-    def show_para(self, title, view, para, on_handle=None, on_ok=None, on_cancel=None, preview=False, modal=True):
+    def show_para(self, title, view, para, on_handle=None, on_ok=None, 
+        on_cancel=None, on_help=None, preview=False, modal=True):
+        lang = Source.manager('config').get('language')
+        dic = Source.manager('dictionary').get(name=title, tag=lang)
         dialog = ParaDialog(self, title)
-        dialog.init_view(view, para, preview, modal=modal, app=self)
+        dialog.init_view(view, para, preview, modal=modal, 
+            app=self, translate=self.translate(dic))
         dialog.Bind('cancel', on_cancel)
         dialog.Bind('parameter', on_handle)
         dialog.Bind('commit', on_ok)
+        dialog.Bind('help', on_help)
         return dialog.show()
 
+    def translate(self, dic):
+        dic = dic or {}
+        if isinstance(dic, list):
+            dic = dict(j for i in dic for j in i.items())
+        def lang(x): return dic[x] if x in dic else x
+        def trans(frame):
+            if hasattr(frame, 'GetChildren'):
+                for i in frame.GetChildren(): trans(i)
+            if isinstance(frame, wx.MenuBar):
+                for i in frame.GetMenus(): trans(i[0])
+                for i in range(frame.GetMenuCount()):
+                    frame.SetMenuLabel(i, lang(frame.GetMenuLabel(i)))
+                return 'not set title'
+            if isinstance(frame, wx.Menu):
+                for i in frame.GetMenuItems(): trans(i)
+                return 'not set title'
+            if isinstance(frame, wx.MenuItem):
+                frame.SetItemLabel(lang(frame.GetItemLabel()))
+                trans(frame.GetSubMenu())
+            if isinstance(frame, wx.Button):
+                frame.SetLabel(lang(frame.GetLabel()))
+            if isinstance(frame, wx.CheckBox):
+                frame.SetLabel(lang(frame.GetLabel()))
+            if isinstance(frame, wx.StaticText):
+                frame.SetLabel(lang(frame.GetLabel()))
+            if hasattr(frame, 'SetTitle'):
+                frame.SetTitle(lang(frame.GetTitle()))
+            if isinstance(frame, wx.MessageDialog):
+                frame.SetMessage(lang(frame.GetMessage()))
+            if isinstance(frame, wx.Notebook):
+                for i in range(frame.GetPageCount()):
+                    frame.SetPageText(i, lang(frame.GetPageText(i)))
+            if hasattr(frame, 'Layout'): frame.Layout()
+        return trans
 if __name__ == '__main__':
     import numpy as np
     import pandas as pd
