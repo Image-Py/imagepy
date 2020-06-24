@@ -12,15 +12,11 @@ widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl, 'path':PathCtrl,
 
 def add_widget(key, value): widgets[key] = value
 
-def translate(v, dic):
-    if isinstance(v, str): return dic[v] if v in dic else v
-    return [dic[i] if isinstance(i, str) and i in dic else i for i in v]
-
 class ParaDialog (wx.Dialog):
-    def __init__( self, parent, title, dic={}):
-        wx.Dialog.__init__ (self, parent, -1, translate(title, dic), style = wx.DEFAULT_DIALOG_STYLE)
+    def __init__( self, parent, title):
+        wx.Dialog.__init__ (self, parent, -1, title, style = wx.DEFAULT_DIALOG_STYLE)
         self.lst = wx.BoxSizer( wx.VERTICAL )
-        self.tus, self.dic = [], dic
+        self.tus = []
         self.on_ok = self.on_cancel = self.on_help = None
         self.handle = print
         self.ctrl_dic = {}
@@ -37,6 +33,7 @@ class ParaDialog (wx.Dialog):
     def add_confirm(self, modal):
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         self.btn_ok = wx.Button( self, wx.ID_OK, 'OK', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
+        self.btn_ok.SetFocus()
         sizer.Add( self.btn_ok, 0, wx.ALL, 5 )
 
         self.btn_cancel = wx.Button( self, wx.ID_CANCEL, 'Cancel', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
@@ -51,13 +48,14 @@ class ParaDialog (wx.Dialog):
             self.btn_cancel.Bind( wx.EVT_BUTTON, lambda e:self.commit('cancel'))
         #self.lst.Add()
 
-    def init_view(self, items, para, preview=False, modal=True, app=None, dic={}):
+    def init_view(self, items, para, preview=False, modal=True, app=None, translate=lambda x:x):
         self.para, self.modal = para, modal
         for item in items:
-            self.add_ctrl_(widgets[item[0]], item[1], translate(item[2:], self.dic), app=app)
+            self.add_ctrl_(widgets[item[0]], item[1], item[2:], app=app)
         if preview:self.add_ctrl_(Check, 'preview', ('preview',), app=app)
         self.reset(para)
         self.add_confirm(modal)
+        translate(self)
         self.pack()
         wx.Dialog.Bind(self, wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         #wx.Dialog.Bind(self, wx.EVT_IDLE, lambda e: self.reset())

@@ -1,5 +1,6 @@
 Windows Style::窗口样式
-	Shown in ImagePy style when next setup!::ImagePy布局将在下次启动时展示！
+	Shown in ImageJ style when next setup!::下次启动将会以ImageJ风格展示
+	Shown in ImagePy style when next setup!::下次启动将会以ImagePy风格展示
 
 Pay Tribute To ImageJ::ImageJ布局风格
 
@@ -28,7 +29,7 @@ Command Line::命令行
 
 Plugin List View::插件列表
 
-Plugin Tree View::插件树形图
+Plugin Tree View::插件树浏览
 
 Tool Tree View::工具树形图
 

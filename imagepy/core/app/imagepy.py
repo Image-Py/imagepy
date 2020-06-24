@@ -87,26 +87,41 @@ class ImagePy(wx.Frame, App):
             cont = '\n'.join(['%-30s\t%-20s\t%s'%i for i in err])
             self.show_txt(cont, 'loading error log')
 
-    def load_all(self):
-        wx.CallAfter(self._load_all)
+    def load_all(self): wx.CallAfter(self._load_all)
 
     def load_menu(self, data):
         self.menubar.clear()
         lang = Source.manager('config').get('language')
         ls = Source.manager('dictionary').gets(tag=lang)
-        self.menubar.dic = dict([(i,j[i]) for i,j,_ in ls])
-        self.menubar.load(data)
+        short = Source.manager('shortcut').gets()
+        acc = self.menubar.load(data, dict([i[:2] for i in short]))
+        self.translate(dict([(i,j[i]) for i,j,_ in ls]))(self.menubar)
+        self.SetAcceleratorTable(acc)
 
     def load_tool(self, data, default=None):
         self.toolbar.clear()
+        lang = Source.manager('config').get('language')
+        ls = Source.manager('dictionary').gets(tag=lang)
+        dic = dict([(i,j[i]) for i,j,_ in ls])
         for i, (name, tols) in enumerate(data[1]):
+            name = dic[name] if name in dic else name
             self.toolbar.add_tools(name, tols, i==0)
+        default = dic[default] if default in dic else default
         if not default is None: self.toolbar.add_pop(os.path.join(root_dir, 'tools/drop.gif'), default)
         self.toolbar.Layout()
 
     def load_widget(self, data):
         self.widgets.clear()
+        lang = Source.manager('config').get('language')
         self.widgets.load(data)
+        for cbk in self.widgets.GetChildren():
+            for i in range(cbk.GetPageCount()):
+                dic = Source.manager('dictionary').get(cbk.GetPageText(i), tag=lang) or {}
+                translate = self.translate(dic)
+                title = cbk.GetPageText(i)
+                cbk.SetPageText(i, dic[title] if title in dic else title)
+                self.translate(dic)(cbk.GetPage(i))
+        # self.translate(self.widgets)
         
     def init_menu(self):
         self.menubar = MenuBar(self)
@@ -162,9 +177,11 @@ class ImagePy(wx.Frame, App):
         sizer.Add( self.tablenb, 1, wx.EXPAND |wx.ALL, 0 )
         self.tablenbwrap.SetSizer( sizer )
         self.tablenbwrap.Layout()
-
+        lang = Source.manager('config').get('language')
+        dic = Source.manager('dictionary').get('common') or {}
+        title = dic['Table'] if 'Table' in dic else 'Table'
         self.auimgr.AddPane( self.tablenbwrap, aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock().Hide()
-            .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Tables') . 
+            .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption(title) . 
             BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
         self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_new_tab)
         self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close_tab)
@@ -196,8 +213,11 @@ class ImagePy(wx.Frame, App):
         self.pro_bar.SetValue(tasks)
 
     def init_widgets(self):
+        lang = Source.manager('config').get('language')
+        dic = Source.manager('dictionary').get('common') or {}
+        title = dic['Widgets'] if 'Widgets' in dic else 'Widgets'
         self.widgets = ChoiceBook(self)
-        self.auimgr.AddPane( self.widgets, aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
+        self.auimgr.AddPane( self.widgets, aui.AuiPaneInfo() .Right().Caption(title) .PinButton( True )
             .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ).Layer( 10 ) )
 
     def init_text(self):
@@ -373,8 +393,12 @@ class ImagePy(wx.Frame, App):
         obj = self.manager('widget').get(panel.title)
         if obj is None:
             pan = panel(self, self)
+            lang = Source.manager('config').get('language')
+            dic = Source.manager('dictionary').get(panel.title, tag=lang)
+            self.translate(dic)(pan)
             self.manager('widget').add(obj=pan, name=panel.title)
-            self.auimgr.AddPane(pan, aui.AuiPaneInfo().Caption(panel.title).Left().Layer( 15 ).PinButton( True )
+            title = dic[panel.title] if panel.title in dic else panel.title
+            self.auimgr.AddPane(pan, aui.AuiPaneInfo().Caption(title).Left().Layer( 15 ).PinButton( True )
                 .Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(True)) #.DestroyOnClose())
         else: 
             info = self.auimgr.GetPane(obj)
@@ -449,7 +473,10 @@ class ImagePy(wx.Frame, App):
         wx.CallAfter(self.txt_info.SetLabel, cont)
 
     def _alert(self, info, title='ImagePy'):
-        dialog=wx.MessageDialog(self, info, title, wx.OK)
+        lang = Source.manager('config').get('language')
+        dics = Source.manager('dictionary').gets(tag=lang) 
+        dialog = wx.MessageDialog(self, info, title, wx.OK)
+        self.translate([i[1] for i in dics])(dialog)
         dialog.ShowModal() == wx.ID_OK
         dialog.Destroy()
 
@@ -476,13 +503,46 @@ class ImagePy(wx.Frame, App):
         on_cancel=None, on_help=None, preview=False, modal=True):
         lang = Source.manager('config').get('language')
         dic = Source.manager('dictionary').get(name=title, tag=lang)
-        dialog = ParaDialog(self, title, dic or {})
-        dialog.init_view(view, para, preview, modal=modal, app=self)
+        dialog = ParaDialog(self, title)
+        dialog.init_view(view, para, preview, modal=modal, 
+            app=self, translate=self.translate(dic))
         dialog.Bind('cancel', on_cancel)
         dialog.Bind('parameter', on_handle)
         dialog.Bind('commit', on_ok)
         dialog.Bind('help', on_help)
         return dialog.show()
+
+    def translate(self, dic):
+        dic = dic or {}
+        if isinstance(dic, list):
+            dic = dict(j for i in dic for j in i.items())
+        def lang(x): return dic[x] if x in dic else x
+        def trans(frame):
+            if hasattr(frame, 'GetChildren'):
+                for i in frame.GetChildren(): trans(i)
+            if isinstance(frame, wx.MenuBar):
+                for i in frame.GetMenus(): trans(i[0])
+                for i in range(frame.GetMenuCount()):
+                    frame.SetMenuLabel(i, lang(frame.GetMenuLabel(i)))
+                return 'not set title'
+            if isinstance(frame, wx.Menu):
+                for i in frame.GetMenuItems(): trans(i)
+                return 'not set title'
+            if isinstance(frame, wx.MenuItem):
+                frame.SetItemLabel(lang(frame.GetItemLabel()))
+                trans(frame.GetSubMenu())
+            if isinstance(frame, wx.Button):
+                frame.SetLabel(lang(frame.GetLabel()))
+            if isinstance(frame, wx.CheckBox):
+                frame.SetLabel(lang(frame.GetLabel()))
+            if isinstance(frame, wx.StaticText):
+                frame.SetLabel(lang(frame.GetLabel()))
+            if hasattr(frame, 'SetTitle'):
+                frame.SetTitle(lang(frame.GetTitle()))
+            if isinstance(frame, wx.MessageDialog):
+                frame.SetMessage(lang(frame.GetMessage()))
+            if hasattr(frame, 'Layout'): frame.Layout()
+        return trans
 
 if __name__ == '__main__':
     import numpy as np

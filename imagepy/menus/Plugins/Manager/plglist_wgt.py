@@ -36,11 +36,11 @@ class Plugin( wx.Panel ):
     title = 'Plugin List View'
     single = None
 
-    def __init__( self, parent,):
+    def __init__( self, parent, app=None):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size( 500,300 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-        self.app = parent
+        self.app = app
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
         bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
         self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, "Search:", 

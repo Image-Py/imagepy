@@ -83,8 +83,6 @@ def start():
         AS.AS_SHADOW_BITMAP,
         shadowcolour=shadow)
     asp.Update()
-    load_document()
-    load_dictionary()
     uistyle = Source.manager('config').get('uistyle') or 'imagepy'
     frame = ImageJ(None) if uistyle == 'imagej' else ImagePy(None)
     frame.Show()

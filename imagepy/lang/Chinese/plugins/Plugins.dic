@@ -1,5 +1,3 @@
-New::新建
-
 New Filter::新建Filter
 
 New Simple::新建Simple
@@ -17,18 +15,20 @@ Run Macros::运行宏
 Manager::管理
 
 Plugins Manager::插件管理
-    Search::搜索
-    Name::名称
-    Author::作者
-    Version::版本
-    Status::状态
-    installed::已安装
-    only installed::只显示已安装
-    Install::安装
-    Update::更新
-    Remove::移除
-    
+	Search::搜索
+	Name::名称
+	Author::作者
+	Version::版本
+	Status::状态
+	installed::已安装
+	only installed::只显示已安装
+	Install::安装
+	Update::更新
+	Remove::移除
+
 Plugin Tree View::插件树浏览
+	Plugin Information::插件信息
+	[SourceCode]::[查看源码]
 
 Tool Tree View::工具树浏览
 
@@ -79,4 +79,3 @@ Stroke Step::笔迹
 Game Of Life::生命游戏
 
 Screen Capture::截屏
-

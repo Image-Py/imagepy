@@ -22,11 +22,11 @@ class Macros(dict):
 class Plugin(wx.Panel):
     title = 'Command Line'
     single = None
-    def __init__(self, parent):
+    def __init__(self, parent, app=None):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
                                 pos = wx.DefaultPosition, size = wx.Size( 500,300 ), 
                                 style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-        cmds['app'] = parent
+        cmds['app'] = app
         cmds['get_img'] = lambda name=None, app=self: self.app.get_img()
         cmds['update'] = lambda app=self: self.app.get_img().update()
         shell = Shell(self, locals=cmds)

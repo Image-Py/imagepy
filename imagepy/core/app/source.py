@@ -11,6 +11,7 @@ Source.manager('macros')
 Source.manager('config')
 
 Source.manager('config').read(osp.join(root_dir, 'data/config.json'))
+Source.manager('shortcut').read(osp.join(root_dir, 'data/shortcut.json'))
 if Source.manager('config').get('language') is None:
 	Source.manager('config').add('language', 'english')
 

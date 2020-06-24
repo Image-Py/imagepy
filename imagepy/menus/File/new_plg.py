@@ -8,7 +8,7 @@ from imagepy.core.engine import Free
 import numpy as np
 
 class Plugin(Free):
-    title = 'New'
+    title = 'New Image'
     para = {'name':'Undefined','width':300, 'height':300, 'type':'8-bit','slice':1}
     view = [(str, 'name', 'name', ''),
             (int, 'width',  (1,10240), 0,  'width', 'pix'),

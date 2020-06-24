@@ -18,11 +18,11 @@ from glob import glob
 class Plugin ( wx.Panel ):
     title = 'Tool Tree View'
     single = None
-    def __init__( self, parent ):
+    def __init__( self, parent, app=None):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size( 500,300 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
-        self.app = parent
+        self.app = app
         bSizer1 = wx.BoxSizer( wx.HORIZONTAL )
         
         self.tre_plugins = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, 

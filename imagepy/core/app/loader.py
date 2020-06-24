@@ -232,7 +232,15 @@ def build_dictionary(path):
                 if isinstance(dic[-1], list):
                     dic[-1] = (dic[-1][0][0], dict(dic[-1]))
                 dic = dict(dic)
-                for i in dic: Source.manager('dictionary').add(i, dic[i], lang)
+                for i in dic: 
+                    obj = Source.manager('dictionary').get(i, tag=lang)
+                    if not obj is None: obj.update(dic[i])
+                    else: Source.manager('dictionary').add(i, dic[i], lang)
+        common = Source.manager('dictionary').get('common', tag=lang)
+        if common is None: return
+        objs = Source.manager('dictionary').gets(tag=lang)
+        for i in objs:
+            for j in common: i[1][j] = common[j]
 
 if __name__ == "__main__":
     print (os.getcwd())
