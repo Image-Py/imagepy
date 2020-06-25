@@ -353,18 +353,6 @@ def json2shp(obj):
 
 def geom2shp(obj): return json2shp(geom.mapping(obj))
 
-def geom_flatten(obj, geoms=None):
-    geoms, root = ([], True) if geoms is None else (geoms, False)
-    if isinstance(obj, geom.GeometryCollection):
-        for i in obj: geom_flatten(i, geoms)
-    elif type(obj) in {geom.MultiPolygon, geom.MultiPoint, geom.MultiLineString}: 
-        geoms.extend(list(obj))
-    else: geoms.append(obj)
-    if root: return geom.GeometryCollection(geoms)
-
-def geom_union(obj):
-    return geom_flatten(unary_union(geom_flatten(obj)))
-
 if __name__ == '__main__':
     import json
 

@@ -1,5 +1,4 @@
 from .shape import *
-from ..util import draw_shp
 import numpy as np
 from numpy.linalg import norm
 import shapely.geometry as geom
@@ -25,6 +24,7 @@ class ROI(Layer):
 		return roitype
 
 	def to_mask(self, msk, mode):
+		from ..util import draw_shp
 		if isinstance(msk, tuple):
 			msk = np.zeros(msk, dtype=np.int8)
 		else: msk[:] = 0

@@ -1,6 +1,5 @@
 import wx, numpy as np
-from .boxutil import cross, multiply, merge, lay, mat, like
-from .imutil import mix_img
+from sciapp.util.imgutil import mix_img, cross, multiply, merge, lay, mat, like
 from .mark import drawmark
 from sciapp.object import Image, Shape, mark2shp, Layer, json2shp
 from sciapp.action import ImageTool, ShapeTool

@@ -43,19 +43,5 @@ if __name__ == '__main__':
     #rgb_test()
     #rgb_gray_blend()
     #complex_test()
-    frame = wx.Frame(None, title='blend')
-    canvas = Canvas(frame, autofit=True)
-    
-    image = Image()
-    image.img = camera()
-    image.pos = (0,0)
-    canvas.images.append(image)
-
-    image = Image()
-    image.img = astronaut()
-    image.pos = (100,200)
-    image.cn = (0,1,2)
-    canvas.images.append(image)
-    frame.Show()
     app.MainLoop()
     

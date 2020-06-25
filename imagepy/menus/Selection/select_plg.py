@@ -1,6 +1,7 @@
 from imagepy.core.engine import Simple, Free
 from sciapp import Source
-from sciapp.object import ROI, geom2shp, geom_flatten, Rectangle, geom_union, mark2shp
+from sciapp.object import ROI, Rectangle
+from sciapp.util.shputil import geom2shp, geom_flatten, geom_union, mark2shp
 import json, time
 
 class SelectAll(Simple):

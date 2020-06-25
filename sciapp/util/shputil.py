@@ -1,6 +1,6 @@
 import numpy as np
 from skimage import draw
-from ..object.shape import *
+# from ..object.shape import *
 
 def offset(shp, dx, dy):
 	if shp.dtype in {'rectangle', 'ellipse', 'circle'}:

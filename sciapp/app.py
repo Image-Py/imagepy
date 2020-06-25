@@ -9,6 +9,10 @@ class Manager:
         if self.unique: self.remove(name, tag)
         self.objs.insert(0, (name, obj, tag))
 
+    def set(self, name, obj, tag=None):
+        self.remove(name, tag)
+        self.objs.insert(0, (name, obj, tag))
+
     def adds(self, objs): 
         for i in objs: self.add(*i)
 
@@ -51,21 +55,21 @@ class Source:
     managers = {}
 
     @classmethod
-    def manager(cls, name, value=None):
+    def manager(cls, name):
         if not name in cls.managers: 
             cls.managers[name] = Manager()
         return cls.managers[name]
 
 class App():
     def __init__(self):
-        self.img_manager = Manager()
-        self.wimg_manager = Manager()
-        self.tab_manager = Manager()
-        self.wtab_manager = Manager()
-        self.mesh_manager = Manager()
-        self.wmesh_manager = Manager()
-        self.task_manager = Manager()
         self.managers = {}
+        self.img_manager = self.manager('img')
+        self.wimg_manager = self.manager('wimg')
+        self.tab_manager = self.manager('tab')
+        self.wtab_manager = self.manager('wtab')
+        self.mesh_manager = self.manager('mesh')
+        self.wmesh_manager = self.manager('wmesh')
+        self.task_manager = self.manager('task')
 
     def manager(self, name, value=None):
         if not name in self.managers: 
@@ -83,7 +87,6 @@ class App():
         if not self.img_manager.has(img.name, obj=img):
             img.name = self.img_manager.name(img.name)
         self.img_manager.add(img.name, img)
-        print(self.img_manager.objs, 'open')
 
     def remove_img(self, img):
         print('remove', img.name)
