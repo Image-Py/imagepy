@@ -58,7 +58,7 @@ class ImageJ(wx.Frame, App):
         sizersta.Add( self.txt_info, 1, wx.ALIGN_BOTTOM|wx.BOTTOM|wx.LEFT|wx.RIGHT, 2 )
         #self.pro_bar = wx.Gauge( stapanel, wx.ID_ANY, 100, wx.DefaultPosition, wx.Size( 100,15 ), wx.GA_HORIZONTAL )
         self.pro_bar = ProgressBar(stapanel)
-        sizersta.Add( self.pro_bar, 0, wx.ALL, 2 )
+        sizersta.Add( self.pro_bar, 0, wx.ALL|wx.ALIGN_CENTER, 0 )
         stapanel.SetSizer(sizersta)
         class OpenDrop(wx.FileDropTarget):
             def __init__(self, app): 
@@ -87,20 +87,19 @@ class ImageJ(wx.Frame, App):
         wgts, errwgt = load_widgets()
         self.load_widget(wgts)
         err = errplg + errtol + errwgt
-        if len(err)>0: 
+        if len(err)>0:
             err = [('File', 'Name', 'Error')] + err
             cont = '\n'.join(['%-30s\t%-20s\t%s'%i for i in err])
             self.show_txt(cont, 'loading error log')
 
-    def load_all(self):
-        wx.CallAfter(self._load_all)
+    def load_all(self): wx.CallAfter(self._load_all)
 
     def load_menu(self, data):
         self.menubar.clear()
         lang = Source.manager('config').get('language')
         ls = Source.manager('dictionary').gets(tag=lang)
         short = Source.manager('shortcut').gets()
-        acc = self.menubar.load(data, dict([i[:2] for i in short]))
+        acc = self.menubar.load(data)
         self.translate(dict([(i,j[i]) for i,j,_ in ls]))(self.menubar)
         self.SetAcceleratorTable(acc)
 
@@ -329,6 +328,7 @@ class ImageJ(wx.Frame, App):
         wx.CallAfter(self._show_mesh, mesh, title)
 
     def show_widget(self, panel, title='Widgets'):
+        print(self.stapanel.GetSize(), '===========')
         obj = self.manager('widget').get(panel.title)
         if obj is None:
             obj = panel(self, self)
@@ -336,13 +336,14 @@ class ImageJ(wx.Frame, App):
             self.auimgr.AddPane(obj, aui.AuiPaneInfo().Caption(title).Left().Layer( 15 ).PinButton( True )
                 .Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(True)) #.DestroyOnClose())
         lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get(obj.title, tag=lang)
+        dic = Source.manager('dictionary').get(obj.title, tag=lang) or {}
         info = self.auimgr.GetPane(obj)
         info.Show(True).Caption(dic[obj.title] if obj.title in dic else obj.title)
         self.translate(dic)(obj)
 
         self.Layout()
         self.auimgr.Update()
+        print(self.stapanel.GetSize(), '===========')
 
     def switch_widget(self, visible=None): 
         info = self.auimgr.GetPane(self.widgets)
@@ -419,6 +420,7 @@ class ImageJ(wx.Frame, App):
     def alert(self, info, title='ImagePy'):
         wx.CallAfter(self._alert, info, title)
 
+
     def yes_no(self, info, title='ImagePy'):
         dialog = wx.MessageDialog(self, info, title, wx.YES_NO | wx.CANCEL)
         rst = dialog.ShowModal()
@@ -482,6 +484,7 @@ class ImageJ(wx.Frame, App):
                     frame.SetPageText(i, lang(frame.GetPageText(i)))
             if hasattr(frame, 'Layout'): frame.Layout()
         return trans
+
 if __name__ == '__main__':
     import numpy as np
     import pandas as pd

@@ -100,7 +100,7 @@ class ImagePy(wx.Frame, App):
         lang = Source.manager('config').get('language')
         ls = Source.manager('dictionary').gets(tag=lang)
         short = Source.manager('shortcut').gets()
-        acc = self.menubar.load(data, dict([i[:2] for i in short]))
+        acc = self.menubar.load(data)
         self.translate(dict([(i,j[i]) for i,j,_ in ls]))(self.menubar)
         self.SetAcceleratorTable(acc)
 
