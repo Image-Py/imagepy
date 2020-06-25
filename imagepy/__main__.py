@@ -1,4 +1,4 @@
 import sys
 sys.path.append(r'../')
-from core.app import startup
-startup.start()
+from imagepy.core import app
+app.startup.start()

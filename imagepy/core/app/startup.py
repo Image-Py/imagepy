@@ -2,6 +2,7 @@ import wx, sys, os
 from .source import *
 from sciapp import Source
 from imagepy.core.app import loader
+from imagepy import root_dir
 
 def extend_plgs(plg):
     if isinstance(plg, tuple):
@@ -62,28 +63,26 @@ def load_widgets():
     return extend_wgts(data[:2]), data[2]
 
 def load_document():
-    Source.manager('document').add('language', os.listdir('doc'))
-    loader.build_document('doc/')
+    Source.manager('document').add('language', os.listdir(root_dir+'/doc'))
+    loader.build_document(root_dir+'/doc/')
 
 def load_dictionary():
-    Source.manager('dictionary').add('language', os.listdir('lang'))
-    loader.build_dictionary('lang/')
+    Source.manager('dictionary').add('language', os.listdir(root_dir+'/lang'))
+    loader.build_dictionary(root_dir+'/lang/')
 
 def start():
     from imagepy.core.app import ImagePy, ImageJ
     import wx.lib.agw.advancedsplash as AS
-
     app = wx.App(False)
-    bitmap = wx.Bitmap('data/logolong.png', wx.BITMAP_TYPE_PNG)
+    bitmap = wx.Bitmap(root_dir+'/data/logolong.png', wx.BITMAP_TYPE_PNG)
     shadow = wx.Colour(255,255,255)
-
     asp = AS.AdvancedSplash(None, bitmap=bitmap, timeout=1000,
         agwStyle=AS.AS_TIMEOUT |
         AS.AS_CENTER_ON_PARENT |
         AS.AS_SHADOW_BITMAP,
         shadowcolour=shadow)
     asp.Update()
-
+    print('d')
     load_document()
     load_dictionary()
     uistyle = Source.manager('config').get('uistyle') or 'imagepy'
