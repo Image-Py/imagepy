@@ -39,9 +39,9 @@ def complex_test():
 
 if __name__ == '__main__':
     app = wx.App()
-    #gray_test()
-    #rgb_test()
-    #rgb_gray_blend()
-    #complex_test()
+    gray_test()
+    rgb_test()
+    rgb_gray_blend()
+    complex_test()
     app.MainLoop()
     

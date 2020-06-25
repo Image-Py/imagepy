@@ -170,8 +170,7 @@ class Canvas (wx.Panel):
             print('frame rate:',int(50/max(0.001,counter[1])))
             counter[0] = counter[1] = 0
 
-    def set_tool(self, tool):
-        self.tool = tool
+    def set_tool(self, tool): self.tool = tool
 
     @property
     def scale(self):

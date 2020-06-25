@@ -11,7 +11,6 @@ from sciwx.text import MDFrame, TextFrame
 from sciwx.plot import PlotFrame
 from sciapp import App, Source
 
-
 class ImageApp(wx.Frame, App):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImageApp', 

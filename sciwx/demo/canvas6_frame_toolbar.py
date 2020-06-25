@@ -1,7 +1,7 @@
 import sys, wx
 sys.path.append('../../')
 from skimage.draw import line
-from sciwx.canvas import CanvasFrame
+from sciwx.app.canvasapp import CanvasApp
 from sciapp.action import Tool, ImageTool
 
 class Pencil(ImageTool):
@@ -35,7 +35,7 @@ if __name__=='__main__':
     from skimage.io import imread
 
     app = wx.App()
-    cf = CanvasFrame(None, autofit=False)
+    cf = CanvasApp(None, autofit=False)
     cf.set_imgs([astronaut(), 255-astronaut()])
     cf.set_cn((0,1,2))
     bar = cf.add_toolbar()
