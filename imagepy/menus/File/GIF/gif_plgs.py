@@ -1,4 +1,4 @@
-from imagepy.core.util import fileio
+from imagepy.core.engine import dataio
 from imagepy.core.engine import Simple
 from skimage.io import imread, imsave
 from sciapp import Source
@@ -8,12 +8,12 @@ Source.manager('reader').add('gif', imread, 'img')
 Source.manager('writer').add('gif', imsave, 'img')
 Source.manager('reader').add('gif', imageio.mimread, 'imgs')
 
-class OpenFile(fileio.Reader):
+class OpenFile(dataio.Reader):
 	title = 'GIF Open'
 	tag = 'img'
 	filt = ['GIF']
 
-class SaveFile(fileio.ImageWriter):
+class SaveFile(dataio.ImageWriter):
 	title = 'GIF Save'
 	tag = 'img'
 	filt = ['GIF']
@@ -32,7 +32,7 @@ class SaveAnimate(Simple):
 	def run(self, ips, imgs, para = None):
 		imageio.mimsave(para['path'], imgs, 'gif', duration = para['dur'])  
 
-class OpenAnimate(fileio.Reader):
+class OpenAnimate(dataio.Reader):
 	title = 'GIF Animate Open'
 	filt = ['GIF']
 	tag = 'imgs'

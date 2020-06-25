@@ -1,4 +1,4 @@
-from imagepy.core.util import fileio
+from imagepy.core.engine import dataio
 import pydicom
 from sciapp import Source
 
@@ -9,7 +9,7 @@ def imread(path):
 
 Source.manager('reader').add('dcm', imread, 'img')
 
-class OpenFile(fileio.Reader):
+class OpenFile(dataio.Reader):
 	title = 'DCM Open'
 	filt = ['DCM']
 	tag = 'img'

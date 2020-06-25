@@ -3,10 +3,9 @@
 Created on Thu Dec 29 01:48:23 2016
 @author: yxl
 """
-import wx
 from sciapp import Source
 #from imagepy.ui.propertygrid import GridDialog
-from imagepy.core.util import xlreport
+#from imagepy.core.util import xlreport
 from time import time
 import openpyxl as pyxl
 from sciapp import Source

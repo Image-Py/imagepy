@@ -8,7 +8,7 @@ New Tool::新建Tool
 
 Macros::宏
 
-Macros Recorder::录制宏
+Macros Recorder::宏录制器
 
 Run Macros::运行宏
 
@@ -31,12 +31,15 @@ Plugin Tree View::插件树浏览
 	[SourceCode]::[查看源码]
 
 Tool Tree View::工具树浏览
+	Tool Information::插件信息
+	[SourceCode]::[查看源码]
 
 Plugin List View::插件列表
+	Search::搜索
 
-Shortcut Editor::编辑快捷键
+Shortcut Editor::快捷键编辑器
 
-Command Line::打开命令行
+Command Line::命令行
 
 Install::安装
 

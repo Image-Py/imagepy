@@ -4,7 +4,7 @@ Created on Sat Oct 15 14:42:55 2016
 @author: yxl
 """
 
-from imagepy.core.util import fileio
+from imagepy.core.engine import dataio
 from skimage.io import imread
 from sciapp import Source
 from imagepy.core.engine import Free

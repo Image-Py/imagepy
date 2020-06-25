@@ -1,4 +1,4 @@
-from imagepy.core.util import fileio
+from imagepy.core.engine import dataio
 from scipy.io import savemat, loadmat
 from sciapp import Source
 import os
@@ -8,22 +8,22 @@ Source.manager('writer').add('mat', lambda path, img: savemat(path, {'img':img})
 Source.manager('reader').add('mat', lambda path: loadmat(path)['img'], 'imgs')
 Source.manager('writer').add('mat', lambda path, img: savemat(path, {'img':img}), 'imgs')
 
-class OpenFile(fileio.Reader):
+class OpenFile(dataio.Reader):
 	title = 'Mat Open'
 	tag = 'img'
 	filt = ['Mat']
 
-class SaveFile(fileio.ImageWriter):
+class SaveFile(dataio.ImageWriter):
 	title = 'Mat Save'
 	tag = 'img'
 	filt = ['Mat']
 
-class Open3D(fileio.Reader):
+class Open3D(dataio.Reader):
 	title = 'Mat 3D Open'
 	tag = 'imgs'
 	filt = ['Mat']
 
-class Save3D(fileio.ImageWriter):
+class Save3D(dataio.ImageWriter):
 	title = 'Mat 3D Save'
 	tag = 'imgs'
 	filt = ['Mat']

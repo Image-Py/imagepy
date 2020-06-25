@@ -34,3 +34,24 @@ Plugin Tree View::插件树浏览
 Tool Tree View::工具树形图
 
 Develop Tool Sute::开发工具集
+	Plugin Tree View::插件树浏览
+	Tool Tree View::工具树浏览
+	Plugin List View::插件列表
+	Shortcut Editor::快捷键编辑器
+	Macros Recorder::宏录制器
+	Command Line::命令行
+	Search::搜索
+	Name::名称
+	Author::作者
+	Version::版本
+	Status::状态
+	installed::已安装
+	only installed::只显示已安装
+	Install::安装
+	Update::更新
+	Remove::移除
+	Plugin Information::插件信息
+	[SourceCode]::[查看源码]
+	Tool Information::插件信息
+	[SourceCode]::[查看源码]
+	Search::搜索

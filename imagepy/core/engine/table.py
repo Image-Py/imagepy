@@ -3,7 +3,6 @@
 Created on Sat Dec  3 03:32:05 2016
 @author: yxl
 """
-import wx
 import threading
 from time import time
 
@@ -46,6 +45,7 @@ class Table:
     def on_help(self):
         lang = Source.manager('config').get('language')
         doc = Source.manager('document').get(self.title, tag=lang)
+        doc = doc or Source.manager('document').get(tol.title, tag='English')
         self.app.show_md(doc or 'No Document!', self.title)
 
     def ok(self, tps, para=None, callafter=None):

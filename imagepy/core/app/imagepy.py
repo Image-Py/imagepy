@@ -39,7 +39,6 @@ class ImagePy(wx.Frame, App):
 
         self.Layout()
         self.auimgr.Update()
-        self.Fit()
         self.Centre( wx.BOTH )
 
         self.Bind(wx.EVT_CLOSE, self.on_close)
@@ -138,6 +137,7 @@ class ImagePy(wx.Frame, App):
         def on_help(evt, tol):
             lang = Source.manager('config').get('language')
             doc = Source.manager('document').get(tol.title, tag=lang)
+            doc = doc or Source.manager('document').get(tol.title, tag='English')
             self.show_md(doc or 'No Document!', tol.title)
         self.toolbar.on_help = on_help
         self.toolbar.Fit()
@@ -336,6 +336,7 @@ class ImagePy(wx.Frame, App):
 
     def show_plot(self, title):
         fig = PlotFrame(self)
+        fig.SetIcon(self.GetIcon())
         fig.figure.title = title
         return fig
 
@@ -404,7 +405,7 @@ class ImagePy(wx.Frame, App):
             self.auimgr.AddPane(obj, aui.AuiPaneInfo().Caption(title).Left().Layer( 15 ).PinButton( True )
                 .Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(True)) #.DestroyOnClose())
         lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get(obj.title, tag=lang)
+        dic = Source.manager('dictionary').get(obj.title, tag=lang) or {}
         info = self.auimgr.GetPane(obj)
         info.Show(True).Caption(dic[obj.title] if obj.title in dic else obj.title)
         self.translate(dic)(obj)
@@ -547,7 +548,7 @@ class ImagePy(wx.Frame, App):
                 frame.SetTitle(lang(frame.GetTitle()))
             if isinstance(frame, wx.MessageDialog):
                 frame.SetMessage(lang(frame.GetMessage()))
-            if isinstance(frame, wx.Notebook):
+            if hasattr(frame, 'SetPageText'):
                 for i in range(frame.GetPageCount()):
                     frame.SetPageText(i, lang(frame.GetPageText(i)))
             if hasattr(frame, 'Layout'): frame.Layout()

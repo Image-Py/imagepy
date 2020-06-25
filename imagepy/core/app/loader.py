@@ -4,7 +4,8 @@ Created on Fri Jan  6 23:45:59 2017
 
 @author: yxl
 """
-import os, sys
+import os, sys, os.path as osp
+from glob import glob
 from ..engine import Macros, MkDown, Widget, Report
 from sciapp import Source
 from ... import root_dir
@@ -29,7 +30,7 @@ def extend_plugins(path, lst, err):
         elif i[-3:] in {'.md', '.mc', '.wf'}:
             p = os.path.join(os.path.join(root_dir, path), i).replace('\\','/')
             rst.append(Macros(i[:-3], ['Open>{"path":"%s"}'%p]))
-            Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
+            Source.manager('plugin').add(rst[-1].title, rst[-1])
         elif i[-6:] in ['wgt.py', 'gts.py']:
             try:
                 rpath = path.replace('/', '.').replace('\\','.')
@@ -37,10 +38,9 @@ def extend_plugins(path, lst, err):
                 if hasattr(plg, 'wgts'):
                     rst.extend([j if j=='-' else Widget(j) for j in plg.wgts])
                     for p in plg.wgts:
-                        if not isinstance(p, str):Source.manager('widget').add(obj=p, name=p.title)
+                        if not isinstance(p, str):Source.manager('widget').add(p.title, p)
                 else: 
                     rst.append(Widget(plg.Plugin))
-                    Source.manager('widget').add(obj=plg.Plugin, name=plg.Plugin.title)
             except Exception as  e:
                 err.append((path, i, sys.exc_info()[1]))
         else:
@@ -50,10 +50,11 @@ def extend_plugins(path, lst, err):
                 if hasattr(plg, 'plgs'):
                     rst.extend([j for j in plg.plgs])
                     for p in plg.plgs:
-                        if not isinstance(p, str): Source.manager('plugin').add(obj=p, name=p.title)
+                        if not isinstance(p, str): 
+                            Source.manager('plugin').add(p.title, p)
                 else: 
                     rst.append(plg.Plugin)
-                    Source.manager('plugin').add(obj=plg.Plugin, name=plg.Plugin.title)
+                    Source.manager('plugin').add(plg.Plugin.title, plg.Plugin)
             except Exception as  e:
                 err.append((path, i, sys.exc_info()[1]))
     return rst
@@ -203,7 +204,7 @@ def build_widgets(path, err='root'):
 
 def build_document(path):
     docs = []
-    for lang in Source.manager('document').get('language'):
+    for lang in [osp.split(i)[1] for i in glob(path+'/*') if osp.isdir(i)]:
         for dirpath, dirnames, filenames in os.walk(path+'/'+lang):
             for filename in filenames:
                 if filename[-3:] != '.md': continue
@@ -215,7 +216,7 @@ def build_document(path):
     return docs
 
 def build_dictionary(path):
-    for lang in Source.manager('dictionary').get('language'):
+    for lang in [osp.split(i)[1] for i in glob(path+'/*') if osp.isdir(i)]:
         for dirpath, dirnames, filenames in os.walk(path+'/'+lang):
             for filename in filenames:
                 if filename[-3:] != 'dic': continue

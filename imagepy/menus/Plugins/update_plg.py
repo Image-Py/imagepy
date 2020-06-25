@@ -53,6 +53,6 @@ class Refresh(Free):
     title = 'Reload Plugins'
 
     def run(self, para=None):
-        IPy.reload_plgs(True, True, True, True)
+        self.app.load_all()
 
 plgs = [Update, Refresh]

@@ -63,12 +63,19 @@ def load_widgets():
     return extend_wgts(data[:2]), data[2]
 
 def load_document():
-    Source.manager('document').add('language', os.listdir(root_dir+'/doc'))
-    loader.build_document(root_dir+'/doc/')
+    docs = [root_dir+'/doc']
+    docs += glob(root_dir+'/plugins/*/doc')
+    for i in docs:loader.build_document(i)
 
 def load_dictionary():
-    Source.manager('dictionary').add('language', os.listdir(root_dir+'/lang'))
-    loader.build_dictionary(root_dir+'/lang/')
+    lans = glob(root_dir+'/lang/*')
+    lans += glob(root_dir+'/plugins/*/lang/*')
+    lans = [i for i in lans if os.path.isdir(i)]
+    lans = [os.path.split(i) for i in lans]
+    lan = sorted(set([i[1] for i in lans]))
+    Source.manager('dictionary').add('language', lan)
+    lans = sorted(set([i[0] for i in lans]))
+    for i in lans: loader.build_dictionary(i)
 
 def start():
     from imagepy.core.app import ImagePy, ImageJ
@@ -82,7 +89,6 @@ def start():
         AS.AS_SHADOW_BITMAP,
         shadowcolour=shadow)
     asp.Update()
-    print('d')
     load_document()
     load_dictionary()
     uistyle = Source.manager('config').get('uistyle') or 'imagepy'

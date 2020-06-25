@@ -6,3 +6,4 @@ from .mkdown import MkDown
 from .widget import Widget
 from .table import Table
 from .report import Report
+from .dataio import *

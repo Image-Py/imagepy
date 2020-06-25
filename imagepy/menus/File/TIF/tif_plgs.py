@@ -1,4 +1,4 @@
-from imagepy.core.util import fileio
+from imagepy.core.engine import dataio
 from skimage.io import imread, imsave
 from sciapp import Source
 
@@ -10,22 +10,22 @@ Source.manager('reader').add('tif', imread, 'imgs')
 Source.manager('reader').add('tiff', imread, 'imgs')
 Source.manager('writer').add('tif', imsave, 'imgs')
 
-class OpenTIF(fileio.Reader):
+class OpenTIF(dataio.Reader):
 	title = 'TIF Open'
 	tag = 'img'
 	filt = ['TIF', 'TIFF']
 
-class SaveTIF(fileio.ImageWriter):
+class SaveTIF(dataio.ImageWriter):
 	title = 'TIF Save'
 	tag = 'img'
 	filt = ['TIF']
 
-class OpenTIFS(fileio.Reader):
+class OpenTIFS(dataio.Reader):
 	title = 'TIF 3D Open'
 	tag = 'imgs'
 	filt = ['TIF', 'TIFF']
 
-class SaveTIFS(fileio.ImageWriter):
+class SaveTIFS(dataio.ImageWriter):
 	title = 'TIF 3D Save'
 	tag = 'imgs'
 	filt = ['TIF']

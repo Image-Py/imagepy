@@ -32,6 +32,7 @@ class Free:
     def on_help(self):
         lang = Source.manager('config').get('language')
         doc = Source.manager('document').get(self.title, tag=lang)
+        doc = doc or Source.manager('document').get(tol.title, tag='English')
         self.app.show_md(doc or 'No Document!', self.title)
         
     def show(self):

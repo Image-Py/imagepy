@@ -1,9 +1,11 @@
 import os
 from sciapp import Source
-from ... import root_dir
-from ..engine import Free, Simple, Table, Macros
+from imagepy import root_dir
+from .free import Free
+from .simple import Simple
+from .table import Table
+from .macros import Macros
 import numpy as np
-
 
 # ViewerManager.add('imgs', IPy.show_img)
 recent = Source.manager('config').get('recent')

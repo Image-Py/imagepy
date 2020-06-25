@@ -137,6 +137,7 @@ class ImageJ(wx.Frame, App):
         def on_help(evt, tol):
             lang = Source.manager('config').get('language')
             doc = Source.manager('document').get(tol.title, tag=lang)
+            doc = doc or Source.manager('document').get(tol.title, tag='English')
             self.show_md(doc or 'No Document!', tol.title)
         self.toolbar.on_help = on_help
         self.toolbar.Fit()
@@ -270,6 +271,7 @@ class ImageJ(wx.Frame, App):
 
     def show_plot(self, title):
         fig = PlotFrame(self)
+        fig.SetIcon(self.GetIcon())
         fig.figure.title = title
         return fig
 

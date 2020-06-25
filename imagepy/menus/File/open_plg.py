@@ -5,10 +5,10 @@ from urllib.request import urlopen
 from io import BytesIO as StringIO
 
 from imagepy.core.engine import Free
-from imagepy.core.util import fileio
+from imagepy.core.engine import dataio
 from sciapp import Source
 
-class OpenFile(fileio.Reader):
+class OpenFile(dataio.Reader):
     title = 'Open'
 
     def load(self):

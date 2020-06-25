@@ -103,8 +103,9 @@ class Plugin ( wx.Panel ):
             self.plg = plg
             name = self.tre_plugins.GetItemText(event.GetItem())
             lang = Source.manager('config').get('language')
-            cont = Source.manager('document').get(name, tag=lang)
-            self.txt_info.set_cont(cont or 'No Document!')
+            doc = Source.manager('document').get(name, tag=lang)
+            doc = doc or Source.manager('document').get(name, tag='English')
+            self.txt_info.set_cont(doc or 'No Document!')
         
     def on_source(self, event):
         ## TODO: should it be absolute path ?

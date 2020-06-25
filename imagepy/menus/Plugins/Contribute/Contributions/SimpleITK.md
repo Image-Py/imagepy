@@ -53,29 +53,29 @@ def write(path, img):
 ```
 ### register reader and writer to the io manager
 ```python 
-from imagepy.core.util import fileio
+from imagepy.core.engine import dataio
 
 # add dicom reader and writer
-fileio.add_reader(['dcm'], read)
-fileio.add_writer(['dcm'], write)
+dataio.add_reader(['dcm'], read)
+dataio.add_writer(['dcm'], write)
 
-class OpenDCM(fileio.Reader):
+class OpenDCM(dataio.Reader):
     title = 'DICOM Open'
     filt = ['DCM']
 
-class SaveDCM(fileio.Writer):
+class SaveDCM(dataio.Writer):
     title = 'DICOM Save'
     filt = ['DCM']
     
 # add nii reader and writer, because nii is a sequence, so ruse read all, and give as a tuple.
-fileio.add_reader(['nii'], (readall,))
-fileio.add_writer(['nii'], (write,))
+dataio.add_reader(['nii'], (readall,))
+dataio.add_writer(['nii'], (write,))
 
-class OpenNII(fileio.Reader):
+class OpenNII(dataio.Reader):
 	title = 'NII Open'
 	filt = ['NII']
 
-class SaveNII(fileio.Reader):
+class SaveNII(dataio.Reader):
 	title = 'NII Save'
 	filt = ['NII']
 

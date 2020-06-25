@@ -1,3 +1,3 @@
-from imagepy.core.util import fileio
+from imagepy.core.engine import dataio
 
-plgs = fileio.rlist
+plgs = dataio.rlist
