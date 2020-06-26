@@ -251,6 +251,7 @@ class ImageJ(wx.Frame, App):
         else: canvas.set_img(img)
         cframe.Bind(wx.EVT_ACTIVATE, self.on_new_img)
         cframe.Bind(wx.EVT_CLOSE, self.on_close_img)
+        cframe.SetIcon(self.GetIcon())
         cframe.Show()
 
     def show_img(self, img, title=None):
@@ -264,6 +265,7 @@ class ImageJ(wx.Frame, App):
             grid.table.name = title
         cframe.Bind(wx.EVT_ACTIVATE, self.on_new_tab)
         cframe.Bind(wx.EVT_CLOSE, self.on_close_tab)
+        cframe.SetIcon(self.GetIcon())
         cframe.Show()
 
     def show_table(self, tab, title=None):
@@ -415,7 +417,10 @@ class ImageJ(wx.Frame, App):
         wx.CallAfter(self.txt_info.SetLabel, cont)
 
     def _alert(self, info, title='ImagePy'):
-        dialog=wx.MessageDialog(self, info, title, wx.OK)
+        lang = Source.manager('config').get('language')
+        dics = Source.manager('dictionary').gets(tag=lang) 
+        dialog = wx.MessageDialog(self, info, title, wx.OK)
+        self.translate([i[1] for i in dics])(dialog)
         dialog.ShowModal() == wx.ID_OK
         dialog.Destroy()
 
@@ -443,9 +448,12 @@ class ImageJ(wx.Frame, App):
         on_cancel=None, on_help=None, preview=False, modal=True):
         lang = Source.manager('config').get('language')
         dic = Source.manager('dictionary').get(name=title, tag=lang)
+        doc = Source.manager('document').get(title, tag=lang)
+        doc = doc or Source.manager('document').get(title, tag='English')
+        on_help = lambda x=doc:self.show_md(x or 'No Document!', title)
         dialog = ParaDialog(self, title)
-        dialog.init_view(view, para, preview, modal=modal, 
-            app=self, translate=self.translate(dic))
+        dialog.init_view(view, para, preview, modal=modal, app=self)
+        self.translate(dic)(dialog)
         dialog.Bind('cancel', on_cancel)
         dialog.Bind('parameter', on_handle)
         dialog.Bind('commit', on_ok)

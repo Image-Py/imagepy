@@ -1,9 +1,7 @@
 import os
 from sciapp import Source
 from imagepy import root_dir
-from .free import Free
-from .simple import Simple
-from .table import Table
+from . import Free, Simple, Table
 from .macros import Macros
 import numpy as np
 

@@ -3,10 +3,9 @@
 Created on Sat Dec  3 03:32:05 2016
 @author: yxl
 """
-import wx
 import threading
-import numpy as np
 from time import time
+import numpy as np
 
 class Simple:
     title = 'SimpleFilter'
@@ -19,37 +18,9 @@ class Simple:
     modal = True
 
     def __init__(self): pass
-    
-    def progress(self, i, n): self.prgs = int(i*100/n)
 
     def load(self, ips):return True
         
-    def preview(self, ips, para):pass
-
-    def show(self):
-        preview = lambda para, ips=self.ips: self.preview(ips, para) or ips.update()
-        return self.app.show_para(self.title, self.view, self.para, preview, 
-            on_ok=lambda : self.ok(self.ips), on_cancel=lambda : self.cancel(self.ips) or self.ips.update(), 
-            preview='preview' in self.note, modal=self.modal)
-    
-    def run(self, ips, imgs, para = None):pass
-        
-    def cancel(self, ips):pass
-
-    def ok(self, ips, para=None, callafter=None):
-        if para == None: para = self.para
-        if self.asyn :
-            threading.Thread(target = self.runasyn, 
-                    args = (ips, ips.imgs, para, callafter)).start()
-        else: self.runasyn(ips, ips.imgs, para, callafter)
-
-    def runasyn(self,  ips, imgs, para = None, callback = None):
-        start = time()
-        self.run(ips, imgs, para)
-        self.app.info('%s: cost %.3fs'%(ips.title, time()-start))
-        ips.update()
-        if callback!=None:callback()
-
     def check(self, ips):
         note = self.note
         if ips == None:
@@ -68,26 +39,60 @@ class Simple:
             elif ips.dtype==np.uint16 and not '16-bit' in note:
                 self.app.alert('Do not surport 16-bit uint image')
                 return False
-            elif ips.dtype in [np.int32, np.int64] and not 'int' in note:
+            elif ips.dtype==np.int32 and not 'int' in note:
                 self.app.alert('Do not surport 32-bit int uint image')
                 return False
-            elif ips.dtype in [np.float32, np.float64] and not 'float' in note:
+            elif ips.dtype in {np.float32, np.float64} and not 'float' in note:
                 self.app.alert('Do not surport float image')
                 return False
         if sum([i in note for i in ('stack','stack2d','stack3d')])>0:
-            if ips.get_nslices()==1:
+            if ips.slices==1:
                 self.app.alert('Stack required!')
                 return False
-            elif 'stack2d' in note and ips.is3d:
+            elif 'stack2d' in note and ips.isarray:
                 self.app.alert('Stack2d required!')
                 return False
-            elif 'stack3d' in note and not ips.is3d:
+            elif 'stack3d' in note and not ips.isarray:
                 self.app.alert('Stack3d required!')
                 return False
         return True
+
+    def preview(self, ips, para):pass
+
+    def progress(self, i, n): self.prgs = int(i*100/n)
+
+    def show(self):
+        preview = lambda para, ips=self.ips: self.preview(ips, para) or ips.update()
+        return self.app.show_para(self.title, self.view, self.para, preview, 
+            on_ok=lambda : self.ok(self.ips), on_help=self.on_help,
+            on_cancel=lambda : self.cancel(self.ips) or self.ips.update(), 
+            preview='preview' in self.note, modal=self.modal)
+    
+    def run(self, ips, imgs, para = None):pass
+
+    def cancel(self, ips):pass
+
+    def on_help(self):
+        self.app.show_md(self.__doc__ or 'No Document!', self.title)
+
+    def ok(self, ips, para=None, callafter=None):
+        if para == None: para = self.para
+        if self.asyn :
+            threading.Thread(target = self.runasyn, 
+                    args = (ips, ips.imgs, para, callafter)).start()
+        else: self.runasyn(ips, ips.imgs, para, callafter)
+        self.app.record_macros('{}>{}'.format(self.title, para))
+
+    def runasyn(self,  ips, imgs, para = None, callback = None):
+        self.app.add_task(self)
+        start = time()
+        self.run(ips, imgs, para)
+        self.app.info('%s: cost %.3fs'%(ips.title, time()-start))
+        ips.update()
+        self.app.remove_task(self)
+        if callback!=None:callback()
         
     def start(self, app, para=None, callback=None):
-        #print self.title, para
         self.app, self.ips = app, app.get_img()
         if not self.check(self.ips):return
         if not self.load(self.ips):return
