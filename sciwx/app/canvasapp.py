@@ -21,8 +21,6 @@ class CanvasApp(wx.Frame, App):
         self.set_log = self.canvas.set_log
         self.set_mode = self.canvas.set_mode
         self.set_tool = self.canvas.set_tool
-        self.set_imgs = self.canvas.set_imgs
-        self.set_img = self.canvas.set_img
         self.set_cn = self.canvas.set_cn
 
         self.Bind(wx.EVT_IDLE, self.on_idle)
@@ -30,6 +28,16 @@ class CanvasApp(wx.Frame, App):
         self.Bind(wx.EVT_CLOSE, self.on_close)
 
         self.status = self.CreateStatusBar( 1 )
+
+    def set_imgs(self, imgs):
+        self.remove_img(self.canvas.image)
+        self.canvas.set_imgs(imgs)
+        self.add_img(self.canvas.image)
+
+    def set_img(self, img, b=False):
+        self.remove_img(self.canvas.image)
+        self.canvas.set_img(img, b)
+        self.add_img(self.canvas.image)
 
     def on_idle(self, event):
         if self.GetTitle()!=self.canvas.image.title:

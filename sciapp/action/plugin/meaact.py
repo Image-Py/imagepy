@@ -1,7 +1,7 @@
 from .shpbase import pick_obj, pick_point, drag, offset
-from . import ImageTool, ShapeTool
-from ..object import Point, Line, Polygon, Layer, Points, Texts
-from ..object.roi import *
+from .. import ImageTool, ShapeTool
+from ...object import Point, Line, Polygon, Layer, Points, Texts
+from ...object.roi import *
 import numpy as np
 from numpy.linalg import norm
 

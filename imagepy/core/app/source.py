@@ -25,7 +25,7 @@ mark_style = Source.manager('config').get('roi_style')
 if not mark_style is None:
 	for i in mark_style: ROI.default[i] = mark_style[i]
 
-from sciapp.action.meaact import Measure
+from sciapp.action import Measure
 mark_style = Source.manager('config').get('mea_style')
 if not mark_style is None:
 	for i in mark_style: Measure.default[i] = mark_style[i]

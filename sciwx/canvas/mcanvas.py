@@ -21,7 +21,9 @@ class ICanvas(Canvas):
         if not b and not isarr: self.images[0] = img
         if b and isarr: self.images[0].back = Image([img])
         if not b and isarr: self.images[0].img = img
-        [self.images[0], self.images[0].back][b].reset()
+        if not b: self.images[0].reset()
+        if b and self.images[0].back: 
+            self.images[0].back.reset()
         self.update_box()
         self.update()
 

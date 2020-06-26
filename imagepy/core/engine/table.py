@@ -43,10 +43,7 @@ class Table:
             tps.update()
 
     def on_help(self):
-        lang = Source.manager('config').get('language')
-        doc = Source.manager('document').get(self.title, tag=lang)
-        doc = doc or Source.manager('document').get(tol.title, tag='English')
-        self.app.show_md(doc or 'No Document!', self.title)
+        self.app.show_md(self.__doc__ or 'No Document!', self.title)
 
     def ok(self, tps, para=None, callafter=None):
         if para == None: para = self.para

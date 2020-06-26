@@ -8,7 +8,7 @@ import wx
 
 def gray_test():
     frame = wx.Frame(None, title='gray test')
-    canvas = Canvas(frame, autofit=False)
+    canvas = Canvas(frame, autofit=True)
     canvas.set_img(camera())
     frame.Show()
 
@@ -30,7 +30,7 @@ def rgb_gray_blend():
     frame.Show()
 
 def complex_test():
-    frame = wx.Frame(None, title='blend')
+    frame = wx.Frame(None, title='fft')
     canvas = Canvas(frame, autofit=True)
     canvas.set_img(fftshift(fft2(camera())))
     canvas.set_rg((0,31015306))

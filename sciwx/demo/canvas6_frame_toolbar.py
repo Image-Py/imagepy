@@ -6,6 +6,8 @@ from sciapp.action import Tool, ImageTool
 
 class Pencil(ImageTool):
     title = 'Pencil'
+    para = {'pc':(255,0,0)}
+    view = [('color', 'pc','pen', 'color')]
         
     def __init__(self):
         self.status = False
@@ -24,7 +26,7 @@ class Pencil(ImageTool):
         rs,cs = line(*[int(i) for i in se])
         rs.clip(0, ips.shape[1], out=rs)
         cs.clip(0, ips.shape[0], out=cs)
-        ips.img[rs,cs] = (255, 0, 0)
+        ips.img[rs,cs] = self.para['pc']
         self.oldp = (y, x)
         key['canvas'].update()
         
@@ -36,8 +38,7 @@ if __name__=='__main__':
 
     app = wx.App()
     cf = CanvasApp(None, autofit=False)
-    cf.set_imgs([astronaut(), 255-astronaut()])
-    cf.set_cn((0,1,2))
+    cf.set_img(astronaut())
     bar = cf.add_toolbar()
     bar.add_tool('M', ImageTool)
     bar.add_tool('P', Pencil)

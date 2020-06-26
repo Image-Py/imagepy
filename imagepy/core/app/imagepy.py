@@ -506,13 +506,22 @@ class ImagePy(wx.Frame, App):
         dialog.Destroy()
         return path
 
+
+        lang = Source.manager('config').get('language')
+        doc = Source.manager('document').get(self.title, tag=lang)
+        doc = doc or Source.manager('document').get(tol.title, tag='English')
+        self.app.show_md(doc or 'No Document!', self.title)
+
     def show_para(self, title, view, para, on_handle=None, on_ok=None, 
         on_cancel=None, on_help=None, preview=False, modal=True):
         lang = Source.manager('config').get('language')
         dic = Source.manager('dictionary').get(name=title, tag=lang)
+        doc = Source.manager('document').get(title, tag=lang)
+        doc = doc or Source.manager('document').get(title, tag='English')
+        on_help = lambda x=doc:self.show_md(x or 'No Document!', title)
         dialog = ParaDialog(self, title)
-        dialog.init_view(view, para, preview, modal=modal, 
-            app=self, translate=self.translate(dic))
+        dialog.init_view(view, para, preview, modal=modal, app=self)
+        self.translate(dic)(dialog)
         dialog.Bind('cancel', on_cancel)
         dialog.Bind('parameter', on_handle)
         dialog.Bind('commit', on_ok)

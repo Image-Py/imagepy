@@ -1,5 +1,5 @@
 from sciapp.action import ImageTool
-from sciapp.action.meaact import Measure
+from sciapp.action import Measure
 from imagepy.core.engine import Free
 from sciapp import Source
 

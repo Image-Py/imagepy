@@ -48,18 +48,15 @@ class ParaDialog (wx.Dialog):
             self.btn_cancel.Bind( wx.EVT_BUTTON, lambda e:self.commit('cancel'))
         #self.lst.Add()
 
-    def init_view(self, items, para, preview=False, modal=True, app=None, translate=lambda x:x):
+    def init_view(self, items, para, preview=False, modal=True, app=None):
         self.para, self.modal = para, modal
         for item in items:
             self.add_ctrl_(widgets[item[0]], item[1], item[2:], app=app)
         if preview:self.add_ctrl_(Check, 'preview', ('preview',), app=app)
         self.reset(para)
         self.add_confirm(modal)
-        translate(self)
-        self.pack()
         wx.Dialog.Bind(self, wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         #wx.Dialog.Bind(self, wx.EVT_IDLE, lambda e: self.reset())
-        print('bind close')
     
     def OnDestroy( self, event ):
         self.handle = print
@@ -82,7 +79,6 @@ class ParaDialog (wx.Dialog):
         self.lst.Add( ctrl, 0, wx.EXPAND, 0 )
 
     def pack(self):
-        self.Layout()
         mint, minu = [], []
         for t,u in self.tus:
             if not t is None: mint.append(t.GetSize()[0])
@@ -90,6 +86,7 @@ class ParaDialog (wx.Dialog):
         for t,u in self.tus:
             if not t is None:t.SetInitialSize((max(mint),-1))
             if not u is None:u.SetInitialSize((max(minu),-1))
+        self.Layout()
         self.Fit()
 
     def para_check(self, para, key):pass
@@ -128,6 +125,7 @@ class ParaDialog (wx.Dialog):
         if tag == 'help': self.on_help = f
 
     def show(self):
+        self.pack()
         if self.modal: 
             status =  self.ShowModal() == 5100
             self.Destroy()

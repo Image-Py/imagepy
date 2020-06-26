@@ -4,8 +4,6 @@ Created on Sat Dec  3 03:32:05 2016
 @author: yxl
 """
 import threading
-
-from sciapp import Source
 from time import time
 import numpy as np
 
@@ -39,10 +37,7 @@ class Simple:
     def cancel(self, ips):pass
 
     def on_help(self):
-        lang = Source.manager('config').get('language')
-        doc = Source.manager('document').get(self.title, tag=lang)
-        doc = doc or Source.manager('document').get(tol.title, tag='English')
-        self.app.show_md(doc or 'No Document!', self.title)
+        self.app.show_md(self.__doc__ or 'No Document!', self.title)
 
     def ok(self, ips, para=None, callafter=None):
         if para == None: para = self.para

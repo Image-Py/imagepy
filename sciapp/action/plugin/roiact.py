@@ -1,7 +1,7 @@
 from .shpact import *
 from .shpbase import BaseEditor
-from .tolact import ImageTool
-from ..object import ROI
+from ..tolact import ImageTool
+from ...object import ROI
 
 class BaseROI(ImageTool):
 	def __init__(self, base): 

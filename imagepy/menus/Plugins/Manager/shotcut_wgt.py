@@ -99,8 +99,7 @@ class Plugin( wx.Panel ):
         code = event.GetKeyCode()
         title = self.buf[event.GetIndex()][0]
         txt = self.buf[event.GetIndex()][1]
-        if code == wx.WXK_DELETE:
-            txt = ''
+        if code == wx.WXK_DELETE: txt = ''
         elif code == wx.WXK_CONTROL: 
             txt = self.ist(txt, 'Ctrl')
         elif code == wx.WXK_ALT: 
@@ -115,7 +114,6 @@ class Plugin( wx.Panel ):
         if len(txt)>0 and txt[-1]=='-':txt=txt[:-1]
         self.buf[event.GetIndex()][1] = txt
         self.lst_plgs.RefreshItem(event.GetIndex())
-        Source.manager('shortcut').remove(name=title)
         if txt!='': Source.manager('shortcut').add(title, txt)
         #PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
         

@@ -1,4 +1,4 @@
-from .tolact import ShapeTool
+from ..tolact import ShapeTool
 from sciapp.object import *
 from sciapp.util import geom_union
 from numpy.linalg import norm

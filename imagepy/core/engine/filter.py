@@ -6,8 +6,6 @@ Created on Fri Dec  2 23:48:33 2016
 
 import threading
 import numpy as np
-
-from sciapp import Source
 from time import time, sleep
 
 def process_channels(plg, ips, src, des, para):
@@ -158,10 +156,7 @@ class Filter:
         #ips.update()
         
     def on_help(self):
-        lang = Source.manager('config').get('language')
-        doc = Source.manager('document').get(self.title, tag=lang)
-        doc = doc or Source.manager('document').get(tol.title, tag='English')
-        self.app.show_md(doc or 'No Document!', self.title)
+        self.app.show_md(self.__doc__ or 'No Document!', self.title)
 
     def cancel(self, ips):
         if 'auto_snap' in self.note:

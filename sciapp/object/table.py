@@ -1,3 +1,5 @@
+import numpy as np
+
 class Table():
     def __init__(self, df=None):
         self.name = 'Table'
