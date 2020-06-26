@@ -48,6 +48,12 @@ Install Packages::安装包
 List Packages::包列表
 
 Install Plugins::安装插件
+	input a zipfile url or github url as http://github.com/username/project::输入一个zip文件链接或github链接，例如http://github.com/username/project
+	package::链接
+	Use proxy::使用代理
+	Protocol::协议类型
+	IP Address::IP地址
+	Port::端口号
 
 List Plugins::插件列表
 
