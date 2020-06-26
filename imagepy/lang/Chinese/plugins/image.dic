@@ -1,0 +1,122 @@
+Type::类型
+
+Adjust::调整
+
+Color::颜色
+
+Stack::序列
+
+Orthogonal view::正交视图
+
+Set Slice::设定切片
+	Num::范围
+
+Next Slice::下一切片
+
+Previous Slice::上一切片
+
+Add Slice::添加切片
+
+Delete Slice::删除切片
+
+Sub Stack::子连续序列
+	start::开始
+	end::结束
+	OK::确定
+	Cancel::取消
+	Help::帮助
+
+Rename::重命名
+	name::名字
+
+Duplicate::复制
+
+Crop::裁剪
+
+Canvas Size::画布尺寸
+	Weight::宽
+	Height::高
+	Horizontal::水平
+	Vertical::垂直
+	pix::像素
+	left::左
+	center::中
+	right::右
+
+Resize::设定尺寸
+	kx::x比例
+	ky::y比例
+	kz::z比例
+	accu::插值次数
+	the kz only works on stack!::z比例仅用于连续序列
+
+Scale And Unit::比例和单位
+	per::比例
+	unit::单位
+	pix::像素
+	kill scale::清除比例
+
+Mark::标记
+
+Open Mark::打开标记
+
+Save Mark::保存标记
+
+Clear Mark::清除标记
+
+Mark Setting::标记设定
+	line::线
+	face::填充
+	text::文本
+	color::颜色
+	width::宽
+	solid fill::填充
+
+Set Background::设定背景
+	background::背景
+	mode::模式
+	kill::清除
+	ratial::混合比例
+
+Trans to Stack::连续序列
+
+Trans to List::离散序列
+
+Background Self::原图作为背景
+	mode::模式
+	ratial::混合比例
+
+Lookup tabel::索引色
+
+Threshold::阈值
+
+Gray Stairs::灰度等级
+
+Bright And Constract::亮度与对比度
+
+Bleach Correction::白校正
+
+Enhance Contrast::对比度增强
+	Saturated pixels::饱和像素
+
+Normalize::归一化
+	3D stack::三维连续序列
+	Subtract background::减去背景
+
+Color Balance::色彩平衡
+
+Color Stairs::色彩等级
+
+Histogram Normalize::直方图归一化
+
+Histogram Match::直方图匹配
+	temp::目标
+
+Lookup table::索引色
+
+Rotate::旋转
+	degree::度
+	angle::角度
+
+Scale::缩放
+	fact::因子
