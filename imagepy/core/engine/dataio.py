@@ -42,7 +42,6 @@ class Reader(Free):
     #process
     def run(self, para = None):
         add_recent(para['path'])
-
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
         readers = Source.manager('reader').gets(name=fe[1:], tag=self.tag)

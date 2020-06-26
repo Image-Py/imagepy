@@ -6,7 +6,7 @@ Created on Fri Jan  6 23:45:59 2017
 """
 import os, sys, os.path as osp
 from glob import glob
-from ..engine import Macros, MkDown, Widget, Report
+from ..engine import Macros, Widget, Report
 from sciapp import Source
 from ... import root_dir
 from codecs import open
@@ -26,11 +26,11 @@ def extend_plugins(path, lst, err):
         elif i[-3:] == 'rpt':
             pt = os.path.join(root_dir,path)
             rst.append(Report(i[:-4], pt+'/'+i))
-            Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
+            # Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
         elif i[-3:] in {'.md', '.mc', '.wf'}:
             p = os.path.join(os.path.join(root_dir, path), i).replace('\\','/')
             rst.append(Macros(i[:-3], ['Open>{"path":"%s"}'%p]))
-            Source.manager('plugin').add(rst[-1].title, rst[-1])
+            # Source.manager('plugin').add(rst[-1].title, rst[-1])
         elif i[-6:] in ['wgt.py', 'gts.py']:
             try:
                 rpath = path.replace('/', '.').replace('\\','.')
@@ -50,11 +50,11 @@ def extend_plugins(path, lst, err):
                 if hasattr(plg, 'plgs'):
                     rst.extend([j for j in plg.plgs])
                     for p in plg.plgs:
-                        if not isinstance(p, str): 
-                            Source.manager('plugin').add(p.title, p)
+                        if not isinstance(p, str):  pass
+                            # Source.manager('plugin').add(p.title, p)
                 else: 
                     rst.append(plg.Plugin)
-                    Source.manager('plugin').add(plg.Plugin.title, plg.Plugin)
+                    # Source.manager('plugin').add(plg.Plugin.title, plg.Plugin)
             except Exception as  e:
                 err.append((path, i, sys.exc_info()[1]))
     return rst
@@ -102,9 +102,6 @@ def extend_tools(path, lst, err):
             p = os.path.join(os.path.join(root_dir,path), i).replace('\\','/')
             rst.append((Macros(i[:-3], ['Open>{"path":"%s"}'%p]),
                 os.path.join(root_dir, path)+'/'+i[:-3]+'.gif'))
-
-            #rst.append((Macros(i[:-3], [getpath(pt, i) for i in cmds]),  
-            #    os.path.join(root_dir, path)+'/'+i[:-3]+'.gif'))
         else:
             try:
                 rpath = path.replace('/', '.').replace('\\','.')

@@ -1,5 +1,4 @@
 from .macros import Macros
-from .mkdown import MkDown
 from .widget import Widget
 from sciapp.action import Table
 from sciapp.action import Filter

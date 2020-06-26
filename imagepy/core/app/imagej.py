@@ -71,6 +71,18 @@ class ImageJ(wx.Frame, App):
             .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True )
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
         
+    def add_plugin(self, name, plg):
+        self.manager('plugin').add(name, plg)
+
+    def flatten(self, plgs, lst=None):
+        if lst is None: lst = []
+        if isinstance(plgs, tuple):
+            if callable(plgs[1]): lst.append((plgs))
+            else: self.flatten(plgs[1], lst)
+        if isinstance(plgs, list):
+            for i in plgs: self.flatten(i, lst)
+        return lst
+
     def _load_all(self):
         lang = Source.manager('config').get('language')
         dic = Source.manager('dictionary').get('common', tag=lang) or {}
@@ -78,8 +90,8 @@ class ImageJ(wx.Frame, App):
         for i in self.auimgr.GetAllPanes():
             i.Caption(dic[i.caption] if i.caption in dic else i.caption)
         self.auimgr.Update()
-        
         plgs, errplg = load_plugins()
+        for name, plg in self.flatten(plgs): self.add_plugin(name, plg)
         self.load_menu(plgs)
         dtool = Source.manager('tools').get('default')
         tols, errtol = load_tools()
@@ -99,7 +111,7 @@ class ImageJ(wx.Frame, App):
         lang = Source.manager('config').get('language')
         ls = Source.manager('dictionary').gets(tag=lang)
         short = Source.manager('shortcut').gets()
-        acc = self.menubar.load(data)
+        acc = self.menubar.load(data, dict([i[:2] for i in short]))
         self.translate(dict([(i,j[i]) for i,j,_ in ls]))(self.menubar)
         self.SetAcceleratorTable(acc)
 
@@ -391,7 +403,7 @@ class ImageJ(wx.Frame, App):
             cmd = cmds.pop(0)
             title, para = cmd.split('>')
             print(title, para)
-            plg = Source.manager('plugin').get(name=title)()
+            plg = self.manager('plugin').get(name=title)()
             after = lambda cmds=cmds: one(cmds, one)
             if len(cmds)==0: after = callafter
             wx.CallAfter(plg.start, self, eval(para), after)
