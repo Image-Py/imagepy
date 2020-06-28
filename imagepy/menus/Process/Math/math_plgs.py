@@ -57,7 +57,7 @@ class Min(Filter):
 
 class Sqrt(Filter):
     """Sqrt_plg: derived from imagepy.core.engine.Filter """
-    title = 'Squre Root'
+    title = 'Square Root'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     
     def run(self, ips, snap, img, para = None):

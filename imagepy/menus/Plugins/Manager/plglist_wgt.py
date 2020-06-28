@@ -68,7 +68,7 @@ class Plugin( wx.Panel ):
     
     #def list_plg(self, lst, items
     def load(self):
-        lst = [i[1] for i in list(Source.manager('plugin').gets())]
+        lst = [i[1] for i in list(self.app.plugin_manager.gets())]
         self.plgs = [(i.title, i.__module__) for i in lst]
         self.plgs.sort()
         self.buf = self.plgs
@@ -83,4 +83,4 @@ class Plugin( wx.Panel ):
         
     def on_run(self, event):
         name=self.buf[event.GetIndex()][0]
-        Source.manager('plugin').get(name)().start(self.app)
+        self.app.manager('plugin').get(name)().start(self.app)

@@ -63,7 +63,7 @@ class Plugin( wx.Panel ):
     
     #def list_plg(self, lst, items
     def load(self):
-        lst = self.app.manager('plugin').names()
+        lst = self.app.plugin_names()
         self.plgs = [[i, Source.manager('shortcut').get(i)] for i in lst]
         for i in self.plgs:
             if i[1]==None:i[1]=''

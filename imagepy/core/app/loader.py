@@ -112,7 +112,7 @@ def extend_tools(path, lst, err):
                     os.path.join(root_dir, path)+'/'+i.split('_')[0]+'.gif'))
             except Exception as e:
                 err.append((path, i, sys.exc_info()[1]))
-    for i in rst:Source.manager('tool').add(obj=i[0], name=i[0].title)
+    # for i in rst:Source.manager('tool').add(obj=i[0], name=i[0].title)
     return rst
             
 def sort_tools(catlog, lst):
@@ -161,7 +161,7 @@ def extend_widgets(path, lst, err):
             rst.append(plg.Plugin)
         except Exception as e:
             err.append((path, i, sys.exc_info()[1]))
-    for i in rst:Source.manager('widget').add(obj=i, name=i.title)
+    #for i in rst:Source.manager('widget').add(obj=i, name=i.title)
     return rst
             
 def sort_widgets(catlog, lst):

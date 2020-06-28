@@ -46,7 +46,7 @@ class Install(Free):
             domain, name = (url[:-4].replace('.','-')).split('/')[-2:]
         domain, name = domain.replace('_', '-'), name.replace('_', '-')
 
-        self.app.set_info('downloading plugin from %s'%para['repo'])
+        self.app.info('downloading plugin from %s'%para['repo'])
 
         if True == para['proxy']:
             proxy=para['Protocol']+"://"+para['IP']+":"+para['Port']
@@ -67,7 +67,7 @@ class Install(Free):
         if os.path.exists(destpath): shutil.rmtree(destpath)
         os.rename(os.path.join(path_cache, folder), destpath)
         zipf.close()
-        self.app.set_info('installing requirement liberies')
+        self.app.info('installing requirement liberies')
         self.prgs = None
         cmds = [sys.executable, '-m', 'pip', 'install', '-r', '%s/requirements.txt'%destpath]
         subprocess.call(cmds)

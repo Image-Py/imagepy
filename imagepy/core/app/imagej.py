@@ -228,7 +228,7 @@ class ImageJ(wx.Frame, App):
         self.remove_mesh_win(event.GetEventObject().canvas)
         event.Skip()
         
-    def set_info(self, value):
+    def info(self, value):
         lang = Source.manager('config').get('language')
         dics = Source.manager('dictionary').gets(tag=lang) 
         dic = dict(j for i in dics for j in i[1].items())
@@ -424,9 +424,6 @@ class ImageJ(wx.Frame, App):
         elif tag=='wf':
             self.show_workflow(cont, title)
         else: self.alert('no view for %s!'%tag)
-
-    def info(self, cont): 
-        wx.CallAfter(self.txt_info.SetLabel, cont)
 
     def _alert(self, info, title='ImagePy'):
         lang = Source.manager('config').get('language')

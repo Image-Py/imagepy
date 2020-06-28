@@ -14,7 +14,7 @@ from skimage.segmentation import clear_border
 
 class Closing(Filter):
     """Closing: derived from imagepy.core.engine.Filter """
-    title = 'Binary Closeing'
+    title = 'Binary Closing'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
     para = {'w':3, 'h':3}
     view = [(int, 'w', (1,15), 0, 'width', 'pix'),

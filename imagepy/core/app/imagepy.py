@@ -70,9 +70,6 @@ class ImagePy(wx.Frame, App):
         self.auimgr.AddPane( stapanel,  aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True )
             .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True )
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
-    
-    def add_plugin(self, name, plg):
-        self.manager('plugin').add(name, plg)
 
     def flatten(self, plgs, lst=None):
         if lst is None: lst = []
@@ -91,13 +88,19 @@ class ImagePy(wx.Frame, App):
         for i in self.auimgr.GetAllPanes():
             i.Caption(dic[i.caption] if i.caption in dic else i.caption)
         self.auimgr.Update()
-        plgs, errplg = load_plugins()        
-        for name, plg in self.flatten(plgs): self.add_plugin(name, plg)
+        plgs, errplg = load_plugins() 
+        self.plugin_manager.remove()       
+        for name, plg in self.flatten(plgs): 
+            self.add_plugin(name, plg, 'plugin')
         self.load_menu(plgs)
         dtool = Source.manager('tools').get('default')
         tols, errtol = load_tools()
+        for name, plg in self.flatten(tols): 
+            self.add_plugin(name, plg, 'tool')
         self.load_tool(tols, dtool or 'Transform')
         wgts, errwgt = load_widgets()
+        for name, plg in self.flatten(wgts): 
+            self.add_plugin(name, plg, 'widget')
         self.load_widget(wgts)
         err = errplg + errtol + errwgt
         if len(err)>0: 
@@ -293,7 +296,7 @@ class ImagePy(wx.Frame, App):
         self.remove_mesh(canvas3d.mesh)
         self.remove_mesh_win(canvas3d)
         
-    def set_info(self, value):
+    def info(self, value):
         lang = Source.manager('config').get('language')
         dics = Source.manager('dictionary').gets(tag=lang) 
         dic = dict(j for i in dics for j in i[1].items())
@@ -489,9 +492,6 @@ class ImagePy(wx.Frame, App):
         elif tag=='wf':
             self.show_workflow(cont, title)
         else: self.alert('no view for %s!'%tag)
-
-    def info(self, cont): 
-        wx.CallAfter(self.txt_info.SetLabel, cont)
 
     def _alert(self, info, title='ImagePy'):
         lang = Source.manager('config').get('language')

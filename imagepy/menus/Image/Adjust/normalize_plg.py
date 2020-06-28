@@ -16,7 +16,7 @@ class Plugin(Simple):
         lim = np.zeros([len(imgs), 2], dtype=imgs[0].dtype)
         dic = {np.uint8:255, np.uint16:65535, np.float32:1, np.float64:1}
 
-        self.app.set_info('count range ...')
+        self.app.info('count range ...')
         for i in range(len(imgs)):
             lim[i] = imgs[i].min(), imgs[i].max()
             self.progress(i, len(imgs))
@@ -25,7 +25,7 @@ class Plugin(Simple):
         if not para['sb']: lim[:,0] = 0
         rg = lim[:,0].min(), lim[:,1].max()
         if para['is3d']: lim[:] = rg
-        self.app.set_info('adjust range ...')
+        self.app.info('adjust range ...')
         for i in range(len(imgs)):
             if para['sb']: imgs[i] -= lim[i,0]
             np.multiply(imgs[i], maxvalue/(lim[i].ptp()), out=imgs[i], casting='unsafe')

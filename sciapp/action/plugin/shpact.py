@@ -1,4 +1,5 @@
 from .shpbase import *
+from ...util import geom_flatten
 
 def inbase(key, btn):
 	status = key['ctrl'], key['alt'], key['shift']

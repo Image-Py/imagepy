@@ -9,6 +9,11 @@ class Manager:
         if self.unique: self.remove(name, tag)
         self.objs.insert(0, (name, obj, tag))
 
+    def active(self, name=None, tag=None, obj=None):
+        objs = self.gets(name, tag, obj)
+        for i in objs: self.objs.remove(i)
+        for i in objs: self.objs.insert(0, i)
+
     def set(self, name, obj, tag=None):
         self.remove(name, tag)
         self.objs.insert(0, (name, obj, tag))
@@ -70,6 +75,16 @@ class App():
         self.mesh_manager = self.manager('mesh')
         self.wmesh_manager = self.manager('wmesh')
         self.task_manager = self.manager('task')
+        self.plugin_manager = self.manager('plugin')
+
+    def add_plugin(self, name, plg, tag=None):
+        self.plugin_manager.add(name, plg, tag)
+
+    def get_plugin(self, name=None):
+        return self.plugin_manager.get(name)
+
+    def plugin_names(self, tag=None):
+        return self.plugin_manager.names(tag)
 
     def manager(self, name, value=None):
         if not name in self.managers: 
@@ -159,3 +174,67 @@ class App():
 
     def remove_task(self, task):
         self.task_manager.remove(obj=task)
+
+    def info(self, value): 
+        print('Information:', value)
+
+    def show_md(self, cont, title='ImagePy'):
+        print(title, '\n', cont)
+
+    def show_txt(self, cont, title='ImagePy'):
+        print(title, '\n', cont)
+
+    def alert(self, cont, title='ImagePy'):
+        print(title, '\n', cont, 'enter to continue!')
+        input()
+
+    def yes_no(self, cont, title='ImagePy'):
+        print(title, '\n', cont, 'Y/N?')
+        return input() in 'yY'
+
+    def getpath(self, title, filt, io, name=''):
+        print('input file path:')
+        return input()
+    
+    def show_para(self, title, view, para, on_handle=None, on_ok=None, 
+        on_cancel=None, on_help=None, preview=False, modal=True):
+        print(title+':')
+        for i in view:
+            if i[0]==str: para[i[1]] = input(i[2]+': ? '+i[3]+' <str> ')
+            if i[0]==int: para[i[1]] = int(input(i[4]+': ? '+i[5]+' <int> '))
+            if i[0]==float: para[i[1]] = float(input(i[4]+': ? '+i[5]+' <float> '))
+            if i[0]=='slide': para[i[1]] = float(input(i[4]+': ? '+i[5]+' <float> '))
+            if i[0]==bool: para[i[1]] = bool(input(i[2]+': <True/False> '))
+            if i[0]==list: para[i[1]] = i[3](input('%s %s: %s'%(i[4],i[5],i[2])+' <single choice> '))
+            if i[0]=='chos':para[i[1]] = input('%s:%s <multi choices> '%(i[3],i[2])).split(',')
+            if i[0]=='color': para[i[1]] = eval(input(i[2]+': ? '+i[3]+' <rgb> '))
+        return para
+
+    def run_macros(self, cmd, callafter=None):
+        cmds = [i for i in cmd]
+        def one(cmds, after): 
+            cmd = cmds.pop(0)
+            title, para = cmd.split('>')
+            plg = self.manager('plugin').get(name=title)()
+            after = lambda cmds=cmds: one(cmds, one)
+            if len(cmds)==0: after = callafter
+            plg.start(self, eval(para), after)
+        one(cmds, None)
+
+if __name__ == '__main__':
+    app = App()
+    app.alert('Hello, SciApp!')
+
+    para = {'name':'yxdragon', 'age':10, 'h':1.72, 'w':70, 'sport':True, 'sys':'Mac', 'lan':['C/C++', 'Python'], 'c':(255,0,0)} 
+
+    view = [('lab', 'lab', 'This is a questionnaire'),
+            (str, 'name', 'name', 'please'), 
+            (int, 'age', (0,150), 0, 'age', 'years old'),
+            (float, 'h', (0.3, 2.5), 2, 'height', 'm'),
+            ('slide', 'w', (1, 150), 0, 'weight','kg'),
+            (bool, 'sport', 'do you like sport'),
+            (list, 'sys', ['Windows','Mac','Linux'], str, 'favourite', 'system'),
+            ('chos', 'lan', ['C/C++','Java','Python'], 'lanuage you like(multi)'),
+            ('color', 'c', 'which', 'you like')]
+
+    app.show_para('parameter', view, para)

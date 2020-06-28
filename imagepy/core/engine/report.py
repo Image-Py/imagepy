@@ -31,7 +31,7 @@ class Report:
         start = time()
         xlreport.fill_value(wb, info, para)
         wb.save(para['path'])
-        self.app.set_info('%s: cost %.3fs'%(self.title, time()-start))
+        self.app.info('%s: cost %.3fs'%(self.title, time()-start))
         self.app.remove_task(self)
         if callback!=None:callback()
 
