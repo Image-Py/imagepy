@@ -15,3 +15,5 @@ xlwt
 markdown
 python-markdown-math
 moderngl
+pystackreg
+opencv_python
