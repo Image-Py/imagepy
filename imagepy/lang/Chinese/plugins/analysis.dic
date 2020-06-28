@@ -1,0 +1,76 @@
+label image::标记图
+
+mark boundaries::标记边线
+
+label render::标记着色
+	color::标记颜色个数
+
+frequence::灰度值频数
+
+pixel statistic::灰度值统计特性
+
+histogram::直方图
+
+points value::点ROI灰度值
+
+shortest route::灰度图最短路径
+	step::通路路径成本值
+
+pixel cluster::像素聚类
+
+gray cluster::灰度图聚类
+	torlerance::公差
+
+color cluster::彩色图聚类
+	torlerance::公差
+
+gray cluster 3d::3D灰度图聚类
+
+color cluster 3d::3D彩色图聚类
+
+gray points statistic::灰度图点ROI统计特性
+
+color points statistic::彩色图点ROI统计特性
+
+k-means::K均值聚类
+	k::质心数
+	iterate::迭代次数
+	threshold::变化阈值
+	resample::重采样
+
+region analysis::区域分析
+
+geometry analysis::几何分析
+
+geometry filter::几何筛选
+	front color::前景灰度值
+	back color::背景灰度值
+	area::面积
+	perimeter::周长
+	holes::孔洞数
+	solidity::紧固度
+	eccentricity::偏心率
+
+property marker::属性标记
+
+connective analysis::连通性分析
+
+intensity analysis::灰度值分析
+
+intensity filter::灰度值统计特性过滤
+
+skeleton network::骨架网络
+
+build graph::建图
+
+graph summarise::图摘要
+
+remove isolate node::移除孤立节点
+
+remove 2path node::移除第二路径节点
+
+cut branch::分支剪切
+
+cut by roi::ROI剪切
+
+graph shortest path::图最短路径

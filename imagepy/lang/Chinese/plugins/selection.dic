@@ -1,0 +1,75 @@
+Select All::全选
+
+Select None::取消选区
+
+ROI Inflate::选区扩张
+
+ROI Shrink::选区收缩
+
+ROI Convex Hull::选区凸包
+
+ROI Bound Box::选区外接矩
+
+ROI Clip::选区剪切
+
+ROI Invert::选区补集
+
+ROI Open::打开ROI文件
+
+ROI Save::保存ROI文件
+
+ROI Add::添加到管理器
+	Name::名称
+
+ROI Load::从管理器加载
+	Name::名称
+
+ROI Remove::从管理器移除
+	Name::名称 
+
+ROI Intersect::选区交集
+	Name::名称
+
+ROI Union::选区并集
+	Name::名称
+
+ROI Difference::选区差集
+	Name::名称
+
+ROI Symmetric Diff::并集-交集
+	Name::名称
+
+ROI Setting::选区设置
+	line::轮廓线
+	face::内部
+	text::文字
+	width::线宽
+	color::颜色
+	pix::像素
+	size::高度
+	solid fill::内部填充
+
+ROI Ctrl Panel::选区控制面板
+	Manage::管理
+	Add::添加
+	Load::加载
+	Update::更新
+	Remove::移除
+	Open::打开
+	Save::保存
+	Operate::几何运算
+	Inflate::扩张
+	Shrink::收缩
+	Convex::凸包
+	Bound::外接矩形
+	Clip::裁剪
+	Invert::反向
+	Relationship::关系运算
+	Intersect::相交
+	Union::合并
+	Difference::减去
+	Sym Diff::异或
+	Draw::绘图
+	Sketch::描边
+	Clear::清除内部
+	Clear Out::清除外部
