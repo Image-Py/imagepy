@@ -10,7 +10,7 @@ from sciwx.text import MDNoteBook, TextNoteBook
 from sciwx.plot import PlotFrame
 from skimage.data import camera
 from sciapp import App, Source
-from sciapp.object import Image
+from sciapp.object import Image, Table
 from imagepy import root_dir
 from .startup import load_plugins, load_tools, load_widgets, load_document, load_dictionary
 
@@ -190,7 +190,7 @@ class ImagePy(wx.Frame, App):
         self.auimgr.AddPane( self.canvasnbwrap, aui.AuiPaneInfo() .Center() .CaptionVisible( False ).PinButton( True ).Dock()
             .PaneBorder( False ).Resizable().FloatingSize( wx.DefaultSize ). BottomDockable( True ).TopDockable( False )
             .LeftDockable( True ).RightDockable( True ) )
-        self.canvasnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_new_img)
+        self.canvasnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_active_img)
         self.canvasnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close_img)
 
     def init_table(self):
@@ -204,8 +204,8 @@ class ImagePy(wx.Frame, App):
         self.auimgr.AddPane( self.tablenbwrap, aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock().Hide()
             .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Table') . 
             BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
-        self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_new_tab)
-        self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close_tab)
+        self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_active_table)
+        self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close_table)
 
     def init_mesh(self):
         self.meshnbwrap = wx.Panel(self)
@@ -269,23 +269,21 @@ class ImagePy(wx.Frame, App):
         if hasattr(event.GetPane().window, 'close'):
             event.GetPane().window.close()
 
-    def on_new_img(self, event):
-        self.add_img(self.canvasnb.canvas().image)
-        self.add_img_win(self.canvasnb.canvas())
+    def on_active_img(self, event):
+        self.active_img(self.canvasnb.canvas().image.name)
+        #self.add_img_win(self.canvasnb.canvas())
 
     def on_close_img(self, event):
         canvas = event.GetEventObject().GetPage(event.GetSelection())
-        self.remove_img_win(canvas)
-        self.remove_img(canvas.image)
+        #self.remove_img_win(canvas)
+        App.close_img(self, canvas.image.title)
 
-    def on_new_tab(self, event):
-        self.add_tab(self.tablenb.grid().table)
-        self.add_tab_win(self.tablenb.grid())
+    def on_active_table(self, event):
+        self.active_table(self.tablenb.grid().table.title)
 
-    def on_close_tab(self, event):
+    def on_close_table(self, event):
         grid = event.GetEventObject().GetPage(event.GetSelection())
-        self.remove_tab_win(grid)
-        self.remove_tab(grid.table)
+        App.close_table(self, grid.table.title)
         
     def on_new_mesh(self, event):
         self.add_mesh(self.meshnb.canvas().mesh)
@@ -324,29 +322,23 @@ class ImagePy(wx.Frame, App):
 
     def _show_img(self, img, title=None):
         canvas = self.canvasnb.add_canvas()
-        self.remove_img(canvas.image)
-        self.remove_img_win(canvas)
-        if not title is None:
-            canvas.set_imgs(img)
-            canvas.image.name = title
-        else: canvas.set_img(img)
-        self.add_img(canvas.image)
-        self.add_img_win(canvas)
+        if not isinstance(img, Image): 
+            img = Image(img, title)
+        App.show_img(self, img, img.title)
+        canvas.set_img(img)
 
     def show_img(self, img, title=None):
         wx.CallAfter(self._show_img, img, title)
 
     def _show_table(self, tab, title):
         grid = self.tablenb.add_grid()
-        self.remove_tab(grid.table)
-        self.remove_tab_win(grid)
+        if not isinstance(tab, Table): 
+            tab = Table(tab, title)
+        App.show_table(self, tab, tab.title)
         grid.set_data(tab)
-        grid.table.name = title
         info = self.auimgr.GetPane(self.tablenbwrap)
         info.Show(True)
         self.auimgr.Update()
-        self.add_tab(grid.table)
-        self.add_tab_win(grid)
 
     def show_table(self, tab, title=None):
         wx.CallAfter(self._show_table, tab, title)
@@ -445,21 +437,17 @@ class ImagePy(wx.Frame, App):
         info.Show(not info.IsShown() if visible is None else visible)
         self.auimgr.Update()
 
-    def close_img(self, name=None):
-        names = self.get_img_name() if name is None else [name]
-        for name in names:
-            idx = self.canvasnb.GetPageIndex(self.get_img_win(name))
-            self.remove_img(self.get_img_win(name).image)
-            self.remove_img_win(self.get_img_win(name))
-            self.canvasnb.DeletePage(idx)
+    def close_img(self, name):
+        App.close_img(self, name)
+        for i in range(self.canvasnb.GetPageCount()):
+            if self.canvasnb.GetPageText(i)==name:
+                return self.canvasnb.DeletePage(i)
 
     def close_table(self, name=None):
-        names = self.get_tab_name() if name is None else [name]
-        for name in names:
-            idx = self.tablenb.GetPageIndex(self.get_tab_win(name))
-            self.remove_tab(self.get_tab_win(name).table)
-            self.remove_tab_win(self.get_tab_win(name))
-            self.tablenb.DeletePage(idx)
+        App.close_tab(self, name)
+        for i in range(self.tablenb.GetPageCount()):
+            if self.tablenb.GetPageText(i)==name:
+                return self.tablenb.DeletePage(i)
 
     def record_macros(self, cmd):
         obj = self.manager('widget').get(name='Macros Recorder')

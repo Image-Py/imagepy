@@ -1,8 +1,8 @@
 import numpy as np
 
 class Table():
-    def __init__(self, df=None):
-        self.name = 'Table'
+    def __init__(self, df=None, name='Table'):
+        self.name = name
         self.df = df
         self.rg = None
         self.props = None

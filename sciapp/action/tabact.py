@@ -21,7 +21,7 @@ class TabAction(SciAction):
         print('I am running!!!')
 
     def start(self, app, para=None, callback=None):
-        self.app, self.tps = app, app.get_tab()
+        self.app, self.tps = app, app.get_table()
         if 'auto_snap' in self.note:
             if 'auto_msk' in self.note: mode = True
             elif 'msk_not' in self.note: mode = False

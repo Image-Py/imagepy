@@ -47,13 +47,13 @@ class Table:
 
     def ok(self, tps, para=None, callafter=None):
         if para == None: para = self.para
-        if self.asyn:
+        if self.asyn and self.app.asyn:
             threading.Thread(target = self.runasyn, 
                 args = (tps, tps.data, tps.snap, para, callafter)).start()
         else: self.runasyn(tps, tps.data, tps.snap, para, callafter)
-        self.app.record_macros('{}>{}'.format(self.title, para))
 
     def runasyn(self,  tps, snap, data, para = None, callback = None):
+        self.app.record_macros('{}>{}'.format(self.title, para))
         self.app.add_task(self)
         start = time()
         self.run(tps, data, snap, para)
@@ -86,7 +86,7 @@ class Table:
         return True
 
     def start(self, app, para=None, callback=None):
-        self.app, self.tps = app, app.get_tab()
+        self.app, self.tps = app, app.get_table()
         #print self.title, para
         if not self.check(self.tps):return
         if not self.load(self.tps):return

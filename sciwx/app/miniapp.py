@@ -235,7 +235,7 @@ class MiniApp(wx.Frame, App):
         self.auimgr.Update()
 
     def close_img(self, name=None):
-        names = self.get_img_name() if name is None else [name]
+        names = self.img_names() if name is None else [name]
         for name in names:
             idx = self.canvasnb.GetPageIndex(self.get_img_win(name))
             self.remove_img(self.get_img_win(name).image)
@@ -255,8 +255,7 @@ class MiniApp(wx.Frame, App):
         def one(cmds, after): 
             cmd = cmds.pop(0)
             title, para = cmd.split('>')
-            print(title, para)
-            plg = Source.manager('plugin').get(name=title)()
+            plg = self.app.plugin_manager.get(name=title)()
             after = lambda cmds=cmds: one(cmds, one)
             if len(cmds)==0: after = callafter
             wx.CallAfter(plg.start, self, eval(para), after)

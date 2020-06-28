@@ -6,8 +6,7 @@ from . import Free, Simple, Table
 from ... import Manager
 import numpy as np
 
-ReaderManager = Manager()
-WriterManager = Manager()
+ReaderManager, WriterManager = Manager(), Manager()
 
 class Reader(Free):
     para = {'path':''}
@@ -20,7 +19,7 @@ class Reader(Free):
 
     #process
     def run(self, para = None):
-        add_recent(para['path'])
+        #add_recent(para['path'])
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
         readers = ReaderManager.gets(fe[1:], tag=self.tag)

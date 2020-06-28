@@ -77,17 +77,17 @@ class Simple:
 
     def ok(self, ips, para=None, callafter=None):
         if para == None: para = self.para
-        if self.asyn :
+        if self.asyn and self.app.asyn:
             threading.Thread(target = self.runasyn, 
                     args = (ips, ips.imgs, para, callafter)).start()
         else: self.runasyn(ips, ips.imgs, para, callafter)
-        self.app.record_macros('{}>{}'.format(self.title, para))
 
     def runasyn(self,  ips, imgs, para = None, callback = None):
+        self.app.record_macros('{}>{}'.format(self.title, para))
         self.app.add_task(self)
         start = time()
         self.run(ips, imgs, para)
-        self.app.info('%s: cost %.3fs'%(ips.title, time()-start))
+        self.app.info('%s: cost %.3fs'%(self.title, time()-start))
         ips.update()
         self.app.remove_task(self)
         if callback!=None:callback()

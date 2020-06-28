@@ -377,7 +377,7 @@ class ImageJ(wx.Frame, App):
         self.auimgr.Update()
 
     def close_img(self, name=None):
-        names = self.get_img_name() if name is None else [name]
+        names = self.img_names() if name is None else [name]
         for name in names:
             idx = self.canvasnb.GetPageIndex(self.get_img_win(name))
             self.remove_img(self.get_img_win(name).image)

@@ -41,5 +41,4 @@ filenames = glob(osp.join(root_dir, 'data/luts/*.lut'))
 keys = [osp.split(filename)[-1][:-4] for filename in filenames]
 values = [np.fromfile(i, dtype=np.uint8).reshape((3,256)).T.copy() for i in filenames]
 for k,v in zip(keys[::-1], values[::-1]): Source.manager('colormap').add(k, v, 'base')
-print(Source.manager('colormap').names)
 Source.manager('colormap').add('Grays', Source.manager('colormap').get('Grays'), 'base')

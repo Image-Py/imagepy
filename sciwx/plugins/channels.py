@@ -157,7 +157,7 @@ class Channels( wx.Panel ):
 		self.active = 0
 	
 	def on_back(self, event):
-		self.com_back.SetItems(['None']+self.app.get_img_name())
+		self.com_back.SetItems(['None']+self.app.img_names())
 		cur = self.app.get_img_win()
 		if not cur is None: cur = cur.back
 		if not cur is None: cur = cur.title

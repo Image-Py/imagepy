@@ -1,4 +1,4 @@
-from .shpact import *
+from .shp_tools import *
 from .shpbase import BaseEditor
 from ..tolact import ImageTool
 from ...object import ROI

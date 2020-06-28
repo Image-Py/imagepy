@@ -21,6 +21,7 @@ def process_channels(plg, ips, src, des, para):
     return des
 
 def process_one(plg, ips, src, img, para, callafter=None):
+    plg.app.record_macros('{}>{}'.format(plg.title, para))
     plg.app.add_task(plg)
     start = time()
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
@@ -38,12 +39,13 @@ def process_one(plg, ips, src, img, para, callafter=None):
     if 'auto_msk' in plg.note and not ips.mask('out') is None:
         msk = ips.mask('out')
         img[msk] = src[msk]
-    plg.app.info('%s: cost %.3fs'%(ips.title, time()-start))
+    plg.app.info('%s: cost %.3fs'%(plg.title, time()-start))
     ips.update()
     plg.app.remove_task(plg)
     if not callafter is None:callafter()
     
 def process_stack(plg, ips, src, imgs, para, callafter=None):
+    plg.app.record_macros('{}>{}'.format(plg.title, para))
     plg.app.add_task(plg)
     start = time()
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
@@ -77,6 +79,7 @@ def process_stack(plg, ips, src, imgs, para, callafter=None):
 class Filter:
     title = 'Filter'
     modal = True
+    asyn = True
     note = []
     'all, 8-bit, 16-bit, int, rgb, float, not_channel, not_slice, req_roi, auto_snap, auto_msk, preview, 2int, 2float'
     para = None
@@ -131,10 +134,12 @@ class Filter:
         # = WidgetsManager.getref('Macros Recorder')
         if ips.slices==1 or 'not_slice' in self.note:
             # process_one(self, ips, ips.snap, ips.img, para)
-            threading.Thread(target = process_one, args = 
-                (self, ips, ips.snap, ips.img, para, callafter)).start()
+            if self.asyn and self.app.asyn:
+                threading.Thread(target = process_one, args = 
+                    (self, ips, ips.snap, ips.img, para, callafter)).start()
+            else: process_one(self, ips, ips.snap, ips.img, para, callafter)
             # if win!=None: win.write('{}>{}'.format(self.title, para))
-            self.app.record_macros('{}>{}'.format(self.title, para))
+            
         elif ips.slices>1:
             has, rst = 'stack' in para, None
             if not has:
@@ -143,15 +148,18 @@ class Filter:
             if has and para['stack'] or rst == 'yes':
                 para['stack'] = True
                 #process_stack(self, ips, ips.snap, ips.imgs, para)
-                threading.Thread(target = process_stack, args = 
-                    (self, ips, ips.snap, ips.imgs, para, callafter)).start()
-                self.app.record_macros('{}>{}'.format(self.title, para))
+                if self.asyn and self.app.asyn:
+                    threading.Thread(target = process_stack, args = 
+                        (self, ips, ips.snap, ips.imgs, para, callafter)).start()
+                else: process_stack(self, ips, ips.snap, ips.imgs, para, callafter)
+                
             elif has and not para['stack'] or rst == 'no': 
                 para['stack'] = False
                 #process_one(self, ips, ips.snap, ips.img, para)
-                threading.Thread(target = process_one, args = 
-                    (self, ips, ips.snap, ips.img, para, callafter)).start()
-                self.app.record_macros('{}>{}'.format(self.title, para))
+                if self.asyn and self.app.asyn:
+                    threading.Thread(target = process_one, args = 
+                        (self, ips, ips.snap, ips.img, para, callafter)).start()
+                else: process_one(self, ips, ips.snap, ips.img, para, callafter)
             elif rst == 'cancel': pass
         #ips.update()
         
