@@ -1,4 +1,4 @@
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 from imagepy.ipyalg.graph import sknw
 import numpy as np
 from numpy.linalg import norm

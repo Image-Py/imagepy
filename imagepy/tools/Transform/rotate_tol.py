@@ -3,12 +3,12 @@ import numpy as np
 from sciapp.action import ImageTool
 from sciapp.util import mark2shp, geom2shp
 from sciapp.object import ROI
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 from shapely.affinity import affine_transform
 import scipy.ndimage as nimg
 
 class RotateTool(ImageTool):
-    """RotateTool class derived from imagepy.core.engine.Tool"""
+    """RotateTool class derived from sciapp.action.Tool"""
     def __init__(self, plg):
         self.plg = plg
         self.para = plg.para
@@ -45,7 +45,7 @@ class RotateTool(ImageTool):
             ips.update()
 
 class Plugin(Filter):
-    """RotateTool class plugin derived from imagepy.core.engine.Filter"""
+    """RotateTool class plugin derived from sciapp.action.Filter"""
     modal = False
     title = 'Rotate'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']

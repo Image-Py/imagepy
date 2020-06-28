@@ -5,7 +5,7 @@ Created on 12/21/2018
 """
 import numpy as np
 import read_roi
-from imagepy.core.engine import Free
+from sciapp.action import Free
 from skimage.draw import polygon, ellipse
 
 class Plugin(Free):

@@ -55,7 +55,7 @@ class ToolBar(wx.Panel):
     def on_help(self, evt, tol): pass
 
     def on_info(self, event, tol): 
-        self.app.set_info(tol.title)
+        self.app.info(tol.title)
 
     def bind(self, btn, tol):
         obj = tol()

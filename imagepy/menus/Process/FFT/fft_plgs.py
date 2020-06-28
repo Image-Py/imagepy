@@ -1,5 +1,5 @@
 import numpy as np
-from imagepy.core.engine import Simple, Filter
+from sciapp.action import Simple, Filter
 from numpy.fft import fft2, ifft2, fftshift, ifftshift
 from sciapp.object import Image
 #from imagepy.core import ImagePlus

@@ -4,7 +4,7 @@ Created on Sat Dec 17 10:49:15 2016
 @author: yxl
 """
 import numpy as np
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 from skimage import color
 
 class SplitRGB(Simple):

@@ -45,7 +45,7 @@ class CanvasApp(wx.Frame, App):
 
     def set_title(self, ips): self.SetTitle(ips.title)
 
-    def set_info(self, info): self.status.SetStatusText(info)
+    def info(self, info): self.status.SetStatusText(info)
 
     def on_valid(self, event): pass
 

@@ -4,7 +4,7 @@ from skimage.morphology import skeletonize
 from imagepy.ipyalg import distance_transform_edt
 import numpy as np
 from imagepy.ipyalg.graph import sknw
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 
 
 def draw_pixs(img, xs, ys, color=None):

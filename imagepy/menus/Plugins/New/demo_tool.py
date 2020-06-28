@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from imagepy.core.draw import paint
-from imagepy.core.engine import Tool
+from imagepy.draw import paint
+from sciapp.action import Tool
 
 # this is a simple tool implements a pencial
 class Plugin(Tool):

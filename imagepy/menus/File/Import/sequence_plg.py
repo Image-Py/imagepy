@@ -4,10 +4,10 @@ Created on Sat Oct 15 14:42:55 2016
 @author: yxl
 """
 
-from imagepy.core.engine import dataio
+from sciapp.action import dataio
 from skimage.io import imread
 from sciapp import Source
-from imagepy.core.engine import Free
+from sciapp.action import Free
 from glob import glob
 import os.path as osp
     
@@ -16,7 +16,7 @@ class Plugin(Free):
     para = {'path':'', 'start':0, 'end':0, 'step':1, 'title':'sequence'}
 
     def load(self):
-        self.filt = Source.manager('reader').names()
+        self.filt = dataio.ReaderManager.names()
         return True
 
     def show(self):
@@ -53,7 +53,7 @@ class Plugin(Free):
     def run(self, para = None):
         fp, fn = osp.split(para['path'])
         fn, fe = osp.splitext(fn)
-        read = Source.manager('reader').get(name=fe[1:])
+        read = dataio.ReaderManager.get(name=fe[1:])
         try: img = read(para['path'])
         except: return self.app.alert('unknown img format!')
         files = self.getfiles(para['path'])

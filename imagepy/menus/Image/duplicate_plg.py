@@ -4,7 +4,7 @@ Created on Tue Dec  6 19:47:34 2016
 @author: yxl
 """
 
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 from sciapp.object import Image, ROI
 from sciapp.util import offset, mark2shp
 import numpy as np

@@ -1,6 +1,6 @@
 import scipy.ndimage as ndimg
 import numpy as np
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 import pandas as pd
 
 def colorselect(img, pts, k, usecov=True):

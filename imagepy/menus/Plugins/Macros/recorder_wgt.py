@@ -1,5 +1,5 @@
 import wx, weakref
-from imagepy.core.engine import Macros
+from sciapp.action import Macros
 import os.path as osp
 
 class Plugin ( wx.Panel ):

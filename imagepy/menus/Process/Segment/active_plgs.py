@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.ndimage import binary_dilation
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 from skimage import img_as_float
 from skimage.segmentation import chan_vese, morphological_chan_vese, \
     morphological_geodesic_active_contour, inverse_gaussian_gradient, \

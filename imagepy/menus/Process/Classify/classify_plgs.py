@@ -1,4 +1,4 @@
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 # from imagepy.core import ImagePlus
 
 import numpy as np
@@ -11,7 +11,7 @@ from imagepy.ipyalg import feature
 model_para = None
 
 class Base(Simple):
-    """Closing: derived from imagepy.core.engine.Filter """
+    """Closing: derived from sciapp.action.Filter """
     def load(self, ips): 
         if len(ips.imgs)==1: ips.snapshot()
         return True
@@ -37,15 +37,15 @@ class Base(Simple):
         if len(imgs)==1: ori = [ImageManager.get(para['img']).img]
         oris = [i[slir, slic] for i in ori]
 
-        IPy.set_info('extract features...')
+        IPy.info('extract features...')
         feat, lab, key = feature.get_feature(oris, labs, key, callback=self.progress)
 
-        IPy.set_info('training data...')
+        IPy.info('training data...')
         self.progress(None, 1)
         model = self.classify(para)
         model.fit(feat, lab)
 
-        IPy.set_info('predict data...')
+        IPy.info('predict data...')
         if preview:
             return feature.get_predict(oris, model, key, labs, callback=self.progress)
         if len(imgs) == 1: ips.swap()
@@ -82,7 +82,7 @@ class RandomForest(Base):
             max_features = feat_dic[para['max_features']], max_depth=max_depth)
 
 class AdaBoost(Base):
-    """Closing: derived from imagepy.core.engine.Filter """
+    """Closing: derived from sciapp.action.Filter """
     title = 'AdaBoost Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
     para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
@@ -105,7 +105,7 @@ class AdaBoost(Base):
             learning_rate = para['learning_rate'], algorithm=para['algorithm'])
 
 class Bagging(Base):
-    """Closing: derived from imagepy.core.engine.Filter """
+    """Closing: derived from sciapp.action.Filter """
     title = 'Bagging Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
     para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
@@ -127,7 +127,7 @@ class Bagging(Base):
             max_features = para['max_features'])
 
 class ExtraTrees(Base):
-    """Closing: derived from imagepy.core.engine.Filter """
+    """Closing: derived from sciapp.action.Filter """
     title = 'ExtraTrees Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
     para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
@@ -152,7 +152,7 @@ class ExtraTrees(Base):
             max_features = feat_dic[para['max_features']], max_depth=max_depth)
 
 class GradientBoosting(Base):
-    """Closing: derived from imagepy.core.engine.Filter """
+    """Closing: derived from sciapp.action.Filter """
     title = 'Gradient Boosting Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
     para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
@@ -180,7 +180,7 @@ class GradientBoosting(Base):
             max_depth=para['max_depth'], learning_rate=para['learning_rate'])
 
 class Voting(Base):
-    """Closing: derived from imagepy.core.engine.Filter """
+    """Closing: derived from sciapp.action.Filter """
     title = 'Voting Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
     para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 

@@ -1,4 +1,4 @@
-from imagepy.core.engine import Free
+from sciapp.action import Free
 import os, sys, os.path as osp
 import zipfile, urllib
 from io import BytesIO
@@ -19,7 +19,7 @@ class Update(Free):
     title = 'Update Software'
 
     def run(self, para=None):
-        IPy.set_info('update now, waiting...')
+        IPy.info('update now, waiting...')
         self.download_zip()
         self.deal_file()
         #self.delete_cache()

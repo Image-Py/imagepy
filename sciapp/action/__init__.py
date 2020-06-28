@@ -4,4 +4,4 @@ from .tolact import Tool, DefaultTool, ImageTool, ShapeTool, TableTool
 from .plugin.meaact import DistanceTool, AngleTool, SlopeTool, AreaTool, CoordinateTool
 from .plugin.shpact import *
 from .plugin.roiact import *
-from .advanced import Filter, Free, Simple, Table
+from .advanced import Filter, Free, Simple, Table, Macros, Widget, dataio

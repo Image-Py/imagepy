@@ -1,7 +1,7 @@
 from sciapp.action import ImageTool
 import numpy as np
 from skimage.morphology import flood_fill, flood
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 
 class FloodFill3D(Simple):
     title = 'Flood Fill 3D'

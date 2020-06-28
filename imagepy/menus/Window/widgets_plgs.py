@@ -1,7 +1,7 @@
-from imagepy.core.engine import Free
+from sciapp.action import Free
 
 class Widgets(Free):
-	"""ImageKiller: derived from imagepy.core.engine.Free"""
+	"""ImageKiller: derived from sciapp.action.Free"""
 	title = 'Widgets'
 	asyn = False
 
@@ -16,7 +16,7 @@ class ToolBar(Free):
 		self.app.switch_toolbar()
 
 class TableWindow(Free):
-	"""ImageKiller: derived from imagepy.core.engine.Free"""
+	"""ImageKiller: derived from sciapp.action.Free"""
 	title = 'Tables Window'
 	asyn = False
 	

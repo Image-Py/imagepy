@@ -1,4 +1,4 @@
-from imagepy.core.engine import Simple, Free
+from sciapp.action import Simple, Free
 from sciapp import Source
 from sciapp.object import ROI, Rectangle
 from sciapp.util.shputil import geom2shp, geom_flatten, geom_union, mark2shp

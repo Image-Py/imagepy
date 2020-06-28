@@ -6,7 +6,7 @@ Created on Mon Oct 17 21:13:42 2016
 from imagepy import root_dir
 import numpy as np
 #from imagepy.core import ImagePlus
-from imagepy.core.engine import Free
+from sciapp.action import Free
 from sciapp import Source
 from sciapp.object import Image
 

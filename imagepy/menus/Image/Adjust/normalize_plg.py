@@ -2,7 +2,7 @@
 Created on Sun Jan 25 9:00:00 2020
 @author: weisong
 """
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 import numpy as np
 
 class Plugin(Simple):

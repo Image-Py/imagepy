@@ -1,4 +1,4 @@
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 import numpy as np
 import scipy.ndimage as ndimg
 from imagepy.ipyalg import distance_transform_edt

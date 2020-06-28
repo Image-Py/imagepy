@@ -1,5 +1,5 @@
 from sciapp import Source
-from imagepy.core.engine import Free
+from sciapp.action import Free
 
 class Language(Free):
 	def __init__(self, key):

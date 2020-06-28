@@ -1,12 +1,12 @@
-from imagepy.core.engine import dataio
+from sciapp.action import dataio
 import numpy as np
 from sciapp import Source
 import os
 
-Source.manager('reader').add('npy', np.load, 'img')
-Source.manager('writer').add('npy', np.save, 'img')
-Source.manager('reader').add('npy', np.load, 'imgs')
-Source.manager('writer').add('npy', np.save, 'imgs')
+dataio.ReaderManager.add('npy', np.load, 'img')
+dataio.WriterManager.add('npy', np.save, 'img')
+dataio.ReaderManager.add('npy', np.load, 'imgs')
+dataio.WriterManager.add('npy', np.save, 'imgs')
 
 class OpenFile(dataio.Reader):
 	title = 'Numpy Open'

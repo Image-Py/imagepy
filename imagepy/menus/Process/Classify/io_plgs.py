@@ -1,10 +1,10 @@
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 from sciapp import Source
 # from imagepy.core import ImagePlus
 import numpy as np
 
 class BuildMark(Simple):
-    """Closing: derived from imagepy.core.engine.Filter """
+    """Closing: derived from sciapp.action.Filter """
     title = 'Build Mark Image'
     note = ['all']
     para = {'mode':'Mask', 'cm':'16_Colors', 'n':2, 'slice':True}

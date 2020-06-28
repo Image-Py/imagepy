@@ -3,7 +3,7 @@
 Created on Sun Dec 11 23:43:44 2016
 @author: yxl
 """
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 import numpy as np
 
 def make_slice(a, b, mode=1):

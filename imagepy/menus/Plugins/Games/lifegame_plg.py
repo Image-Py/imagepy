@@ -1,5 +1,5 @@
 import numpy as np
-from imagepy.core.engine import Free
+from sciapp.action import Free
 from sciapp.action import ImageTool
 from scipy.ndimage import label
 from scipy.signal import convolve2d

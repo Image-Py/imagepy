@@ -1,4 +1,4 @@
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 from skimage import data, io, segmentation, color
 
 class SLIC(Filter):

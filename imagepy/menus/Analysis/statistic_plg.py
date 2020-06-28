@@ -5,7 +5,7 @@ Created on Mon Dec 26 20:34:59 2016
 """
 from imagepy import root_dir
 import wx, numpy as np, os
-from imagepy.core.engine import Filter,Simple
+from sciapp.action import Filter,Simple
 from pubsub import pub
 import pandas as pd
 

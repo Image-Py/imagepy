@@ -2,7 +2,7 @@ from skimage.io import imread
 from urllib.request import urlopen
 from io import BytesIO as StringIO
 
-from imagepy.core.engine import Free
+from sciapp.action import Free
 
 class IJImg(Free):
 	def __init__(self, title, name):

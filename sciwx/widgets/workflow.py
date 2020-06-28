@@ -49,7 +49,7 @@ class WorkFlowPanel ( wx.Panel ):
 				btn = wx.Button( self.pan_chapter, wx.ID_ANY, section['title'], wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
 				sizer_section.Add( btn, 0, wx.ALL, 3 )
 				btn.Bind(wx.EVT_BUTTON, lambda e, x=section['title']: self.f(x))
-				btn.Bind( wx.EVT_ENTER_WINDOW, lambda e, info=section['hint']: self.set_info(info))
+				btn.Bind( wx.EVT_ENTER_WINDOW, lambda e, info=section['hint']: self.info(info))
 				#self.m_button1.Bind( wx.EVT_LEAVE_WINDOW, self.on_out )
 
 			sizer_frame.Add( sizer_section, 0, wx.EXPAND, 3 )
@@ -100,7 +100,7 @@ class WorkFlowPanel ( wx.Panel ):
 		self.spn_scroll.Bind( wx.EVT_SPIN, self.on_spn )
 		self.btn_help.Bind( wx.EVT_LEFT_DOWN, self.on_help )
 
-	def set_info(self, info):
+	def info(self, info):
 		self.txt_info.SetValue(info)
 
 	def on_spn(self, event):

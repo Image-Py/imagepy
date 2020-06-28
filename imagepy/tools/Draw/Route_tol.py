@@ -4,7 +4,7 @@ Created on Wed Oct 19 17:35:09 2016
 
 @author: yxl
 """
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 from sciapp.action import ImageTool
 import numpy as np
 from sciapp.util import mark2shp

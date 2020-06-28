@@ -1,4 +1,4 @@
-from imagepy.core.engine import Simple, Free
+from sciapp.action import Simple, Free
 from sciapp import Source
 from sciapp.object import Shape
 from sciapp.util import mark2shp

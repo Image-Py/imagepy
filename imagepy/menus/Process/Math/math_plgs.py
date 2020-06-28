@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*
 import numpy as np
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 
 class Add(Filter):
-    """Add_plg: derived from imagepy.core.engine.Filter """
+    """Add_plg: derived from sciapp.action.Filter """
     title = 'Add'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
     para = {'num':0}
@@ -13,7 +13,7 @@ class Add(Filter):
         np.add(snap, para['num'], out=img, casting='unsafe')
 
 class Subtract(Filter):
-    """Subtract_plg: derived from imagepy.core.engine.Filter """
+    """Subtract_plg: derived from sciapp.action.Filter """
     title = 'Subtract'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
     para = {'num':0}
@@ -23,7 +23,7 @@ class Subtract(Filter):
         np.subtract(snap, para['num'], out=img, casting='unsafe')
 
 class Multiply(Filter):
-    """Multiply_plg: derived from imagepy.core.engine.Filter """
+    """Multiply_plg: derived from sciapp.action.Filter """
     title = 'Multiply'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2int']
     para = {'num':0}
@@ -33,7 +33,7 @@ class Multiply(Filter):
         np.multiply(snap, para['num'], out=img, casting='unsafe')
         
 class Max(Filter):
-    """Max_plg: derived from imagepy.core.engine.Filter """
+    """Max_plg: derived from sciapp.action.Filter """
     title = 'Max'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'num':0}
@@ -44,7 +44,7 @@ class Max(Filter):
         img[img<para['num']] = para['num']
         
 class Min(Filter):
-    """Min_plg: derived from imagepy.core.engine.Filter """
+    """Min_plg: derived from sciapp.action.Filter """
     title = 'Min'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'num':0}
@@ -56,7 +56,7 @@ class Min(Filter):
          
 
 class Sqrt(Filter):
-    """Sqrt_plg: derived from imagepy.core.engine.Filter """
+    """Sqrt_plg: derived from sciapp.action.Filter """
     title = 'Square Root'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     
@@ -64,7 +64,7 @@ class Sqrt(Filter):
         np.sqrt(snap, out=img, casting='unsafe')
         
 class Gamma(Filter):
-    """Garmma_plg: derived from imagepy.core.engine.Filter """
+    """Garmma_plg: derived from sciapp.action.Filter """
     title = 'Gamma'
     note = ['all', 'auto_msk', 'auto_snap', 'preview', '2float']
     para = {'num':0}

@@ -4,7 +4,7 @@ Created on Mon Dec  5 02:38:04 2016
 
 @author: yxl
 """
-from imagepy.core.engine import Free
+from sciapp.action import Free
 import numpy as np
 
 class Plugin(Free):

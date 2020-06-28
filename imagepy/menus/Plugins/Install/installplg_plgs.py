@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from imagepy import root_dir
-from imagepy.core.engine import Free
+from sciapp.action import Free
 import os, subprocess, zipfile, shutil
 
 import zipfile, sys, urllib

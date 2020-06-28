@@ -1,10 +1,10 @@
-from imagepy.core.engine import dataio
+from sciapp.action import dataio
 from sciapp import Source
 
 def readmc(path):
     with open(path) as f: return f.readlines()
 
-Source.manager('reader').add('mc', readmc, 'mc')
+dataio.ReaderManager.add('mc', readmc, 'mc')
 
 class Macros(dataio.Reader):
     title = 'Run Macros'
@@ -14,7 +14,7 @@ class Macros(dataio.Reader):
 def readwf(path):
     with open(path) as f: return f.read()
 
-Source.manager('reader').add('wf', readwf, 'wf')
+dataio.ReaderManager.add('wf', readwf, 'wf')
 
 class WorkFlow(dataio.Reader):
     title = 'Run WorkFlow'

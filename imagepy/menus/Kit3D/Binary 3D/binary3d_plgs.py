@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 import scipy.ndimage as ndimg
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 from skimage.morphology import skeletonize_3d
 from imagepy.ipyalg import find_maximum, watershed
 from skimage.filters import apply_hysteresis_threshold
@@ -8,7 +8,7 @@ from imagepy.ipyalg import distance_transform_edt
 import numpy as np
 
 class Dilation(Simple):
-    """Dilation: derived from imagepy.core.engine.Filter """
+    """Dilation: derived from sciapp.action.Filter """
     title = 'Dilation 3D'
     note = ['all', 'stack3d']
     para = {'r':3}
@@ -20,7 +20,7 @@ class Dilation(Simple):
         imgs *= 255
 
 class Erosion(Simple):
-    """Dilation: derived from imagepy.core.engine.Filter """
+    """Dilation: derived from sciapp.action.Filter """
     title = 'Erosion 3D'
     note = ['all', 'stack3d']
     para = {'r':3}
@@ -32,7 +32,7 @@ class Erosion(Simple):
         imgs *= 255
 
 class Opening(Simple):
-    """Dilation: derived from imagepy.core.engine.Filter """
+    """Dilation: derived from sciapp.action.Filter """
     title = 'Opening 3D'
     note = ['all', 'stack3d']
     para = {'r':3}
@@ -44,7 +44,7 @@ class Opening(Simple):
         imgs *= 255
 
 class Closing(Simple):
-    """Dilation: derived from imagepy.core.engine.Filter """
+    """Dilation: derived from sciapp.action.Filter """
     title = 'Closing 3D'
     note = ['all', 'stack3d']
     para = {'r':3}
@@ -56,7 +56,7 @@ class Closing(Simple):
         imgs *= 255
 
 class FillHole(Simple):
-    """Dilation: derived from imagepy.core.engine.Filter """
+    """Dilation: derived from sciapp.action.Filter """
     title = 'Fill Holes 3D'
     note = ['all', 'stack3d']
 

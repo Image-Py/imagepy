@@ -1,4 +1,4 @@
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 import numpy as np
 
 class Plugin(Simple):

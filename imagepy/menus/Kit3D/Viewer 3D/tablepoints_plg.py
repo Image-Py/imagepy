@@ -1,4 +1,4 @@
-from imagepy.core.engine import Table
+from sciapp.action import Table
 from sciapp import Source
 import numpy as np
 

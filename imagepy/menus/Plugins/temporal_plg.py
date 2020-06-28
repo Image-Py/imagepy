@@ -2,7 +2,7 @@
 Created on Sun Jan 22 12:56:00 2020
 @author: weisong
 """
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 from sciapp import Source
 import numpy as np
 

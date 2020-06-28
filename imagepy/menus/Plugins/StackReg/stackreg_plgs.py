@@ -1,4 +1,4 @@
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 from pystackreg import StackReg
 import numpy as np
 import pandas as pd
@@ -20,7 +20,7 @@ class Register(Simple):
 	def run(self, ips, imgs, para = None):
 		k = para['diag']/np.sqrt((np.array(ips.img.shape)**2).sum())
 		size = tuple((np.array(ips.img.shape)*k).astype(np.int16))
-		IPy.set_info('down sample...')
+		IPy.info('down sample...')
 		news = []
 		for img in imgs:
 			if k!=0: img = tf.resize(img, size)
@@ -28,7 +28,7 @@ class Register(Simple):
 				img = ndimg.gaussian_filter(img, para['sigma'])
 			news.append(img)
 
-		IPy.set_info('register...')
+		IPy.info('register...')
 		sr = StackReg(eval('StackReg.%s'%para['trans']))
 		sr.register_stack(np.array(news), reference=para['ref'])
 
@@ -40,7 +40,7 @@ class Register(Simple):
 			mats, columns=['A%d'%(i+1) for i in range(mats.shape[1])]), title='%s-Tmats'%ips.title)
 
 		if para['new'] == 'None': return
-		IPy.set_info('transform...')
+		IPy.info('transform...')
 		for i in range(sr._tmats.shape[0]):
 			tform = tf.ProjectiveTransform(matrix=sr._tmats[i])
 			img =  tf.warp(imgs[i], tform)

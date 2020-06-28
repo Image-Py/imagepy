@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 import scipy.ndimage as ndimg
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 #from skimage.morphology import watershed
 from imagepy.ipyalg import watershed
 import numpy as np

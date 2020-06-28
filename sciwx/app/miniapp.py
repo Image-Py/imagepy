@@ -119,7 +119,7 @@ class MiniApp(wx.Frame, App):
         self.remove_mesh_win(event.GetEventObject().canvas)
         event.Skip()
         
-    def set_info(self, value):
+    def info(self, value):
         wx.CallAfter(self.txt_info.SetLabel, value)
 
     def set_progress(self, value):

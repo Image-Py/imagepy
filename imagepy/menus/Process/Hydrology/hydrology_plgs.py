@@ -1,6 +1,6 @@
 import scipy.ndimage as ndimg
 import numpy as np
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 from imagepy.ipyalg import find_maximum, ridge, stair, isoline, watershed
 # from imagepy.core.roi import PointRoi
 from sciapp.object import Points, ROI

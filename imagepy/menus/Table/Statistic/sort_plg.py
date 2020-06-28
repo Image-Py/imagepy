@@ -1,4 +1,4 @@
-from imagepy.core.engine import Table
+from sciapp.action import Table
 import pandas as pd
 
 class Plugin(Table):

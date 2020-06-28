@@ -53,7 +53,7 @@ def write(path, img):
 ```
 ### register reader and writer to the io manager
 ```python 
-from imagepy.core.engine import dataio
+from sciapp.action import dataio
 
 # add dicom reader and writer
 dataio.add_reader(['dcm'], read)
@@ -87,7 +87,7 @@ Do a simple filter
 ![gradient](http://idoc.imagepy.org/itk/gradient.png)
 ```python
 import SimpleITK as sitk
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 
 class Plugin(Filter):
     title = 'ITK Gradient Magnitude'
@@ -122,7 +122,7 @@ Filter with parameter
 ```python
 # -*- coding: utf-8 -*
 import SimpleITK as sitk
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 
 class Plugin(Filter):
     title = 'ITK Discrete Gaussian'
@@ -147,7 +147,7 @@ Write 3D Filter
 ![gaussian3d](http://idoc.imagepy.org/itk/gaussian3d.png)
 ```python
 import SimpleITK as sitk
-from imagepy.core.engine import  Simple
+from sciapp.action import  Simple
 
 class Plugin(Simple):
     title = 'ITK Gradient Magnitude 3D'
@@ -167,7 +167,7 @@ Treat ROI and ColorImage
 ![roicolor](http://idoc.imagepy.org/itk/roicolor.png)
 ```python
 import SimpleITK as sitk
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 import numpy as np
 
 class Plugin(Filter):
@@ -190,7 +190,7 @@ Watershed With ROI
 ![roiwatershed](http://idoc.imagepy.org/itk/roiwatershed.png)
 ```python
 import SimpleITK as sitk
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 import numpy as np
 
 class Plugin(Filter):

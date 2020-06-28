@@ -1,4 +1,4 @@
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 from skimage import data, io, segmentation, color
 from skimage.future import graph
 import numpy as np

@@ -4,7 +4,7 @@ Created on Mon Nov 28 01:57:11 2016
 @author: yxl
 """
 import numpy as np
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 
 class ToStack(Simple):
     title = 'Trans to Stack'

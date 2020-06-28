@@ -5,7 +5,7 @@ Created on Mon Dec  5 04:34:09 2016
 @author: yxl
 """
 from skimage.io import imsave
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 from sciapp import Source
 
 class Plugin(Simple):
@@ -28,7 +28,7 @@ class Plugin(Simple):
     #process
     def run(self, ips, imgs, para = None):
         path = para['path']+'/'+para['name']
-        write = Source.manager('writer').get(para['format'])
+        write = dataio.WriterManager.get(para['format'])
         print(path)
         for i in range(len(imgs)):
             self.progress(i, len(imgs))

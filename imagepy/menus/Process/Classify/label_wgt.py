@@ -1,6 +1,6 @@
 # from imagepy.ui.widgets import CMapSelCtrl
 # from imagepy.core.manager import ColorManager, ImageManager, WindowsManager, ToolsManager
-from imagepy.core.engine import Macros
+from sciapp.action import Macros
 import numpy as np
 import wx, os.path as osp
 

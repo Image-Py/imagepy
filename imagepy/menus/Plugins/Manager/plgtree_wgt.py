@@ -5,10 +5,10 @@ Created on Sat Jan  7 01:00:02 2017
 @author: yxl
 """
 
-from imagepy.core.engine import Free
+from sciapp.action import Free
 import wx,os
 from imagepy import root_dir
-from imagepy.core.app import loader
+from imagepy.app import loader
 from wx.py.editor import EditorFrame
 from sciwx.text import MDPad
 from sciapp import Source

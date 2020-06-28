@@ -1,5 +1,5 @@
 import numpy as np
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 from skimage.measure import regionprops
 from scipy.ndimage import label, generate_binary_structure
 from imagepy.ipyalg.graph.connect import connect_graph, mapidx

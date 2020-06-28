@@ -35,7 +35,7 @@ Do a simple filter
 ```python
 # -*- coding: utf-8 -*
 import cv2
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 
 class Plugin(Filter):
     title = 'Laplacian'
@@ -72,7 +72,7 @@ Filter with parameter
 ```python
 # -*- coding: utf-8 -*
 import cv2
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 
 class Plugin(Filter):
     title = 'Canny'
@@ -99,7 +99,7 @@ More detail information please see [ImagePy's README](https://github.com/Image-P
 # -*- coding: utf-8 -*-
 from imagepy import IPy
 import numpy as np, cv2
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
         
 class Plugin(Filter):
     title = 'Adaptive Threshold'
@@ -126,7 +126,7 @@ Watershed with interactive marker
 ![interactive watershed](http://opencvplgs.imagepy.org/watershed.png)
 ```python
 # -*- coding: utf-8 -*
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 import numpy as np, cv2
 
 class Plugin(Filter):
@@ -158,7 +158,7 @@ mark is a overlay drawn on a image, It has draw method with parameter:
 3. **key** other parameter such as slice number.
 ```python
 # -*- coding: utf-8 -*
-from imagepy.core.engine import Tool, Filter
+from sciapp.action import Tool, Filter
 import numpy as np, wx, cv2
 
 class Mark():

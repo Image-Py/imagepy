@@ -1,4 +1,4 @@
-from imagepy.core.engine import Free
+from sciapp.action import Free
 from skimage import data
 from scipy import misc
 import numpy as np

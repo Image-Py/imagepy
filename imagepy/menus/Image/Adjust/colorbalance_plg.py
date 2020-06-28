@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 
 class Plugin(Filter):
   title = 'Color Balance'

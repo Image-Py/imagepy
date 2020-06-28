@@ -1,12 +1,12 @@
-from imagepy.core.engine import dataio
-from imagepy.core.engine import Simple
+from sciapp.action import dataio
+from sciapp.action import Simple
 from skimage.io import imread, imsave
 from sciapp import Source
 import imageio
 
-Source.manager('reader').add('gif', imread, 'img')
-Source.manager('writer').add('gif', imsave, 'img')
-Source.manager('reader').add('gif', imageio.mimread, 'imgs')
+dataio.ReaderManager.add('gif', imread, 'img')
+dataio.WriterManager.add('gif', imsave, 'img')
+dataio.ReaderManager.add('gif', imageio.mimread, 'imgs')
 
 class OpenFile(dataio.Reader):
 	title = 'GIF Open'

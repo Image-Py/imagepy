@@ -4,7 +4,7 @@ Created on Mon Dec 26 19:41:16 2016
 
 @author: yxl
 """
-from imagepy.core.engine import Free
+from sciapp.action import Free
 #from imagepy.core.manager import ImageManager, TextLogManager, \
 #    TableManager, WindowsManager, WTableManager
 

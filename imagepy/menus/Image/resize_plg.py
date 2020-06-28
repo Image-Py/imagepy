@@ -4,7 +4,7 @@ Created on Wed Dec  7 23:03:28 2016
 @author: yxl
 """
 
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 import scipy.ndimage as ndimg
 import numpy as np
 

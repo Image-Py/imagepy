@@ -1,14 +1,14 @@
-from imagepy.core.engine import dataio
+from sciapp.action import dataio
 from skimage.io import imread, imsave
 from sciapp import Source
 
-Source.manager('reader').add('tif', imread, 'img')
-Source.manager('reader').add('tiff', imread, 'img')
-Source.manager('writer').add('tif', imsave, 'img')
+dataio.ReaderManager.add('tif', imread, 'img')
+dataio.ReaderManager.add('tiff', imread, 'img')
+dataio.WriterManager.add('tif', imsave, 'img')
 
-Source.manager('reader').add('tif', imread, 'imgs')
-Source.manager('reader').add('tiff', imread, 'imgs')
-Source.manager('writer').add('tif', imsave, 'imgs')
+dataio.ReaderManager.add('tif', imread, 'imgs')
+dataio.ReaderManager.add('tiff', imread, 'imgs')
+dataio.WriterManager.add('tif', imsave, 'imgs')
 
 class OpenTIF(dataio.Reader):
 	title = 'TIF Open'

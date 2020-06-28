@@ -1,5 +1,5 @@
 import numpy as np
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 from skimage.feature import blob_dog, blob_doh, blob_log
 from sciapp.object import mark2shp
 import pandas as pd

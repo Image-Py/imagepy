@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 from skimage import feature
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 
 class Canny(Filter):
     title = 'Canny'

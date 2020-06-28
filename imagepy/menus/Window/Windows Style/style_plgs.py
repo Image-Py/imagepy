@@ -1,4 +1,4 @@
-from imagepy.core.engine import Free
+from sciapp.action import Free
 from sciapp import Source
 
 class ImageJStyle(Free):

@@ -1,4 +1,4 @@
-from imagepy.core.engine import Table
+from sciapp.action import Table
 import matplotlib.pyplot as plt
 #from imagepy.core.manager import ColorManager
 from matplotlib import colors

@@ -3,15 +3,15 @@
 Created on Mon Dec  5 03:19:13 2016
 @author: yxl
 """
-from imagepy.core.engine import dataio
+from sciapp.action import dataio
 from sciapp import Source
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 
 class SaveImage(dataio.ImageWriter):
 	title = 'Save'
 
 	def load(self, ips):
-		self.filt = [i for i in sorted(Source.manager('writer').names())]
+		self.filt = [i for i in sorted(dataio.WriterManager.names())]
 		return True
 
 class WindowCapture(dataio.ImageWriter):

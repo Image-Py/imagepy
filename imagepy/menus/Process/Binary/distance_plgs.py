@@ -7,7 +7,7 @@ import numpy as np
 from skimage.morphology import skeletonize
 from skimage.morphology import medial_axis
 from imagepy.ipyalg.graph import skel2d
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 from imagepy.ipyalg import find_maximum, watershed, distance_transform_edt
 from skimage.filters import apply_hysteresis_threshold
 import scipy.ndimage as ndimg
@@ -21,7 +21,7 @@ class Skeleton(Filter):
     img *= 255
 
 class EDT(Filter):
-	"""EDT: derived from imagepy.core.engine.Filter """
+	"""EDT: derived from sciapp.action.Filter """
 	title = 'Distance Transform'
 	note = ['all', 'auto_msk', 'auto_snap','preview']
 

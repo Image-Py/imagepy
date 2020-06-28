@@ -57,7 +57,7 @@ class Table:
         self.app.add_task(self)
         start = time()
         self.run(tps, data, snap, para)
-        self.app.set_info('%s: cost %.3fs'%(tps.title, time()-start))
+        self.app.info('%s: cost %.3fs'%(tps.title, time()-start))
         tps.update()
         self.app.remove_task(self)
         if callback!=None:callback()

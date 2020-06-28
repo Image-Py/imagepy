@@ -53,7 +53,7 @@ class ImageTool(DefaultTool):
         r, c = int(y), int(x)
         if (r>0) & (c>0) & (r<img.shape[0]) & (c<img.shape[1]):
             s = 'x:%d y:%d  value:%s'%(x, y, img.img[r,c])
-            self.app.set_info(s)
+            self.app.info(s)
 
     def start(self, app): 
         self.app = app
@@ -65,7 +65,7 @@ class ShapeTool(DefaultTool):
     title = 'Shape Tool'
 
     def mouse_move(self, img, x, y, btn, **key):
-        if self.app: self.app.set_info('%d, %d'%(x, y))
+        if self.app: self.app.info('%d, %d'%(x, y))
 
     def start(self, app): 
         self.app = app

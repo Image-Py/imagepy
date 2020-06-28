@@ -3,7 +3,7 @@
 Created on Sat Nov 19 11:26:12 2016
 @author: yxl
 """
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 
 class SetSlice(Simple):
     title = 'Set Slice'

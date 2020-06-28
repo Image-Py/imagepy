@@ -4,7 +4,7 @@ Created on Sun Nov 27 00:56:00 2016
 @author: yxl
 """
 import numpy as np
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 
 def like(hist1, hist2):
     hist1 = np.cumsum(hist1)/hist1.sum()
@@ -53,7 +53,7 @@ class Normalize(Filter):
         img[:] = ahist[img]
         
 class Match(Filter):
-    """Calculator Plugin derived from imagepy.core.engine.Simple """
+    """Calculator Plugin derived from sciapp.action.Simple """
     title = 'Histogram Match'
     note = ['all', 'not_channel', 'auto_snap', 'auto_msk']
     para = {'img':None}

@@ -4,15 +4,15 @@ from skimage.io import imread
 from urllib.request import urlopen
 from io import BytesIO as StringIO
 
-from imagepy.core.engine import Free
-from imagepy.core.engine import dataio
+from sciapp.action import Free
+from sciapp.action import dataio
 from sciapp import Source
 
 class OpenFile(dataio.Reader):
     title = 'Open'
 
     def load(self):
-        self.filt = [i for i in sorted(Source.manager('reader').names())]
+        self.filt = [i for i in sorted(dataio.ReaderManager.names())]
         return True
 
 class OpenUrl(Free):

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 
 # a simple demo implements the next slice
 class Plugin(Simple):

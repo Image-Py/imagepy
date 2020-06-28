@@ -4,7 +4,7 @@ Created on Tue Dec 27 01:06:59 2016
 @author: yxl
 """
 import numpy as np
-from imagepy.core.engine import Simple, Filter
+from sciapp.action import Simple, Filter
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
 from sciapp.object import mark2shp

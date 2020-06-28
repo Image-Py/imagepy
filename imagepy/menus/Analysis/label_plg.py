@@ -6,7 +6,7 @@ Created on Mon Dec 26 22:05:43 2016
 import numpy as np
 from scipy.ndimage import label, generate_binary_structure
 from skimage.segmentation import find_boundaries
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 from imagepy.ipyalg.graph import connect, render
 from sciapp.object import Image
 

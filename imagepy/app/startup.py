@@ -1,7 +1,7 @@
 import wx, sys, os
 from .source import *
 from sciapp import Source
-from imagepy.core.app import loader
+from . import loader
 from imagepy import root_dir
 
 def extend_plgs(plg):
@@ -78,7 +78,7 @@ def load_dictionary():
     for i in lans: loader.build_dictionary(i)
 
 def start():
-    from imagepy.core.app import ImagePy, ImageJ
+    from . import ImagePy, ImageJ
     import wx.lib.agw.advancedsplash as AS
     app = wx.App(False)
     bitmap = wx.Bitmap(root_dir+'/data/logolong.png', wx.BITMAP_TYPE_PNG)

@@ -1,5 +1,5 @@
 import numpy as np
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 #from imagepy.ui.widgets import CurvePanel
 from scipy import interpolate
 

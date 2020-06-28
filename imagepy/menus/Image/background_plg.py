@@ -1,6 +1,6 @@
 import numpy as np
 from sciapp.object import Image
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 
 class SetBackground(Simple):
     title = 'Set Background'

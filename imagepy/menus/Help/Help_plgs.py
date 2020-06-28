@@ -4,7 +4,7 @@ Created on Sat Nov 19 14:05:12 2016
 @author: yxl
 """
 import webbrowser
-from imagepy.core.engine import Free
+from sciapp.action import Free
 
 ## TODO:Fixme!
 class About(Free):

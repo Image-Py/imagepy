@@ -74,7 +74,7 @@ class ImageApp(wx.Frame, App):
         self.remove_tab(event.GetEventObject().grid.table)
         event.Skip()
         
-    def set_info(self, value):
+    def info(self, value):
         wx.CallAfter(self.txt_info.SetLabel, value)
 
     def set_progress(self, value):

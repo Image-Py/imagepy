@@ -1,6 +1,6 @@
 from sciapp.action import ImageTool
 from sciapp.action import Measure
-from imagepy.core.engine import Free
+from sciapp.action import Free
 from sciapp import Source
 
 class Plugin(Free):

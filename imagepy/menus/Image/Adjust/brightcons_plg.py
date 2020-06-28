@@ -3,7 +3,7 @@ Created on Sun Nov 27 00:56:00 2016
 @author: yxl
 """
 import numpy as np
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 #from imagepy.ui.widgets import HistCanvas
         
 class Plugin(Filter):

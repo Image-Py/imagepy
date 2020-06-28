@@ -7,7 +7,7 @@ Created on Sun Jan 15 03:19:34 2017
 import wx
 # from imagepy.core import ImagePlus
 from sciapp.action import ImageTool
-from imagepy.core.engine import  Simple
+from sciapp.action import  Simple
 
 class Cross:
     def __init__(self, w, h):

@@ -1,9 +1,9 @@
-from imagepy.core.engine import dataio
+from sciapp.action import dataio
 from skimage.io import imread, imsave
 from sciapp import Source
 
-Source.manager('reader').add('bmp', imread, 'img')
-Source.manager('writer').add('bmp', imsave, 'img')
+dataio.ReaderManager.add('bmp', imread, 'img')
+dataio.WriterManager.add('bmp', imsave, 'img')
 
 class OpenFile(dataio.Reader):
 	title = 'BMP Open'

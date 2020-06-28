@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 import scipy.ndimage as nimg
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 import numpy as np
 
 class Uniform(Filter):

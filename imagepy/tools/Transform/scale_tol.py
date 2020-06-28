@@ -1,5 +1,5 @@
 import numpy as np
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 from sciapp.action import ImageTool
 from sciapp.util import mark2shp, geom2shp
 from shapely.affinity import affine_transform

@@ -1,4 +1,4 @@
-from imagepy.core.engine import Free
+from sciapp.action import Free
 import time, wx, numpy as np
 
 class Plugin(Free):

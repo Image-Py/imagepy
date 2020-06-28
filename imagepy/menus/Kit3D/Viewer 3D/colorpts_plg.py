@@ -1,4 +1,4 @@
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 from sciapp.object import Surface, MarkText
 from sciapp.util import surfutil
 import numpy as np

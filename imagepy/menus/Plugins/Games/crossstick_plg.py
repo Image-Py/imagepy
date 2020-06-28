@@ -1,4 +1,4 @@
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 import numpy as np 
 from scipy.cluster.vq import kmeans, vq
 

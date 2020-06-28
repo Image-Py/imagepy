@@ -1,12 +1,12 @@
-from imagepy.core.engine import dataio
+from sciapp.action import dataio
 from scipy.io import savemat, loadmat
 from sciapp import Source
 import os
 
-Source.manager('reader').add('mat', lambda path: loadmat(path)['img'], 'img')
-Source.manager('writer').add('mat', lambda path, img: savemat(path, {'img':img}), 'img')
-Source.manager('reader').add('mat', lambda path: loadmat(path)['img'], 'imgs')
-Source.manager('writer').add('mat', lambda path, img: savemat(path, {'img':img}), 'imgs')
+dataio.ReaderManager.add('mat', lambda path: loadmat(path)['img'], 'img')
+dataio.WriterManager.add('mat', lambda path, img: savemat(path, {'img':img}), 'img')
+dataio.ReaderManager.add('mat', lambda path: loadmat(path)['img'], 'imgs')
+dataio.WriterManager.add('mat', lambda path, img: savemat(path, {'img':img}), 'imgs')
 
 class OpenFile(dataio.Reader):
 	title = 'Mat Open'

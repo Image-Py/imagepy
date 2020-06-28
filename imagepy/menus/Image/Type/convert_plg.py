@@ -4,7 +4,7 @@ Created on Sat Dec 17 14:15:41 2016
 @author: yxl
 """
 import numpy as np
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 
 def trans(imgs, shp, cn, sl, rg1, rg2, tp, prog=print):
     buf = np.zeros(shp, dtype=np.float32)

@@ -1,5 +1,5 @@
 from skimage.filters import frangi, sato, hessian ,meijering
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 
 class Frangi(Simple):
 	title = 'Frangi 3D'

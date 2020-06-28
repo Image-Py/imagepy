@@ -6,9 +6,9 @@ Created on Fri Jan  6 23:45:59 2017
 """
 import os, sys, os.path as osp
 from glob import glob
-from ..engine import Macros, Widget, Report
+from sciapp.action import Macros, Widget#, Report
 from sciapp import Source
-from ... import root_dir
+from .. import root_dir
 from codecs import open
 
 def getpath(root, path):

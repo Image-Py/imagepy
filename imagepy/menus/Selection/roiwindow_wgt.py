@@ -1,6 +1,6 @@
 import wx
 #from imagepy.core.manager import RoiManager, ImageManager
-from imagepy.core.engine import Macros
+from sciapp.action import Macros
 from sciapp.object import ROI, mark2shp
 #from imagepy import IPy
 
