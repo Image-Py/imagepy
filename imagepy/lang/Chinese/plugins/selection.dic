@@ -40,8 +40,11 @@ ROI Symmetric Diff::与任意选区联合
 	Name::求联合选区名 
 
 ROI Setting::选区设置
-	roi::选区颜色
-	line width::线宽
+	line::轮廓线颜色
+	face::内部颜色
+	text::文本颜色
+	width::线宽
+	text::文本大小
 
 ROI Ctrl Panel::选区控制面板
 	Manage::管理
@@ -55,14 +58,14 @@ ROI Ctrl Panel::选区控制面板
 	Inflate::扩张
 	Shrink::收缩
 	Convex::凸包
-	Bound::外接矩
+	Bound::外接矩形
 	Clip::裁剪
 	Invert::反向
 	Relationship::关系运算
-	Intersect::香蕉
+	Intersect::相交
 	Union::合并
 	Difference::减去
-	Sym Diff::抑或
+	Sym Diff::异或
 	Draw::绘图
 	Sketch::描边
 	Clear::清除内部
