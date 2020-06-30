@@ -514,6 +514,13 @@ class ImagePy(wx.Frame, App):
         dialog.Destroy()
         return path
 
+    def getdir(self, title, name=''):
+        dialog = wx.DirDialog(self, title, name, wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
+        rst = dialog.ShowModal()
+        path = dialog.GetPath() if rst == wx.ID_OK else None
+        dialog.Destroy()
+        return path
+
     def show_para(self, title, view, para, on_handle=None, on_ok=None, 
         on_cancel=None, on_help=None, preview=False, modal=True):
         lang = ConfigManager.get('language')

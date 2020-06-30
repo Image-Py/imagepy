@@ -159,12 +159,12 @@ class PathCtrl(wx.Panel):
     def ontext(self, event): print('ColorCtrl')
         
     def onselect(self, event):
-        from ...core.manager import ConfigManager
-        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
-        dpath = ConfigManager.get('defaultpath') or '.'
+        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt.split(',')])
+        #dpath = ConfigManager.get('defaultpath') or '.'
         #if dpath==None: dpath = root_dir # './'
-        dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
-        dialog = wx.FileDialog(self, 'Path Select', dpath, '', filt, wx.FD_OPEN)
+        if self.filt == '':
+            dialog = wx.DirDialog(self, 'Path Select', '.', wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
+        else: dialog = wx.FileDialog(self, 'Path Select', dpath, '', filt, wx.FD_OPEN)
         rst = dialog.ShowModal()
         if rst == wx.ID_OK:
             path = dialog.GetPath()
