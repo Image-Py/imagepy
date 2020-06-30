@@ -1,6 +1,5 @@
 from sciapp.action import dataio
 import numpy as np
-from sciapp import Source
 
 def imread(path):
 	return np.loadtxt(path,dtype=float)

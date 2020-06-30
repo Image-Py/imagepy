@@ -1,5 +1,5 @@
 from sciapp.action import dataio
-from sciapp import Source
+
 
 def readmc(path):
     with open(path) as f: return f.readlines()

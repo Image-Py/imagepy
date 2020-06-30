@@ -4,20 +4,19 @@ from wx.py.shell import Shell
 import scipy.ndimage as ndimg
 import numpy as np
 # from imagepy import IPy
-
 from sciapp.action import Free
-from sciapp import Source
+
 
 cmds = {'app':'app', 'np':np, 'ndimg':ndimg, 'update':None, 'get_img':None}
 
 class Macros(dict):
-    def __init__(self):
-        for i in Source.manager('plugin').names():
+    def __init__(self, app):
+        for i in app.plugin_manager.names():
             if not isinstance(i, str) or i == 'Command Line':
                 #print(PluginsManager.plgs[i])
                 continue
             name = ''.join(list(filter(str.isalnum, i)))
-            exec("self.run_%s = lambda para=None, plg=Source.manager('plugin').get(i):plg().start(cmds['app'], para)"%name)
+            exec("self.run_%s = lambda para=None, plg=app.plugin_manager.get(i):plg().start(cmds['app'], para)"%name)
 
 class Plugin(wx.Panel):
     title = 'Command Line'
@@ -33,6 +32,6 @@ class Plugin(wx.Panel):
         bSizer = wx.BoxSizer( wx.VERTICAL )
         bSizer.Add( shell, 1, wx.EXPAND|wx.ALL, 5 )
         self.SetSizer(bSizer)
-        cmds['plgs'] = Macros()
+        cmds['plgs'] = Macros(app)
         shell.run('# plgs.run_name() to call a ImagePy plugin.\n')
         shell.run('# app is avalible here, and get_img() to get the current ImagePlus, update() to redraw.\n')

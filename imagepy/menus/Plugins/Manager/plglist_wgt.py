@@ -6,7 +6,6 @@ Created on Sat Jan  7 16:01:14 2017
 """
 import wx, os
 #from imagepy import IPy, root_dir
-from sciapp import Source
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):

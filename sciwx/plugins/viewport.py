@@ -45,9 +45,7 @@ class ViewPort ( wx.Panel ):
 		self.label.Wrap( -1 )
 		bSizer2.Add( self.label, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 		
-		
 		bSizer1.Add( bSizer2, 0, wx.EXPAND, 5 )
-		
 		
 		self.SetSizer( bSizer1 )
 		self.Layout()

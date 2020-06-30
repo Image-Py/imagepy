@@ -1,4 +1,4 @@
 from ..lookuptables_plg import LUT
-from sciapp import Source
+from imagepy.app import ColorManager
 
-plgs = [LUT(i, j) for i, j, _ in Source.manager('colormap').gets(tag='adv')]
+plgs = [LUT(i, j) for i, j, _ in ColorManager.gets(tag='adv')]

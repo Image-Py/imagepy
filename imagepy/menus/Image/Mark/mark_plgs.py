@@ -1,5 +1,5 @@
 from sciapp.action import Simple, Free
-from sciapp import Source
+from imagepy.app import ConfigManager
 from sciapp.object import Shape
 from sciapp.util import mark2shp
 import json
@@ -54,6 +54,6 @@ class Setting(Free):
 
     def run(self, para=None):
         for i in para: Shape.default[i] = para[i]
-        Source.manager('config').add('mark_style', para)
+        ConfigManager.set('mark_style', para)
 
 plgs = [Open, Save, Clear, '-', Setting]

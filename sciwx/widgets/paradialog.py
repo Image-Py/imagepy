@@ -7,7 +7,7 @@ from .threpanel import ThresholdPanel
 
 widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl, 'path':PathCtrl,
             float:NumCtrl, 'lab':Label, bool:Check, str:TextCtrl, list:Choice,
-            'color':ColorCtrl, 'any':AnyType, 'chos':Choices, 'hist':ThresholdPanel,
+            'color':ColorCtrl, 'cmap':CMapSelPanel, 'any':AnyType, 'chos':Choices, 'hist':ThresholdPanel,
             'curve':CurvePanel, 'img':ImageList, 'tab':TableList, 'field':TableField, 'fields':TableFields}
 
 def add_widget(key, value): widgets[key] = value

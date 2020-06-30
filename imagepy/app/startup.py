@@ -1,8 +1,8 @@
 import wx, sys, os
-from .source import *
-from sciapp import Source
+from .manager import *
 from . import loader
 from imagepy import root_dir
+from .manager import ConfigManager, DictManager
 
 def extend_plgs(plg):
     if isinstance(plg, tuple):
@@ -73,7 +73,7 @@ def load_dictionary():
     lans = [i for i in lans if os.path.isdir(i)]
     lans = [os.path.split(i) for i in lans]
     lan = sorted(set([i[1] for i in lans]))
-    Source.manager('dictionary').add('language', lan)
+    DictManager.add('language', lan)
     lans = sorted(set([i[0] for i in lans]))
     for i in lans: loader.build_dictionary(i)
 
@@ -91,7 +91,7 @@ def start():
     asp.Update()
     load_document()
     load_dictionary()
-    uistyle = Source.manager('config').get('uistyle') or 'imagepy'
+    uistyle = ConfigManager.get('uistyle') or 'imagepy'
     frame = ImageJ(None) if uistyle == 'imagej' else ImagePy(None)
     frame.Show()
     app.MainLoop()

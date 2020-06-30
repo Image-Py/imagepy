@@ -6,7 +6,6 @@ Created on Sat Jan  7 16:01:14 2017
 """
 import wx, os, glob, shutil, random
 from imagepy import root_dir
-from sciapp import Source
 from sciwx.text import MDPad
 #from imagepy.ui.mkdownwindow import HtmlPanel, md2html
 
@@ -143,7 +142,7 @@ class Plugin( wx.Panel ):
         i = self.lst_plgs.GetFirstSelected()
         if i==-1: return
         path = self.buf[i][-1]['path']
-        Source.manager('plugin').get('Install Plugins')().start(
+        self.app.plugin_manager.get('Install Plugins')().start(
             self.app, {'repo':self.buf[i][-1]['path']}, self.load)
 
     def on_remove(self, event):

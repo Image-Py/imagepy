@@ -55,3 +55,4 @@ class Manager:
         if not osp.exists(path): return
         with open(path) as f:
             self.adds(json.loads(f.read()))
+        return self

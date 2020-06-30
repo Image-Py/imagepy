@@ -11,9 +11,10 @@ from sciwx.text import MDFrame, TextFrame
 from sciwx.plot import PlotFrame
 from skimage.data import camera
 from sciapp import App, Source
-from sciapp.object import Image
+from sciapp.object import Image, Table
 from imagepy import root_dir
 from .startup import load_plugins, load_tools, load_widgets
+from .manager import ConfigManager, DictManager, ShortcutManager, DocumentManager
 #from .source import *
 
 class ImageJ(wx.Frame, App):
@@ -70,9 +71,6 @@ class ImageJ(wx.Frame, App):
         self.auimgr.AddPane( stapanel,  aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).PinButton( True )
             .PaneBorder( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ).DockFixed( True )
             . MinSize(wx.Size(-1, 20)). MaxSize(wx.Size(-1, 20)).Layer( 10 ) )
-        
-    def add_plugin(self, name, plg):
-        self.manager('plugin').add(name, plg)
 
     def flatten(self, plgs, lst=None):
         if lst is None: lst = []
@@ -84,19 +82,24 @@ class ImageJ(wx.Frame, App):
         return lst
 
     def _load_all(self):
-        lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get('common', tag=lang) or {}
+        lang = ConfigManager.get('language')
+        dic = DictManager.get('common', tag=lang) or {}
         self.auimgr.GetPane(self.widgets).Caption('Widgets')
         for i in self.auimgr.GetAllPanes():
             i.Caption(dic[i.caption] if i.caption in dic else i.caption)
         self.auimgr.Update()
         plgs, errplg = load_plugins()
-        for name, plg in self.flatten(plgs): self.add_plugin(name, plg)
+        self.plugin_manager.remove()       
+        for name, plg in self.flatten(plgs): 
+            self.add_plugin(name, plg, 'plugin')
         self.load_menu(plgs)
-        dtool = Source.manager('tools').get('default')
         tols, errtol = load_tools()
-        self.load_tool(tols, dtool or 'Transform')
+        for name, plg in self.flatten(tols): 
+            self.add_plugin(name, plg, 'tool')
+        self.load_tool(tols, 'Transform')
         wgts, errwgt = load_widgets()
+        for name, plg in self.flatten(wgts): 
+            self.add_plugin(name, plg, 'widget')
         self.load_widget(wgts)
         err = errplg + errtol + errwgt
         if len(err)>0:
@@ -108,17 +111,17 @@ class ImageJ(wx.Frame, App):
 
     def load_menu(self, data):
         self.menubar.clear()
-        lang = Source.manager('config').get('language')
-        ls = Source.manager('dictionary').gets(tag=lang)
-        short = Source.manager('shortcut').gets()
+        lang = ConfigManager.get('language')
+        ls = DictManager.gets(tag=lang)
+        short = ShortcutManager.gets()
         acc = self.menubar.load(data, dict([i[:2] for i in short]))
         self.translate(dict([(i,j[i]) for i,j,_ in ls]))(self.menubar)
         self.SetAcceleratorTable(acc)
 
     def load_tool(self, data, default=None):
         self.toolbar.clear()
-        lang = Source.manager('config').get('language')
-        ls = Source.manager('dictionary').gets(tag=lang)
+        lang = ConfigManager.get('language')
+        ls = DictManager.gets(tag=lang)
         dic = dict([(i,j[i]) for i,j,_ in ls])
         for i, (name, tols) in enumerate(data[1]):
             name = dic[name] if name in dic else name
@@ -129,11 +132,11 @@ class ImageJ(wx.Frame, App):
 
     def load_widget(self, data):
         self.widgets.clear()
-        lang = Source.manager('config').get('language')
+        lang = ConfigManager.get('language')
         self.widgets.load(data)
         for cbk in self.widgets.GetChildren():
             for i in range(cbk.GetPageCount()):
-                dic = Source.manager('dictionary').get(cbk.GetPageText(i), tag=lang) or {}
+                dic = DictManager.get(cbk.GetPageText(i), tag=lang) or {}
                 translate = self.translate(dic)
                 title = cbk.GetPageText(i)
                 cbk.SetPageText(i, dic[title] if title in dic else title)
@@ -147,9 +150,9 @@ class ImageJ(wx.Frame, App):
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.toolbar = ToolBar(self, False)
         def on_help(evt, tol):
-            lang = Source.manager('config').get('language')
-            doc = Source.manager('document').get(tol.title, tag=lang)
-            doc = doc or Source.manager('document').get(tol.title, tag='English')
+            lang = ConfigManager.get('language')
+            doc = DocumentManager.get(tol.title, tag=lang)
+            doc = doc or DocumentManager.get(tol.title, tag='English')
             self.show_md(doc or 'No Document!', tol.title)
         self.toolbar.on_help = on_help
         self.toolbar.Fit()
@@ -200,23 +203,20 @@ class ImageJ(wx.Frame, App):
         if hasattr(event.GetPane().window, 'close'):
             event.GetPane().window.close()
 
-    def on_new_img(self, event):
-        self.add_img(event.GetEventObject().canvas.image)
-        self.add_img_win(event.GetEventObject().canvas)
+    def on_active_img(self, event):
+        self.active_img(event.GetEventObject().canvas.image.name)
+        # self.add_img_win(event.GetEventObject().canvas)
 
     def on_close_img(self, event):
-        event.GetEventObject().Bind(wx.EVT_ACTIVATE, None)
-        self.remove_img_win(event.GetEventObject().canvas)
-        self.remove_img(event.GetEventObject().canvas.image)
+        #event.GetEventObject().Bind(wx.EVT_ACTIVATE, None)
+        App.close_img(self, event.GetEventObject().canvas.image.title)
         event.Skip()
 
-    def on_new_tab(self, event):
-        self.add_tab(event.GetEventObject().grid.table)
-        self.add_tab_win(event.GetEventObject().grid)
+    def on_active_table(self, event):
+        self.active_table(event.GetEventObject().grid.table.title)
 
-    def on_close_tab(self, event):
-        self.remove_tab_win(event.GetEventObject().grid)
-        self.remove_tab(event.GetEventObject().grid.table)
+    def on_close_table(self, event):
+        App.close_table(self, event.GetEventObject().grid.table.title)
         event.Skip()
         
     def on_new_mesh(self, event):
@@ -229,8 +229,8 @@ class ImageJ(wx.Frame, App):
         event.Skip()
         
     def info(self, value):
-        lang = Source.manager('config').get('language')
-        dics = Source.manager('dictionary').gets(tag=lang) 
+        lang = ConfigManager.get('language')
+        dics = DictManager.gets(tag=lang) 
         dic = dict(j for i in dics for j in i[1].items())
         value = dic[value] if value in dic else value
         wx.CallAfter(self.txt_info.SetLabel, value)
@@ -251,18 +251,18 @@ class ImageJ(wx.Frame, App):
         self.auimgr.UnInit()
         del self.auimgr
         self.Destroy()
-        Source.manager('config').write()
+        ConfigManager.write()
         sys.exit()
 
     def _show_img(self, img, title=None):
         cframe = CanvasFrame(self, True)
         canvas = cframe.canvas
-        if not title is None:
-            canvas.set_imgs(img)
-            canvas.image.name = title
-        else: canvas.set_img(img)
-        cframe.Bind(wx.EVT_ACTIVATE, self.on_new_img)
+        if not isinstance(img, Image): 
+            img = Image(img, title)
+        App.show_img(self, img, img.title)
+        cframe.Bind(wx.EVT_ACTIVATE, self.on_active_img)
         cframe.Bind(wx.EVT_CLOSE, self.on_close_img)
+        canvas.set_img(img)
         cframe.SetIcon(self.GetIcon())
         cframe.Show()
 
@@ -272,11 +272,12 @@ class ImageJ(wx.Frame, App):
     def _show_table(self, tab, title):
         cframe = GridFrame(self)
         grid = cframe.grid
+        if not isinstance(tab, Table): 
+            tab = Table(tab, title)
+        App.show_table(self, tab, tab.title)
         grid.set_data(tab)
-        if not title is None:
-            grid.table.name = title
-        cframe.Bind(wx.EVT_ACTIVATE, self.on_new_tab)
-        cframe.Bind(wx.EVT_CLOSE, self.on_close_tab)
+        cframe.Bind(wx.EVT_ACTIVATE, self.on_active_table)
+        cframe.Bind(wx.EVT_CLOSE, self.on_close_table)
         cframe.SetIcon(self.GetIcon())
         cframe.Show()
 
@@ -351,8 +352,8 @@ class ImageJ(wx.Frame, App):
             self.manager('widget').add(panel.title, obj)
             self.auimgr.AddPane(obj, aui.AuiPaneInfo().Caption(title).Left().Layer( 15 ).PinButton( True )
                 .Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(True)) #.DestroyOnClose())
-        lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get(obj.title, tag=lang) or {}
+        lang = ConfigManager.get('language')
+        dic = DictManager.get(obj.title, tag=lang) or {}
         info = self.auimgr.GetPane(obj)
         info.Show(True).Caption(dic[obj.title] if obj.title in dic else obj.title)
         self.translate(dic)(obj)
@@ -426,8 +427,8 @@ class ImageJ(wx.Frame, App):
         else: self.alert('no view for %s!'%tag)
 
     def _alert(self, info, title='ImagePy'):
-        lang = Source.manager('config').get('language')
-        dics = Source.manager('dictionary').gets(tag=lang) 
+        lang = ConfigManager.get('language')
+        dics = DictManager.gets(tag=lang) 
         dialog = wx.MessageDialog(self, info, title, wx.OK)
         self.translate([i[1] for i in dics])(dialog)
         dialog.ShowModal() == wx.ID_OK
@@ -455,10 +456,10 @@ class ImageJ(wx.Frame, App):
 
     def show_para(self, title, view, para, on_handle=None, on_ok=None, 
         on_cancel=None, on_help=None, preview=False, modal=True):
-        lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get(name=title, tag=lang)
-        doc = Source.manager('document').get(title, tag=lang)
-        doc = doc or Source.manager('document').get(title, tag='English')
+        lang = ConfigManager.get('language')
+        dic = DictManager.get(name=title, tag=lang)
+        doc = DocumentManager.get(title, tag=lang)
+        doc = doc or DocumentManager.get(title, tag='English')
         on_help = lambda x=doc:self.show_md(x or 'No Document!', title)
         dialog = ParaDialog(self, title)
         dialog.init_view(view, para, preview, modal=modal, app=self)

@@ -4,7 +4,6 @@ Created on Mon Dec  5 03:19:13 2016
 @author: yxl
 """
 from sciapp.action import dataio
-from sciapp import Source
 from sciapp.action import Simple
 
 class SaveImage(dataio.ImageWriter):

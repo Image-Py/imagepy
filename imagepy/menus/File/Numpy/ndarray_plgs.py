@@ -1,6 +1,5 @@
 from sciapp.action import dataio
 import numpy as np
-from sciapp import Source
 import os
 
 dataio.ReaderManager.add('npy', np.load, 'img')

@@ -1,7 +1,7 @@
 import wx, os
 from sciapp.action import Free
-from sciapp import Source
 from imagepy import root_dir
+from imagepy.app import ShortcutManager
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):
@@ -64,7 +64,7 @@ class Plugin( wx.Panel ):
     #def list_plg(self, lst, items
     def load(self):
         lst = self.app.plugin_names()
-        self.plgs = [[i, Source.manager('shortcut').get(i)] for i in lst]
+        self.plgs = [[i, ShortcutManager.get(i)] for i in lst]
         for i in self.plgs:
             if i[1]==None:i[1]=''
         self.plgs.sort()
@@ -114,8 +114,8 @@ class Plugin( wx.Panel ):
         if len(txt)>0 and txt[-1]=='-':txt=txt[:-1]
         self.buf[event.GetIndex()][1] = txt
         self.lst_plgs.RefreshItem(event.GetIndex())
-        if txt!='': Source.manager('shortcut').add(title, txt)
+        if txt!='': ShortcutManager.add(title, txt)
         #PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
         
     def close(self):
-        Source.manager('shortcut').write(os.path.join(root_dir,'data/shortcut.json'))
+        ShortcutManager.write(os.path.join(root_dir,'data/shortcut.json'))

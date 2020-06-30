@@ -6,7 +6,6 @@ Created on Mon Dec  5 04:34:09 2016
 """
 from skimage.io import imsave
 from sciapp.action import Simple
-from sciapp import Source
 
 class Plugin(Simple):
     title = 'Save Sequence'

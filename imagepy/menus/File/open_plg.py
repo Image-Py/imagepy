@@ -6,7 +6,7 @@ from io import BytesIO as StringIO
 
 from sciapp.action import Free
 from sciapp.action import dataio
-from sciapp import Source
+
 
 class OpenFile(dataio.Reader):
     title = 'Open'

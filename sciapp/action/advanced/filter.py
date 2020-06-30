@@ -21,7 +21,8 @@ def process_channels(plg, ips, src, des, para):
     return des
 
 def process_one(plg, ips, src, img, para, callafter=None):
-    plg.app.record_macros('{}>{}'.format(plg.title, para))
+    if callafter != 'no record':
+        plg.app.record_macros('{}>{}'.format(plg.title, para))
     plg.app.add_task(plg)
     start = time()
     transint = '2int' in plg.note and ips.dtype in (np.uint8, np.uint16)
@@ -42,7 +43,7 @@ def process_one(plg, ips, src, img, para, callafter=None):
     plg.app.info('%s: cost %.3fs'%(plg.title, time()-start))
     ips.update()
     plg.app.remove_task(plg)
-    if not callafter is None:callafter()
+    if not callafter in (None, 'no record'):callafter()
     
 def process_stack(plg, ips, src, imgs, para, callafter=None):
     plg.app.record_macros('{}>{}'.format(plg.title, para))
@@ -121,7 +122,7 @@ class Filter:
         return True
         
     def preview(self, ips, para):
-        process_one(self, ips, ips.snap, ips.img, para, None)
+        process_one(self, ips, ips.snap, ips.img, para, 'no record')
         
     def load(self, ips):return True
           

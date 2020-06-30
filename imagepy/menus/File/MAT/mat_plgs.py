@@ -1,6 +1,5 @@
 from sciapp.action import dataio
 from scipy.io import savemat, loadmat
-from sciapp import Source
 import os
 
 dataio.ReaderManager.add('mat', lambda path: loadmat(path)['img'], 'img')

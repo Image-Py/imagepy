@@ -1,7 +1,7 @@
 from sciapp.action import Simple, Free
-from sciapp import Source
 from sciapp.object import ROI, Rectangle
 from sciapp.util.shputil import geom2shp, geom_flatten, geom_union, mark2shp
+from imagepy.app import ConfigManager
 import json, time
 
 class SelectAll(Simple):
@@ -231,7 +231,7 @@ class Setting(Free):
 
     def run(self, para=None):
         for i in para: ROI.default[i] = para[i]
-        Source.manager('config').add('roi_style', para)
+        ConfigManager.set('roi_style', para)
 
 plgs = [SelectAll, SelectNone, 
         '-', Inflate, Shrink, Convex, Box, Clip, Invert, 

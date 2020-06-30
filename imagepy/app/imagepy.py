@@ -13,6 +13,7 @@ from sciapp import App, Source
 from sciapp.object import Image, Table
 from imagepy import root_dir
 from .startup import load_plugins, load_tools, load_widgets, load_document, load_dictionary
+from .manager import ConfigManager, DictManager, ShortcutManager, DocumentManager
 
 class ImagePy(wx.Frame, App):
     def __init__( self, parent ):
@@ -81,8 +82,8 @@ class ImagePy(wx.Frame, App):
         return lst
 
     def _load_all(self):
-        lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get('common', tag=lang) or {}
+        lang = ConfigManager.get('language')
+        dic = DictManager.get('common', tag=lang) or {}
         self.auimgr.GetPane(self.widgets).Caption('Widgets')
         self.auimgr.GetPane(self.tablenbwrap).Caption('Table')
         for i in self.auimgr.GetAllPanes():
@@ -93,11 +94,10 @@ class ImagePy(wx.Frame, App):
         for name, plg in self.flatten(plgs): 
             self.add_plugin(name, plg, 'plugin')
         self.load_menu(plgs)
-        dtool = Source.manager('tools').get('default')
         tols, errtol = load_tools()
         for name, plg in self.flatten(tols): 
             self.add_plugin(name, plg, 'tool')
-        self.load_tool(tols, dtool or 'Transform')
+        self.load_tool(tols, 'Transform')
         wgts, errwgt = load_widgets()
         for name, plg in self.flatten(wgts): 
             self.add_plugin(name, plg, 'widget')
@@ -112,9 +112,9 @@ class ImagePy(wx.Frame, App):
 
     def load_menu(self, data):
         self.menubar.clear()
-        lang = Source.manager('config').get('language')
-        ls = Source.manager('dictionary').gets(tag=lang)
-        short = Source.manager('shortcut').gets()
+        lang = ConfigManager.get('language')
+        ls = DictManager.gets(tag=lang)
+        short = ShortcutManager.gets()
 
         acc = self.menubar.load(data, dict([i[:2] for i in short]))
         self.translate(dict([(i,j[i]) for i,j,_ in ls]))(self.menubar)
@@ -122,8 +122,8 @@ class ImagePy(wx.Frame, App):
 
     def load_tool(self, data, default=None):
         self.toolbar.clear()
-        lang = Source.manager('config').get('language')
-        ls = Source.manager('dictionary').gets(tag=lang)
+        lang = ConfigManager.get('language')
+        ls = DictManager.gets(tag=lang)
         dic = dict([(i,j[i]) for i,j,_ in ls])
         for i, (name, tols) in enumerate(data[1]):
             name = dic[name] if name in dic else name
@@ -134,11 +134,11 @@ class ImagePy(wx.Frame, App):
 
     def load_widget(self, data):
         self.widgets.clear()
-        lang = Source.manager('config').get('language')
+        lang = ConfigManager.get('language')
         self.widgets.load(data)
         for cbk in self.widgets.GetChildren():
             for i in range(cbk.GetPageCount()):
-                dic = Source.manager('dictionary').get(cbk.GetPageText(i), tag=lang) or {}
+                dic = DictManager.get(cbk.GetPageText(i), tag=lang) or {}
                 translate = self.translate(dic)
                 title = cbk.GetPageText(i)
                 cbk.SetPageText(i, dic[title] if title in dic else title)
@@ -152,9 +152,9 @@ class ImagePy(wx.Frame, App):
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.toolbar = ToolBar(self, True)
         def on_help(evt, tol):
-            lang = Source.manager('config').get('language')
-            doc = Source.manager('document').get(tol.title, tag=lang)
-            doc = doc or Source.manager('document').get(tol.title, tag='English')
+            lang = ConfigManager.get('language')
+            doc = DocumentManager.get(tol.title, tag=lang)
+            doc = doc or DocumentManager.get(tol.title, tag='English')
             self.show_md(doc or 'No Document!', tol.title)
         self.toolbar.on_help = on_help
         self.toolbar.Fit()
@@ -234,8 +234,8 @@ class ImagePy(wx.Frame, App):
         self.pro_bar.SetValue(tasks)
 
     def init_widgets(self):
-        lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get('common', tag=lang)
+        lang = ConfigManager.get('language')
+        dic = DictManager.get('common', tag=lang)
         self.widgets = ChoiceBook(self)
         self.auimgr.AddPane( self.widgets, aui.AuiPaneInfo() .Right().Caption('Widgets') .PinButton( True )
             .Dock().Resizable().FloatingSize( wx.DefaultSize ).MinSize( wx.Size( 266,-1 ) ).Layer( 10 ) )
@@ -295,8 +295,8 @@ class ImagePy(wx.Frame, App):
         self.remove_mesh_win(canvas3d)
         
     def info(self, value):
-        lang = Source.manager('config').get('language')
-        dics = Source.manager('dictionary').gets(tag=lang) 
+        lang = ConfigManager.get('language')
+        dics = DictManager.gets(tag=lang) 
         dic = dict(j for i in dics for j in i[1].items())
         value = dic[value] if value in dic else value
         wx.CallAfter(self.txt_info.SetLabel, value)
@@ -317,7 +317,7 @@ class ImagePy(wx.Frame, App):
         self.auimgr.UnInit()
         del self.auimgr
         self.Destroy()
-        Source.manager('config').write()
+        ConfigManager.write()
         sys.exit()
 
     def _show_img(self, img, title=None):
@@ -413,8 +413,8 @@ class ImagePy(wx.Frame, App):
             self.manager('widget').add(panel.title, obj)
             self.auimgr.AddPane(obj, aui.AuiPaneInfo().Caption(title).Left().Layer( 15 ).PinButton( True )
                 .Float().Resizable().FloatingSize( wx.DefaultSize ).Dockable(True)) #.DestroyOnClose())
-        lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get(obj.title, tag=lang) or {}
+        lang = ConfigManager.get('language')
+        dic = DictManager.get(obj.title, tag=lang) or {}
         info = self.auimgr.GetPane(obj)
         info.Show(True).Caption(dic[obj.title] if obj.title in dic else obj.title)
         self.translate(dic)(obj)
@@ -442,6 +442,12 @@ class ImagePy(wx.Frame, App):
         for i in range(self.canvasnb.GetPageCount()):
             if self.canvasnb.GetPageText(i)==name:
                 return self.canvasnb.DeletePage(i)
+
+    def get_img_win(self, name=None):
+        name = name or self.get_img().name
+        for i in range(self.canvasnb.GetPageCount()):
+            if self.canvasnb.GetPageText(i)==name:
+                return self.canvasnb.GetPage(i)
 
     def close_table(self, name=None):
         App.close_tab(self, name)
@@ -482,8 +488,8 @@ class ImagePy(wx.Frame, App):
         else: self.alert('no view for %s!'%tag)
 
     def _alert(self, info, title='ImagePy'):
-        lang = Source.manager('config').get('language')
-        dics = Source.manager('dictionary').gets(tag=lang) 
+        lang = ConfigManager.get('language')
+        dics = DictManager.gets(tag=lang) 
         dialog = wx.MessageDialog(self, info, title, wx.OK)
         self.translate([i[1] for i in dics])(dialog)
         dialog.ShowModal() == wx.ID_OK
@@ -508,18 +514,12 @@ class ImagePy(wx.Frame, App):
         dialog.Destroy()
         return path
 
-
-        lang = Source.manager('config').get('language')
-        doc = Source.manager('document').get(self.title, tag=lang)
-        doc = doc or Source.manager('document').get(tol.title, tag='English')
-        self.app.show_md(doc or 'No Document!', self.title)
-
     def show_para(self, title, view, para, on_handle=None, on_ok=None, 
         on_cancel=None, on_help=None, preview=False, modal=True):
-        lang = Source.manager('config').get('language')
-        dic = Source.manager('dictionary').get(name=title, tag=lang)
-        doc = Source.manager('document').get(title, tag=lang)
-        doc = doc or Source.manager('document').get(title, tag='English')
+        lang = ConfigManager.get('language')
+        dic = DictManager.get(name=title, tag=lang)
+        doc = DocumentManager.get(title, tag=lang)
+        doc = doc or DocumentManager.get(title, tag='English')
         on_help = lambda x=doc:self.show_md(x or 'No Document!', title)
         dialog = ParaDialog(self, title)
         dialog.init_view(view, para, preview, modal=modal, app=self)

@@ -1,7 +1,6 @@
 from sciapp.action import dataio
 from sciapp.action import Simple
 from skimage.io import imread, imsave
-from sciapp import Source
 import imageio
 
 dataio.ReaderManager.add('gif', imread, 'img')

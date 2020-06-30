@@ -1,7 +1,6 @@
-from sciapp.action import ImageTool
 from sciapp.action import Measure
 from sciapp.action import Free
-from sciapp import Source
+from imagepy.app import ConfigManager
 
 class Plugin(Free):
     title = 'Measure Setting'
@@ -15,4 +14,4 @@ class Plugin(Free):
 
     def run(self, para=None):
         for i in para: Measure.default[i] = para[i]
-        Source.manager('config').add('mea_style', para)
+        ConfigManager.set('mea_style', para)

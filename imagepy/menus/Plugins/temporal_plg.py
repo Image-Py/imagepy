@@ -3,7 +3,7 @@ Created on Sun Jan 22 12:56:00 2020
 @author: weisong
 """
 from sciapp.action import Simple
-from sciapp import Source
+from imagepy.app import ColorManager
 import numpy as np
 
 def color_code(img, lut):
@@ -26,14 +26,14 @@ class Plugin(Simple):
     def load(self, ips): 
         self.slength = len(ips.imgs)
         self.para['End image'] = self.slength
-        self.view = [(list, 'LUT', Source.manager('colormap').names(), str, 'LUT',''),
+        self.view = [(list, 'LUT', ColorManager.names(), str, 'LUT',''),
             (int, 'Start image', (1,self.slength),0,'Start image','1~%d'%self.slength),
             (int, 'End image', (2,self.slength),0,'End image','start~%d'%self.slength),
             (bool, 'Creatbar', 'Creat time color scale bar')]
         return True
 
     def run(self, ips, imgs, para = None):
-        cmap = Source.manager('colormap').get(para['LUT'])
+        cmap = ColorManager.get(para['LUT'])
         imglut = color_code(imgs[para['Start image']-1: para['End image']], cmap)
         self.app.show_img([imglut],'Color-coded %s'%ips.title)
         if para['Creatbar']:

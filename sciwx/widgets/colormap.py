@@ -1,11 +1,13 @@
 import numpy as np
 import wx.adv
 import sys, wx
+from .. import ColorManager
 
 class CMapSelCtrl(wx.adv.OwnerDrawnComboBox):
     def __init__(self, parent):
         wx.adv.OwnerDrawnComboBox.__init__(self, parent, choices=[], 
             style=wx.CB_READONLY, pos=(20,40), size=(256, 30))
+        self.SetItems(ColorManager.gets())
 
     def SetItems(self, kvs):
         self.Clear()
@@ -70,7 +72,7 @@ class CMapSelCtrl(wx.adv.OwnerDrawnComboBox):
         return -1; # default - will be measured from text width
 
 class CMapSelPanel(wx.Panel):
-    def __init__( self, parent, title):
+    def __init__( self, parent, title, app=None):
         wx.Panel.__init__(self, parent)
         sizer = wx.BoxSizer(wx.VERTICAL)
         lab_title = wx.StaticText( self, wx.ID_ANY, title,

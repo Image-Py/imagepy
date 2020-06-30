@@ -53,8 +53,7 @@ class Histogram( wx.Panel ):
 		bSizer1.Add( bSizer2, 0, wx.EXPAND |wx.ALL, 5 )
 
 		self.cmapsel = CMapSelCtrl(self)
-
-		self.cmapsel.SetItems(Source.manager('colormap').gets())
+		
 		bSizer1.Add(self.cmapsel, 0, wx.ALL|wx.EXPAND, 5 )
 
 		self.cmap = CMapPanel(self)

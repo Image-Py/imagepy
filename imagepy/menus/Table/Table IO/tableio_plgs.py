@@ -1,6 +1,5 @@
 from sciapp.action import dataio
 from pandas import read_csv, read_excel, read_hdf
-from sciapp import Source
 
 def show(data, title):
     IPy.show_table(data, title)

@@ -6,7 +6,6 @@ Created on Sat Nov 26 01:26:25 2016
 import numpy as np
 from sciapp.action import Simple, Filter
 from sciapp.action import ImageTool
-from sciapp import Source
 
 class PasteMove(ImageTool):
     def __init__(self):

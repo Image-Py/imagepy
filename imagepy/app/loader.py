@@ -7,8 +7,8 @@ Created on Fri Jan  6 23:45:59 2017
 import os, sys, os.path as osp
 from glob import glob
 from sciapp.action import Macros, Widget#, Report
-from sciapp import Source
 from .. import root_dir
+from .manager import DocumentManager, DictManager
 from codecs import open
 
 def getpath(root, path):
@@ -26,19 +26,15 @@ def extend_plugins(path, lst, err):
         elif i[-3:] == 'rpt':
             pt = os.path.join(root_dir,path)
             rst.append(Report(i[:-4], pt+'/'+i))
-            # Source.manager('plugin').add(obj=rst[-1], name=rst[-1].title)
         elif i[-3:] in {'.md', '.mc', '.wf'}:
             p = os.path.join(os.path.join(root_dir, path), i).replace('\\','/')
             rst.append(Macros(i[:-3], ['Open>{"path":"%s"}'%p]))
-            # Source.manager('plugin').add(rst[-1].title, rst[-1])
         elif i[-6:] in ['wgt.py', 'gts.py']:
             try:
                 rpath = path.replace('/', '.').replace('\\','.')
                 plg = __import__('imagepy.'+ rpath+'.'+i[:-3],'','',[''])
                 if hasattr(plg, 'wgts'):
                     rst.extend([j if j=='-' else Widget(j) for j in plg.wgts])
-                    for p in plg.wgts:
-                        if not isinstance(p, str):Source.manager('widget').add(p.title, p)
                 else: 
                     rst.append(Widget(plg.Plugin))
             except Exception as  e:
@@ -51,10 +47,8 @@ def extend_plugins(path, lst, err):
                     rst.extend([j for j in plg.plgs])
                     for p in plg.plgs:
                         if not isinstance(p, str):  pass
-                            # Source.manager('plugin').add(p.title, p)
                 else: 
                     rst.append(plg.Plugin)
-                    # Source.manager('plugin').add(plg.Plugin.title, plg.Plugin)
             except Exception as  e:
                 err.append((path, i, sys.exc_info()[1]))
     return rst
@@ -112,7 +106,6 @@ def extend_tools(path, lst, err):
                     os.path.join(root_dir, path)+'/'+i.split('_')[0]+'.gif'))
             except Exception as e:
                 err.append((path, i, sys.exc_info()[1]))
-    # for i in rst:Source.manager('tool').add(obj=i[0], name=i[0].title)
     return rst
             
 def sort_tools(catlog, lst):
@@ -161,7 +154,6 @@ def extend_widgets(path, lst, err):
             rst.append(plg.Plugin)
         except Exception as e:
             err.append((path, i, sys.exc_info()[1]))
-    #for i in rst:Source.manager('widget').add(obj=i, name=i.title)
     return rst
             
 def sort_widgets(catlog, lst):
@@ -206,10 +198,8 @@ def build_document(path):
             for filename in filenames:
                 if filename[-3:] != '.md': continue
                 docs.append(os.path.join(dirpath, filename))
-                f = open(docs[-1], encoding='utf-8')
-                cont = f.read()
-                f.close()
-                Source.manager('document').add(filename[:-3], cont, lang)
+                with open(docs[-1], encoding='utf-8') as f:
+                    DocumentManager.add(filename[:-3], f.read(), lang)
     return docs
 
 def build_dictionary(path):
@@ -231,12 +221,12 @@ def build_dictionary(path):
                     dic[-1] = (dic[-1][0][0], dict(dic[-1]))
                 dic = dict(dic)
                 for i in dic: 
-                    obj = Source.manager('dictionary').get(i, tag=lang)
+                    obj = DictManager.get(i, tag=lang)
                     if not obj is None: obj.update(dic[i])
-                    else: Source.manager('dictionary').add(i, dic[i], lang)
-        common = Source.manager('dictionary').get('common', tag=lang)
+                    else: DictManager.add(i, dic[i], lang)
+        common = DictManager.get('common', tag=lang)
         if common is None: return
-        objs = Source.manager('dictionary').gets(tag=lang)
+        objs = DictManager.gets(tag=lang)
         for i in objs: i[1].update(common)
 
 if __name__ == "__main__":

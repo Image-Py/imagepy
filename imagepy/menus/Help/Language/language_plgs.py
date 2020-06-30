@@ -1,5 +1,5 @@
-from sciapp import Source
 from sciapp.action import Free
+from imagepy.app import ConfigManager, DictManager
 
 class Language(Free):
 	def __init__(self, key):
@@ -7,11 +7,10 @@ class Language(Free):
 		asyn = False
 
 	def run(self, para = None):
-		Source.manager('config').remove('language')
-		Source.manager('config').add('language', self.title)
+		ConfigManager.add('language', self.title)
 		self.app.load_all()
 
 	def __call__(self):
 		return self
 
-plgs = [Language(i) for i in Source.manager('dictionary').get('language')]
+plgs = [Language(i) for i in DictManager.get('language')]

@@ -1,5 +1,4 @@
 import wx, wx.lib.agw.aui as aui
-from sciapp import Source
 from imagepy.menus.Plugins.Macros.recorder_wgt import Plugin as recorder
 from imagepy.menus.Plugins.Manager.console_wgt import Plugin as console
 from imagepy.menus.Plugins.Manager.plglist_wgt import Plugin as plglist
@@ -17,12 +16,12 @@ class DevelopToolSute ( wx.Panel ):
 		mrecorder = recorder(self)
 		self.notebook = aui.AuiNotebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, aui.AUI_NB_DEFAULT_STYLE )
 		self.notebook.AddPage( mrecorder, mrecorder.title, True, wx.NullBitmap )
-		self.notebook.AddPage( console(self), console.title, False, wx.NullBitmap )
-		self.notebook.AddPage( plglist(self), plglist.title, False, wx.NullBitmap )
-		self.notebook.AddPage( plgtree(self), plgtree.title, False, wx.NullBitmap )
-		self.notebook.AddPage( toltree(self), toltree.title, False, wx.NullBitmap )
+		self.notebook.AddPage( console(self, app), console.title, False, wx.NullBitmap )
+		self.notebook.AddPage( plglist(self, app), plglist.title, False, wx.NullBitmap )
+		self.notebook.AddPage( plgtree(self, app), plgtree.title, False, wx.NullBitmap )
+		self.notebook.AddPage( toltree(self, app), toltree.title, False, wx.NullBitmap )
 		for i in range(5): self.notebook.GetPage(i).app = parent
-		Source.manager('widget').add('Macros Recorder', mrecorder)
+		app.manager('widget').add('Macros Recorder', mrecorder)
 		sizer.Add( self.notebook, 1, wx.EXPAND |wx.ALL, 0 )
 		self.SetSizer( sizer )
 		self.Fit()

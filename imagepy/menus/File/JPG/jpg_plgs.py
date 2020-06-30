@@ -1,6 +1,5 @@
 from sciapp.action import dataio
 from imageio import imread, imsave
-from sciapp import Source
 
 dataio.ReaderManager.add('jpg', imread, 'img')
 dataio.WriterManager.add('jpg', imsave, 'img')

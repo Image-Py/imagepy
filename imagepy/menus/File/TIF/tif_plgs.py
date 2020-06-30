@@ -1,6 +1,5 @@
 from sciapp.action import dataio
 from skimage.io import imread, imsave
-from sciapp import Source
 
 dataio.ReaderManager.add('tif', imread, 'img')
 dataio.ReaderManager.add('tiff', imread, 'img')

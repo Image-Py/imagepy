@@ -2,7 +2,7 @@ from sciapp.action import Table
 import matplotlib.pyplot as plt
 #from imagepy.core.manager import ColorManager
 from matplotlib import colors
-from sciapp import Source
+from imagepy.app import ColorManager
 
 class Plot(Table):
 	title = 'Plot Chart'
@@ -113,7 +113,7 @@ class Scatter(Table):
 	def run(self, tps, snap, data, para = None):
 		rs = data[para['rs']] * para['s'] if para['rs'] != 'None' else para['s']
 		cs = data[para['cs']] if para['cs'] != 'None' else '#%.2x%.2x%.2x'%para['c']
-		cm = Source.manager('colormap').get(para['cm'])/255.0
+		cm = ColorManager.get(para['cm'])/255.0
 		cm = None if para['cs'] == 'None' else colors.ListedColormap(cm, N=256)
 		plt = self.app.show_plot(para['title'])
 		data.plot.scatter(x=para['x'], y=para['y'], s=rs, c=cs, alpha=para['alpha'], 

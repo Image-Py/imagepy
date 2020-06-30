@@ -1,5 +1,4 @@
 from sciapp.action import dataio
-from sciapp import Source
 
 def read(path):
 	with open(path) as f: return f.read()

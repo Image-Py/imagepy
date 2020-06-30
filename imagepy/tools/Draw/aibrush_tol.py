@@ -1,7 +1,6 @@
 from sciapp.action import ImageTool
 import numpy as np
 from time import time
-from sciapp import Source
 from skimage.morphology import flood_fill, flood
 from skimage.draw import line, circle
 from skimage.segmentation import felzenszwalb

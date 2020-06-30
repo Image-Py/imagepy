@@ -15,6 +15,12 @@ class App():
         
         self.plugin_manager = self.manager('plugin')
 
+    def manager(self, name, value=None):
+        if not name in self.managers: 
+            self.managers[name] = Manager()
+        return self.managers[name]
+
+    # ========== Plugin ==========
     def add_plugin(self, name, plg, tag=None):
         self.plugin_manager.add(name, plg, tag)
 
@@ -24,11 +30,7 @@ class App():
     def plugin_names(self, tag=None):
         return self.plugin_manager.names(tag)
 
-    def manager(self, name, value=None):
-        if not name in self.managers: 
-            self.managers[name] = Manager()
-        return self.managers[name]
-
+    # ========== Image ==========
     def show_img(self, img, name): 
         if not isinstance(img, Image): 
             img = Image(img, name)
@@ -50,6 +52,7 @@ class App():
     def img_names(self):
         return self.img_manager.names()
 
+    # ========== Table ==========
     def show_table(self, tab, name): 
         if not isinstance(tab, Table): 
             tab = Table(tab, name)
@@ -70,7 +73,7 @@ class App():
 
     def table_names(self):
         return self.tab_manager.names()
-
+    # ========== Others ==========
     def show_plot(self): pass
 
     def show_mesh(self): pass

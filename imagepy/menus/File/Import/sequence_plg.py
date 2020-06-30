@@ -6,7 +6,6 @@ Created on Sat Oct 15 14:42:55 2016
 
 from sciapp.action import dataio
 from skimage.io import imread
-from sciapp import Source
 from sciapp.action import Free
 from glob import glob
 import os.path as osp

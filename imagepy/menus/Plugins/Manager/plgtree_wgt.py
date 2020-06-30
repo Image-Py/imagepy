@@ -8,10 +8,9 @@ Created on Sat Jan  7 01:00:02 2017
 from sciapp.action import Free
 import wx,os
 from imagepy import root_dir
-from imagepy.app import loader
+from imagepy.app import loader, ConfigManager
 from wx.py.editor import EditorFrame
 from sciwx.text import MDPad
-from sciapp import Source
 from glob import glob
 
 class Plugin ( wx.Panel ):
@@ -102,9 +101,9 @@ class Plugin ( wx.Panel ):
         if plg!=None:
             self.plg = plg
             name = self.tre_plugins.GetItemText(event.GetItem())
-            lang = Source.manager('config').get('language')
-            doc = Source.manager('document').get(name, tag=lang)
-            doc = doc or Source.manager('document').get(name, tag='English')
+            lang = ConfigManager.get('language')
+            doc = DocumentManager.get(name, tag=lang)
+            doc = doc or DocumentManager.get(name, tag='English')
             self.txt_info.set_cont(doc or 'No Document!')
         
     def on_source(self, event):
