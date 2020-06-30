@@ -19,11 +19,11 @@ class Update(Free):
     title = 'Update Software'
 
     def run(self, para=None):
-        IPy.info('update now, waiting...')
+        self.app.info('update now, waiting...')
         self.download_zip()
         self.deal_file()
         #self.delete_cache()
-        IPy.alert('imagepy update done!')
+        self.app.alert('imagepy update done!')
 
     def download_zip(self):
         url='https://github.com/Image-Py/imagepy/archive/master.zip'
