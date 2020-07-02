@@ -5,7 +5,7 @@ def alert(info, title='SciWx'):
 	dialog.ShowModal() == wx.ID_OK
 	dialog.Destroy()
 
-def getpath(title, filt, io, name=''):
+def get_path(title, filt, io, name=''):
 	filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in filt])
 	dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
 	dialog = wx.FileDialog(None, title, '', name, filt, dic[io])
@@ -22,6 +22,6 @@ if __name__ == '__main__':
 	frame2 = wx.Frame(None)
 	frame2.Show()
 
-	path = getpath('file', ['png','bmp'], 'save')
+	path = get_path('file', ['png','bmp'], 'save')
 	print(path)
 	app.MainLoop()

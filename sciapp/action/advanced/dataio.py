@@ -14,7 +14,7 @@ class Reader(Free):
 
     def show(self):
         filt = [i.lower() for i in self.filt]
-        self.para['path'] = self.app.getpath('Open..', filt, 'open', '')
+        self.para['path'] = self.app.get_path('Open..', filt, 'open', '')
         return not self.para['path'] is None
 
     #process
@@ -36,7 +36,7 @@ class ImageWriter(Simple):
 
     def show(self):
         filt = [i.lower() for i in self.filt]
-        self.para['path'] = self.app.getpath('Save..', filt, 'save', '')
+        self.para['path'] = self.app.get_path('Save..', filt, 'save', '')
         return not self.para['path'] is None
 
     #process
@@ -53,7 +53,7 @@ class TableWriter(Table):
 
     def show(self):
         filt = [i.lower() for i in self.filt]
-        self.para['path'] = self.app.getpath('Save..', filt, 'save', '')
+        self.para['path'] = self.app.get_path('Save..', filt, 'save', '')
         return not self.para['path'] is None
 
     #process

@@ -7,11 +7,11 @@ dataio.WriterManager.add('bmp', imsave, 'img')
 class OpenFile(dataio.Reader):
 	title = 'BMP Open'
 	tag = 'img'
-	filt = ['BMP']
+	filt = 'BMP'
 
 class SaveFile(dataio.ImageWriter):
 	title = 'BMP Save'
 	tag = 'img'
-	filt = ['BMP']
+	filt = 'BMP'
 
 plgs = [OpenFile, SaveFile]

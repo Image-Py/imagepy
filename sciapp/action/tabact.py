@@ -9,7 +9,7 @@ class TabAction(SciAction):
     def show(self):
         tps, data, snap = self.tps, self.tps.data, self.tps.snap
         f = lambda p: self.run(tps, data, snap, p) or tps.update()
-        return self.app.show_para(self.title, self.view, self.para, f, on_ok=None, 
+        return self.app.show_para(self.title, self.para, self.view, f, on_ok=None, 
             on_cancel=lambda x=self.tps:self.cancel(x), 
             preview='preview' in self.note, modal=True)
 

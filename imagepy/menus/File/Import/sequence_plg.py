@@ -20,7 +20,7 @@ class Plugin(Free):
 
     def show(self):
         filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
-        rst = self.app.getpath('Import sequence', self.filt, 'open')
+        rst = self.app.get_path('Import sequence', self.filt, 'open')
         if rst is None: return rst
         self.para['path'] = rst
         files = self.getfiles(self.para['path'])

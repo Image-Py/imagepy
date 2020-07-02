@@ -23,6 +23,8 @@ class App():
     # ========== Plugin ==========
     def add_plugin(self, name, plg, tag=None):
         self.plugin_manager.add(name, plg, tag)
+        for i in ' _.-': name = name.replace(i,'_')
+        self.__dict__['_%s_'%name] = plg
 
     def get_plugin(self, name=None):
         return self.plugin_manager.get(name)
@@ -124,13 +126,12 @@ class App():
         print(title, '\n', cont, 'Y/N?')
         return input() in 'yY'
 
-    def getpath(self, title, filt, io, name=''):
+    def get_path(self, title='sciapp', filt='', io='save', name=''):
         print('input file path:')
         return input()
     
-    def show_para(self, title, view, para, on_handle=None, on_ok=None, 
+    def show_para(self, title, para, view, on_handle=None, on_ok=None, 
         on_cancel=None, on_help=None, preview=False, modal=True):
-        print(title+':')
         for i in view:
             if i[0]==str: para[i[1]] = input(i[2]+': ? '+i[3]+' <str> ')
             if i[0]==int: para[i[1]] = int(input(i[4]+': ? '+i[5]+' <int> '))
@@ -148,7 +149,7 @@ class App():
             cmd = cmds.pop(0)
             if not isinstance(cmd, str): title, para = cmd
             else: title, para = eval(cmd.replace('>', ','))
-            plg = self.manager('plugin').get(name=title)()
+            plg = self.plugin_manager.get(name=title)()
             after = lambda cmds=cmds: one(cmds, one)
             if len(cmds)==0: after = callafter
             plg.start(self, para, after)

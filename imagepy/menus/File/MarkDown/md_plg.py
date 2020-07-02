@@ -8,4 +8,4 @@ dataio.ReaderManager.add('md', read, 'md')
 class Plugin(dataio.Reader):
 	title = 'MarkDown Open'
 	tag = 'md'
-	filt = ['MD']
+	filt = 'MD'

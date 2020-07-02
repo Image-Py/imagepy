@@ -16,7 +16,7 @@ class NumCtrl(wx.Panel):
         sizer.Add( self.ctrl, 2, wx.ALL, 5 )
 
         self.postfix = lab_unit = wx.StaticText( self, wx.ID_ANY, unit,
-                                  wx.DefaultPosition, wx.DefaultSize)
+                                wx.DefaultPosition, wx.DefaultSize)
 
         lab_unit.Wrap( -1 )
         sizer.Add( lab_unit, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -139,12 +139,12 @@ class ColorCtrl(wx.Panel):
         return wx.Colour(rgb).Get(False)[::-1]
 
 class PathCtrl(wx.Panel):
-    def __init__(self, parent, title, filt, app=None):
+    def __init__(self, parent, title, filt, io, app=None):
         wx.Panel.__init__(self, parent)
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
                                    wx.DefaultPosition, wx.DefaultSize)
-        self.filt = filt
+        self.filt, self.io = filt, io
         lab_title.Wrap( -1 )
         sizer.Add( lab_title, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
         self.ctrl = wx.TextCtrl(self, wx.TE_RIGHT)
@@ -159,12 +159,12 @@ class PathCtrl(wx.Panel):
     def ontext(self, event): print('ColorCtrl')
         
     def onselect(self, event):
-        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt.split(',')])
-        #dpath = ConfigManager.get('defaultpath') or '.'
-        #if dpath==None: dpath = root_dir # './'
-        if self.filt == '':
-            dialog = wx.DirDialog(self, 'Path Select', '.', wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
-        else: dialog = wx.FileDialog(self, 'Path Select', dpath, '', filt, wx.FD_OPEN)
+        if isinstance(self.filt, str): self.filt = self.filt.split(',')
+        filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
+        dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
+        if self.io=='folder':
+            dialog = wx.DirDialog(self, 'Path Select', '.', wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST | wx.FD_CHANGE_DIR)
+        else: dialog = wx.FileDialog(self, 'Path Select', dpath, '', filt, dict[self.io] | wx.FD_CHANGE_DIR)
         rst = dialog.ShowModal()
         if rst == wx.ID_OK:
             path = dialog.GetPath()

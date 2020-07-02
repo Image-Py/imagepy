@@ -13,7 +13,7 @@ dataio.WriterManager.add('csv', save_csv, 'tab')
 class OpenCSV(dataio.Reader):
     title = 'CSV Open'
     tag = 'tab'
-    filt = ['csv']
+    filt = 'csv'
 
 class SaveCSV(dataio.TableWriter):
     title = 'CSV Save'

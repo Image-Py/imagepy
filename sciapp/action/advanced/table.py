@@ -30,7 +30,7 @@ class Table:
     
     def show(self):
         preview = lambda para, tps=self.tps: self.preview(tps, para) or tps.update()
-        return self.app.show_para(self.title, self.view, self.para, preview, 
+        return self.app.show_para(self.title, self.para, self.view, preview, 
             on_ok=lambda : self.ok(self.tps), on_help=self.on_help,
             on_cancel=lambda : self.cancel(self.tps) or self.tps.update(), 
             preview='preview' in self.note, modal=self.modal)
