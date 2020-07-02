@@ -22,7 +22,7 @@ class Reader(Free):
         #add_recent(para['path'])
         fp, fn = os.path.split(para['path'])
         fn, fe = os.path.splitext(fn)
-        readers = ReaderManager.gets(fe[1:], tag=self.tag)
+        readers = ReaderManager.gets(fe[1:].lower(), tag=self.tag)
         if len(readers)==0: 
             return self.app.alert('no reader found for %s file'%fe[1:])
         if not self.tag is None:
