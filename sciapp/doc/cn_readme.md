@@ -57,7 +57,7 @@ Action：对App对象的一个操作，例如获取当前图像，做某种滤�
 
 ### Action的继承树
 
-因为绝大多数的Action都和交互有关，而SciApp自身主要实现对象管理功能，交互只能通过print进行展示，所以很多功能这里只是列距，具体用法我们会在sciwx实现的一个App实例中展示。
+因为绝大多数的Action都和交互有关，而SciApp自身主要实现对象管理功能，交互只能通过print进行展示，所以很多功能这里只是列举，具体用法我们会在sciwx实现的一个App实例中展示。
 
 
 
@@ -71,17 +71,17 @@ Action：对App对象的一个操作，例如获取当前图像，做某种滤�
 
   * ImageTool: 图像工具，例如画笔，魔术棒等，需要重载一系列鼠标事件（参数坐标已转入图像坐标系）
 
-  * TableTool：表格工具，需要重载一系列鼠标事件（参数坐标已自动转如单元格行列）
-  * ShapeTool: 矢量编辑，例如点线面，多边形绘制（参数坐标已自动转如数据坐标系）
+  * TableTool：表格工具，需要重载一系列鼠标事件（参数坐标已自动转入单元格行列）
+  * ShapeTool: 矢量编辑，例如点线面，多边形绘制（参数坐标已自动转入数据坐标系）
 
 **Advanced:** 这个包下面是一些高级的Action模板，也是我们扩展插件主要使用的
 
-* dataio: 里面实现了Reader，Writer类的Action，我们只需要将读写函数注册给对于的Manager
+* dataio: 里面实现了Reader，Writer类的Action，我们只需要将读写函数注册给对应的Manager
 * Free: 继承SciAction，添加了para， view交互，添加了多线程支持。
 * Filter: 继承ImageAction，主要用于做图像滤波，自动多通道，自带批量特性，多线程支持。
 * Simple: 继承ImageAction，主要用于图像操作，自带多线程支持。
 * Table: 继承TableAction，主要用于表格操作，比如表格统计，数据绘图等。
-* Macros: 将一段字符串作为宏执行，构造时传入字符串，start后依次质心。
+* Macros: 将一段字符串作为宏执行，构造时传入字符串，start后依次执行。
 
 **Plugins:** 这个包下面有一些带有具体功能，开箱即用的Action
 
