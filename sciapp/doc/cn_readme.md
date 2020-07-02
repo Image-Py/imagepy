@@ -38,8 +38,8 @@ App：一个科学容器，里面包含若干Manager，用于管理App所持有�
 
 
 
-* [[Manager 对象]](./cn_manager) 可以增删查改的对象容器
-* [[App 对象]](./cn_app) 科研应用接口，各类Object的大容器
+* [[Manager 对象]](./cn_manager.md) 可以增删查改的对象容器
+* [[App 对象]](./cn_app.md) 科研应用接口，各类Object的大容器
 
 
 
@@ -47,9 +47,9 @@ App：一个科学容器，里面包含若干Manager，用于管理App所持有�
 
 Action：对App对象的一个操作，例如获取当前图像，做某种滤波，然后从图像中获取某种信息，最后show一个Table处理。其通用模板是Action().start(app)。可以在其子类中重载start，对app进行任何操作。
 
-* [如何衍生出图像滤波类Action](./cn_imgaction)
-* [如何衍生出数据读写类Action](./cn_ioaction)
-* [读取-处理-写入，完成具体工作](./cn_iprocesso)
+* [如何衍生出图像滤波类Action](./cn_imgaction.md)
+* [如何衍生出数据读写类Action](./cn_ioaction.md)
+* [读取-处理-写入，完成具体工作](./cn_iprocesso.md)
 
 以上例子是为了说明Action的作用机制，也展示了框架的构建思路，但并不意味着我们需要按照以上方法，从SciAction构建各种模板，我们已经构建了相当丰富，功能也更为完善的Action派生树，以下进行列举。
 

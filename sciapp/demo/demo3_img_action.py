@@ -19,7 +19,7 @@ def action_demo1():
     app = App()
     SciAction().start(app)
 
-class GaussianAction1(SciAction):
+class GaussianAction2(SciAction):
     '''get current image object, and do a gaussian filter with sigma 5'''
     name = 'GaussianAction1'
 
