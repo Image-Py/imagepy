@@ -25,7 +25,7 @@ SciAction().start(app)
 
 ### 用SciAction实现滤波
 
-这里我们在start内，获取当前图像，并对齐进行一个sigma为5的高斯滤波
+这里我们在start内，获取当前图像，并对其进行一个sigma为5的高斯滤波
 
 ```python
 class GaussianAction1(SciAction):
@@ -115,7 +115,7 @@ class ImageAction(SciAction):
         self.run(image.img, self.para)
 ```
 
-现在我们的Gaussian滤波器写法成了这样，只需继承ImageAction，定义para，view，然后重载run函数即可。
+现在我们的Gaussian滤波器写成了这样，只需继承ImageAction，定义para，view，然后重载run函数即可。
 
 ```python
 class Gaussian(ImageAction):

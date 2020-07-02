@@ -8,7 +8,7 @@ Manager是一个通用容器，类似一个内存数据库，负责对象的增�
 
 * **add(self, name, obj, tag=None):** 添加一个对象，tag作为可选标签，对象添加在有序列表的最前面
 
-* **adds(self, objs): ** 批量添加name, obj, tag列表
+* **adds(self, objs):** 批量添加name, obj, tag列表
 
 * **gets(self, name=None, tag=None, obj=None):** 获取满足条件的对象，返回name, obj, tag列表，None表示不作为条件
 
@@ -77,7 +77,7 @@ def tag_test():
 
 
 
-这个例子说明容器内部是按照添加的倒叙存放的，调用active可以将满足条件的元素置顶。
+这个例子说明容器内部是按照添加的倒序存放的，调用active可以将满足条件的元素置顶。
 
 ```python
 def order_test():

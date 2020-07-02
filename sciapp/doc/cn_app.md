@@ -14,8 +14,6 @@ App是一个科研应用接口，里面有若干Manager，用于管理应用进�
 
 * **show_md(self, cont, title='sciapp'):** 以MarkDown语法书写，向用户弹出格式化文档
 
-  ---
-
 * **show_para(self, title, para, view, on_handle=None, on_ok=None, on_cancel=None, on_help=None, preview=False, modal=True):** 展示交互对话框，para是参数字典，view指定了交互方式。而在这个命令行版的App对象中，只能通过打印完成交互，因而其他参数这里没有作用。但App是一个交互式应用接口，对于界面应用，其他参数分别是，参数变化回调，对话框确认，取消回调，是否自动添加预览选项，对话框是否以模态方式展示
 
   ---
