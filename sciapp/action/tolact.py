@@ -12,7 +12,7 @@ class Tool(SciAction):
     def mouse_up(self, canvas, x, y, btn, **key): pass
     def mouse_move(self, canvas, x, y, btn, **key): pass
     def mouse_wheel(self, canvas, x, y, d, **key): pass
-    def start(self, app): 
+    def start(self, app, para=None, callafter=None): 
         self.app, self.default = app, self
         if not app is None: app.tool = self
 
@@ -39,7 +39,7 @@ class DefaultTool(Tool):
         if d>0: key['canvas'].zoomout(x, y, coord='data')
         if d<0: key['canvas'].zoomin(x, y, coord='data')
 
-    def start(self, app): 
+    def start(self, app, para=None): 
         self.app = app
         Tool.default = self
         if not app is None: app.tool = self
@@ -55,7 +55,7 @@ class ImageTool(DefaultTool):
             s = 'x:%d y:%d  value:%s'%(x, y, img.img[r,c])
             self.app.info(s)
 
-    def start(self, app): 
+    def start(self, app, para=None, callafter=None): 
         self.app = app
         ImageTool.default = self
         if not app is None: app.tool = self
@@ -67,7 +67,7 @@ class ShapeTool(DefaultTool):
     def mouse_move(self, img, x, y, btn, **key):
         if self.app: self.app.info('%d, %d'%(x, y))
 
-    def start(self, app): 
+    def start(self, app, para=None, callafter=None): 
         self.app = app
         ShapeTool.default = self
         if not app is None: app.tool = self
@@ -76,7 +76,7 @@ class TableTool(DefaultTool):
     default = None
     title = 'Table Tool'
 
-    def start(self, app): 
+    def start(self, app, para=None, callafter=None): 
         self.app = app
         TableTool.default = self
         if not app is None: app.tool = self

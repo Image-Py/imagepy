@@ -81,7 +81,7 @@ class Plugin( wx.Panel ):
 		 	return IPy.alert('you must train your model first!')
 		para = {'path':''}
 		filt = '|'.join(['%s files (*.%s)|*.%s'%('FCL', 'fcl', 'fcl')])
-		if not IPy.getpath('Save..', filt, 'save', para): return
+		if not IPy.get_path('Save..', filt, 'save', para): return
 		joblib.dump( manager.model_para, para['path'])
 
 	def on_export(self, event):
@@ -89,7 +89,7 @@ class Plugin( wx.Panel ):
 		if idx==-1: return IPy.alert('no model selected!')
 		para = {'path':''}
 		filt = '|'.join(['%s files (*.%s)|*.%s'%('FCL', 'fcl', 'fcl')])
-		if not IPy.getpath('Save..', filt, 'save', para): return
+		if not IPy.get_path('Save..', filt, 'save', para): return
 		oldname = osp.join(IPy.root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection())
 		print(para['path'])
 		shutil.copyfile(oldname, para['path'])

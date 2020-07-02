@@ -9,7 +9,7 @@ class ImgAction(SciAction):
     def show(self):
         ips, img, snap = self.ips, self.ips.img, self.ips.snap
         f = lambda p: self.run(ips, img, snap, p) or self.ips.update()
-        return self.app.show_para(self.title, self.view, self.para, f, on_ok=None, 
+        return self.app.show_para(self.title, self.para, self.view, f, on_ok=None, 
             on_cancel=lambda x=self.ips:self.cancel(x), 
             preview='preview' in self.note, modal=True)
 

@@ -4,7 +4,7 @@ from skimage.io import imread, imsave
 class Open(SciAction):
 	name = 'Open'
 	def start(self, app, para=None):
-		path = app.getpath('Open', ['png','bmp','jpg'], 'open')
+		path = app.get_path('Open', ['png','bmp','jpg'], 'open')
 		if path is None: return
 		app.show_img(imread(path))
 
@@ -13,7 +13,7 @@ class Save(ImgAction):
 	para = {'path':''}
 
 	def show(self):
-		path = self.app.getpath('Open', ['png','bmp','jpg'], 'save')
+		path = self.app.get_path('Open', ['png','bmp','jpg'], 'save')
 		if path is None: return
 		self.para['path'] = path
 		return True

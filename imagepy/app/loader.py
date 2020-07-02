@@ -11,7 +11,7 @@ from .. import root_dir
 from .manager import DocumentManager, DictManager
 from codecs import open
 
-def getpath(root, path):
+def get_path(root, path):
     for i in range(10,0,-1):
         if not '../'*i in path: continue
         s = root

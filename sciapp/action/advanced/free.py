@@ -25,7 +25,7 @@ class Free:
 
     def show(self):
         if self.view==None:return True
-        return self.app.show_para(self.title, self.view, self.para, None)
+        return self.app.show_para(self.title, self.para, self.view, None)
 
     def start(self, app, para=None, callback=None):
         self.app = app

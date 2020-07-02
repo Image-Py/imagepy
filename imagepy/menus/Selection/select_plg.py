@@ -122,7 +122,7 @@ class Save(Simple):
     para={'path':''}
 
     def show(self):
-        self.para['path'] = self.app.getpath('ROI Save', ['roi'], 'save')
+        self.para['path'] = self.app.get_path('ROI Save', ['roi'], 'save')
         return not self.para['path'] is None
 
     def run(self, ips, imgs, para = None):
@@ -135,7 +135,7 @@ class Open(Simple):
     para={'path':''}
 
     def show(self):
-        self.para['path'] = self.app.getpath('ROI Save', ['roi'], 'open')
+        self.para['path'] = self.app.get_path('ROI Save', ['roi'], 'open')
         return not self.para['path'] is None
 
     def run(self, ips, imgs, para = None):

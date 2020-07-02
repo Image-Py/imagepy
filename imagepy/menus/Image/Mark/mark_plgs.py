@@ -22,7 +22,7 @@ class Save(Simple):
         return True
 
     def show(self):
-        self.para['path'] = self.app.getpath('Save..', ['mrk'], 'save')
+        self.para['path'] = self.app.get_path('Save..', ['mrk'], 'save')
         return not self.para['path'] is None
 
     def run(self, ips, imgs, para = None):
@@ -35,7 +35,7 @@ class Open(Simple):
     para = {'path':''}
 
     def show(self):
-        self.para['path'] = self.app.getpath('Open..', ['mrk'], 'open')
+        self.para['path'] = self.app.get_path('Open..', ['mrk'], 'open')
         return not self.para['path'] is None
 
     def run(self, ips, imgs, para = None):

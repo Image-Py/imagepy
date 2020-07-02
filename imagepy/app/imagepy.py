@@ -505,17 +505,13 @@ class ImagePy(wx.Frame, App):
         dic = {wx.ID_YES:'yes', wx.ID_NO:'no', wx.ID_CANCEL:'cancel'}
         return dic[rst]
 
-    def getpath(self, title, filt, io, name=''):
+    def get_path(self, title, filt, io, name=''):
+        if isinstance(filt, str): filt = filt.split(',')
         filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in filt])
         dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
-        dialog = wx.FileDialog(self, title, '', name, filt, dic[io])
-        rst = dialog.ShowModal()
-        path = dialog.GetPath() if rst == wx.ID_OK else None
-        dialog.Destroy()
-        return path
-
-    def getdir(self, title, name=''):
-        dialog = wx.DirDialog(self, title, name, wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
+        if io in {'open', 'save'}:
+            dialog = wx.FileDialog(self, title, '', name, filt, dic[io] | wx.FD_CHANGE_DIR)
+        else: dialog = wx.DirDialog(self, title, '', wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST | wx.FD_CHANGE_DIR)
         rst = dialog.ShowModal()
         path = dialog.GetPath() if rst == wx.ID_OK else None
         dialog.Destroy()

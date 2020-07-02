@@ -445,7 +445,7 @@ class ImageJ(wx.Frame, App):
         dic = {wx.ID_YES:'yes', wx.ID_NO:'no', wx.ID_CANCEL:'cancel'}
         return dic[rst]
 
-    def getpath(self, title, filt, io, name=''):
+    def get_path(self, title, filt, io, name=''):
         filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in filt])
         dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
         dialog = wx.FileDialog(self, title, '', name, filt, dic[io])

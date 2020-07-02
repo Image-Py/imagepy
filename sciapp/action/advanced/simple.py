@@ -63,7 +63,7 @@ class Simple:
 
     def show(self):
         preview = lambda para, ips=self.ips: self.preview(ips, para) or ips.update()
-        return self.app.show_para(self.title, self.view, self.para, preview, 
+        return self.app.show_para(self.title, self.para, self.view, preview, 
             on_ok=lambda : self.ok(self.ips), on_help=self.on_help,
             on_cancel=lambda : self.cancel(self.ips) or self.ips.update(), 
             preview='preview' in self.note, modal=self.modal)

@@ -15,8 +15,8 @@ class Plugin(Free):
             (list, 'c', [1,3], int, 'channel', '')]
     
     def load(self):
-        filt = ['raw']
-        self.para['path'] = self.app.getpath('Open..', filt, 'open', '')
+        filt = 'raw'
+        self.para['path'] = self.app.get_path('Open..', filt, 'open', '')
         return not self.para['path'] is None
 
     #process

@@ -2,6 +2,7 @@ from sciapp.action import Free
 import os, sys, os.path as osp
 import zipfile, urllib
 from io import BytesIO
+from imagepy import root_dir
 import shutil
 
 if sys.version_info[0]==2:
