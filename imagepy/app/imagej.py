@@ -454,7 +454,7 @@ class ImageJ(wx.Frame, App):
         dialog.Destroy()
         return path
 
-    def show_para(self, title, view, para, on_handle=None, on_ok=None, 
+    def show_para(self, title, para, view, on_handle=None, on_ok=None, 
         on_cancel=None, on_help=None, preview=False, modal=True):
         lang = ConfigManager.get('language')
         dic = DictManager.get(name=title, tag=lang)
