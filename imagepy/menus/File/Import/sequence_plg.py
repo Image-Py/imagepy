@@ -30,7 +30,7 @@ class Plugin(Free):
                      (int, 'start', (0, nfs-1), 0, 'Start', '0~{}'.format(nfs-1)),
                      (int, 'end',   (0, nfs-1), 0, 'End', '0~{}'.format(nfs-1)),
                      (int, 'step',  (0, nfs-1), 0, 'Step', '')]
-        return self.app.show_para('Import sequence', self.view, self.para)
+        return self.app.show_para('Import sequence', self.para, self.view)
 
     def getfiles(self, name):
         p,f = osp.split(name)
