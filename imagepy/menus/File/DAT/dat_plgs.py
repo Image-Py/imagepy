@@ -13,11 +13,11 @@ dataio.WriterManager.add('dat', imsave, 'img')
 class OpenFile(dataio.Reader):
 	title = 'DAT Open'
 	tag = 'img'
-	filt = 'DAT'
+	filt = ['DAT']
 
 class SaveFile(dataio.ImageWriter):
 	title = 'DAT Save'
 	tag = 'img'
-	filt = 'DAT'
+	filt = ['DAT']
 
 plgs = [OpenFile,SaveFile]

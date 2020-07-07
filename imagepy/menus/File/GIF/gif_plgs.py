@@ -10,17 +10,17 @@ dataio.ReaderManager.add('gif', imageio.mimread, 'imgs')
 class OpenFile(dataio.Reader):
 	title = 'GIF Open'
 	tag = 'img'
-	filt = 'GIF'
+	filt = ['GIF']
 
 class SaveFile(dataio.ImageWriter):
 	title = 'GIF Save'
 	tag = 'img'
-	filt = 'GIF'
+	filt = ['GIF']
 
 class SaveAnimate(Simple):
 	title = 'GIF Animate Save'
 	note = ['all']
-	filt = 'GIF'
+	filt = ['GIF']
 	para={'path':'', 'dur':0.2}
 	view = [(int, 'dur', (0.01, 10), 2, 'duration', 's')]
 
@@ -33,7 +33,7 @@ class SaveAnimate(Simple):
 
 class OpenAnimate(dataio.Reader):
 	title = 'GIF Animate Open'
-	filt = 'GIF'
+	filt = ['GIF']
 	tag = 'imgs'
 	note = ['8-bit', 'rgb', 'stack']
 
