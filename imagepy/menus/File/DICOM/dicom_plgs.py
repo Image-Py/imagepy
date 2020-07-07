@@ -8,7 +8,7 @@ dataio.ReaderManager.add('dcm', imread, 'img')
 
 class OpenFile(dataio.Reader):
 	title = 'DCM Open'
-	filt = 'DCM'
+	filt = ['DCM']
 	tag = 'img'
 
 plgs = [OpenFile]

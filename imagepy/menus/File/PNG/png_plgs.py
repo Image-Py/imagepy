@@ -7,11 +7,11 @@ dataio.WriterManager.add('png', imsave, 'img')
 class OpenFile(dataio.Reader):
 	title = 'PNG Open'
 	tag = 'img'
-	filt = 'PNG'
+	filt = ['PNG']
 
 class SaveFile(dataio.ImageWriter):
 	title = 'PNG Save'
 	tag = 'img'
-	filt = 'PNG'
+	filt = ['PNG']
 
 plgs = [OpenFile, SaveFile]
