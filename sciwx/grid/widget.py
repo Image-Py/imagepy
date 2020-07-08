@@ -27,6 +27,7 @@ class MGrid(wx.Panel):
     def name(self): return self.grid.table.name
 
     def on_idle(self, event):
+        if self.table.data is None: return
         if self.lab_info.GetLabel() != self.table.info:
             self.lab_info.SetLabel(self.table.info)
 

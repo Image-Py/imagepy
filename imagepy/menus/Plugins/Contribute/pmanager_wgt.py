@@ -142,8 +142,9 @@ class Plugin( wx.Panel ):
         i = self.lst_plgs.GetFirstSelected()
         if i==-1: return
         path = self.buf[i][-1]['path']
+        self.app.plugin_manager.get('Install Plugins').para['repo'] = path
         self.app.plugin_manager.get('Install Plugins')().start(
-            self.app, {'repo':self.buf[i][-1]['path']}, self.load)
+            self.app, None, self.load)
 
     def on_remove(self, event):
         i = self.lst_plgs.GetFirstSelected()

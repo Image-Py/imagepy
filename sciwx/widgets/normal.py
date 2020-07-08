@@ -139,7 +139,7 @@ class ColorCtrl(wx.Panel):
         return wx.Colour(rgb).Get(False)[::-1]
 
 class PathCtrl(wx.Panel):
-    def __init__(self, parent, title, filt, io, app=None):
+    def __init__(self, parent, filt, io, title, app=None):
         wx.Panel.__init__(self, parent)
         sizer = wx.BoxSizer( wx.HORIZONTAL )
         self.prefix = lab_title = wx.StaticText( self, wx.ID_ANY, title,
@@ -152,11 +152,12 @@ class PathCtrl(wx.Panel):
         self.SetSizer(sizer)
         
         self.ctrl.Bind(wx.EVT_KEY_UP, self.ontext)
-        self.ctrl.Bind( wx.EVT_LEFT_DOWN, self.onselect)
+        self.ctrl.Bind( wx.EVT_LEFT_DCLICK, self.onselect)
         
     def Bind(self, z, f): self.f = f
         
-    def ontext(self, event): print('ColorCtrl')
+    def ontext(self, event): 
+        self.f(self)
         
     def onselect(self, event):
         if isinstance(self.filt, str): self.filt = self.filt.split(',')
@@ -164,11 +165,12 @@ class PathCtrl(wx.Panel):
         dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
         if self.io=='folder':
             dialog = wx.DirDialog(self, 'Path Select', '.', wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST | wx.FD_CHANGE_DIR)
-        else: dialog = wx.FileDialog(self, 'Path Select', dpath, '', filt, dict[self.io] | wx.FD_CHANGE_DIR)
+        else: dialog = wx.FileDialog(self, 'Path Select', None, '', filt, dict[self.io] | wx.FD_CHANGE_DIR)
         rst = dialog.ShowModal()
         if rst == wx.ID_OK:
             path = dialog.GetPath()
             self.ctrl.SetValue(path)
+            self.f(self)
         dialog.Destroy()
         
     def SetValue(self, value):

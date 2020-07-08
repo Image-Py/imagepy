@@ -132,6 +132,7 @@ class Scene:
 		mode = {'mesh':moderngl.TRIANGLES, 'grid':moderngl.LINES}[obj.mode]
 		if obj.update:
 			self.vabo[name][0][:,6:9] = obj.cs
+			self.vabo[name][0][:,:3] = obj.vts
 			self.vabo[name][2].write(self.vabo[name][0].tobytes())
 			obj.update = False
 		self.vabo[name][1].render(mode)

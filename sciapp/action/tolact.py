@@ -76,6 +76,9 @@ class TableTool(DefaultTool):
     default = None
     title = 'Table Tool'
 
+    def mouse_down(self, data, x, y, btn, **others):
+        print('you click on cell', x, y)
+
     def start(self, app, para=None, callafter=None): 
         self.app = app
         TableTool.default = self

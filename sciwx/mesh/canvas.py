@@ -28,11 +28,16 @@ class Canvas3D(glcanvas.GLCanvas):
         self.Bind(wx.EVT_RIGHT_UP, self.OnMouseUp)
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel)
+        self.Bind(wx.EVT_IDLE, self.OnIdle)
         self.lastx, self.lasty = None, None
         #self.update()
         #print('init===========')
         pub.subscribe(self.add_surf, 'add_surf')
         # pub.subscribe(self.add_mark, 'add_mark')
+
+    def OnIdle(self, event):
+        if sum([i.update for i in self.scene.objs.values()])>0:
+            self.Refresh(False)
 
     def InitGL(self):
         self.scene.on_ctx(moderngl.create_context())

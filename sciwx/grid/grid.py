@@ -200,8 +200,8 @@ class Grid(wx.grid.Grid):
             print(para)
             if col!=-1:
                 props[self.table.columns[col]] = [para[i] for i in ['accu', 'tc', 'lc', 'ln']]
-                print(props[self.table.columns[col]])
-                print('===========')
+                #print(props[self.table.columns[col]])
+                #print('===========')
             if col==-1:
                 for c in self.table.columns:
                     props[c] = [para[i] for i in ['accu', 'tc', 'lc', 'ln']]
@@ -253,9 +253,10 @@ class Grid(wx.grid.Grid):
     def on_idle(self, event):
         if not self.IsShown() or self.table is None\
             or self.table.dirty == False: return
-        self.select()
+        
         self.tablebase.ResetView(self)
         self.table.dirty = False
+        # self.select()
         print('update')
 
     def __del__(self):

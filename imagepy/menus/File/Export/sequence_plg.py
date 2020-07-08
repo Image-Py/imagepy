@@ -13,7 +13,7 @@ class Plugin(Simple):
     note = ['all']
     para = {'path':'','name':'','format':'png'}
     #para = {'path':'./','name':'','format':'png'}
-    view = [('path', 'path', 'path', '', 'folder'),
+    view = [('path', 'path', '', 'folder', 'path'),
             (str, 'name', 'name', 'number'),
             (None)]
 

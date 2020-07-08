@@ -103,6 +103,7 @@ class Canvas (wx.Panel):
         box = [1e10, 1e10, -1e10, -1e10]
         for i in self.images: box = merge(box, i.box)
         shapes = [i for i in self.marks.values() if isinstance(i, Shape)]
+        shapes = [i for i in shapes if not i.box is None]
         for i in shapes: box = merge(box, i.box)
         if box[2]<=box[0]: box[0], box[2] = box[0]-1e-3, box[2]+1e-3
         if box[1]<=box[3]: box[1], box[3] = box[1]-1e-3, box[3]+1e-3

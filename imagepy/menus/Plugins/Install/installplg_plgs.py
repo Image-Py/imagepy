@@ -34,7 +34,6 @@ class Install(Free):
             (str, 'Port', 'Port', '')]
 
     def run(self, para=None):
-        para = self.para
         url = para['repo']
         if 'github.com' in url:
             if url[-4:] == '.git':
