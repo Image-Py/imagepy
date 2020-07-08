@@ -49,7 +49,7 @@ class ToolBar(wx.Panel):
 
     def on_config(self, evt, tol):
         if not hasattr(tol, 'view'): return
-        self.app.show_para(tol.title, tol.view, tol.para)
+        self.app.show_para(tol.title, tol.para, tol.view)
         tol.config()
 
     def on_help(self, evt, tol): pass
