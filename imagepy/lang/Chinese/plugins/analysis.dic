@@ -120,24 +120,62 @@ Property Marker::属性标记
 	color map::色谱
 	pix::邻域
 
-connective analysis::连通性分析
+Connective Analysis::区域邻接分析
+	conection::联通
+	pix::邻域
+	it is a label image::图像已标记
+	nonzero::只分析非0区域
+	slice::序列
 
-intensity analysis::灰度值分析
+Intensity Analysis::区域灰度分析
+	intensity::目标图像
+	conection::联通
+	pix::邻域
+	slice::序列
+	has labeled::图像已标记
+	=========  indecate  =========::=========  指标  =========
+	center::质心
+	extent::外接矩
+	max::最大值
+	min::最小值
+	mean::平均值
+	standard::标准差
+	sum::求和
 
-intensity filter::灰度值统计特性过滤
+Intensity Filter::区域灰度过滤
+	intensity::目标图像
+	conection::联通
+	pix::邻域
+	slice::序列
+	Filter: "+" means >=, "-" means <::"+" 代表 >=, "-" 
+	front color::前景色
+	back color::背景色
+	max::最大值
+	min::最小值
+	mean::平均值
+	std::标准差
+	sum::求和
 
-skeleton network::骨架网络
+Skeleton Network::骨架网络
 
-build graph::建图
+Graph Statistic::边，节点统计
 
-graph summarise::图摘要
+Build Graph::从骨架建立图
 
-remove isolate node::移除孤立节点
+Graph Summarise::图信息汇总
 
-remove 2path node::移除第二路径节点
+Remove Isolate Node::移除孤立节点
 
-cut branch::分支剪切
+Remove 2Path Node::移除双路径节点
 
-cut by roi::ROI剪切
+Cut Branch::分支剪切
+	limit::阈值
+	unit::单位
+	recursion::递归剪枝
 
-graph shortest path::图最短路径
+Cut By ROI::用ROI剪枝
+
+Graph Shortest Path::图最短路径
+	start::出发
+	end::到达
+	id::编号
