@@ -68,10 +68,10 @@ def build_plugins(path, err='root'):
     root = err=='root'
     if root: err=[]
     subtree = []
-    cont = os.listdir(os.path.join(root_dir, path))
+    cont = os.listdir(path)
     for i in cont:
         subp = os.path.join(path,i)
-        if os.path.isdir(os.path.join(root_dir, subp)):
+        if os.path.isdir(subp):
             sub = build_plugins(subp, err)
             if len(sub)!=0:subtree.append(sub[:2])
         elif i[-6:] in ('plg.py', 'lgs.py', 'wgt.py', 'gts.py'):
@@ -80,8 +80,8 @@ def build_plugins(path, err='root'):
             subtree.append(i)
     if len(subtree)==0:return []
     
+    path = path[path.index(root_dir)+len(root_dir)+1:]
     rpath = path.replace('/', '.').replace('\\','.')
-    #rpath = rpath[rpath.index('imagepy.'):]
     pg = __import__('imagepy.'+rpath,'','',[''])
     pg.title = os.path.basename(path)
     if hasattr(pg, 'catlog'):

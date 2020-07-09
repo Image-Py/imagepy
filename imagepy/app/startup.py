@@ -26,8 +26,8 @@ def extend_wgts(wgt):
     else: return (wgt.title, wgt)
 
 def load_plugins():
-    data = loader.build_plugins('menus')
-    extends = glob('plugins/*/menus')
+    data = loader.build_plugins(root_dir+'/menus')
+    extends = glob(root_dir+'/plugins/*/menus')
     keydata = {}
     for i in data[1]:
         if isinstance(i, tuple): keydata[i[0].title] = i[1]
