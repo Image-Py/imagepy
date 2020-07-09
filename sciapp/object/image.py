@@ -140,8 +140,8 @@ class Image:
 
     def reset(self):
         self.cn = [0, (0,1,2)][self.channels==3]
-        if self.dtype == np.uint8:
-            self.rg = [(0, 255)] * self.channels
+        if self.dtype == np.uint8: pass
+            # self.rg = [(0, 255)] * self.channels
         else: 
             self.rg = self.get_updown('all', 'all', step=512)
 

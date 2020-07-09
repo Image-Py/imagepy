@@ -67,6 +67,7 @@ Minimum::最小值滤波
 
 Median::中值滤波
 	size::核大小
+	pix::像素
 
 Percent::百分比滤波
 	size::核大小
@@ -75,6 +76,8 @@ Percent::百分比滤波
 Prewitt::Prewitt梯度滤波
 
 Sobel::Sobel梯度滤波
+	direction::方向
+	aixs::轴
 
 Laplace::拉普拉斯滤波
 
@@ -224,13 +227,20 @@ SLIC Superpixel::SLIC超像素
 	segments::分割数量
 	campactness::紧凑性
 	max_iter::最大迭代次数
-	sigma::高斯平滑标准差
+	sigma::高斯平滑
+	smooth::标准差
+	n::
+	color-space::色彩
 
 Quick Shift::快速Shift聚类
-	ratio::色彩/空间平衡比例
-	kernel_size::高斯平滑内核的宽度
-	distance::数据的切点距离
+	ratio::色彩/空间平衡
+	kernel_size::卷积核宽度
+	distance::到切点距离
+	cut off::
 	sigma::高斯平滑标准差
+	color-space::比例
+	sigma::高斯平滑
+	smooth::标准差
 
 Felzenszwalb::Felzenszwalb聚类
 	scale::尺度参数
@@ -241,18 +251,28 @@ SLIC Superpixel Label::SLIC超像素标记
 	segments::分割数量
 	campactness::紧凑性
 	max_iter::最大迭代次数
-	sigma::高斯平滑标准差
+	sigma::高斯平滑
+	smooth::标准差
+	n::
+	color-space::色彩
+	stack::序列
 
 Quickshift Label::快速Shift聚类标记
-	ratio::色彩/空间平衡比例
-	kernel_size::高斯平滑内核的宽度
-	distance::数据的切点距离
+	ratio::色彩/空间平衡
+	kernel_size::卷积核宽度
+	distance::到切点距离
+	cut off::
 	sigma::高斯平滑标准差
+	color-space::比例
+	sigma::高斯平滑
+	smooth::标准差
+	stack::序列
 
-Felzenszwalb Lable::Felzenszwalb聚类标记
+Felzenszwalb Label::Felzenszwalb聚类标记
 	scale::尺度参数
 	sigma::高斯平滑内核的宽度
 	min_size::最小区域面积
+	stack::序列
 
 RAG Threshold::相邻区域阈值融合
 	threshold::阈值

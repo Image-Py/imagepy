@@ -80,14 +80,13 @@ class Histogram(Simple):
             hist = np.histogram(img, np.arange(257))[0]
         show_hist(self.app, ips.title+'-Histogram', hist)
 
-
 class Frequence(Simple):
     title = 'Frequence'
     note = ['8-bit', '16-bit']
     
     para = {'fre':True, 'slice':False}
     view = [(bool, 'fre', 'count frequence'),
-            (bool, 'slice', 'each slices')]
+            (bool, 'slice', 'slice')]
         
     def run(self, ips, imgs, para = None):
         if not para['slice']: imgs = [ips.img]

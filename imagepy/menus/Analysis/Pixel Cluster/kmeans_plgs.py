@@ -2,7 +2,7 @@ from sciapp.action import Filter
 import numpy as np 
 from scipy.cluster.vq import kmeans, vq
 
-class K_mean(Filter):
+class Plugin(Filter):
 	title = 'K-Means'
 
 	note = ['all', 'not_channel', 'auto_msk', 'auto_snap', 'preview']
@@ -19,7 +19,6 @@ class K_mean(Filter):
 			para['k'],para['iter'],para['thresh'])[0]
 		img[:] = ms[vq(pts, ms)[0]].reshape(img.shape)
 
-plgs = [K_mean]
 
 if __name__ == '__main__':
     from skimage.data import camera, astronaut
@@ -27,4 +26,4 @@ if __name__ == '__main__':
 
     ImageApp.start(
         imgs = [('astronaut', astronaut())], 
-        plgs=[('K', K_mean)])
+        plgs=[('K', Plugin)])

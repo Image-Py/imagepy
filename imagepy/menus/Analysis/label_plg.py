@@ -32,7 +32,7 @@ class Boundaries(Simple):
     title = 'Mark Boundaries'
     note = ['8-bit', '16-bit','int']    
     para = {'slice':False, 'mode':'outer', 'con':'4-Connect'}
-    view = [(list, 'con', ['4-Connect','8-Connect'], str, 'Structure', 'connect'),
+    view = [(list, 'con', ['4-Connect','8-Connect'], str, 'structure', 'connect'),
             (list, 'mode', ['thick', 'inner', 'outer', 'subpixel'], str, 'mode', ''),
             (bool, 'slice', 'slice')]
         
@@ -52,14 +52,13 @@ class Render(Simple):
     title = 'Label Render'
     note = ['8-bit', '16-bit', 'int']    
     para = {'slice':False, 'con':'8-Connect', 'colors':6, 'back':False}
-    view = [(list, 'con', ['4-Connect','8-Connect'], str, 'Structure', 'connect'),
+    view = [(list, 'con', ['4-Connect','8-Connect'], str, 'structure', 'connect'),
             (int, 'colors', (4, 255), 0, 'colors', 'n'),
             (bool, 'back', 'background'),
             (bool, 'slice', 'slice')]
     
     def run(self, ips, imgs, para = None):
         if not para['slice']:  imgs = [ips.img]
-        print(para)
         labels = []
         for i in range(len(imgs)):
             self.progress(i, len(imgs))
