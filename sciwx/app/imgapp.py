@@ -10,6 +10,7 @@ from sciwx.mesh import Canvas3DFrame
 from sciwx.text import MDFrame, TextFrame
 from sciwx.plot import PlotFrame
 from sciapp import App, Source
+from sciapp.object import Image, Table
 
 class ImageApp(wx.Frame, App):
     def __init__( self, parent ):
@@ -25,7 +26,7 @@ class ImageApp(wx.Frame, App):
         sizer.Add(self.toolbar, 0, wx.EXPAND |wx.ALL, 0)
 
         self.canvasnb = CanvasNoteBook(self)
-        self.canvasnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_new_img)
+        self.canvasnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_active_img)
         self.canvasnb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_close_img)
         sizer.Add(self.canvasnb, 1, wx.EXPAND |wx.ALL, 0)
 
@@ -56,14 +57,13 @@ class ImageApp(wx.Frame, App):
         tasks = [(p.title, lambda t=p:p.prgs) for n,p,t in tasks]
         self.pro_bar.SetValue(tasks)
 
-    def on_new_img(self, event):
-        self.add_img(self.canvasnb.canvas().image)
-        self.add_img_win(self.canvasnb.canvas())
+    def on_active_img(self, event):
+        self.active_img(self.canvasnb.canvas().image.name)
+        # self.add_img_win(self.canvasnb.canvas())
 
     def on_close_img(self, event):
         canvas = event.GetEventObject().GetPage(event.GetSelection())
-        self.remove_img_win(canvas)
-        self.remove_img(canvas.image)
+        App.close_img(self, canvas.image.title)
 
     def on_new_tab(self, event):
         self.add_tab(event.GetEventObject().grid.table)
@@ -93,14 +93,10 @@ class ImageApp(wx.Frame, App):
 
     def _show_img(self, img, title=None):
         canvas = self.canvasnb.add_canvas()
-        self.remove_img(canvas.image)
-        self.remove_img_win(canvas)
-        if not title is None:
-            canvas.set_imgs(img)
-            canvas.image.name = title
-        else: canvas.set_img(img)
-        self.add_img(canvas.image)
-        self.add_img_win(canvas)
+        if not isinstance(img, Image): 
+            img = Image(img, title)
+        App.show_img(self, img, img.title)
+        canvas.set_img(img)
 
     def show_img(self, img, title=None):
         wx.CallAfter(self._show_img, img, title)
@@ -161,7 +157,7 @@ class ImageApp(wx.Frame, App):
         dialog.Destroy()
         return path
 
-    def show_para(self, title, view, para, on_handle=None, on_ok=None, on_cancel=None, preview=False, modal=True):
+    def show_para(self, title, para, view, on_handle=None, on_ok=None, on_cancel=None, preview=False, modal=True):
         dialog = ParaDialog(self, title)
         dialog.init_view(view, para, preview, modal=modal, app=self)
         dialog.Bind('cancel', on_cancel)

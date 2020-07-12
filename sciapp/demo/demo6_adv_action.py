@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../../')
+
 from sciapp.action.advanced import dataio, Filter
 from scipy.ndimage import gaussian_filter
 from skimage.io import imread, imsave
