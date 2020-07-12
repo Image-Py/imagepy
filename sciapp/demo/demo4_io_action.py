@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../../')
+
 from sciapp import App, Manager
 from sciapp.action import SciAction
 import os.path as osp
@@ -100,7 +103,7 @@ def img_write_demo4():
     ImageWriter().start(app)
 
 if __name__ == '__main__':
-    #image_read_demo1()
-    #image_read_demo2()
-    #image_read_demo3()
+    image_read_demo1()
+    image_read_demo2()
+    image_read_demo3()
     img_write_demo4()
