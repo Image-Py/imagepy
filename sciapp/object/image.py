@@ -170,7 +170,7 @@ class Image:
 
     def lookup(self, img=None):
         if img is None: img = self.img
-        return lookup(img, self.cn, self.rg, self.lut)
+        return lookup(img, self.cn, [self.rg], self.lut)
 
 if __name__ == '__main__':
     img = Image(np.zeros((5,5)))
