@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../../')
+
 from sciapp import App, Manager
 from sciapp.action import SciAction
 import os.path as osp
