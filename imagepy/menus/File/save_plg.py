@@ -15,7 +15,7 @@ class SaveImage(dataio.ImageWriter):
 
 class WindowCapture(dataio.ImageWriter):
 	title = 'Save With Mark'
-	filt = 'PNG'
+	filt = ['PNG']
 
 	def run(self, ips, imgs, para = None):
 		self.app.get_img_win().canvas.save_buffer(para['path'])
