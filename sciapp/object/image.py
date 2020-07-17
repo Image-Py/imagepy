@@ -53,7 +53,7 @@ class Image:
         self.msk = None
         self.pos = (0,0)
         self.cn = 0
-        self.rg = (0,255)
+        self.rg = [(0,255)]
         self.lut = default_lut
         self.log = False
         self.mode = 'set'
