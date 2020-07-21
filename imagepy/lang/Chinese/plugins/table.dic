@@ -98,6 +98,13 @@ Table Sort By Key::通过键值排序
 
 Selection::选择
 
+Sel By C Name R Count::通过列名和行号选择
+	fields::所选列
+	all columns::选择所有列
+	start rows::起始行
+	end rows::结束行
+	all rows::选择所有行
+
 Signal::信号处理
 
 Signal Uniform Filter::信号均匀滤波器
