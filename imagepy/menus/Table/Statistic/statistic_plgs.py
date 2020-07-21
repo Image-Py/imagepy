@@ -41,7 +41,7 @@ class GroupStatistic(Table):
 		
 	view = [('fields', 'cn', 'field to statistic'),
 			('field', 'major', 'group by', 'major'),
-			('field', 'minor', 'group by', 'key'),
+			('field', 'minor', 'group by', 'minor'),
 			
 			(bool, 'sum', 'sum'),
 			(bool, 'mean', 'mean'),
