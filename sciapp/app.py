@@ -37,7 +37,7 @@ class App():
         if not isinstance(img, Image): 
             img = Image(img, name)
         img.name = self.img_manager.name(name)
-        self.img_manager.add(name, img)
+        self.img_manager.add(img.name, img)
         print(img.info)
 
     def close_img(self, name): 
