@@ -3,7 +3,7 @@ import wx, numpy as np
 from sciapp import Source
 
 class Histogram( wx.Panel ):
-	title = 'Histogram'
+	title = 'Histogram Widget'
 
 	def __init__( self, parent, app):
 		wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 255,0 ), style = wx.TAB_TRAVERSAL )
