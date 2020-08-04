@@ -27,12 +27,12 @@ class Plugin(Filter):
 
     #process
     def run(self, ips, snap, img, para = None):
-        if not ips.dtype != np.uint8:
+        if ips.dtype != np.uint8:
             ips.range = para['thre_lh']
             return
         img[:] = snap
-        np.subtract(img, para['thr1'], out=img, casting='unsafe')
-        k = 255.0/max(para['thr2']-para['thr1'], 1e-10)
+        np.subtract(img, para['thre_lh'][0], out=img, casting='unsafe')
+        k = 255.0/max(para['thre_lh'][1]-para['thre_lh'][0], 1e-10)
         np.multiply(img, k, out=img, casting='unsafe')
         img[snap<para['thre_lh'][0]] = 0
         img[snap>para['thre_lh'][1]] = 255
