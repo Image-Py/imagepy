@@ -58,7 +58,7 @@ class FindMin(Filter):
         ips.update()
 
 class UPRidge(Filter):
-    title = 'Find Riedge'
+    title = 'Find Ridge'
     note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'preview']
     
     para = {'sigma':1.0, 'thr':0, 'ud':True, 'type':'white line'}
