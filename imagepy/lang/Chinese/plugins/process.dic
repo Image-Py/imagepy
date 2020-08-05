@@ -140,21 +140,38 @@ Find Minimum::查找极小值
 	tolerance::容错
 
 Find IsoLine::查找等高线
-	low::低阈值
-	high::高阈值
+	low::下阈值
+	high::上阈值
 	step::步长
+	output::输出
 
-Find Riedge::查找山脊线
+Find Ridge::查找山脊线
 	sigma::标准差
+	Low::阈值
+	ascend::涨水
+	output::输出
 
 Active Ridge::交互查找山脊线
+	Low::阈值
+	ascend::涨水
+	output::输出
 
 Find Watershed::分水岭
 	sigma::标准差
+	Low::阈值
+	full connectivity::八邻域连通
+	ascend::涨水
+	output::输出
 
-Up And Down Watershed::高低阈值分水岭
+Up And Down Watershed::上下阈值分水岭
+	Low::下阈值
+	High::上阈值
+	output::输出
 
-Watershed With ROI::区分作为种子分水岭
+Watershed With ROI::带ROI的分水岭
+	full connectivity::八邻域连通
+	ascend::涨水
+	output::输出
 
 Features::特征点选取
 
