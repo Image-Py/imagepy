@@ -103,10 +103,10 @@ class Plugin ( wx.Panel ):
 		tol.start()
 
 	def on_color(self, event):
-		ColorManager.set_front(self.btns.index(event.GetEventObject()))
+		self.app.manager('color').add('front', tuple(self.cs[self.btns.index(event.GetEventObject())]))
 
 	def on_items(self, event):
-		items = ['No Background Image']+ImageManager.get_titles()
+		items = ['No Background Image']+self.app.img_names()
 		self.com_back.SetItems(items)
 		if self.com_back.GetValue() in items:
 			self.com_back.Select(items.index(self.com_back.GetValue()))
@@ -114,14 +114,14 @@ class Plugin ( wx.Panel ):
 
 	def on_cmapsel(self, event):
 		key = self.cmapsel.GetValue()
-		lut = ColorManager.gets(key)
+		lut = ColorManager.get(key)
 		n = self.spn_num.GetValue()+1
 		idx = np.linspace(0, 255, n).astype(int)
-		cs = list(lut[idx]) + [(128,128,128)]*(16-n)
-		for btn, c in zip(self.btns, cs):
+		self.cs = list(lut[idx]) + [(128,128,128)]*(16-n)
+		for btn, c in zip(self.btns, self.cs):
 			btn.SetBackgroundColour(c)
 
-		ips = ImageManager.get()
+		ips = self.app.get_img()
 		if ips is None: return
 		newlut = lut*0
 		newlut[:n] = lut[idx]
@@ -131,19 +131,19 @@ class Plugin ( wx.Panel ):
 	def on_setback(self, event):
 		name = self.com_back.GetValue()
 		if name is None: return
-		ImageManager.get().back = ImageManager.get(name)
+		self.app.get_img().back = self.app.get_img(name)
 		#curwin = WindowsManager.get()
 		#curwin.set_back(ImageManager.get(name))
-		ImageManager.get().update()
+		self.app.get_img().update()
 
 	def on_mode(self, event):
-		ips = ImageManager.get()
+		ips = self.app.get_img()
 		if ips is None: return
 		if self.chk_hide.GetValue():  
-			ips.chan_mode = 0.0
+			ips.mode = 0.0
 			return ips.update()
 		modes = ['set', 'max', 'min', 'msk', 0.2, 0.4, 0.5, 0.6, 0.8]
-		ips.chan_mode = modes[self.com_mode.GetSelection()]
+		ips.mode = modes[self.com_mode.GetSelection()]
 		ips.update()
 
 	def __del__( self ):
