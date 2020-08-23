@@ -3,7 +3,7 @@ from glob import glob
 #from imagepy.core.manager import RoiManager, ImageManager, ReaderManager, ViewerManager
 from . import classify_plgs as manager
 from .predict_plg import Plugin as FCL
-#from imagepy import IPy
+from imagepy import root_dir
 
 #ReaderManager.add('fcl', lambda x:x, 'fcl')
 #ViewerManager.add('fcl', lambda x,n:wx.CallAfter(FCL(path=x).start))
@@ -11,9 +11,9 @@ from .predict_plg import Plugin as FCL
 class Plugin( wx.Panel ):
 	title = 'Feature Classify Panel'
 
-	def __init__( self, parent ):
+	def __init__( self, parent, app=None):
 		wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size(256, 256), style = wx.TAB_TRAVERSAL )
-		
+		self.app = app
 		sizer = wx.BoxSizer( wx.HORIZONTAL )
 		
 		sizer_btns = wx.BoxSizer( wx.VERTICAL )
@@ -53,7 +53,7 @@ class Plugin( wx.Panel ):
 		self.Layout()
 
 	def LoadModel(self):
-		fs = glob(osp.join(IPy.root_dir, 'data/ilastik/*.fcl'))
+		fs = glob(osp.join(root_dir, 'data/ilastik/*.fcl'))
 		self.models = [osp.split(i)[1] for i in fs]
 		self.lst_model.SetItems(self.models)
 
@@ -68,52 +68,53 @@ class Plugin( wx.Panel ):
 
 	def on_save(self, event):
 		if manager.model_para is None:
-		 	return IPy.alert('you must train your model first!')
+		 	return self.app.alert('you must train your model first!')
 		para = {'name':'New Model'}
-		if not IPy.get_para('name', [(str, 'name', 'model', 'name')], para): return
-		if not osp.exists(osp.join(IPy.root_dir, 'data/ilastik')):
-			os.mkdir(osp.join(IPy.root_dir, 'data/ilastik'))
-		joblib.dump( manager.model_para, osp.join(IPy.root_dir, 'data/ilastik/%s.fcl'%para['name']))
+		if not self.app.show_para('name', para, [(str, 'name', 'model', 'name')]): return
+		if not osp.exists(osp.join(root_dir, 'data/ilastik')):
+			os.mkdir(osp.join(root_dir, 'data/ilastik'))
+		joblib.dump( manager.model_para, osp.join(root_dir, 'data/ilastik/%s.fcl'%para['name']))
 		self.LoadModel()
 
 	def on_saveas(self, event):
 		if manager.model_para is None:
-		 	return IPy.alert('you must train your model first!')
-		para = {'path':''}
-		filt = '|'.join(['%s files (*.%s)|*.%s'%('FCL', 'fcl', 'fcl')])
-		if not IPy.get_path('Save..', filt, 'save', para): return
+		 	return self.app.alert('you must train your model first!')
+		para = {'path':'', 'name':''}
+		filt = ['fcl']
+		print("filt = ", filt)
+		para['path'] = self.app.get_path('Save..', filt, 'save', para['name'])
 		joblib.dump( manager.model_para, para['path'])
 
 	def on_export(self, event):
 		idx = self.lst_model.GetSelection()
-		if idx==-1: return IPy.alert('no model selected!')
-		para = {'path':''}
-		filt = '|'.join(['%s files (*.%s)|*.%s'%('FCL', 'fcl', 'fcl')])
-		if not IPy.get_path('Save..', filt, 'save', para): return
-		oldname = osp.join(IPy.root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection())
+		if idx==-1: return self.app.alert('no model selected!')
+		para = {'path':'', 'name':''}
+		filt = ['fcl']
+		para['path'] = self.app.get_path('Save..', filt, 'save', para['name'])
+		oldname = osp.join(root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection())
 		print(para['path'])
 		shutil.copyfile(oldname, para['path'])
 		self.LoadModel()
 
 	def on_rename(self, event):
 		idx = self.lst_model.GetSelection()
-		if idx==-1: return IPy.alert('no model selected!')
+		if idx==-1: return self.app.alert('no model selected!')
 		para = {'name':'New Model'}
-		if not IPy.get_para('name', [(str, 'name', 'model', 'name')], para): return
-		oldname = osp.join(IPy.root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection())
-		os.rename(oldname, osp.join(IPy.root_dir, 'data/ilastik/%s.fcl'%para['name']))
+		if not self.app.show_para('name', para, [(str, 'name', 'model', 'name')]): return
+		oldname = osp.join(root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection())
+		os.rename(oldname, osp.join(root_dir, 'data/ilastik/%s.fcl'%para['name']))
 		self.LoadModel()
 
 	def on_remove(self, event):
 		idx = self.lst_model.GetSelection()
-		if idx==-1: return IPy.alert('no model selected!')
-		os.remove(osp.join(IPy.root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection()))
+		if idx==-1: return self.app.alert('no model selected!')
+		os.remove(osp.join(root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection()))
 		self.LoadModel()
 
 	def on_run(self, event):
 		idx = self.lst_model.GetSelection()
-		if idx==-1: return IPy.alert('no model selected!')
-		FCL(path=self.lst_model.GetStringSelection()).start()
+		if idx==-1: return self.app.alert('no model selected!')
+		FCL(path=self.lst_model.GetStringSelection()).start(self.app)
 		
 	def __del__( self ):
 		pass
