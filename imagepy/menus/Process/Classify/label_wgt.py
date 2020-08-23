@@ -93,17 +93,17 @@ class Plugin ( wx.Panel ):
 		Macros(None, ['Build Mark Image>None']).start(self.app)
 
 	def on_fill(self, event):
-		tol = ToolsManager.get('Flood Fill')()
+		tol = self.app.get_plugin('Flood Fill')()
 		tol.para['tor'] = 0
-		tol.start()
+		tol.start(self.app)
 
 	def on_pen(self, width):
-		tol = ToolsManager.get('Pencil')()
+		tol = self.app.get_plugin('Pencil')()
 		tol.para['width'] = width
-		tol.start()
+		tol.start(self.app)
 
 	def on_color(self, event):
-		self.app.manager('color').add('front', tuple(self.cs[self.btns.index(event.GetEventObject())]))
+		self.app.manager('color').add('front', self.btns.index(event.GetEventObject()))
 
 	def on_items(self, event):
 		items = ['No Background Image']+self.app.img_names()

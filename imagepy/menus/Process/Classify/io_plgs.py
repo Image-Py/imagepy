@@ -17,7 +17,7 @@ class BuildMark(Simple):
 
     def run(self, ips, imgs, para = None):
         shp = ips.img.shape[:2]
-        imgs = [np.zeros(shp+(3,), dtype=np.uint8) for i in range([1, len(imgs)][para['slice']])]
+        imgs = [np.zeros(shp, dtype=np.uint8) for i in range([1, len(imgs)][para['slice']])]
         newips = Image(imgs, ips.title+'-mark')
         newips.back = ips
         idx = ['None', 'Max', 'Min', 'Mask', '2-8mix', '4-6mix', '5-5mix', '6-4mix', '8-2mix']

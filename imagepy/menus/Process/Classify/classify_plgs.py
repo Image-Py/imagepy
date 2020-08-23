@@ -1,5 +1,5 @@
 from sciapp.action import Filter, Simple
-# from imagepy.core import ImagePlus
+from sciapp.object import Image
 
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier, \
@@ -12,7 +12,8 @@ model_para = None
 
 class Base(Simple):
     """Closing: derived from sciapp.action.Filter """
-    def load(self, ips): 
+    def load(self, ips):
+        print("len(ips.imgs) = ", len(ips.imgs))
         if len(ips.imgs)==1: ips.snapshot()
         return True
 
@@ -31,29 +32,29 @@ class Base(Simple):
         if len(ips.imgs)==1: ips.img[:] = ips.snap
         key = {'chans':None, 'grade':para['grade'], 'w':para['w']}
         key['items'] = [i for i in ['ori', 'blr', 'sob', 'eig'] if para[i]]
-        slir, slic = ips.get_rect()
+        slir, slic = ips.rect
         labs = [i[slir, slic] for i in imgs]
-        ori = ImageManager.get(para['img']).imgs
-        if len(imgs)==1: ori = [ImageManager.get(para['img']).img]
+        ori = self.app.get_img(para['img']).imgs
+        if len(imgs)==1: ori = [self.app.get_img(para['img']).img]
         oris = [i[slir, slic] for i in ori]
 
-        IPy.info('extract features...')
+        self.app.info('extract features...')
         feat, lab, key = feature.get_feature(oris, labs, key, callback=self.progress)
 
-        IPy.info('training data...')
-        self.progress(None, 1)
+        self.app.info('training data...')
+        # self.progress(None, 1)
         model = self.classify(para)
         model.fit(feat, lab)
 
-        IPy.info('predict data...')
+        self.app.info('predict data...')
         if preview:
             return feature.get_predict(oris, model, key, labs, callback=self.progress)
         if len(imgs) == 1: ips.swap()
         outs = feature.get_predict(oris, model, key, callback=self.progress)
-        nips = ImagePlus(outs, ips.title+'rst')
+        nips = Image(outs, ips.title+'rst')
         nips.range, nips.lut = ips.range, ips.lut
-        nips.back, nips.chan_mode = ips.back, 0.4
-        IPy.show_ips(nips)
+        nips.back, nips.mode = ips.back, 0.4
+        self.app.show_img(nips)
         global model_para
         model_para = model, key
 
