@@ -84,6 +84,7 @@ class ICanvas(Canvas):
                 self.marks['mark'] = self.image.mark.body[self.image.cur]
             elif 'mark' in self.marks: del self.marks['mark']
         else: self.marks['mark'] = self.image.mark
+        self.tool = self.image.tool
         Canvas.on_idle(self, event)
 
 class VCanvas(Canvas):

@@ -66,22 +66,17 @@ class Plugin(Filter):
                 self.para['ox'] = int((box[0]+box[2])/2)
         self.make_mark()
         ips.update()
-        win = self.app.get_img_win()
-        win.canvas.tool = RotateTool(self)
+        ips.tool = RotateTool(self).start(self.app, 'local')
         return True
         
     def cancel(self, ips):
         Filter.cancel(self, ips)
         ips.roi = self.bufroi
-        win = self.app.get_img_win()
-        ips.mark = None
-        win.canvas.tool = None
+        ips.mark = ips.tool = None
         
     def ok(self, ips, para=None):
+        ips.mark = ips.tool = None
         Filter.ok(self, ips, para)
-        win = self.app.get_img_win()
-        ips.mark = None
-        win.canvas.tool = None
         
     def draw(self, dc, f, **key):
         dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))

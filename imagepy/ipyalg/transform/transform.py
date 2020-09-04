@@ -4,7 +4,7 @@ from scipy.ndimage import map_coordinates
 import numpy as np
 # import matplotlib.pyplot as plt
 
-def linear_polar(img, o=None, r=None, output=None, order=1, cont=0):
+def linear_polar(img, o=None, r=None, order=1, cont=0, output=None):
     if o is None: o = np.array(img.shape[:2])/2 - 0.5
     if r is None: r = (np.array(img.shape[:2])**2).sum()**0.5/2
     cns = 1 if img.ndim == 2 else img.shape[2]
@@ -24,7 +24,7 @@ def linear_polar(img, o=None, r=None, output=None, order=1, cont=0):
         map_coordinates(img[:,:,i], (ys, xs), order=order, output=output[:,:,i])
     return output.reshape(output.shape[:2]) if output.shape[2]==1 else output
 
-def polar_linear(img, o=None, r=None, output=None, order=1, cont=0):
+def polar_linear(img, o=None, r=None, order=1, cont=0, output=None):
     if r is None: r = img.shape[0]
     cns = 1 if img.ndim == 2 else img.shape[2]
     if output is None:

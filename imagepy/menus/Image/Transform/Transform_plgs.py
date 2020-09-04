@@ -6,7 +6,7 @@ Created on Sat Nov 19 01:14:50 2016
 import numpy as np
 import scipy.ndimage as nimg
 from sciapp.action import Filter, Simple
-from imagepy.ipyalg.transform
+from imagepy.ipyalg import linear_polar, polar_linear
 
 class Rotate(Filter):
     title = 'Rotate'
@@ -41,20 +41,37 @@ class Scale(Filter):
         trans = np.array([[k,0],[0,k]])
         offset = o-trans.dot(o)
         nimg.affine_transform(snap, trans, output=img, offset=offset)
-'''
+
 class LinearPolar(Simple):
     title = 'Linear To Polar'
-    note = ['all']    
-    para = {'slice':False, 'order':1}
+    note = ['all']
+    para = {'ext':'crop', 'order':1, 'slices':False}
+    view = [(list, 'ext', ['full', 'crop'], str, 'extent', ''),
+            (int, 'order', (0, 5), 0, 'interpolate', 'order'),
+            (bool, 'slices', 'slices')]
 
-    view = [(list, 'con', ['4-Connect','8-Connect'], str, 'Structure', 'connect'),
-            (bool, 'slice', 'slice')]
-        
-    def run(self, ips, imgs, para = None):
-        if not para['slice']:  imgs = [ips.img]
-        labels = []
+    def run(self, ips, imgs, para):
+        if not para['slices']: imgs = [ips.img]
+        r, rst = min(ips.shape[:2])/2 if para['ext']=='crop' else None, []
         for i in range(len(imgs)):
-            labels.append(lab)
-        self.app.show_img(labels, ips.title+'-label') 
-'''
-plgs = [Rotate, Scale]
+            self.progress(i, len(imgs))
+            rst.append(linear_polar(imgs[i], None, r, para['order']))
+        self.app.show_img(rst, ips.title + '-polar')
+
+class PolarLinear(Simple):
+    title = 'Polar To Linear'
+    note = ['all']
+    para = {'ext':'crop', 'order':1, 'slices':False}
+    view = [(list, 'ext', ['full', 'crop'], str, 'extent', ''),
+            (int, 'order', (0, 5), 0, 'interpolate', 'order'),
+            (bool, 'slices', 'slices')]
+
+    def run(self, ips, imgs, para):
+        if not para['slices']: imgs = [ips.img]
+        r, rst = round(ips.shape[0]/(2**0.5 if para['ext']=='crop' else 1)), []
+        for i in range(len(imgs)):
+            self.progress(i, len(imgs))
+            rst.append(polar_linear(imgs[i], None, int(r), para['order']))
+        self.app.show_img(rst, ips.title + '-polar')
+
+plgs = [Rotate, Scale, LinearPolar, PolarLinear]

@@ -60,6 +60,7 @@ class Image:
         self.dirty = False
         self.snap = None
         self.back = None
+        self.tool = None
 
     @property
     def box(self):

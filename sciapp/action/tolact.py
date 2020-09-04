@@ -14,6 +14,7 @@ class Tool(SciAction):
     def mouse_wheel(self, canvas, x, y, d, **key): pass
     def start(self, app, para=None, callafter=None): 
         self.app, self.default = app, self
+        if para == 'local': return self
         if not app is None: app.tool = self
 
 class DefaultTool(Tool):
@@ -41,8 +42,9 @@ class DefaultTool(Tool):
 
     def start(self, app, para=None): 
         self.app = app
+        if para == 'local': return self
         Tool.default = self
-        if not app is None: app.tool = self
+        #if not app is None: app.tool = self
 
 class ImageTool(DefaultTool):
     default = None
@@ -57,8 +59,9 @@ class ImageTool(DefaultTool):
 
     def start(self, app, para=None, callafter=None): 
         self.app = app
+        if para == 'local': return self
         ImageTool.default = self
-        if not app is None: app.tool = self
+        #if not app is None: app.tool = self
 
 class ShapeTool(DefaultTool):
     default = None
@@ -69,8 +72,9 @@ class ShapeTool(DefaultTool):
 
     def start(self, app, para=None, callafter=None): 
         self.app = app
+        if para == 'local': return self
         ShapeTool.default = self
-        if not app is None: app.tool = self
+        # if not app is None: app.tool = self
 
 class TableTool(DefaultTool):
     default = None
@@ -81,8 +85,9 @@ class TableTool(DefaultTool):
 
     def start(self, app, para=None, callafter=None): 
         self.app = app
+        if para == 'local': return self
         TableTool.default = self
-        if not app is None: app.tool = self
+        # if not app is None: app.tool = self
 
 DefaultTool().start(None)
 ImageTool().start(None)
