@@ -1,5 +1,5 @@
 from sciapp.action import Filter, Simple
-# from imagepy.core import ImagePlus
+from sciapp.object import Image
 
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier, \
@@ -12,7 +12,8 @@ model_para = None
 
 class Base(Simple):
     """Closing: derived from sciapp.action.Filter """
-    def load(self, ips): 
+    def load(self, ips):
+        print("len(ips.imgs) = ", len(ips.imgs))
         if len(ips.imgs)==1: ips.snapshot()
         return True
 
@@ -31,39 +32,37 @@ class Base(Simple):
         if len(ips.imgs)==1: ips.img[:] = ips.snap
         key = {'chans':None, 'grade':para['grade'], 'w':para['w']}
         key['items'] = [i for i in ['ori', 'blr', 'sob', 'eig'] if para[i]]
-        slir, slic = ips.get_rect()
+        slir, slic = ips.rect
         labs = [i[slir, slic] for i in imgs]
-        ori = ImageManager.get(para['img']).imgs
-        if len(imgs)==1: ori = [ImageManager.get(para['img']).img]
-        oris = [i[slir, slic] for i in ori]
+        ori = ips.back
+        oris = [ori.img[slir, slic]]
 
-        IPy.info('extract features...')
+        self.app.info('extract features...')
         feat, lab, key = feature.get_feature(oris, labs, key, callback=self.progress)
 
-        IPy.info('training data...')
-        self.progress(None, 1)
+        self.app.info('training data...')
+        # self.progress(None, 1)
         model = self.classify(para)
         model.fit(feat, lab)
 
-        IPy.info('predict data...')
+        self.app.info('predict data...')
         if preview:
             return feature.get_predict(oris, model, key, labs, callback=self.progress)
         if len(imgs) == 1: ips.swap()
         outs = feature.get_predict(oris, model, key, callback=self.progress)
-        nips = ImagePlus(outs, ips.title+'rst')
+        nips = Image(outs, ips.title+'rst')
         nips.range, nips.lut = ips.range, ips.lut
-        nips.back, nips.chan_mode = ips.back, 0.4
-        IPy.show_ips(nips)
+        nips.back, nips.mode = ips.back, 0.4
+        self.app.show_img(nips)
         global model_para
         model_para = model, key
 
 class RandomForest(Base):
     title = 'Random Forest Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
-    para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
+    para = {'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
             'eig':True, 'n_estimators':100, 'max_features':'sqrt', 'max_depth':0}
-    view = [('img', 'img', 'img', 'back'),
-            ('lab', None, '===== Classifier Parameter ====='),
+    view = [('lab', None, '===== Classifier Parameter ====='),
             (int, 'n_estimators', (10,1024), 0, 'estimators', 'n'),
             (int, 'max_depth', (0,64), 0, 'depth', 'max'),
             (list, 'max_features', ['sqrt', 'log2', 'None'], str, 'features', 'max'),
@@ -85,10 +84,9 @@ class AdaBoost(Base):
     """Closing: derived from sciapp.action.Filter """
     title = 'AdaBoost Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
-    para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
+    para = {'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
             'eig':True, 'n_estimators':50, 'learning_rate':1, 'algorithm':'SAMME.R'}
-    view = [('img', 'img', 'img', 'back'),
-            ('lab', None, '===== Classifier Parameter ====='),
+    view = [('lab', None, '===== Classifier Parameter ====='),
             (int, 'n_estimators', (10,1024), 0, 'estimators', 'n'),
             (float, 'learning_rate', (0.1, 10), 1, 'learn', 'rate'),
             (list, 'algorithm', ['SAMME', 'SAMME.R'], str, 'algorithm', ''),
@@ -108,10 +106,9 @@ class Bagging(Base):
     """Closing: derived from sciapp.action.Filter """
     title = 'Bagging Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
-    para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
+    para = {'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
             'eig':True, 'n_estimators':50, 'max_features':1.0}
-    view = [('img', 'img', 'img', 'back'),
-            ('lab', None, '===== Classifier Parameter ====='),
+    view = [('lab', None, '===== Classifier Parameter ====='),
             (int, 'n_estimators', (10,1024), 0, 'estimators', 'n'),
             (float, 'max_features', (0.2, 1), 1, 'features', 'k'),
             ('lab', None, '===== Feature Parameter ====='),
@@ -130,10 +127,9 @@ class ExtraTrees(Base):
     """Closing: derived from sciapp.action.Filter """
     title = 'ExtraTrees Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
-    para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
+    para = {'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
             'eig':True, 'n_estimators':10, 'max_features':'sqrt', 'max_depth':0}
-    view = [('img', 'img', 'img', 'back'),
-            ('lab', None, '===== Classifier Parameter ====='),
+    view = [('lab', None, '===== Classifier Parameter ====='),
             (int, 'n_estimators', (10,1024), 0, 'estimators', 'n'),
             (int, 'max_depth', (0,64), 0, 'depth', 'max'),
             (list, 'max_features', ['sqrt', 'log2', 'None'], str, 'features', 'max'),
@@ -155,11 +151,10 @@ class GradientBoosting(Base):
     """Closing: derived from sciapp.action.Filter """
     title = 'Gradient Boosting Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
-    para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
+    para = {'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
             'eig':True, 'n_estimators':100, 'max_features':'sqrt', 
             'max_depth':3, 'learning_rate':0.1, 'loss':'deviance'}
-    view = [('img', 'img', 'img', 'back'),
-            ('lab', None, '===== Classifier Parameter ====='),
+    view = [('lab', None, '===== Classifier Parameter ====='),
             (list, 'loss', ['deviance', 'exponential'], str, 'loss', ''),
             (int, 'n_estimators', (10,1024), 0, 'estimators', 'n'),
             (int, 'max_depth', (1,10), 0, 'depth', 'max'),
@@ -183,11 +178,10 @@ class Voting(Base):
     """Closing: derived from sciapp.action.Filter """
     title = 'Voting Classify'
     note = ['8-bit', 'auto_msk', 'not_slice', 'auto_snap', 'preview']
-    para = {'img':None, 'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
+    para = {'grade':3, 'w':1, 'ori':True, 'blr':True, 'sob':True, 
             'eig':True, 'n_estimators':100, 'max_features':'sqrt', 
             'max_depth':3, 'learning_rate':0.1, 'loss':'deviance'}
-    view = [('img', 'img', 'img', 'back'),
-            ('lab', None, '===== Classifier Parameter ====='),
+    view = [('lab', None, '===== Classifier Parameter ====='),
             (list, 'loss', ['deviance', 'exponential'], str, 'loss', ''),
             (int, 'n_estimators', (10,1024), 0, 'estimators', 'n'),
             (int, 'max_depth', (1,10), 0, 'depth', 'max'),

@@ -175,7 +175,7 @@ class PointsValue(Simple):
             (bool, 'slice', 'slice')]
         
     def load(self, ips):
-        if ips.roi.roitype != 'point':
+        if ips.roi.roitype != 'point' and ips.roi.roitype != 'points':
             return self.app.alert('a PointRoi needed!')
         return True
     

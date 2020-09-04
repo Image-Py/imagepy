@@ -95,7 +95,7 @@ class ImageJ(wx.Frame, App):
         self.load_menu(plgs)
         tols, errtol = load_tools()
         for name, plg in self.flatten(tols): 
-            self.add_plugin(name, plg, 'tool')
+            self.add_plugin(plg.title, plg, 'tool')
         self.load_tool(tols, 'Transform')
         wgts, errwgt = load_widgets()
         for name, plg in self.flatten(wgts): 
