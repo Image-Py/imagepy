@@ -118,8 +118,8 @@ class Statistic(Simple):
     view = [(bool, 'max', 'max'),
             (bool, 'min', 'min'),
             (bool, 'mean', 'mean'),
-            (bool, 'variance', 'var'),
-            (bool, 'standard', 'std'),
+            (bool, 'var', 'variance'),
+            (bool, 'std', 'standard'),
             (bool, 'slice', 'slice')]
         
     def count(self, img, para):

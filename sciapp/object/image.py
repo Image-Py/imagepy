@@ -139,9 +139,9 @@ class Image:
     def update(self): self.dirty = True
 
     def reset(self):
-        self.cn = [0, (0,1,2)][self.channels==3]
-        if self.dtype == np.uint8: pass
-            # self.rg = [(0, 255)] * self.channels
+        self.cn = [0, [0,1,2]][self.channels==3]
+        if self.dtype == np.uint8: 
+            self.rg = [(0, 255)] * self.channels
         else: 
             self.rg = self.get_updown('all', 'all', step=512)
 
@@ -170,7 +170,7 @@ class Image:
 
     def lookup(self, img=None):
         if img is None: img = self.img
-        return lookup(img, self.cn, [self.rg], self.lut)
+        return lookup(img, self.cn, self.rg, self.lut)
 
 if __name__ == '__main__':
     img = Image(np.zeros((5,5)))

@@ -5,7 +5,8 @@ Created on Sat Nov 19 01:14:50 2016
 """
 import numpy as np
 import scipy.ndimage as nimg
-from sciapp.action import Filter
+from sciapp.action import Filter, Simple
+from imagepy.ipyalg.transform
 
 class Rotate(Filter):
     title = 'Rotate'
@@ -40,5 +41,20 @@ class Scale(Filter):
         trans = np.array([[k,0],[0,k]])
         offset = o-trans.dot(o)
         nimg.affine_transform(snap, trans, output=img, offset=offset)
+'''
+class LinearPolar(Simple):
+    title = 'Linear To Polar'
+    note = ['all']    
+    para = {'slice':False, 'order':1}
 
+    view = [(list, 'con', ['4-Connect','8-Connect'], str, 'Structure', 'connect'),
+            (bool, 'slice', 'slice')]
+        
+    def run(self, ips, imgs, para = None):
+        if not para['slice']:  imgs = [ips.img]
+        labels = []
+        for i in range(len(imgs)):
+            labels.append(lab)
+        self.app.show_img(labels, ips.title+'-label') 
+'''
 plgs = [Rotate, Scale]

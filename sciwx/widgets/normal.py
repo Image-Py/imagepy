@@ -165,7 +165,7 @@ class PathCtrl(wx.Panel):
         dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
         if self.io=='folder':
             dialog = wx.DirDialog(self, 'Path Select', '.', wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST | wx.FD_CHANGE_DIR)
-        else: dialog = wx.FileDialog(self, 'Path Select', None, '', filt, dict[self.io] | wx.FD_CHANGE_DIR)
+        else: dialog = wx.FileDialog(self, 'Path Select', '', '.', filt, dic[self.io] | wx.FD_CHANGE_DIR)
         rst = dialog.ShowModal()
         if rst == wx.ID_OK:
             path = dialog.GetPath()

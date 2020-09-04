@@ -61,7 +61,7 @@ def process_stack(plg, ips, src, imgs, para, callafter=None):
 
     for i,n in zip(imgs,list(range(len(imgs)))):
         #sleep(0.5)
-        plg.progress(n, len(imgs))
+        plg.progress(n+1, len(imgs))
         if 'auto_snap' in plg.note : src[:] = i
         if transint or transfloat: buf[:] = i
         rst = process_channels(plg, ips, src, buf if transint or transfloat else i, para)
@@ -145,7 +145,7 @@ class Filter:
             has, rst = 'stack' in para, None
             if not has:
                 rst = self.app.yes_no('Run every slice in current stacks?')
-            if 'auto_snap' in self.note and self.modal:ips.reset()
+            if 'auto_snap' in self.note and self.modal:ips.img[:] = ips.snap
             if has and para['stack'] or rst == 'yes':
                 para['stack'] = True
                 #process_stack(self, ips, ips.snap, ips.imgs, para)

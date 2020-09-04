@@ -1,6 +1,5 @@
 import os
 from sciapp import Source
-from imagepy import root_dir
 from . import Free, Simple, Table
 #from .macros import Macros
 from ... import Manager
