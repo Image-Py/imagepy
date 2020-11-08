@@ -356,8 +356,9 @@ def geom2shp(obj): return json2shp(geom.mapping(obj))
 if __name__ == '__main__':
     import json
 
-    mark = {'type': 'layer', 'body': [{'type': 'circle', 'body': (256, 256, 5)}, {'type': 'cirlce', 'body': (256, 256, 50)}, {'type': 'circle', 'body': (306.0, 256.0, 3)}]}
-    a = mark2shp(mark)
+    layer = {'type': 'layer', 'body': [{'type': 'circle', 'body': (256, 256, 5)}, {'type': 'circle', 'body': (256, 256, 50)}, {'type': 'circle', 'body': (306.0, 256.0, 3)}]}
+    layers = {'type':'layers', 'body':{1:{'type':'layer', 'body':[]}}}
+    a = mark2shp(layers)
     print(a)
     #import geonumpy.io as gio
     #shp = gio.read_shp('C:/Users/54631/Documents/projects/huangqu/demo/shape/province.shp')

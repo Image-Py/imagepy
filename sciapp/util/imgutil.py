@@ -192,7 +192,7 @@ if not jit is None:
 
 # mode: set, min, max, mix, nor
 def mix_img(img, m, o, shp, buf, rgb, byt, rg=(0,255), lut=None, log=True, cns=0, mode='set'):
-    if img is None: return
+    if img is None or mode == 'hide': return
     img = img.reshape((img.shape[0], img.shape[1], -1))
     if isinstance(rg, tuple): rg = [rg]*img.shape[2]
 

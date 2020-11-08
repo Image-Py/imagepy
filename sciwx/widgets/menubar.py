@@ -54,26 +54,30 @@ if __name__ == '__main__':
         def __init__(self, name):
             self.name = name
 
-        def start(self):
+        def start(self, app):
             print(self.name)
 
         def __call__(self):
             return self
         
     data = ('menu', [
-            ('File', [('Open', P('O')),
-                      '-',
-                      ('Close', P('C'))]),
-            ('Edit', [('Copy', P('C')),
-                      ('A', [('B', P('B')),
-                             ('C', P('C'))]),
-                      ('Paste', P('P'))])])
+                ('File', [
+                    ('Open', P('O')),
+                    '-',
+                    ('Close', P('C'))]),
+                ('Edit', [
+                    ('Copy', P('C')),
+                    ('A', [
+                        ('B', P('B')),
+                        ('C', P('C'))]),
+                    ('Paste', P('P'))])])
     
     app = wx.App()
     frame = wx.Frame(None)
-    menubar = MenuBar()
-    menubar.load(data)
+    menubar = MenuBar(frame)
+    acc = menubar.load(data, {'Open':'Ctrl-O'})
     frame.SetMenuBar(menubar)
+    menubar.SetAcceleratorTable(acc)
     frame.Show()
     app.MainLoop()
 

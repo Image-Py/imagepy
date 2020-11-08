@@ -131,10 +131,9 @@ class Canvas (wx.Panel):
             buf = memoryview(self.outrgb)
             self.outbmp = wx.Bitmap.FromBuffer(*shp[::-1], buf)
         if not back is None:
-            mix_img(back.img, m, o, shp, self.outbak, 
+            mix_img(back.imgs[img.cur], m, o, shp, self.outbak, 
                 self.outrgb, self.outint, back.rg, back.lut,
                 back.log, cns=back.cn, mode='set')
-        
         mix_img(img.img, m, o, shp, self.outimg,
             self.outrgb, self.outint, img.rg, img.lut,
             img.log, cns=img.cn, mode=img.mode)

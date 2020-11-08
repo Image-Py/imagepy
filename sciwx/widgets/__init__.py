@@ -7,6 +7,7 @@ from .progressbar import ProgressBar
 from .normal import *
 from .toolbar import ToolBar
 from .menubar import MenuBar
+from .ribbonbar import RibbonBar
 from .viewport import ViewPort
 from .choicebook import ChoiceBook
 from .workflow import WorkFlowPanel

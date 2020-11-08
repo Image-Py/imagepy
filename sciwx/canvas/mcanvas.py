@@ -53,6 +53,9 @@ class ICanvas(Canvas):
     def image(self): return self.images[0]
 
     @property
+    def name(self): return self.image.title
+
+    @property
     def back(self): return self.images[0].back
 
     def draw_ruler(self, dc, f, **key):

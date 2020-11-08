@@ -1,9 +1,11 @@
 import wx, wx.lib.agw.aui as aui
 from .mcanvas import SCanvas as Canvas
 from ..widgets import ToolBar, MenuBar
+from sciapp import App
 
-class VectorFrame(wx.Frame):
+class VectorFrame(wx.Frame, App):
     def __init__(self, parent=None, autofit=False):
+        App.__init__(self)
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY,
                             title = 'VectorFrame',
                             pos = wx.DefaultPosition,

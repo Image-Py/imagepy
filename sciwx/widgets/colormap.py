@@ -1,7 +1,7 @@
 import numpy as np
 import wx.adv
 import sys, wx
-from .. import ColorManager
+from sciwx import ColorManager
 
 class CMapSelCtrl(wx.adv.OwnerDrawnComboBox):
     def __init__(self, parent):

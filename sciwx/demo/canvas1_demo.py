@@ -23,7 +23,7 @@ def rgb_gray_blend():
     frame = wx.Frame(None, title='blend')
     canvas = Canvas(frame, autofit=True)
     canvas.set_img(astronaut())
-    canvas.set_cn((0,1,2))
+    canvas.set_cn((2,-1,-1))
     canvas.set_img(camera(), True)
     canvas.set_cn(0, True)
     canvas.set_mode(0.5)

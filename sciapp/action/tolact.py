@@ -30,7 +30,7 @@ class DefaultTool(Tool):
         self.oldxy = None
     
     def mouse_move(self, obj, x, y, btn, **key):
-        if self.oldxy is None: return
+        if not hasattr(self, 'oldxy') or self.oldxy is None: return
         ox, oy = self.oldxy
         up = (1,-1)[key['canvas'].up]
         key['canvas'].move(key['px']-ox, (key['py']-oy)*up)
@@ -51,6 +51,7 @@ class ImageTool(DefaultTool):
     title = 'Image Tool'
 
     def mouse_move(self, img, x, y, btn, **key):
+        DefaultTool.mouse_move(self, img, x, y, btn, **key)
         if self.app is None: return
         r, c = int(y), int(x)
         if (r>0) & (c>0) & (r<img.shape[0]) & (c<img.shape[1]):

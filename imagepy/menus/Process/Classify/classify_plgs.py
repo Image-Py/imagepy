@@ -34,8 +34,8 @@ class Base(Simple):
         key['items'] = [i for i in ['ori', 'blr', 'sob', 'eig'] if para[i]]
         slir, slic = ips.rect
         labs = [i[slir, slic] for i in imgs]
-        ori = ips.back
-        oris = [ori.img[slir, slic]]
+        ori = ips.back.imgs
+        oris = [i[slir, slic] for i in ori]
 
         self.app.info('extract features...')
         feat, lab, key = feature.get_feature(oris, labs, key, callback=self.progress)

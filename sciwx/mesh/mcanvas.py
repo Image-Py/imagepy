@@ -176,6 +176,10 @@ class MCanvas3D(wx.Panel):
     def get_obj(self, name):
         return self.canvas.scene.meshset.get_obj(name)
 
+    def set_style(self, name, **key):
+        self.get_obj(name).set_style(**key)
+        self.canvas.Refresh()
+
     def on_visible(self, evt):
         self.curobj.set_style(visible=evt.IsChecked())
         self.canvas.Refresh(False)

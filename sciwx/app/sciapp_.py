@@ -15,7 +15,7 @@ from sciapp import App, Source
 from sciapp.action.plugin.filters import Gaussian
 from sciapp.action.plugin.generalio import OpenFile, SaveImage
 
-class MiniApp(wx.Frame, App):
+class SciApp(wx.Frame, App):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = 'ImagePy', 
                             size = wx.Size(800,600), pos = wx.DefaultPosition, 
@@ -139,8 +139,8 @@ class MiniApp(wx.Frame, App):
 
     def on_close_img(self, event):
         canvas = event.GetEventObject().GetPage(event.GetSelection())
-        #self.remove_img_win(canvas)
-        App.close_img(self, canvas.image.title)
+        self.remove_img_win(canvas)
+        self.remove_img(canvas.image)
 
     def on_new_tab(self, event):
         self.add_tab(event.GetEventObject().grid.table)
@@ -180,6 +180,7 @@ class MiniApp(wx.Frame, App):
         sys.exit()
 
     def _show_img(self, img, title=None):
+        print(img)
         canvas = self.canvasnb.add_canvas()
         if not isinstance(img, Image): 
             img = Image(img, title)
@@ -359,7 +360,7 @@ if __name__ == '__main__':
     import pandas as pd
 
     app = wx.App(False)
-    frame = MiniApp(None)
+    frame = SciApp(None)
     frame.Show()
     frame.show_img([np.zeros((512, 512), dtype=np.uint8)], 'zeros')
     frame.show_table(pd.DataFrame(np.arange(100).reshape((10,10))), 'title')

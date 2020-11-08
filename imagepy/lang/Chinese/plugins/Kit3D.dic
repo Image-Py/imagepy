@@ -1,0 +1,143 @@
+Filters 3D::三维滤波
+
+Gaussian 3D::三维高斯滤波
+	sigma::方差
+
+Uniform 3D::三维均值滤波
+	size::核大小
+
+Sobel 3D::三维Sobel滤波
+	sigma::方差
+	wight::权重
+
+Unsharp Mask 3D::三维非锐化掩膜
+
+Up Down Watershed 3D::三维上下限分水岭
+
+Features 3D::三维特征增强
+
+Frangi 3D::三维Frangi特征增强
+	sigma start::标准差上限
+	sigma end::标准差下限
+	sigma step::步长
+	alpha::alpha值
+	beta::beta值
+	gamma::gamma增益
+
+Meijering 3D::三维Meijering特征增强
+	sigma start::标准差上限
+	sigma end::标准差下限
+	sigma step::步长
+
+Sato 3D::三维Sato特征增强
+	sigma start::标准差上限
+	sigma end::标准差下限
+	sigma step::步长
+
+Hessian 3D::三维Hessian特征增强
+	sigma start::标准差上限
+	sigma end::标准差下限
+	sigma step::步长
+	alpha::alpha值
+	beta::beta值
+	gamma::gamma增益
+
+Binary 3D::三维二值化
+
+Dilation 3D::三维膨胀
+	r::半径
+
+Erosion 3D::三维腐蚀
+	r::半径
+
+Opening 3D::三维开运算
+	r::半径
+
+Closing 3D::三维闭运算
+	r::半径
+
+Fill Holes 3D::三维填充孔洞
+
+Skeleton 3D::三维骨架提取
+
+Distance 3D::三维距离变换
+
+Binary Watershed 3D::三维二值分水岭
+	tolerance::容错
+
+Analysis 3D::三维分析
+
+Pixel Statistic 3D::三维像素统计
+
+Frequence 3D::三维频数计算
+	bins::直方图箱数
+
+Region Label 3D::三维区域标记
+
+Geometry Analysis 3D::三维几何分析
+
+Geometry Filter 3D::三维几何过滤
+	front color::前景色
+	back color::背景色
+	volume::体积
+	diagonal::对角线
+
+Measure Surface And Volume::表面体积测量
+
+Network 3D::三维网络图
+
+Skeleton 3D::三维骨架提取
+
+Build Graph 3D::三维拓扑建立
+
+Graph Cut Branch 3D::三维剪枝
+	limit::阈值
+
+Remove Isolate 3D::三维移除孤立点
+
+Remove 2Path Node 3D::三维移除2路径节点
+
+Graph Statistic 3D::三维拓扑关系统计
+
+Graph Summarise 3D::三维拓扑关系汇总
+
+Show Graph 3D::三维拓扑可视化
+	radius::半径
+	node::节点
+	line::线
+	path::路径
+
+Show Graph R 3D::三维球棍模型可视化
+
+Viewer 3D::三维画布
+
+Show Viewer 3D::新建三维画布
+
+2D Surface::2D地表重建
+	Name::名字
+	down scale::降采样
+	sigma::平滑标准差
+	scale z::z轴缩放
+
+3D Surface::三维表面重建
+	Name::名字
+	down scale::降采样
+	march step::重建步长
+	color::颜色
+
+3D Image Cube::三维立方体
+
+RGB Points Cloud::RGB点云
+	Name::名字
+	number::数量
+	radius::半径
+
+Table Point Cloud::点云表格
+
+2DSurface Demo::2D表面演示
+
+Lines Demo::三维线演示
+
+Random Balls Demo::随机球演示
+
+Decoration Demo::小饰品演示

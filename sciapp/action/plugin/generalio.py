@@ -1,7 +1,7 @@
 from ..advanced import dataio
 from skimage.io import imread, imsave
 
-for i in ('bmp', 'jpg', 'tif'):
+for i in ('bmp', 'jpg', 'tif', 'png', 'gif'):
 	dataio.ReaderManager.add(i, imread, 'img')
 	dataio.WriterManager.add(i, imsave, 'img')
 

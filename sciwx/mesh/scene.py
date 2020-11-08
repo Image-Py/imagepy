@@ -110,11 +110,16 @@ class Scene:
 		self.vabo[name] = [buf, vao, vbo]
 
 	def add_surf(self, name, obj):
+		if isinstance(obj, tuple):
+			if isinstance(obj[3], (int, float)):
+				obj = MarkText(*obj)
+			else: obj = Surface(*obj)
 		if not self.ctx is None:
 			if isinstance(obj, MarkText):
 				self.ctx_txt(self.ctx, self.prog_txt, obj, name)
 			elif isinstance(obj, Surface):
 				self.ctx_obj(self.ctx, self.prog_suf, obj, name)
+
 		self.objs[name] = obj
 		self.count_box()
 

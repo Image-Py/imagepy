@@ -179,4 +179,4 @@ if __name__ == '__main__':
 
     ImageApp.start(
         imgs = [('camera', camera())], 
-        plgs=[('G', Gaussian)])
+        plgs=[('G', Gaussian), ('T', Gaussian)])

@@ -61,6 +61,7 @@ class Image:
         self.snap = None
         self.back = None
         self.tool = None
+        self.data = {}
 
     @property
     def box(self):
