@@ -129,7 +129,7 @@ class Histogram( wx.Panel ):
 	def on_minmax( self, event ):
 		ips = self.app.get_img()
 		if ips is None: return
-		minv, maxv = ips.get_updown()
+		minv, maxv = ips.get_updown()[0]
 		self.range = ips.range = (minv, maxv)
 		hist = ips.histogram()
 		self.histpan.SetValue(hist)
