@@ -1,5 +1,7 @@
 from skimage.filters import frangi, sato, hessian ,meijering
+from skimage.feature import structure_tensor, structure_tensor_eigvals
 from sciapp.action import Filter, Simple
+import numpy as np
 
 def scale(img, low, high):
 	img *= (high-low)/(max(img.ptp(), 1e-5))
@@ -70,4 +72,22 @@ class Hessian(Filter):
 			beta=para['beta'], gamma=para['gamma'],  black_ridges=para['bridges'])
 		img[:] = scale(rst, ips.range[0], ips.range[1])
 
-plgs = [Frangi, Meijering, Sato, Hessian]
+class StructureTensor(Filter):
+	title = 'Structure Tensor'
+	note = ['all', 'auto_msk', 'auto_snap', 'preview', '2float']
+	para = {'sigma':2, 'axis':'major', 'log':False}
+
+	view = [(float, 'sigma', (0, 20), 1, 'sigma','pix'),
+			(list, 'axis', ['major', 'minor', 'both'], str, 'axis', ''),
+			(bool, 'log', 'log')]
+
+	def run(self, ips, snap, img, para = None):
+		axx, axy, ayy = structure_tensor(snap, sigma=para['sigma'])
+		l1, l2 = structure_tensor_eigvals(axx, axy, ayy)
+		if para['axis']=='major': rst = l1
+		elif para['axis']=='minor': rst = l2
+		else: rst = (l1**2 + l2**2)**0.5
+		if para['log']: rst += 1; np.log(rst, out=rst)
+		img[:] = scale(rst, ips.range[0], ips.range[1])
+
+plgs = [Frangi, Meijering, Sato, Hessian, StructureTensor]

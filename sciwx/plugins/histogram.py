@@ -117,7 +117,7 @@ class Histogram( wx.Panel ):
 		ips = self.app.get_img()
 		if ips is None: return
 		self.range = ips.range = (0,255)
-		hist = ips.histogram()
+		hist = ips.histogram(step=1024)
 		self.histpan.SetValue(hist)
 		self.sli_low.set_para((0,255), 0)
 		self.sli_high.set_para((0,255), 0)
@@ -131,7 +131,7 @@ class Histogram( wx.Panel ):
 		if ips is None: return
 		minv, maxv = ips.get_updown()[0]
 		self.range = ips.range = (minv, maxv)
-		hist = ips.histogram()
+		hist = ips.histogram(step=1024)
 		self.histpan.SetValue(hist)
 		self.sli_low.set_para(self.range, 10)
 		self.sli_high.set_para(self.range, 10)
@@ -143,7 +143,7 @@ class Histogram( wx.Panel ):
 	def on_slice( self, event ):
 		ips = self.app.get_img()
 		if ips is None: return
-		hist = ips.histogram()
+		hist = ips.histogram(step=1024)
 		self.histpan.SetValue(hist)
 	
 	def on_stack( self, event ):
