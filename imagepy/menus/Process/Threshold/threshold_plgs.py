@@ -51,7 +51,7 @@ class Hysteresis(Filter):
 class Auto(Filter):
     title = 'Auto Threshold'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
-    para = {'method':'otsu'}
+    para = {'method':'Otsu'}
     view = [(list, 'method', ['Otsu', 'Yen', 'Isodata', 'Li', 
         'Mini', 'Mean', 'Triangle'], str, 'Method', '')]
 
@@ -65,7 +65,7 @@ class Auto(Filter):
 class Local(Filter):
     title = 'Adaptive Threshold'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
-    para = {'method':'mean', 'size':9, 'offset':2}
+    para = {'method':'Mean', 'size':9, 'offset':2}
     view = [(list, 'method', ['Gaussian', 'Mean', 'Median'], str, 'method', ''),
             (int, 'size', (3, 31), 0, 'blocksize', 'pix'),
             (int, 'offset', (0, 50), 0, 'offset', '')]
