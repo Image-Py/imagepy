@@ -190,7 +190,7 @@ class Canvas (wx.Panel):
         self.update()
 
     def on_size(self, event):
-        if max(self.GetClientSize())>20:
+        if max(self.GetClientSize())>20 and self.images[0].img is not None:
             self.initBuffer()
         if len(self.images)+len(self.marks)==0: return
         if self.conbox[2] - self.conbox[0] > 1: self.update()
