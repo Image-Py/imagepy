@@ -96,7 +96,7 @@ class Frequence(Simple):
             img = imgs[i] if msk is None else imgs[i][msk]
             maxv = img.max()
             if maxv==0:continue
-            ct = np.histogram(img, maxv, [1,maxv+1])[0]
+            ct = np.histogram(img, maxv+1, [0,maxv])[0]
             titles = ['slice','value','count']
             dt = [[i]*len(ct), list(range(maxv+1)), ct]
             if not para['slice']:
