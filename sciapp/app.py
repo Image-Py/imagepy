@@ -6,7 +6,7 @@ class App():
         self.asyn = asyn
         self.managers = {}
         self.img_manager = self.manager('img')
-        #self.wimg_manager = self.manager('wimg')
+        self.wimg_manager = self.manager('wimg')
         self.tab_manager = self.manager('tab')
         #self.wtab_manager = self.manager('wtab')
         self.mesh_manager = self.manager('mesh')
@@ -39,6 +39,9 @@ class App():
         img.name = self.img_manager.name(name)
         self.img_manager.add(img.name, img)
         print(img.info)
+
+    def add_img_win(self, win, name):
+        self.wimg_manager.add(name, win)
 
     def close_img(self, name): 
         self.img_manager.remove(name)
