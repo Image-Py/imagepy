@@ -258,6 +258,8 @@ class MCanvas(wx.Panel):
         self.canvas.on_idle(event)
     
     def on_idle(self, event):
+        if self.image.img is None:
+            return
         image, info = self.image, self.lab_info.GetLabel()
         imgs = image.slices, image.channels, image.cn, image.cur
         selfs = self.pages ,self.chans, self.cn, self.cur
