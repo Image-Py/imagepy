@@ -6,7 +6,7 @@ Created on Fri Jan  6 23:45:59 2017
 """
 import os, sys, os.path as osp
 from glob import glob
-from sciapp.action import Macros, Widget#, Report
+from sciapp.action import Macros, Widget, Report
 from .. import root_dir
 from .manager import DocumentManager, DictManager
 from codecs import open
@@ -23,9 +23,9 @@ def extend_plugins(path, lst, err):
     rst = []
     for i in lst:
         if isinstance(i, tuple) or i=='-': rst.append(i)
-        elif i[-3:] == 'rpt': pass
-            #pt = os.path.join(root_dir,path)
-            #rst.append(Report(i[:-4], pt+'/'+i))
+        elif i[-3:] == 'rpt':
+            pt = os.path.join(root_dir,path)
+            rst.append(Report(i[:-4], pt+'/'+i))
         elif i[-3:] in {'.md', '.mc', '.wf'}:
             p = os.path.join(os.path.join(root_dir, path), i).replace('\\','/')
             rst.append(Macros(i[:-3], ['Open>{"path":"%s"}'%p]))
