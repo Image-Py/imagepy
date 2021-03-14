@@ -3,7 +3,7 @@ import os.path as osp
 
 def md2html(mdstr, css=None):
     exts = ['markdown.extensions.extra', 'markdown.extensions.codehilite',
-        'markdown.extensions.tables','markdown.extensions.toc', 'mdx_math']
+        'markdown.extensions.tables','markdown.extensions.toc']#, 'mdx_math']
     html = '''
         <html lang="zh-cn">
             <head>
