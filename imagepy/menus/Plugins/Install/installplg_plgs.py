@@ -4,7 +4,7 @@ from sciapp.action import Free
 import os, subprocess, zipfile, shutil
 
 import zipfile, sys, urllib
-path = 'https://github.com/Image-Py/imagepy/archive/master.zip'
+path = 'https://github.com/Image-Py/imagepy/archive/main.zip'
 
 from urllib.request import urlretrieve
 import urllib
@@ -37,9 +37,9 @@ class Install(Free):
         url = para['repo']
         if 'github.com' in url:
             if url[-4:] == '.git':
-                url = url.replace('.git', '/archive/master.zip')
+                url = url.replace('.git', '/archive/main.zip')
             elif url[-4:] != '.zip':
-                url = url + '/archive/master.zip'
+                url = url + '/archive/main.zip'
             domain, name = url.split('/')[-4:-2]
         else:
             domain, name = (url[:-4].replace('.','-')).split('/')[-2:]
@@ -62,7 +62,7 @@ class Install(Free):
         zipf = zipfile.ZipFile(os.path.join(path_cache, domain+'_'+name+'.zip'))
         folder = zipf.namelist()[0]
         zipf.extractall(path_cache)
-        destpath = os.path.join(path_plgs, domain+'_'+folder.replace('-master',''))
+        destpath = os.path.join(path_plgs, domain+'_'+folder.replace('-main',''))
         if os.path.exists(destpath): shutil.rmtree(destpath)
         os.rename(os.path.join(path_cache, folder), destpath)
         zipf.close()
