@@ -23,9 +23,10 @@ def make_logo(obj):
         a = memoryview(rgb[::3]).tolist()
         a = bytes([255-i for i in a])
         bmp = wx.Bitmap.FromBufferAndAlpha(16, 16, rgb, a)
-    img = bmp.ConvertToImage()
-    img.Resize((20,20), (2,2))
-    return img.ConvertToBitmap()
+    # img = bmp.ConvertToImage()
+    # img.Resize((20,20), (2,2))
+    # return img.ConvertToBitmap()
+    return bmp
 
 class ToolBar(wx.Panel):
     def __init__(self, parent, vertical=False):
