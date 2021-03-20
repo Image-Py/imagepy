@@ -53,7 +53,7 @@ class Plugin( wx.Panel ):
 		self.Layout()
 
 	def LoadModel(self):
-		fs = glob(osp.join(root_dir, 'data/ilastik/*.fcl'))
+		fs = glob(osp.join(root_dir, 'plugins/ilastik/*.fcl'))
 		self.models = [osp.split(i)[1] for i in fs]
 		self.lst_model.SetItems(self.models)
 
@@ -71,9 +71,9 @@ class Plugin( wx.Panel ):
 		 	return self.app.alert('you must train your model first!')
 		para = {'name':'New Model'}
 		if not self.app.show_para('name', para, [(str, 'name', 'model', 'name')]): return
-		if not osp.exists(osp.join(root_dir, 'data/ilastik')):
-			os.mkdir(osp.join(root_dir, 'data/ilastik'))
-		joblib.dump( manager.model_para, osp.join(root_dir, 'data/ilastik/%s.fcl'%para['name']))
+		if not osp.exists(osp.join(root_dir, 'plugins/ilastik')):
+			os.mkdir(osp.join(root_dir, 'plugins/ilastik'))
+		joblib.dump( manager.model_para, osp.join(root_dir, 'plugins/ilastik/%s.fcl'%para['name']))
 		self.LoadModel()
 
 	def on_saveas(self, event):
@@ -91,7 +91,7 @@ class Plugin( wx.Panel ):
 		para = {'path':'', 'name':''}
 		filt = ['fcl']
 		para['path'] = self.app.get_path('Save..', filt, 'save', para['name'])
-		oldname = osp.join(root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection())
+		oldname = osp.join(root_dir, 'plugins/ilastik/%s'%self.lst_model.GetStringSelection())
 		print(para['path'])
 		shutil.copyfile(oldname, para['path'])
 		self.LoadModel()
@@ -101,14 +101,14 @@ class Plugin( wx.Panel ):
 		if idx==-1: return self.app.alert('no model selected!')
 		para = {'name':'New Model'}
 		if not self.app.show_para('name', para, [(str, 'name', 'model', 'name')]): return
-		oldname = osp.join(root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection())
-		os.rename(oldname, osp.join(root_dir, 'data/ilastik/%s.fcl'%para['name']))
+		oldname = osp.join(root_dir, 'plugins/ilastik/%s'%self.lst_model.GetStringSelection())
+		os.rename(oldname, osp.join(root_dir, 'plugins/ilastik/%s.fcl'%para['name']))
 		self.LoadModel()
 
 	def on_remove(self, event):
 		idx = self.lst_model.GetSelection()
 		if idx==-1: return self.app.alert('no model selected!')
-		os.remove(osp.join(root_dir, 'data/ilastik/%s'%self.lst_model.GetStringSelection()))
+		os.remove(osp.join(root_dir, 'plugins/ilastik/%s'%self.lst_model.GetStringSelection()))
 		self.LoadModel()
 
 	def on_run(self, event):

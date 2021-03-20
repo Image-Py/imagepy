@@ -1,54 +1,44 @@
 from sciapp.action import Free
 import os, sys, os.path as osp
-import zipfile, urllib
-from io import BytesIO
 from imagepy import root_dir
+from dulwich import porcelain
 import shutil
-
-if sys.version_info[0]==2:
-    from urllib import urlretrieve
-else: 
-    from urllib.request import urlretrieve
-
-def Schedule(a,b,c, plg):
-    per = 100.0 * a * b / c
-    if per > 100 : per = 100
-    print('%-3d%%'%per)
-    plg.prgs = (int(per), 100)
 
 class Update(Free):
     title = 'Update Software'
 
     def run(self, para=None):
         self.app.info('update now, waiting...')
-        self.download_zip()
-        self.deal_file()
-        #self.delete_cache()
-        self.app.alert('imagepy update done!')
-
-    def download_zip(self):
-        url='https://github.com/Image-Py/imagepy/archive/master.zip'
-        path=osp.dirname(root_dir)
-        zipname = osp.join(path, 'imagepy_cache.zip')
-        print('downloading from %s'%url)
-        urlretrieve(url, zipname, 
-            lambda a,b,c, p=self: Schedule(a,b,c,p))
-
-    def deal_file(self):
-        path = osp.dirname(root_dir)
-        #remove 
+        url = 'https://gitee.com/mirrors/imagepy'
+        path = osp.dirname(root_dir); rpath = osp.dirname(path)
+        newpath = osp.join(rpath, 'imagepy_new')
+        if osp.exists(newpath): shutil.rmtree(newpath)
+        porcelain.clone(url, os.path.join(rpath, 'imagepy_new'), depth=1).close()
+        shutil.rmtree(os.path.join(os.path.join(rpath, 'imagepy_new'), '.git'))
+        shutil.copytree(osp.join(path, 'imagepy/plugins'), 
+            osp.join(rpath, 'imagepy_new/imagepy/plugins'))
+        shutil.copyfile(osp.join(path, 'imagepy/data/config.json'), 
+            osp.join(rpath, 'imagepy_new/imagepy/data/config.json'))
+        shutil.copyfile(osp.join(path, 'imagepy/data/shortcut.json'), 
+            osp.join(rpath, 'imagepy_new/imagepy/data/shortcut.json'))
+        newpath = os.path.join(rpath, 'imagepy_new')
+        fs = os.listdir(os.path.join(rpath, 'imagepy_new'))
+        fs = [i for i in fs if osp.isdir(osp.join(newpath, i))]
+        fs = [i for i in fs if osp.exists(osp.join(path, i))]
+        for i in [j for j in fs if j!='imagepy']: shutil.rmtree(osp.join(path, i))
+        for i in [j for j in fs if j!='imagepy']: 
+            shutil.copytree(osp.join(newpath, i),  osp.join(path, i))
         for i in os.listdir(root_dir):
-            if i in ['plugins', 'ilastik', 'preference.cfg', '.gitignore']: continue
-            if osp.isdir(osp.join(root_dir,i)): shutil.rmtree(osp.join(root_dir, i))
+            if osp.isdir(osp.join(root_dir,i)): 
+                shutil.rmtree(osp.join(root_dir, i))
             else : os.remove(osp.join(root_dir,i))
-
-        source = zipfile.ZipFile(osp.join(path, 'imagepy_cache.zip'), 'r')
-        target = zipfile.ZipFile(BytesIO(), 'w')
-        for i in source.namelist()[1:]: target.writestr(i[15:], source.read(i))
-        target.extractall(path)
-        target.close()
-        source.close()
-        os.remove(osp.join(path,'imagepy_cache.zip'))
+        newdir = os.path.join(newpath, 'imagepy')
+        for i in os.listdir(newdir):
+            if osp.isdir(osp.join(newdir, i)):
+                shutil.copytree(osp.join(newdir, i), osp.join(root_dir, i))
+            else: shutil.copyfile(osp.join(newdir, i), osp.join(root_dir, i))
+        shutil.rmtree(newpath)
+        self.app.alert('imagepy update done!')
 
 class Refresh(Free):
     title = 'Reload Plugins'

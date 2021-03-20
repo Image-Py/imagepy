@@ -6,11 +6,11 @@ class App():
         self.asyn = asyn
         self.managers = {}
         self.img_manager = self.manager('img')
-        #self.wimg_manager = self.manager('wimg')
+        self.wimg_manager = self.manager('wimg')
         self.tab_manager = self.manager('tab')
-        #self.wtab_manager = self.manager('wtab')
+        self.wtab_manager = self.manager('wtab')
         self.mesh_manager = self.manager('mesh')
-        #self.wmesh_manager = self.manager('wmesh')
+        self.wmesh_manager = self.manager('wmesh')
         self.task_manager = self.manager('task')
         
         self.plugin_manager = self.manager('plugin')
