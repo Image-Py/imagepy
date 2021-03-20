@@ -3,7 +3,6 @@ numpy-stl
 openpyxl
 pandas
 pydicom
-
 pypubsub
 read-roi
 scikit-image
@@ -15,3 +14,4 @@ xlwt
 markdown
 python-markdown-math
 moderngl
+dulwich

@@ -44,6 +44,7 @@ if __name__ == '__main__':
             'openpyxl',
             'markdown',
             'python-markdown-math',
-            'numba'
+            'numba',
+            'dulwich'
         ],
     )
