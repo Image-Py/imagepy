@@ -1,5 +1,5 @@
 # cellpose-planer
-**Path:** https://github.com/Image-Py/cellpose-planer
+**Path:** https://gitee.com/imagepy/cellpose-planer
 
 **Version:** 0.1
 
