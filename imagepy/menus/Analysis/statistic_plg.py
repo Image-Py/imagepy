@@ -68,16 +68,15 @@ def show_hist(parent, title, hist):
 
 class Histogram(Simple):
     title = 'Histogram'
-    note = ['8-bit', '16-bit', 'rgb']
+    note = ['all']
 
     def run(self, ips, imgs, para = None):
         msk = ips.mask('in')
+        rg = np.linspace(*ips.range, 257)
+        img = ips.img if msk is None else ips.img[msk]
         if ips.channels == 3:
-            img = ips.img if msk is None else ips.img[msk]
-            hist = [np.histogram(img.ravel()[i::3], np.arange(257))[0] for i in (0,1,2)]
-        else:
-            img = ips.lookup() if msk is None else ips.lookup()[msk]
-            hist = np.histogram(img, np.arange(257))[0]
+            hist = [np.histogram(img.ravel()[i::3], rg)[0] for i in (0,1,2)]
+        else: hist = np.histogram(img,rg)[0]
         show_hist(self.app, ips.title+'-Histogram', hist)
 
 class Frequence(Simple):
@@ -94,11 +93,9 @@ class Frequence(Simple):
         msk = ips.mask('in')
         for i in range(len(imgs)):
             img = imgs[i] if msk is None else imgs[i][msk]
-            maxv = img.max()
-            if maxv==0:continue
-            ct = np.histogram(img, maxv+1, [0,maxv])[0]
+            ct = np.bincount(img.ravel()) #np.histogram(img, maxv+1, [0,maxv])[0]
             titles = ['slice','value','count']
-            dt = [[i]*len(ct), list(range(maxv+1)), ct]
+            dt = [np.ones(len(ct), dtype=np.uint32)+i, np.arange(len(ct)), ct]
             if not para['slice']:
                 titles, dt = titles[1:], dt[1:]
             if self.para['fre']:
@@ -144,27 +141,6 @@ class Statistic(Simple):
             data.append(self.count(img, para))
             self.progress(n, len(imgs))
         self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-statistic')
-        
-class Mark:
-    def __init__(self, data):
-        self.data = data
-
-    def draw(self, dc, f, **key):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
-        dc.SetTextForeground((255,255,0))
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
-                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        
-        dc.SetFont(font)
-        data = self.data[0 if len(self.data)==1 else key['cur']]
-
-        for i in range(len(data)):
-            pos = f(*(data[i][0], data[i][1]))
-            dc.SetBrush(wx.Brush((255,255,255)))
-            dc.DrawCircle(pos[0], pos[1], 2)
-            dc.SetBrush(wx.Brush((0,0,0), wx.BRUSHSTYLE_TRANSPARENT))
-            dc.DrawCircle(pos[0], pos[1], data[i][2]*key['k'])
-            dc.DrawText('id={}, r={}'.format(i, data[i][2]), pos[0], pos[1])
 
 class PointsValue(Simple):
     title = 'Points Value'

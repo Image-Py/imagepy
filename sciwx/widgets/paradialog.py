@@ -52,8 +52,10 @@ class ParaDialog (wx.Dialog):
         self.para, self.modal = para, modal
         for item in items:
             self.add_ctrl_(widgets[item[0]], item[1], item[2:], app=app)
-        if preview:self.add_ctrl_(Check, 'preview', ('preview',), app=app)
+        if preview: self.add_ctrl_(Check, 'preview', ('preview',), app=app)
         self.reset(para)
+        for p in self.ctrl_dic:
+            if p in para: para[p] = self.ctrl_dic[p].GetValue()
         self.add_confirm(modal)
         wx.Dialog.Bind(self, wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         #wx.Dialog.Bind(self, wx.EVT_IDLE, lambda e: self.reset())

@@ -132,28 +132,15 @@ if __name__ == '__main__':
         def __call__(self):
             return self
         
-    # data = ('menu', [
-    #             ('File', None, [
-    #                 ('Open CV', (255,0,0), P('O')),
-    #                 '-',
-    #                   ('Close', None, P('C'))]),
-    #         ('Edit', None, [('Copy', None, P('C')),
-    #                   ('A', None, [('B', None, P('B')),
-    #                          ('C', None, P('C'))]),
-    #                   ('Paste', None, P('P'))])])
-
     data = ('menu', [
-                ('File', [
-                    ('Open', P('O')),
+                ('File', None, [
+                    ('Open CV', (255,0,0), P('O')),
                     '-',
-                    ('Close', P('C'))]),
-                ('Edit', [
-                    ('Copy', P('C')),
-                    ('A', [
-                        ('B', P('B')),
-                        ('C', P('C'))]),
-                    ('Paste', P('P'))])])
-    
+                      ('Close', None, P('C'))]),
+            ('Edit', None, [('Copy', None, P('C')),
+                      ('A', None, [('B', None, P('B')),
+                             ('C', None, P('C'))]),
+                      ('Paste', P('P'))])])
     app = wx.App()
     frame = wx.Frame(None)
     menubar = RibbonBar(frame)

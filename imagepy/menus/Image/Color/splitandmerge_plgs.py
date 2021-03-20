@@ -21,7 +21,7 @@ class SplitRGB(Simple):
             for c,ci in zip((r,g,b),(0,1,2)):
                 if self.para['copy']:c.append(i[:,:,ci].copy())
                 else: c.append(i[:,:,ci])
-            self.progress(i, n)
+            self.progress(n+1, len(imgs))
         for im, tl in zip([r,g,b],['red','green','blue']):
             self.app.show_img(im, ips.title+'-'+tl)
         if self.para['destory']:

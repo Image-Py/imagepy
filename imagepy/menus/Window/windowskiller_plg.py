@@ -16,7 +16,7 @@ class ImageKiller(Free):
             (bool, 'all', 'close all images')]
     
     def run(self, para = None):
-        self.app.close_image(None if para['all'] else para['img'])
+        self.app.close_img(None if para['all'] else para['img'])
         
 class TableKiller(Free):
     title = 'Kill Table'

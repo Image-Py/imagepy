@@ -16,7 +16,7 @@ class RegionCounter(Simple):
     title = 'Geometry Analysis'
     note = ['8-bit', '16-bit', 'int']
     para = {'con':'8-connect', 'center':True, 'area':True, 'l':True, 'extent':False, 'cov':False, 'slice':False,
-            'ed':False, 'holes':False, 'ca':False, 'fa':False, 'solid':False}
+            'ed':False, 'holes':False, 'ca':False, 'fa':False, 'solid':False, 'labeled':False}
     view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             (bool, 'slice', 'slice'),
             ('lab', None, '=========  indecate  ========='),
@@ -29,7 +29,8 @@ class RegionCounter(Simple):
             (bool, 'holes', 'holes'),
             (bool, 'fa', 'filled area'),
             (bool, 'solid', 'solidity'),
-            (bool, 'cov', 'cov')]
+            (bool, 'cov', 'cov'),
+            (bool, 'labeled', 'has been labeled')]
 
     #process
     def run(self, ips, imgs, para = None):
@@ -51,7 +52,7 @@ class RegionCounter(Simple):
         data, mark = [], {'type':'layers', 'body':{}}
         strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
         for i in range(len(imgs)):
-            label(imgs[i], strc, output=buf)
+            np.copyto(imgs[i], buf) if para['labeled'] else label(imgs[i], strc, output=buf)
             ls = regionprops(buf)
 
             dt = [[i]*len(ls), list(range(len(ls)))]
