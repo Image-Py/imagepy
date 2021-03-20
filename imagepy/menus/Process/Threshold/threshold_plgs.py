@@ -81,7 +81,7 @@ class Niblack(Filter):
             (float, 'k', (0, 1), 2, 'offset', '')]
     
     def run(self, ips, snap, img, para = None):
-        if para['size']%2==0: return IPy.alert('size must be Odd')
+        if para['size']%2==0: return self.app.alert('size must be Odd')
         img[:] = (snap>threshold_niblack(snap, para['size'], para['k']))*ips.range[1]
 
 class Sauvola(Filter):
@@ -92,7 +92,7 @@ class Sauvola(Filter):
             (float, 'k', (0, 1), 2, 'offset', '')]
     
     def run(self, ips, snap, img, para = None):
-        if para['size']%2==0: return IPy.alert('size must be Odd')
+        if para['size']%2==0: return self.app.alert('size must be Odd')
         img[:] = (snap>threshold_sauvola(snap, para['size'], para['k']))*ips.range[1]
 
 plgs = [SimpleThreshold, Auto, '-', Local, Niblack, Sauvola, '-', Hysteresis]

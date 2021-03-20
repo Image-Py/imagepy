@@ -2,7 +2,7 @@ import wx, os, sys
 import time, threading
 sys.path.append('../../../')
 import wx.lib.agw.aui as aui
-from sciwx.widgets import MenuBar, ToolBar, ChoiceBook, ParaDialog, WorkFlowPanel, ProgressBar
+from sciwx.widgets import MenuBar, RibbonBar, ToolBar, ChoiceBook, ParaDialog, WorkFlowPanel, ProgressBar
 from sciwx.canvas import CanvasNoteBook
 from sciwx.grid import GridNoteBook
 from sciwx.mesh import Canvas3DNoteBook
@@ -147,6 +147,8 @@ class ImagePy(wx.Frame, App):
         
     def init_menu(self):
         self.menubar = MenuBar(self)
+        # self.menubar = RibbonBar(self)
+        # self.auimgr.AddPane( self.menubar, aui.AuiPaneInfo() .CaptionVisible(False) .Top() .PinButton( True ).Dock().Resizable().MinSize(wx.Size(1000, 130)).FloatingSize( wx.DefaultSize ).Layer(5) )
         
     def init_tool(self):
         sizer = wx.BoxSizer(wx.VERTICAL)

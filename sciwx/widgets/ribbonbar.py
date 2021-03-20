@@ -69,7 +69,10 @@ class RibbonBar(rb.RibbonBar):
     def parse(self, ks, vs, pt, short, rst):
         page = rb.RibbonPage( self, wx.ID_ANY, ks , wx.NullBitmap , 0 )
         panel = toolbar = None
+
         for kv1 in vs:
+            if len(kv1) == 2:
+                kv1 = (kv1[0], None, kv1[1])
             if kv1 == '-': continue
             pname = kv1[0] if isinstance(kv1[2], list) else '--'
             if panel is None and not isinstance(kv1[2], list):
@@ -85,6 +88,8 @@ class RibbonBar(rb.RibbonBar):
                 panel = rb.RibbonPanel( page, wx.ID_ANY, pname , make_logo(kv1[1] or kv1[0][0]) , wx.DefaultPosition, wx.DefaultSize, rb.RIBBON_PANEL_DEFAULT_STYLE )
                 toolbar = rb.RibbonButtonBar( panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
                 for kv2 in kv1[2]:
+                    if len(kv2) == 2:
+                        kv2 = (kv2[0], None, kv2[1])
                     if kv2 == '-': continue
                     btn = toolbar.AddSimpleButton( wx.NewId(), kv2[0], make_logo(kv2[1] or kv2[0][0]), wx.EmptyString)
                     toolbar.Bind(rb.EVT_RIBBONBUTTONBAR_CLICKED, lambda e, p=kv2[2]:p().start(self.app), id=btn.id)
@@ -98,11 +103,14 @@ class RibbonBar(rb.RibbonBar):
         
     def load(self, data, shortcut={}):
         rst = []
-        for k,l,v in data[1]: 
-            self.parse(k, v, self, shortcut, rst)
+        for klv in data[1]:
+            if len(klv) == 2:
+                self.parse(klv[0], klv[1], self, shortcut, rst)
+            else:
+                self.parse(klv[0], klv[2], self, shortcut, rst)
+
         rst = [(*hot_key(i[0]), i[1]) for i in rst]
-        acc = wx.AcceleratorTable(rst)
-        self.GetParent().SetAcceleratorTable(acc)
+        return wx.AcceleratorTable(rst)
 
     def on_menu(self, event): 
         print('here')
@@ -124,15 +132,27 @@ if __name__ == '__main__':
         def __call__(self):
             return self
         
+    # data = ('menu', [
+    #             ('File', None, [
+    #                 ('Open CV', (255,0,0), P('O')),
+    #                 '-',
+    #                   ('Close', None, P('C'))]),
+    #         ('Edit', None, [('Copy', None, P('C')),
+    #                   ('A', None, [('B', None, P('B')),
+    #                          ('C', None, P('C'))]),
+    #                   ('Paste', None, P('P'))])])
+
     data = ('menu', [
-                ('File', None, [
-                    ('Open CV', (255,0,0), P('O')),
+                ('File', [
+                    ('Open', P('O')),
                     '-',
-                      ('Close', None, P('C'))]),
-            ('Edit', None, [('Copy', None, P('C')),
-                      ('A', None, [('B', None, P('B')),
-                             ('C', None, P('C'))]),
-                      ('Paste', None, P('P'))])])
+                    ('Close', P('C'))]),
+                ('Edit', [
+                    ('Copy', P('C')),
+                    ('A', [
+                        ('B', P('B')),
+                        ('C', P('C'))]),
+                    ('Paste', P('P'))])])
     
     app = wx.App()
     frame = wx.Frame(None)

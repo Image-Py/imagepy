@@ -40,6 +40,9 @@ class App():
         self.img_manager.add(img.name, img)
         print(img.info)
 
+    def add_img_win(self, win, name):
+        self.wimg_manager.add(name, win)
+
     def close_img(self, name): 
         self.img_manager.remove(name)
         print('close image:', name)
