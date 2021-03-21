@@ -9,7 +9,7 @@ class Update(Free):
 
     def run(self, para=None):
         self.app.info('update now, waiting...')
-        url = 'https://gitee.com/mirrors/imagepy'
+        url = 'https://gitee.com/imagepy/imagepy'
         path = osp.dirname(root_dir); rpath = osp.dirname(path)
         newpath = osp.join(rpath, 'imagepy_new')
         if osp.exists(newpath): shutil.rmtree(newpath)
