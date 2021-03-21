@@ -8,7 +8,7 @@ Created on Sat Jan  7 01:00:02 2017
 from sciapp.action import Free
 import wx,os
 from imagepy import root_dir
-from imagepy.app import loader, ConfigManager
+from imagepy.app import loader, ConfigManager, DocumentManager
 from wx.py.editor import EditorFrame
 from sciwx.text import MDPad
 from glob import glob
@@ -74,22 +74,21 @@ class Plugin ( wx.Panel ):
                 self.tre_plugins.SetItemData(item, i)
                 
     def load(self):
-        datas = loader.build_plugins('menus')
+        data = loader.build_plugins(root_dir+'/menus')
+        extends = glob(root_dir+'/plugins/*/menus')
         keydata = {}
-        for i in datas[1]:
-            if isinstance(i, tuple): keydata[i[0].__name__.split('.')[-1]] = i[1]
-        #print(keydata)
-        extends = glob('plugins/*/menus')
+        for i in data[1]:
+            if isinstance(i, tuple): keydata[i[0].title] = i[1]
         for i in extends:
             plgs = loader.build_plugins(i)
+            data[2].extend(plgs[2])
             for j in plgs[1]:
                 if not isinstance(j, tuple): continue
-                name = j[0].__name__.split('.')[-1]
-                if name in keydata: 
-                    keydata[name].extend(j[1])
-                else: datas[1].append(j)
+                name = j[0].title
+                if name in keydata: keydata[name].extend(j[1])
+                else: data[1].append(j)
         root = self.tre_plugins.AddRoot('Plugins')
-        self.addnode(root, datas[1])
+        self.addnode(root, data[1])
     
     # Virtual event handlers, overide them in your derived class
     def on_run( self, event ):

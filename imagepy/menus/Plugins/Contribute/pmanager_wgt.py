@@ -7,6 +7,7 @@ Created on Sat Jan  7 16:01:14 2017
 import wx, os, glob, shutil, random
 from imagepy import root_dir
 from sciwx.text import MDPad
+from sciapp.action import Macros
 #from imagepy.ui.mkdownwindow import HtmlPanel, md2html
 
 class VirtualListCtrl(wx.ListCtrl):
@@ -36,15 +37,16 @@ def parse(path):
     f = open(path, encoding='utf-8')
     body = {'file':path}
     try:
-        for i in range(13):
+        line = f.readline()
+        if line[0] == '#':body['name'] = line.split('#')[-1].strip()
+        while line:
             line = f.readline()
-            if line[0] == '#':body['name'] = line.split('#')[-1].strip()
-            if 'Path:' in line: body['path'] = line.split('**')[-1].strip()
-            if 'Version:' in line: body['version'] = line.split('**')[-1].strip()
-            if 'Author:' in line: body['author'] = line.split('**')[-1].strip()
-            if 'Email:' in line: body['email'] = line.split('**')[-1].strip()
-            if 'Keyword:' in line: body['keyword'] = line.split('**')[-1].strip()
-            if 'Description' in line: body['Description'] = line.split('**')[-1].strip()
+            if line.startswith('**Path:'): body['path'] = line.split('**')[-1].strip()
+            if line.startswith('**Version:'): body['version'] = line.split('**')[-1].strip()
+            if line.startswith('**Author:'): body['author'] = line.split('**')[-1].strip()
+            if line.startswith('**Email:'): body['email'] = line.split('**')[-1].strip()
+            if line.startswith('**Keyword:'): body['keyword'] = line.split('**')[-1].strip()
+            if line.startswith('**Description'): body['Description'] = line.split('**')[-1].strip()
         f.close()
     except: body = [0]
     finally: f.close()
@@ -67,6 +69,8 @@ class Plugin( wx.Panel ):
         self.txt_search = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, 
                                        wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer2.Add( self.txt_search, 1, wx.ALL, 5 )
+        self.btn_update = wx.Button( self, wx.ID_ANY, 'Refresh List Online', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
+        bSizer2.Add( self.btn_update, 0, wx.ALL, 5 )
 
         bSizer3 = wx.BoxSizer( wx.HORIZONTAL )
         self.btn_install = wx.Button( self, wx.ID_ANY, 'Install/Update', wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
@@ -95,6 +99,7 @@ class Plugin( wx.Panel ):
         # Connect Events
         self.txt_search.Bind( wx.EVT_TEXT, self.on_search)
         self.lst_plgs.Bind( wx.EVT_LIST_ITEM_SELECTED, self.on_run)
+        self.btn_update.Bind(wx.EVT_BUTTON, self.on_update)
         self.btn_install.Bind(wx.EVT_BUTTON, self.on_install)
         self.btn_uninstall.Bind(wx.EVT_BUTTON, self.on_remove)
         self.chk_has.Bind( wx.EVT_CHECKBOX, self.on_check)
@@ -131,6 +136,9 @@ class Plugin( wx.Panel ):
         self.lst_plgs.set_data(self.buf)
         self.lst_plgs.Refresh()
         
+    def on_update(self, event):
+        Macros('', ['Update Plugins List>None']).start(self.app, callafter=self.load)
+
     def on_run(self, event):
         f = open(self.buf[event.GetIndex()][-1]['file'], encoding='utf-8')
         cont = f.read()
