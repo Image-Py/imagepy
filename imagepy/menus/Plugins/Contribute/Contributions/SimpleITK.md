@@ -1,6 +1,6 @@
 # itk-plgs 
 
-**Path:** https://github.com/Image-Py/itk-plgs
+**Path:** https://gitee.com/imagepy/itk-plgs
 
 **Version:** 0.1
 

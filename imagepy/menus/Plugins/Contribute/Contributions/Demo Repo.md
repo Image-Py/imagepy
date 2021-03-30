@@ -1,6 +1,6 @@
 # Demo Plugin
 
-**Path:** https://github.com/Image-Py/demoplugin
+**Path:** https://gitee.com/imagepy/demoplugin
 
 **Version:** 0.1
 

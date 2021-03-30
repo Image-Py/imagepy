@@ -1,6 +1,6 @@
 # IBook
 
-**Path:** https://github.com/Image-Py/IBook
+**Path:** https://gitee.com/imagepy/IBook
 
 **Version:** 0.1
 
@@ -10,7 +10,7 @@
 
 **Keyword:** book, tutorial
 
-**Description:** ImagePy's plugins to show some image processing method, which is friendly to beginner
+**Description:** ImagePy's plugins to show some image processing method, which is friendly to beginner.
 
 you must fill the information upon, and you can not remove or insert line, you can write free below.
 

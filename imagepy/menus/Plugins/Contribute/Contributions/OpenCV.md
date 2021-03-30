@@ -1,6 +1,6 @@
 # opencv-plgs  
 
-**Path:** https://github.com/Image-Py/opencv-plgs
+**Path:** https://gitee.com/imagepy/opencv-plgs
 
 **Version:** 0.1
 
