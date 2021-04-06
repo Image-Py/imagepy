@@ -64,7 +64,7 @@ class RegionCounter(Simple):
             if para['cov']:
                 ellips = [i.centroid[::-1] + (i.major_axis_length/2,i.minor_axis_length/2, i.orientation+np.pi/2) for i in ls]
                 layer['body'].append({'type':'ellipses', 'body':ellips})
-            print(i,i,i,i,i)
+
             if len(ls)>0: mark['body'][i] = layer
 
             if para['center']:

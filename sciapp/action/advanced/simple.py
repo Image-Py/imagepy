@@ -42,7 +42,7 @@ class Simple:
             elif ips.dtype==np.int32 and not 'int' in note:
                 self.app.alert('Do not surport 32-bit int uint image')
                 return False
-            elif ips.dtype in {np.float32, np.float64} and not 'float' in note:
+            elif (ips.dtype==np.float32 or ips.dtype==np.float64) and not 'float' in note:
                 self.app.alert('Do not surport float image')
                 return False
         if sum([i in note for i in ('stack','stack2d','stack3d')])>0:
