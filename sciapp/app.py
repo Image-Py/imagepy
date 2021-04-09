@@ -151,7 +151,7 @@ class App():
         def one(cmds, after): 
             cmd = cmds.pop(0)
             if not isinstance(cmd, str): title, para = cmd
-            else: title, para = eval(cmd.replace('>', ','))
+            else: title, para = eval('"'+cmd.replace('>', '",'))
             plg = self.plugin_manager.get(name=title)()
             after = lambda cmds=cmds: one(cmds, one)
             if len(cmds)==0: after = callafter
