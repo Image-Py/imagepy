@@ -32,7 +32,7 @@ class Hysteresis(Filter):
         return True
 
     def cancel(self, ips):
-        ips.lut = self.buflut
+        ips.lut[:] = self.buflut
         ips.update()
 
     def preview(self, ips, para):
@@ -45,7 +45,7 @@ class Hysteresis(Filter):
         ips.update()
 
     def run(self, ips, snap, img, para = None):
-        ips.lut = self.buflut
+        ips.lut[:] = self.buflut
         return apply_hysteresis_threshold(snap, para['low'], para['high'])*ips.range[1]
 
 class Auto(Filter):

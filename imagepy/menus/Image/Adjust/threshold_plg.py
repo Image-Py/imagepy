@@ -27,7 +27,7 @@ class Plugin(Filter):
         return True
 
     def cancel(self, ips):
-        ips.lut = self.lut
+        ips.lut[:] = self.lut
 
     def preview(self, ips, para):
         ips.lut[:] = self.lut
@@ -41,7 +41,7 @@ class Plugin(Filter):
     
     def run(self, ips, snap, img, para = None):
         if para == None: para = self.para
-        ips.lut = self.lut
+        ips.lut[:] = self.lut
         img[:] = 0
         img[snap>=para['thre_lh'][1]] = 255
         img[snap<para['thre_lh'][0]] = 255
