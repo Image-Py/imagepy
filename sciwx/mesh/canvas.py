@@ -94,7 +94,7 @@ def viewtext(text, view):
         view._picking_filter.id = view._id
     else:
         view._picking_filter.enabled = True
-        view._picking_filter.id = mesh.high_light
+        view._picking_filter.id = text.high_light
     # view.shading = 'flat'
     text.dirty = False
     return view
@@ -117,7 +117,7 @@ def viewvolume(vol, view):
         view._picking_filter.id = view._id
     else:
         view._picking_filter.enabled = True
-        view._picking_filter.id = mesh.high_light
+        view._picking_filter.id = vol.high_light
     # view.shading = 'flat'
     vol.dirty = False
     return view
@@ -162,6 +162,7 @@ class Canvas3D(scene.SceneCanvas):
             need = 'update'
             self.bgcolor = self.scene3d.bg_color
             for i in self.visuals:
+                if not isinstance(self.visuals[i], MeshVisual): continue
                 self.visuals[i].ambient_light_color = self.scene3d.ambient_color
                 self.visuals[i].light_color = self.scene3d.light_color
                 self.visuals[i].light_dir = self.scene3d.light_dir

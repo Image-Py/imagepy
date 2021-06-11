@@ -11,7 +11,7 @@ class MeshViewTool(MeshTool):
     def mouse_down(self, obj, x, y, btn, **key):
         self.oldxy = x, y
         if btn == 1 and not key['shift']:
-            picked = key['canvas'].at(x,y)
+            picked = key['canvas'].at(x,y) if key['ctrl'] else None
             if not picked is None: 
                 self.curobj = picked
                 self.curobj.set_data(high_light=0xffaaffff)
@@ -69,3 +69,5 @@ class MeshViewTool(MeshTool):
         if camera._distance is not None:
             camera._distance *= s
         camera.scale_factor *= s
+
+MeshViewTool().start(None)

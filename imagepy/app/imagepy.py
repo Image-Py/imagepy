@@ -203,7 +203,7 @@ class ImagePy(wx.Frame, App):
         self.tablenbwrap.SetSizer( sizer )
         self.tablenbwrap.Layout()
         
-        self.auimgr.AddPane( self.tablenbwrap, aui.AuiPaneInfo() .Center() .CaptionVisible( True ).PinButton( True ).Dock()
+        self.auimgr.AddPane( self.tablenbwrap, aui.AuiPaneInfo() .Bottom() .CaptionVisible( True ).PinButton( True ).Dock(). Hide()
             .MaximizeButton( True ).Resizable().FloatingSize((800, 600)).BestSize(( 120,120 )). Caption('Table') . 
             BottomDockable( True ).TopDockable( False ).LeftDockable( True ).RightDockable( True ) )
         self.tablenb.Bind( wx.lib.agw.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_active_table)
