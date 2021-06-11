@@ -6,27 +6,34 @@ Created on Tue Jan 10 22:33:33 2017
 """
 from sciapp.action import Simple, Filter, Free
 from scipy.ndimage.filters import gaussian_filter
-from sciapp.object import Surface, MarkText
-from sciapp.util import surfutil
+from sciapp.object import Mesh, Scene, Surface2d, Surface3d, Volume3d
+from imagepy.app import ColorManager
+from sciapp.util import meshutil
 
 class Show(Free):
     title = 'Show Viewer 3D'
+    para = {'name':'Scene', 'bg':(0,0,0)}
+    view = [(str, 'name', 'name', ''),
+            ('color', 'bg', 'background', 'color')]
+
     def run(self, para):
-        self.app.show_mesh()
+        scene = Scene(bg_color=[i/255 for i in para['bg']])
+        self.app.show_mesh(scene, para['name'])
 
 class Surface2D(Simple):
     title = '2D Surface'
     note = ['8-bit', '16-bit', 'float']
-    para = {'name':'undifine', 'scale':2, 'sigma':2,'h':1}
+    para = {'name':'undifine', 'sample':2, 'sigma':2,'h':0.3, 'cm':'gray'}
     view = [(str, 'name', 'Name', ''),
-            (int, 'scale', (1,5), 0, 'down scale', 'pix'),
+            (int, 'sample', (1,10), 0, 'down sample', 'pix'),
             (int, 'sigma', (0,30), 0, 'sigma', ''),
-            (float, 'h', (0.1,10), 1, 'scale z', '')]
+            (float, 'h', (0.1,10), 1, 'scale z', ''),
+            ('cmap', 'cm', 'color map')]
 
     def run(self, ips, imgs, para = None):
-        ds, sigma = para['scale'], para['sigma']
-        vts, fs, ns, cs = surfutil.build_surf2d(ips.img, ds=ds, sigma=para['sigma'], k=para['h'])
-        self.app.show_mesh(Surface(vts, fs, ns, cs), para['name'])
+        ds, sigma, cm = para['sample'], para['sigma'], ColorManager.get(para['cm'])
+        mesh = Surface2d(ips.img, sample=ds, sigma=sigma, k=para['h'], cmap=cm)
+        self.app.show_mesh(mesh, para['name'])
 
 class Surface3D(Simple):
     modal = False
@@ -54,8 +61,8 @@ class Surface3D(Simple):
     def run(self, ips, imgs, para = None):
         ips.lut = self.buflut
         cs = tuple([int(i/255.0) for i in para['color']])
-        vts, fs, ns, cs = surfutil.build_surf3d(ips.imgs, para['ds'], para['thr'], para['step'], cs)
-        self.app.show_mesh(Surface(vts, fs, ns, cs), para['name'])
+        surf3d = Surface3d(imgs=ips.imgs, level=para['thr'], sample=para['ds'], step=para['step'], colors=cs)
+        self.app.show_mesh(surf3d, para['name'])
 
 class ImageCube(Simple):
     modal = False
@@ -76,4 +83,21 @@ class ImageCube(Simple):
             vts, fs, ns, cs = surfutil.build_img_box(imgs, para['color'])
             self.app.show_mesh(Surface(vts, fs, ns, cs, mode='grid'), para['name']+'-box')
 
-plgs = [Show, Surface2D, Surface3D, ImageCube]
+class Volume3D(Simple):
+    modal = False
+    title = '3D Volume'
+    note = ['8-bit', 'stack3d']
+    para = {'name':'undifine', 'step':1, 'cm':'gray', 'cube':True}
+    view = [(str, 'name', 'Name', ''),
+            (int, 'step', (1,10), 0, 'march step', 'pix'),
+            ('cmap', 'cm', 'color map'),
+            (bool, 'cube', 'draw outline cube')]
+
+    def run(self, ips, imgs, para = None):
+        cmap =  ColorManager.get(para['cm'])
+        self.app.show_mesh(Volume3d(imgs, step=para['step'], cmap=cmap), para['name'])
+        if para['cube']:
+            vts, fs = meshutil.create_bound((0,0,0), imgs.shape)
+            self.app.show_mesh(Mesh(verts=vts, faces=fs, colors=(1,1,1), mode='grid'), 'box')
+
+plgs = [Show, Surface2D, Surface3D, ImageCube, Volume3D]

@@ -1,5 +1,5 @@
 from .manager import Manager
-from .object import Image, Table
+from .object import Image, Table, Scene
 
 class App():
     def __init__(self, asyn=True):
@@ -78,24 +78,26 @@ class App():
 
     def table_names(self):
         return self.tab_manager.names()
+
     # ========== Others ==========
     def show_plot(self): pass
 
-    def show_mesh(self): pass
-
-    def add_mesh(self, mesh):
-        if not self.mesh_manager.has(mesh.name, obj=mesh):
-            mesh.name = self.mesh_manager.name(mesh.name)
+    def show_mesh(self, mesh, name):
+        mesh.name = self.mesh_manager.name(name)
         self.mesh_manager.add(mesh.name, mesh)
 
-    def remove_mesh(self, mesh):
-        self.mesh_manager.remove(obj=mesh)
+    def active_mesh(self, name): 
+        self.mesh_manager.active(name)
+        print('active mesh:', name)
 
-    def add_mesh_win(self, win):
-        self.wmesh_manager.add(win.name, win)
+    def close_mesh(self, name):
+        self.mesh_manager.remove(name)
 
-    def remove_mesh_win(self, win):
-        self.wmesh_manager.remove(obj=win)
+    #def add_mesh_win(self, win):
+    #    self.wmesh_manager.add(win.name, win)
+
+    #def remove_mesh_win(self, win):
+    #    self.wmesh_manager.remove(obj=win)
 
     def get_mesh(self, name=None):
         return self.mesh_manager.get(name)
@@ -103,8 +105,8 @@ class App():
     def get_mesh_name(self):
         return self.mesh_manager.names()
     
-    def get_mesh_win(self, name=None):
-        return self.wmesh_manager.get(name)
+    #def get_mesh_win(self, name=None):
+    #    return self.wmesh_manager.get(name)
 
     def add_task(self, task):
         self.task_manager.add(task.title, task)

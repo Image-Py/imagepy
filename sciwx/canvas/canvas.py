@@ -57,7 +57,7 @@ class Canvas (wx.Panel):
             'shift':sta[2], 'px':px, 'py':py, 'canvas':self}
         if me.Moving() and not (ld or md or rd): 
             for i in (ImageTool, ShapeTool):
-                if isinstance(tool, i): i.mouse_move(tool, obj, x, y, btn)
+                if isinstance(tool, i): i.mouse_move(tool, obj, x, y, btn, **others)
         if me.ButtonDown():
             self.SetFocus()
             tool.mouse_down(obj, x, y, btn, **others)

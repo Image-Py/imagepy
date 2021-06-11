@@ -263,13 +263,16 @@ def draw_text(pts, dc, f, **key):
 	size  = font.GetPointSize()
 	tcolor = dc.GetTextForeground()
 	bcolor = dc.GetTextBackground()
-	
+	dc.SetTextForeground(color)
+	dc.SetTextBackground(fcolor)
 	if not pts.color is None: 
 		pen.SetColour(pts.color)
 		dc.SetTextForeground(pts.color)
 	brush.SetColour(pen.GetColour())
 	brush.SetStyle(100)
-	if not pts.color is None:
+	if not pts.fill is None:
+		dc.SetBackgroundMode((106, 100)[pts.fill])
+	if not pts.fcolor is None:
 		dc.SetTextBackground(pts.fcolor)
 	if not pts.lw is None:
 		font.SetPointSize(pts.lw)
@@ -281,8 +284,8 @@ def draw_text(pts, dc, f, **key):
 	if pts.dtype == 'text':
 		(x, y), text = pts.body, pts.txt
 		x, y = f(x, y)
-		dc.DrawText(text, x+3, y+3)
-		if pts.fill:
+		dc.DrawText(text, x+1, y+1)
+		if not pts.lstyle is None:
 			dc.DrawEllipse(x-2,y-2,4,4)
 	if pts.dtype == 'texts':
 		tlst, clst, elst = [], [], []
@@ -328,8 +331,6 @@ def draw_layer(pts, dc, f, **key):
 		brush.SetColour(pts.fcolor)
 	if pts.lw != None: 
 		pen.SetWidth(pts.lw)
-	if pts.fill: 
-		brush.SetStyle((106,100)[pts.fill])
 	if not pts.fill is None:
 		brush.SetStyle((106,100)[pts.fill])
 

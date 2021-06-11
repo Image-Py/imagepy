@@ -17,12 +17,12 @@ class Shape:
         self.name = 'shape'
         self.body = [] if body is None else body
         self.color = key['color'] if 'color' in key else None
-        self.fcolor = key['fcolor'] if 'fcolor' in key else None
-        self.lstyle = key['lstyle'] if 'lstyle' in key else None
-        self.tcolor = key['tcolor'] if 'tcolor' in key else None
-        self.lw = key['lw'] if 'lw' in key else None
-        self.r = key['r'] if 'r' in key else None
-        self.fill = key['fill'] if 'fill' in key else None
+        self.fcolor = key.get('fcolor', None)
+        self.lstyle = key.get('style', None)
+        self.tcolor = key.get('tcolor', None)
+        self.lw = key.get('lw', None)
+        self.r = key.get('r', None)
+        self.fill = key.get('fill', None)
         self._box = None
         self.dirty = True
 
