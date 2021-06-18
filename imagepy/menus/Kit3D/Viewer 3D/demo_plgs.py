@@ -1,6 +1,6 @@
 from sciapp.action import Free
-from sciapp.object import Surface, MarkText
-from sciapp.util import surfutil
+from sciapp.object import Mesh
+from sciapp.util import  meshutil
 import numpy as np
 
 class Decoration(Free):
@@ -13,19 +13,15 @@ class Decoration(Free):
 		r = np.sin(m0*phi)**m1 + np.cos(m2*phi)**m3 + np.sin(m4*theta)**m5 + np.cos(m6*theta)**m7  
 		x = r*np.sin(phi)*np.cos(theta)  
 		y = r*np.cos(phi)  
-		z = r*np.sin(phi)*np.sin(theta)  
-		vts, fs, ns, cs = surfutil.build_mesh(x, y, z)
-		cs[:] = surfutil.auto_lookup(vts[:,2], surfutil.linear_color('jet'))/255
-		self.app.show_mesh(Surface(vts, fs, ns, cs), 'decoration')
+		z = r*np.sin(phi)*np.sin(theta)
+		vts, fs = meshutil.create_grid_mesh(x, y, z)
+		mesh = Mesh(vts, fs.astype(np.uint32), vts[:,2], mode='grid', cmap='jet')
+		self.app.show_mesh(mesh, 'decoration')
 
 class Lines(Free):
 	title = 'Lines Demo'
 
 	def run(self, para=None):
-		vts = np.array([(0,0,0),(1,1,0),(2,1,0),(1,0,0)], dtype=np.float32)
-		fs = np.array([(0,1,2),(1,2,3)], dtype=np.uint32)
-		ns = np.ones((4,3), dtype=np.float32)
-
 		n_mer, n_long = 6, 11
 		pi = np.pi
 		dphi = pi / 1000.0
@@ -35,20 +31,21 @@ class Lines(Free):
 		y = np.sin(mu) * (1 + np.cos(n_long * mu / n_mer) * 0.5)
 		z = np.sin(n_long * mu / n_mer) * 0.5
 
-		vts, fs, ns, cs = surfutil.build_line(x, y, z, (1, 0, 0))
-		cs[:] = surfutil.auto_lookup(vts[:,2], surfutil.linear_color('jet'))/255
-		self.app.show_mesh(Surface(vts, fs, ns, cs, mode='grid'), 'line')
+		vts = np.array([x, y, z]).T.astype(np.float32)
+		fs = np.arange(len(vts), dtype=np.uint32)
+		fs = np.array([fs[:-1], fs[1:]]).T
+		mesh = Mesh(vts, fs, vts[:,2], cmap='jet', mode='grid')
+		self.app.show_mesh(mesh, 'line')
 
 class Balls(Free):
 	title = 'Random Balls Demo'
 
 	def run(self, para=None):
 		os = np.random.rand(30).reshape((-1,3))
-		rs = np.random.rand(10)/5
-		cs = (np.random.rand(10)*255).astype(np.uint8)
-		cs = surfutil.linear_color('jet')[cs]/255
-
-		vts, fs, ns, cs = surfutil.build_balls(os, rs, cs)
-		self.app.show_mesh(Surface(vts, fs, ns, cs), 'balls')
+		rs = np.random.rand(10)/7+0.05
+		cs = np.random.rand(10)
+		vts_b, fs_b, cs_b = meshutil.create_balls(os, rs, cs)
+		mesh = Mesh(verts=vts_b, faces=fs_b, colors=cs_b, cmap='jet')
+		self.app.show_mesh(mesh, 'balls')
 
 plgs = [Lines, Balls, Decoration]

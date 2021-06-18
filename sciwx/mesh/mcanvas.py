@@ -1,11 +1,6 @@
-import wx
-import os.path as osp
-import platform, math
-from pubsub import pub
 from .canvas import Canvas3D
-from sciapp.util import count_ns
+import wx, os.path as osp, platform
 import numpy as np
-import math
 
 def make_bitmap(bmp):
     img = bmp.ConvertToImage()
@@ -85,7 +80,7 @@ class MCanvas3D(wx.Panel):
         self.m_staticText2.Wrap( -1 )
         ssizer.Add( self.m_staticText2, 0, wx.ALIGN_CENTER|wx.LEFT, 10 )
 
-        cho_objChoices = ['mesh', 'grid']
+        cho_objChoices = ['mesh', 'grid', 'points']
         self.cho_mode = wx.Choice( self.settingbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, cho_objChoices, 0 )
         self.cho_mode.SetSelection( 0 )
         ssizer.Add( self.cho_mode, 0, wx.ALIGN_CENTER|wx.ALL, 1 )
@@ -98,23 +93,23 @@ class MCanvas3D(wx.Panel):
         self.Layout()
         self.Centre( wx.BOTH )
         
-        self.view_x = self.canvas.view_x
-        self.view_y = self.canvas.view_y
-        self.view_z = self.canvas.view_z
-        self.set_pers = self.canvas.set_pers
-        self.set_background = self.canvas.set_background
-        self.set_scatter = self.canvas.set_scatter
-        self.set_bright = self.canvas.set_bright
+        self.view_x = lambda e: self.canvas.set_camera(azimuth=0, elevation=0)
+        self.view_y = lambda e: self.canvas.set_camera(azimuth=90, elevation=0)
+        self.view_z = lambda e: self.canvas.set_camera(azimuth=0, elevation=90)
+        self.set_pers = lambda s: self.canvas.set_camera(fov=[0, 45][s])
+        #self.set_background = self.canvas.set_background
+        #self.set_scatter = self.canvas.set_scatter
+        #self.set_bright = self.canvas.set_bright
 
-        self.on_bgcolor = lambda e: self.canvas.set_background(np.array(e.GetColour()[:3])/255)
-        self.on_bg = lambda e: self.canvas.set_scatter((3-e.GetSelection())/3)
-        self.on_light = lambda e: self.canvas.set_bright((3-e.GetSelection())/3)
+        self.on_bgcolor = lambda e: self.canvas.scene3d.set_style(bg_color=tuple(np.array(e.GetColour()[:3])/255))
+        self.on_bg = lambda e: self.canvas.scene3d.set_style(ambient_color=((3-e.GetSelection())/3,)*3+(1,))
+        self.on_light = lambda e: self.canvas.scene3d.set_style(light_color=((3-e.GetSelection())/3,)*3+(1,))
 
         self.btn_x.Bind( wx.EVT_BUTTON, self.view_x)
         self.btn_y.Bind( wx.EVT_BUTTON, self.view_y)
         self.btn_z.Bind( wx.EVT_BUTTON, self.view_z)
-        self.btn_open.Bind( wx.EVT_BUTTON, self.on_open)
-        self.btn_stl.Bind( wx.EVT_BUTTON, self.on_stl)
+        #self.btn_open.Bind( wx.EVT_BUTTON, self.on_open)
+        #self.btn_stl.Bind( wx.EVT_BUTTON, self.on_stl)
         self.btn_pers.Bind( wx.EVT_BUTTON, lambda evt, f=self.set_pers:f(True))
         self.btn_orth.Bind( wx.EVT_BUTTON, lambda evt, f=self.set_pers:f(False))
         self.btn_color.Bind( wx.EVT_COLOURPICKER_CHANGED, self.on_bgcolor )
@@ -127,17 +122,23 @@ class MCanvas3D(wx.Panel):
         self.sli_alpha.Bind( wx.EVT_SCROLL, self.on_alpha )
         self.col_color.Bind( wx.EVT_COLOURPICKER_CHANGED, self.on_color )
 
-        if scene!=None: self.cho_obj.Set(list(scene.objs.keys()))
+        self.Bind(wx.EVT_IDLE, self.on_idle)
+
+        self.cho_obj.Set(list(self.canvas.scene3d.names))
     
+    def on_idle(self, event):
+        if set(self.canvas.scene3d.names) != set(self.cho_obj.Items):
+            self.cho_obj.Set(list(self.canvas.scene3d.names))
+
     @property
-    def name(self): return self.canvas.scene.meshset.name
+    def name(self): return self.canvas.scene3d.name
 
     def set_mesh(self, mesh):
         self.canvas.set_mesh(mesh)
         self.cho_obj.Set(list(mesh.objs.keys()))
 
     @property
-    def mesh(self): return self.canvas.scene.meshset
+    def scene3d(self): return self.canvas.scene3d
 
     def on_save(self, evt):
         dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
@@ -174,42 +175,75 @@ class MCanvas3D(wx.Panel):
         dialog.Destroy()
 
     def get_obj(self, name):
-        return self.canvas.scene.meshset.get_obj(name)
+        return self.canvas.scene3d.get_obj(name)
 
     def set_style(self, name, **key):
         self.get_obj(name).set_style(**key)
         self.canvas.Refresh()
 
     def on_visible(self, evt):
-        self.curobj.set_style(visible=evt.IsChecked())
-        self.canvas.Refresh(False)
+        self.curobj.set_data(visible=evt.IsChecked())
+        # self.canvas.Refresh(False)
 
     def on_alpha(self, evt):
-        self.curobj.set_style(alpha=evt.GetInt()/10.0)
-        self.canvas.Refresh(False)
+        self.curobj.set_data(alpha=evt.GetInt()/10.0)
+        # self.canvas.Refresh(False)
 
     def on_mode(self, evt):
-        self.curobj.set_style(mode=evt.GetString())
-        self.canvas.Refresh(False)
+        self.curobj.set_data(mode=evt.GetString())
+        # self.canvas.Refresh(False)
 
     def on_color(self, evt):
         c = tuple(np.array(evt.GetColour()[:3])/255)
-        self.curobj.set_style(color = c)
-        self.canvas.Refresh(False)
+        self.curobj.set_data(colors = c)
+        # self.canvas.Refresh(False)
 
     def on_select(self, evt):
         n = self.cho_obj.GetSelection()
         self.curobj = self.get_obj(self.cho_obj.GetString(n))
+
+        '''
         self.chk_visible.SetValue(self.curobj.visible)
         color = (np.array(self.curobj.color)*255).astype(np.uint8)
         self.col_color.SetColour((tuple(color)))
         self.sli_alpha.SetValue(int(self.curobj.alpha*10))
         self.cho_mode.SetSelection(['mesh', 'grid'].index(self.curobj.mode))
+        '''
 
     def add_surf_asyn(self, name, obj):
         self.canvas.add_surf_asyn(name, obj)
         self.cho_obj.Append(name)
 
-    def add_surf(self, name, obj):
-        self.canvas.add_surf(name, obj)
+    def add_obj(self, name, obj):
+        self.canvas.scene3d.add_obj(name, obj)
         self.cho_obj.Append(name)
+
+'''
+from mesh import Mesh
+import numpy as np
+
+colors = np.random.rand(4,4); colors[:,3] = 1
+
+slz = Mesh(verts=np.array([(0,0,0),(1,1,0),(1,0,1),(0,1,1)], dtype='float32'), 
+           faces=np.array([(0,1,2),(0,2,3),(0,1,3),(1,2,3)], dtype='int32'),
+           colors = colors, mode='mesh')
+
+from geom import create_sphere
+verts, faces = create_sphere(16, 16, 16)
+
+ball1 = Mesh(verts=verts, faces=faces, colors=verts, mode='mesh', alpha=1)
+ball2 = Mesh(verts=verts+(1,0,0), faces=faces, colors=(1,1,1), mode='mesh', alpha=1)
+
+class MdCanvas(wx.Frame):
+    def __init__(self, size=(800, 600), title='wx MdCanvas'):
+        wx.Frame.__init__(self, None, -1, title, wx.DefaultPosition, size=size)
+        canvas = MCanvas3D(self)
+        canvas.add_obj('ball1', ball1)
+        canvas.add_obj('ball2', ball2)
+'''
+
+if __name__ == '__main__':
+    myapp = wx.App(0)
+    frame = MdCanvas()
+    frame.Show(True)
+    myapp.MainLoop()

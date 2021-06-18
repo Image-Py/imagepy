@@ -51,6 +51,7 @@ class ImageTool(DefaultTool):
     title = 'Image Tool'
 
     def mouse_move(self, img, x, y, btn, **key):
+        if img.img is None: return
         DefaultTool.mouse_move(self, img, x, y, btn, **key)
         if self.app is None: return
         r, c = int(y), int(x)
@@ -90,7 +91,33 @@ class TableTool(DefaultTool):
         TableTool.default = self
         # if not app is None: app.tool = self
 
+class MeshTool(DefaultTool):
+    default = None
+    title = 'Shape Tool'
+
+    def start(self, app, para=None, callafter=None): 
+        self.app = app
+        if para == 'local': return self
+        MeshTool.default = self
+        # if not app is None: app.tool = self
+
+    def mouse_move(self, obj, x, y, btn, **key):
+        if not self.oldxy is None:
+            dx = x - self.oldxy[0]
+            dy = y - self.oldxy[1]
+            camera = key['canvas'].camera
+            camera.orbit(-dx/2, dy/2)
+            self.oldxy = x, y
+
+    def mouse_wheel(self, obj, x, y, d, **key):
+        s = 1.1 ** - d
+        camera = key['canvas'].camera
+        if camera._distance is not None:
+            camera._distance *= s
+        camera.scale_factor *= s
+
 DefaultTool().start(None)
 ImageTool().start(None)
 ShapeTool().start(None)
 TableTool().start(None)
+MeshTool().start(None)

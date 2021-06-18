@@ -5,8 +5,8 @@ from itertools import combinations
 import networkx as nx
 import numpy as np
 import pandas as pd
-from sciapp.object import Surface, MarkText
-from sciapp.util import surfutil
+from sciapp.object import Mesh, TextSet
+from sciapp.util import meshutil
 norm = np.linalg.norm
 
 class Skeleton3D(Simple):
@@ -57,19 +57,19 @@ class Show3DGraph(Simple):
 
 		rs = [para['r']] * len(balls)
 		cs = tuple(np.array(para['ncolor'])/255.0)
-		vts, fs, ns, cs = surfutil.build_balls(balls, rs, cs)
-		self.app.show_mesh(Surface(vts, fs, ns, cs), 'balls')
-
-		vts, fs, pos, h, color = surfutil.build_marks(['ID:%s'%i for i in ids], balls, para['r'], para['r'], (1,1,1))
-		self.app.show_mesh(MarkText(vts, fs, pos, h, color), 'txt')
+		vts, fs, cs = meshutil.create_balls(balls, rs, cs)
+		self.app.show_mesh(Mesh(verts=vts, faces=fs, colors=cs), 'balls')
 
 		cs = tuple(np.array(para['lcolor'])/255.0)
-		vts, fs, ns, cs = surfutil.build_lines(xs, ys, zs, cs)
-		self.app.show_mesh(Surface(vts, fs, ns, cs, mode='grid'), 'path')
+		vts, fs, cs = meshutil.create_lines(xs, ys, zs, cs)
+		self.app.show_mesh(Mesh(verts=vts, faces=fs, colors=cs, mode='grid'), 'path')
 
 		cs = tuple(np.array(para['pcolor'])/255.0)
-		vts, fs, ns, cs = surfutil.build_lines(lxs, lys, lzs, cs)
-		self.app.show_mesh(Surface(vts, fs, ns, cs, mode='grid'), 'lines')
+		vts, fs, cs = meshutil.create_lines(lxs, lys, lzs, cs)
+		self.app.show_mesh(Mesh(verts=vts, faces=fs, colors=cs, mode='grid'), 'lines')
+		
+		self.app.show_mesh(TextSet(['ID:%s'%i for i in ids], verts=balls, size=para['r']*256, colors=(1,1,1)), 'txt')
+
 
 
 class Show3DGraphR(Simple):
