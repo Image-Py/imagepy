@@ -38,7 +38,7 @@ class FindMax(Filter):
     note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'preview']
     
     para = {'tol':2, 'mode':False, 'wsd':False}
-    view = [(int, 'tol', (0,100), 0,  'tolerance', 'value')]
+    view = [(int, 'tol', (0,1000), 0,  'tolerance', 'value')]
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'])
@@ -225,4 +225,33 @@ class ROIWatershed(Filter):
         if para['type'] == 'white line on ori':
             np.maximum(snap, mark, out=img)
 
-plgs = [FindMax, FindMin, IsoLine, '-', UPRidge, ARidge, '-', Watershed, UPWatershed, ROIWatershed]
+class SeperateObjectsWithROI(Filter):
+    ## This function is for seperate solid objects with local maximum/minimum.
+    ## The difference between this function and "Watershed with ROI" lies at 
+    ## the input of "watershed with roi" is already a DEM image
+    ## while the input here is the solid objects, and using Sobel filter to convert
+    ## it into DEM
+    title = 'Seperate Objects With ROI'
+    note = ['8-bit', 'auto_snap', 'not_channel']
+    
+    para = {'type':'white line', 'con':False}
+    view = [(bool, 'con', 'full connectivity'),
+            (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', '')]
+    
+    def run(self, ips, snap, img, para = None):
+        markers, n = ndimg.label(ips.mask(), np.ones((3,3)), output=np.uint32)
+
+        edge = sobel(snap)
+
+        mark = watershed(edge, markers, line=True, conn=para['con']+1)
+        mark = np.multiply((mark==0), 255, dtype=np.uint8)
+
+        if para['type'] == 'white line':
+            img[:] = mark
+        if para['type'] == 'gray line':
+            np.minimum(snap, mark, out=img)
+        if para['type'] == 'white line on ori':
+            np.maximum(snap, mark, out=img)
+
+
+plgs = [FindMax, FindMin, IsoLine, '-', UPRidge, ARidge, '-', Watershed, UPWatershed, ROIWatershed, SeperateObjectsWithROI]
