@@ -3,8 +3,6 @@ from sciapp.object import Mesh
 from sciapp.util import  meshutil
 import numpy as np
 
-from ...File.STL.stl_plgs import OpenFile
-
 class Decoration(Free):
 	title = 'Decoration Demo'
 
@@ -50,4 +48,4 @@ class Balls(Free):
 		mesh = Mesh(verts=vts_b, faces=fs_b, colors=cs_b, cmap='jet')
 		self.app.show_mesh(mesh, 'balls')
 
-plgs = [OpenFile, Lines, Balls, Decoration]
+plgs = [Lines, Balls, Decoration]
