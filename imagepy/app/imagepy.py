@@ -504,7 +504,9 @@ class ImagePy(wx.Frame, App):
             self.show_md(cont, title)
         elif tag=='wf':
             self.show_workflow(cont, title)
-        else: self.alert('no view for %s!'%tag)
+        elif tag=='mesh':
+            self.show_mesh(cont, title)
+        else: self.alert('no viewer for %s!'%tag)
 
     def _alert(self, info, title='ImagePy'):
         lang = ConfigManager.get('language')
