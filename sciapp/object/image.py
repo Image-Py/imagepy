@@ -46,6 +46,7 @@ class Image:
     def __init__(self, imgs=None, name='Image'):
         self.name = name
         self.cur = 0
+        self.rg = [(0, 255)]
         self.set_imgs(imgs)
         self.roi = None
         self.mark = None
@@ -53,7 +54,7 @@ class Image:
         self.msk = None
         self.pos = (0,0)
         self.cn = 0
-        self.rg = [(0,255)]
+        
         self.lut = default_lut
         self.log = False
         self.mode = 'set'

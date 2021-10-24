@@ -78,7 +78,7 @@ class Mesh:
 		self.faces = faces.astype(np.uint32, copy=False) if not faces is None else None
 		self.colors = colors
 		self.mode, self.visible, self.dirty = 'mesh', True, 'geom'
-		self.alpha = 1; self.edges = None
+		self.alpha = 1; self.edges = None; self.shiness = 60
 		self.high_light = False; self.cmap = 'gray' if cmap is None else cmap
 		self.set_data(**key)
 
@@ -98,6 +98,7 @@ class Mesh:
 		self.visible = key.get('visible', self.visible)
 		self.alpha = key.get('alpha', self.alpha)
 		self.high_light = key.get('high_light', False)
+		self.shiness = key.get('shiness', self.shiness)
 		self.cmap = key.get('cmap', self.cmap)
 		self.dirty = self.dirty or True
 
@@ -116,7 +117,7 @@ class TextSet:
 		self.texts, self.verts, self.size, self.colors = texts, verts, size, colors
 		self.visible, self.dirty = True, 'geom'
 		self.alpha = 1; self.edges = None
-		self.high_light = False;
+		self.high_light = False; self.shiness = 0
 		self.set_data(**key)
 
 	def set_data(self, texts=None, verts=None, colors=None, size=None, **key):
@@ -128,6 +129,7 @@ class TextSet:
 		self.visible = key.get('visible', self.visible)
 		self.alpha = key.get('alpha', self.alpha)
 		self.high_light = key.get('high_light', False)
+		self.shiness = key.get('shiness', self.shiness)
 		self.dirty = self.dirty or True
 
 class Surface2d(Mesh):
@@ -171,7 +173,7 @@ class Volume3d:
 		self.imgs, self.level, self.sample, self.step = imgs, level, sample, step
 		self.visible, self.dirty = True, 'geom'
 		self.cmap = 'gray' if cmap is None else cmap
-		self.alpha = 1
+		self.alpha = 1; self.shiness = 0
 		self.high_light = False;
 		self.set_data(**key)
 
@@ -184,5 +186,6 @@ class Volume3d:
 		self.visible = key.get('visible', self.visible)
 		self.alpha = key.get('alpha', self.alpha)
 		self.high_light = key.get('high_light', False)
+		self.shiness = key.get('shiness', self.shiness)
 		self.cmap = key.get('cmap', self.cmap)
 		self.dirty = self.dirty or True

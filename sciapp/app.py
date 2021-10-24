@@ -62,7 +62,7 @@ class App():
         if not isinstance(tab, Table): 
             tab = Table(tab, name)
         tab.name = self.tab_manager.name(name)
-        self.tab_manager.add(name, tab)
+        self.tab_manager.add(tab.name, tab)
         print(tab.info)
 
     def close_table(self, name): 

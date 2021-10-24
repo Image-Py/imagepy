@@ -1,4 +1,4 @@
-import wx, weakref
+import wx, weakref, sys
 import numpy as np
 from vispy import app, scene, gloo
 import platform, os.path as osp
@@ -28,8 +28,8 @@ class MeshVisual(scene.visuals.Mesh):
     
     def _update_data(self):
         rst = scene.visuals.Mesh._update_data(self)
-        if self.shading is not None:
-            self.shared_program.vert['light_color'] = self._light_color
+        #if self.shading is not None:
+        #    self.shared_program.vert['light_color'] = self._light_color
         return rst
 
 class VolumeVisual(scene.visuals.Volume):
@@ -54,24 +54,26 @@ def viewmesh(mesh, view):
         if isinstance(mesh.colors, tuple): colorkey = 'color'
         elif mesh.colors.ndim == 2: colorkey = 'vertex_colors'
         elif mesh.colors.ndim == 1: colorkey = 'vertex_values'
-
         key[colorkey] = mesh.colors
         view.set_data(**key)
-
     view.interactive = True
-    view.shininess = 0
+    if view.shading_filter:
+        view.shading_filter.shininess = mesh.shiness
     if isinstance(mesh.cmap, str): cmap = mesh.cmap
     elif mesh.cmap.max()>1+1e-5: cmap = Colormap(mesh.cmap/255)
     else: cmap = Colormap(mesh.cmap)
     view.cmap = cmap
+    view.clim = [-1, 1]
     view.visible = mesh.visible
     view.opacity = mesh.alpha
+    '''
     if mesh.high_light is False:
         view._picking_filter.enabled = False
         view._picking_filter.id = view._id
     else:
         view._picking_filter.enabled = True
         view._picking_filter.id = mesh.high_light
+    '''
     # view.shading = 'flat'
     mesh.dirty = False
     return view
@@ -105,7 +107,7 @@ def viewvolume(vol, view):
     else: cmap = Colormap(vol.cmap)
     if vol.dirty=='geom':
         if view is None: 
-            view = VolumeVisual(vol.imgs, emulate_texture=False, cmap=cmap)
+            view = VolumeVisual(vol.imgs, cmap=cmap)
         view.relative_step_size = vol.step
         view.threshold = vol.level
     
@@ -128,44 +130,42 @@ def viewobj(obj, view):
     if isinstance(obj, TextSet): return viewtext(obj, view)
     if isinstance(obj, Volume3d): return viewvolume(obj, view)
 
-class Canvas3D(scene.SceneCanvas):
-    def __new__(cls, parent, scene3d=None):
-        self = super().__new__(cls)
-        scene.SceneCanvas.__init__(self, app="wx", parent=parent, keys='interactive', show=True, dpi=150)
-        canvas = parent.GetChildren()[-1]
-        self.unfreeze()
-        self.canvas = weakref.ref(canvas)
-        self.view = self.central_widget.add_view()
+class Canvas3D(wx.Panel):
+    def __init__(self, parent, scene3d=None):
+        wx.Panel.__init__(self, parent)
+        self.canvas = scene.SceneCanvas(app='wx', parent=self, keys='interactive', show=True, dpi=150)
+        box = wx.BoxSizer( wx.VERTICAL )
+        box.Add(self.GetChildren()[-1], 1, wx.ALL|wx.EXPAND, 0 )
+        self.SetSizer(box)
         self.set_scene(scene3d or Scene())
+        self.Bind(wx.EVT_IDLE, self.on_idle)
+        self.view = self.canvas.central_widget.add_view()
         self.visuals = {}
         self.curobj = None
-        self.freeze()
-        canvas.Bind(wx.EVT_IDLE, self.on_idle)
-        canvas.tool = None
-        canvas.camera = scene.cameras.TurntableCamera(parent=self.view.scene, fov=45, name='Turntable')
-        canvas.set_camera = self.set_camera
-        canvas.fit = lambda : self.set_camera(auto=True)
-        canvas.at = self.at
-        self.view.camera = canvas.camera
-        return canvas
+        self.tool = None
+        self.camera = scene.cameras.TurntableCamera(parent=self.view.scene, fov=45, name='Turntable')
+        self.view.camera = self.camera
 
-    def __init__(self, **kwargs): pass
+        self.canvas._process_mouse_event = self._process_mouse_event
 
     def set_scene(self, scene):
         self.scene3d = scene
-        self.canvas().scene3d = self.scene3d
-        self.canvas().add_obj = self.scene3d.add_obj
+
+    def add_obj(self, name, obj):
+        self.scene3d.add_obj(name, obj)
 
     def on_idle(self, event):
         need = 'ignore'
         if self.scene3d.dirty:
             need = 'update'
-            self.bgcolor = self.scene3d.bg_color
+            self.canvas.bgcolor = self.scene3d.bg_color
             for i in self.visuals:
                 if not isinstance(self.visuals[i], MeshVisual): continue
-                self.visuals[i].ambient_light_color = self.scene3d.ambient_color
-                self.visuals[i].light_color = self.scene3d.light_color
-                self.visuals[i].light_dir = self.scene3d.light_dir
+                if self.visuals[i].shading_filter is None: continue
+                # self.visuals[i].shading_filter.shininess = 0
+                self.visuals[i].shading_filter.ambient_light = self.scene3d.ambient_color
+                self.visuals[i].shading_filter.diffuse_light = self.scene3d.light_color
+                self.visuals[i].shading_filter.light_dir = self.scene3d.light_dir
             self.scene3d.dirty = False
         for i in self.scene3d.names:
             obj = self.scene3d.objects[i]
@@ -177,16 +177,17 @@ class Canvas3D(scene.SceneCanvas):
                 self.visuals[i] = viewobj(obj, vis)
                 if need=='ignore': need = 'update'
             self.visuals[i].parent = self.view.scene
-        if need == 'add': self.canvas().fit()
+        if need == 'add': self.fit()
         if need != 'ignore': 
-            print('need')
-            self.update()
+            self.canvas.update()
+
+    def fit(self): self.set_camera(auto=True)
 
     def set_camera(self, azimuth=None, elevation=None, dist=None, fov=None, auto=False):
-        if not azimuth is None: self.canvas().camera.azimuth = azimuth
-        if not elevation is None: self.canvas().camera.elevation = elevation
-        if not fov is None: self.canvas().camera.fov = fov
-        if auto: self.canvas().camera.set_range()
+        if not azimuth is None: self.camera.azimuth = azimuth
+        if not elevation is None: self.camera.elevation = elevation
+        if not fov is None: self.camera.fov = fov
+        if auto: self.camera.set_range()
     
     def at(self, x, y):
         self.view.interactive = False
@@ -201,7 +202,7 @@ class Canvas3D(scene.SceneCanvas):
         # self.measure_fps()
         # return scene.SceneCanvas._process_mouse_event(self, event)
         px, py = x, y = tuple(event.pos)
-        canvas, tool, btn = self.canvas(), self.canvas().tool or MeshTool.default, event._button
+        canvas, tool, btn = self, self.tool or MeshTool.default, event._button
         btn = {2:3, 3:2}.get(btn, btn)
         ld, rd, md = [i in event.buttons for i in (1,2,3)]
         sta = [i in [j.name for j in event.modifiers] for i in ('Alt', 'Control', 'Shift')]
@@ -225,6 +226,10 @@ class Canvas3D(scene.SceneCanvas):
         cursor = ckey[tool.cursor] if tool.cursor in ckey else 1
         canvas.SetCursor(wx.Cursor(cursor))
         event.handled = True
+
+    def close(self):
+        self.canvas._process_mouse_event = None
+        self.canvas = None
 
     def __del__(self):
         # self.img = self.back = None

@@ -1,5 +1,6 @@
 from .canvas import Canvas3D
 import wx, os.path as osp, platform
+import math
 import numpy as np
 
 def make_bitmap(bmp):
@@ -46,6 +47,13 @@ class MCanvas3D(wx.Panel):
         self.cho_bg = wx.Choice( self.toolbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, ['force scatter', 'normal scatter', 'weak scatter', 'off scatter'], 0 )
         self.cho_bg.SetSelection( 1 )
         tsizer.Add( self.cho_bg, 0, wx.ALIGN_CENTER|wx.ALL, 1 )
+        self.spn_dirv = wx.SpinButton( self.toolbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
+        tsizer.Add( self.spn_dirv, 0, wx.ALL|wx.EXPAND, 1 )
+        self.spn_dirh = wx.SpinButton( self.toolbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_HORIZONTAL )
+        tsizer.Add( self.spn_dirh, 0, wx.ALL|wx.EXPAND, 1 )
+
+        self.spn_dirv.SetRange(-1e4, 1e4)
+        self.spn_dirh.SetRange(-1e4, 1e4)
 
         self.toolbar.SetSizer( tsizer )
         tsizer.Layout()
@@ -53,18 +61,19 @@ class MCanvas3D(wx.Panel):
         self.settingbar = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         ssizer = wx.BoxSizer( wx.HORIZONTAL )
         
-        self.m_staticText1 = wx.StaticText( self.settingbar, wx.ID_ANY, u"Object:", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText1.Wrap( -1 )
-        ssizer.Add( self.m_staticText1, 0, wx.ALIGN_CENTER|wx.LEFT, 10 )
         
-        cho_objChoices = ['None']
+        cho_objChoices = ['']
         self.cho_obj = wx.Choice( self.settingbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, cho_objChoices, 0 )
         self.cho_obj.SetSelection( 0 )
         ssizer.Add( self.cho_obj, 0, wx.ALIGN_CENTER|wx.ALL, 1 )
         
         self.chk_visible = wx.CheckBox( self.settingbar, wx.ID_ANY, u"visible", wx.DefaultPosition, wx.DefaultSize, 0 )
         ssizer.Add( self.chk_visible, 0, wx.ALIGN_CENTER|wx.LEFT, 10 )
-        
+
+        self.cho_hlight = wx.Choice( self.settingbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, ['force specular', 'normal specular', 'weak specular', 'off specular'], 0 )
+        self.cho_hlight.SetSelection( 3 )
+        ssizer.Add( self.cho_hlight, 0, wx.ALIGN_CENTER|wx.ALL, 1 )
+
         self.col_color = wx.ColourPickerCtrl( self.settingbar, wx.ID_ANY, wx.BLACK, wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
         ssizer.Add( self.col_color, 0, wx.ALIGN_CENTER|wx.ALL, 1 )
         
@@ -75,10 +84,6 @@ class MCanvas3D(wx.Panel):
         self.sli_alpha = wx.Slider( self.settingbar, wx.ID_ANY, 10, 0, 10, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL )
         ssizer.Add( self.sli_alpha, 0, wx.ALIGN_CENTER|wx.ALL, 1 )
         self.settingbar.SetSizer(ssizer)
-
-        self.m_staticText2 = wx.StaticText( self.settingbar, wx.ID_ANY, u"Mode:", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText2.Wrap( -1 )
-        ssizer.Add( self.m_staticText2, 0, wx.ALIGN_CENTER|wx.LEFT, 10 )
 
         cho_objChoices = ['mesh', 'grid', 'points']
         self.cho_mode = wx.Choice( self.settingbar, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, cho_objChoices, 0 )
@@ -104,6 +109,7 @@ class MCanvas3D(wx.Panel):
         self.on_bgcolor = lambda e: self.canvas.scene3d.set_style(bg_color=tuple(np.array(e.GetColour()[:3])/255))
         self.on_bg = lambda e: self.canvas.scene3d.set_style(ambient_color=((3-e.GetSelection())/3,)*3+(1,))
         self.on_light = lambda e: self.canvas.scene3d.set_style(light_color=((3-e.GetSelection())/3,)*3+(1,))
+        self.on_shiness = lambda e: self.curobj.set_data(shiness=(3-e.GetSelection())*20)
 
         self.btn_x.Bind( wx.EVT_BUTTON, self.view_x)
         self.btn_y.Bind( wx.EVT_BUTTON, self.view_y)
@@ -117,10 +123,14 @@ class MCanvas3D(wx.Panel):
         self.cho_obj.Bind( wx.EVT_CHOICE, self.on_select )
         self.cho_mode.Bind( wx.EVT_CHOICE, self.on_mode )
         self.cho_light.Bind( wx.EVT_CHOICE, self.on_light )
+        self.cho_hlight.Bind( wx.EVT_CHOICE, self.on_shiness )
         self.cho_bg.Bind( wx.EVT_CHOICE, self.on_bg )
         self.chk_visible.Bind( wx.EVT_CHECKBOX, self.on_visible)
         self.sli_alpha.Bind( wx.EVT_SCROLL, self.on_alpha )
         self.col_color.Bind( wx.EVT_COLOURPICKER_CHANGED, self.on_color )
+
+        self.spn_dirv.Bind( wx.EVT_SPIN, self.on_dirv )
+        self.spn_dirh.Bind( wx.EVT_SPIN, self.on_dirh )
 
         self.Bind(wx.EVT_IDLE, self.on_idle)
 
@@ -129,6 +139,8 @@ class MCanvas3D(wx.Panel):
     def on_idle(self, event):
         if set(self.canvas.scene3d.names) != set(self.cho_obj.Items):
             self.cho_obj.Set(list(self.canvas.scene3d.names))
+            self.cho_obj.SetSelection(0)
+            self.on_select(0)
 
     @property
     def name(self): return self.canvas.scene3d.name
@@ -139,6 +151,24 @@ class MCanvas3D(wx.Panel):
 
     @property
     def scene3d(self): return self.canvas.scene3d
+
+    def light_dir_move(self, dx, dy):
+        from math import sin, cos, asin, sqrt, pi
+        lx, ly, lz = self.scene3d.light_dir
+        ay = asin(lz/sqrt(lx**2+ly**2+lz**2))-dy
+        xx = cos(dx)*lx - sin(dx)*ly
+        yy = sin(dx)*lx + cos(dx)*ly
+        ay = max(min(pi/2-1e-4, ay), -pi/2+1e-4)
+        zz, k = sin(ay), cos(ay)/sqrt(lx**2+ly**2)
+        self.scene3d.set_style(light_dir = (xx*k, yy*k, zz))
+
+    def on_dirv(self, evt):
+        self.light_dir_move(0, 5/180*math.pi*evt.GetInt())
+        self.spn_dirv.SetValue(0)
+
+    def on_dirh(self, evt):
+        self.light_dir_move(5/180*math.pi*evt.GetInt(), 0)
+        self.spn_dirh.SetValue(0)
 
     def on_save(self, evt):
         dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
@@ -212,12 +242,13 @@ class MCanvas3D(wx.Panel):
 
     def add_surf_asyn(self, name, obj):
         self.canvas.add_surf_asyn(name, obj)
-        self.cho_obj.Append(name)
 
     def add_obj(self, name, obj):
         self.canvas.scene3d.add_obj(name, obj)
-        self.cho_obj.Append(name)
 
+    def close(self):
+        self.canvas.close()
+        self.canvas = None
 '''
 from mesh import Mesh
 import numpy as np
