@@ -120,14 +120,14 @@ def build_graph(nodes, edges, multi=False, full=True):
     return graph
 
 def mark_node(ske):
-    buf = np.pad(ske, (1,1), mode='constant')
+    buf = np.pad(ske, (1,1), mode='constant').astype(np.uint16)
     nbs = neighbors(buf.shape)
     acc = np.cumprod((1,)+buf.shape[::-1][:-1])[::-1]
     mark(buf, nbs)
     return buf
     
 def build_sknw(ske, multi=False, iso=True, ring=True, full=True):
-    buf = np.pad(ske, (1,1), mode='constant')
+    buf = np.pad(ske, (1,1), mode='constant').astype(np.uint16)
     nbs = neighbors(buf.shape)
     acc = np.cumprod((1,)+buf.shape[::-1][:-1])[::-1]
     mark(buf, nbs)

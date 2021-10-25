@@ -89,7 +89,7 @@ class Mesh:
 		if not faces is None: self.faces = faces.astype(np.uint32, copy=False)
 		if not colors is None: self.colors = colors
 		if not faces is None: self.edge = None
-		if sum([i is None for i in [verts, faces, colors]])<3: self.dirty = 'geom'
+		if sum([i is None for i in [verts, faces]])<2: self.dirty = 'geom'
 		if not self.faces is None and self.faces.ndim==1: key['mode'] = 'points'
 		elif not self.faces is None and self.faces.shape[1]==2: 
 			if key.get('mode', self.mode)=='mesh': key['mode'] = 'grid'

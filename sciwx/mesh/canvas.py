@@ -10,6 +10,20 @@ from sciapp.action import MeshTool
 # verts, faces, colors, mode, alpha, visible
 # light_dir, light, ambiass, background
 
+from vispy.geometry import MeshData
+
+def get_vertex_normals(self, indexed=None):
+    if self._vertex_normals is None:
+        faceNorms = self.get_face_normals()
+        self._vertex_normals = np.zeros(self._vertices.shape, dtype=np.float32)
+        np.add.at(self._vertex_normals, self._faces.T, faceNorms[None,:,:])
+        v = np.linalg.norm(self._vertex_normals, axis=1)[:,None]
+        self._vertex_normals /= np.clip(v, 1e-5, 1e5, out=v)
+    if indexed is None: return self._vertex_normals
+    elif indexed == 'faces': return self._vertex_normals[self.get_faces()]
+
+MeshData.get_vertex_normals = get_vertex_normals
+
 class MeshVisual(scene.visuals.Mesh):
     def __init__(self, *p, **key):
         scene.visuals.Mesh.__init__(self, *p, **key)
@@ -62,6 +76,7 @@ def viewmesh(mesh, view):
     if isinstance(mesh.cmap, str): cmap = mesh.cmap
     elif mesh.cmap.max()>1+1e-5: cmap = Colormap(mesh.cmap/255)
     else: cmap = Colormap(mesh.cmap)
+    if isinstance(mesh.colors, tuple): view.color = mesh.colors
     view.cmap = cmap
     view.clim = [-1, 1]
     view.visible = mesh.visible
