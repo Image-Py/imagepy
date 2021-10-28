@@ -217,7 +217,7 @@ class ROIWatershed(Filter):
         if not para['ud']:img[:] = 255-img
         mark = watershed(img, markers, line=True, conn=para['con']+1)
         mark = np.multiply((mark==0), 255, dtype=np.uint8)
-
+        
         if para['type'] == 'white line':
             img[:] = mark
         if para['type'] == 'gray line':

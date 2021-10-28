@@ -51,7 +51,7 @@ def hot_key(txt):
 class RibbonBar(rb.RibbonBar):
     def __init__(self, app):
         rb.RibbonBar.__init__(self, app, wx.ID_ANY, wx.DefaultPosition, (-1, 140), rb.RIBBON_BAR_DEFAULT_STYLE|rb.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS )
-        self.app = app
+        self.app = app.GetTopLevelParent()
 
     def parse(self, ks, vs, pt):
         if isinstance(vs, list):

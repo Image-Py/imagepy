@@ -8,7 +8,7 @@ class ImageList(Choice):
 
 class TableList(Choice):
 	def __init__(self, parent, title, unit, app=None):
-		Choice.__init__(self, parent, app.get_tab_name(), str, title, unit)
+		Choice.__init__(self, parent, app.table_names(), str, title, unit)
 
 class TableField(Choice):
 	def __init__(self, parent, title, unit, app=None):

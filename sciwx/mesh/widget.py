@@ -69,7 +69,9 @@ class Canvas3DNoteBook(wx.lib.agw.aui.AuiNotebook):
 
 	def on_valid(self, event): pass
 
-	def on_close(self, event): pass
+	def on_close(self, event): 
+		self.GetCurrentPage().close()
+		import gc; gc.collect()
 
 class Canvas3DNoteFrame(wx.Frame):
 	def __init__(self, parent):

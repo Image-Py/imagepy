@@ -293,7 +293,8 @@ class ImagePy(wx.Frame, App):
 
     def on_close_mesh(self, event):
         # canvas3d = event.GetEventObject().GetPage(event.GetSelection())
-        self.close_mesh(self.meshnb.canvas().scene3d.name)
+        App.close_mesh(self, self.meshnb.canvas().scene3d.name)
+        event.Skip()
         # self.remove_mesh_win(canvas3d)
         
     def info(self, value):
