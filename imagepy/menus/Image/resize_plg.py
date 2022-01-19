@@ -8,37 +8,49 @@ from sciapp.action import Simple
 import scipy.ndimage as ndimg
 import numpy as np
 
+
 class Plugin(Simple):
-    title = 'Resize'
-    note = ['all']
-    
-    para = {'kx':0.5, 'ky':0.5, 'kz':1,'order':3}
-    view = [(float, 'kx', (0.1,10), 2, 'kx', '0.1~10'),
-            (float, 'ky', (0.1,10), 2, 'ky', '0.1~10'),
-            (float, 'kz', (0.1,10), 2, 'kz', '0.1~10'),
-            (int, 'order', (0,5), 0, 'accu', '0-5'),
-            ('lab',  None, 'the kz only works on stack!')]
-    
-    def run(self, ips, imgs, para = None):
-        kx, ky, kz = [para[i] for i in ('ky','kx','kz')]
-        size = np.round([ips.slices*kz, ips.shape[1]*kx, ips.shape[0]*ky])
+    title = "Resize"
+    note = ["all"]
+
+    para = {"kx": 0.5, "ky": 0.5, "kz": 1, "order": 3}
+    view = [
+        (float, "kx", (0.1, 10), 2, "kx", "0.1~10"),
+        (float, "ky", (0.1, 10), 2, "ky", "0.1~10"),
+        (float, "kz", (0.1, 10), 2, "kz", "0.1~10"),
+        (int, "order", (0, 5), 0, "accu", "0-5"),
+        ("lab", None, "the kz only works on stack!"),
+    ]
+
+    def run(self, ips, imgs, para=None):
+        kx, ky, kz = [para[i] for i in ("ky", "kx", "kz")]
+        size = np.round([ips.slices * kz, ips.shape[1] * kx, ips.shape[0] * ky])
         n, w, h = size.astype(np.uint16)
 
         buf = np.zeros((n, h, w, ips.channels), dtype=ips.dtype)
-        if kz==1:
+        if kz == 1:
             for i in range(ips.slices):
-                img = imgs[i].reshape(ips.shape+(-1,))
+                img = imgs[i].reshape(ips.shape + (-1,))
                 for c in range(ips.channels):
-                    ndimg.zoom(img[:,:,c], (ky, kx), output=buf[i,:,:,c], order=para['order'])
-        else: 
+                    ndimg.zoom(
+                        img[:, :, c],
+                        (ky, kx),
+                        output=buf[i, :, :, c],
+                        order=para["order"],
+                    )
+        else:
             for c in range(ips.channels):
-                imgsc = [i.reshape(i.shape[:2]+(-1,))[:,:,c] for i  in imgs]
-                ndimg.zoom(imgsc, (kz, kx, ky), order=para['order'], output=buf[:,:,:,c])
+                imgsc = [i.reshape(i.shape[:2] + (-1,))[:, :, c] for i in imgs]
+                ndimg.zoom(
+                    imgsc, (kz, kx, ky), order=para["order"], output=buf[:, :, :, c]
+                )
 
-        if ips.channels == 1: buf.shape = (buf.shape[:3])
-        if n == 1: buf = [buf.reshape(buf.shape[1:])]
+        if ips.channels == 1:
+            buf.shape = buf.shape[:3]
+        if n == 1:
+            buf = [buf.reshape(buf.shape[1:])]
         ips.set_imgs(buf)
-        '''
+        """
         else: 
 
         if ips.slice>1:
@@ -80,4 +92,4 @@ class Plugin(Simple):
             nbc = ndimg.zoom(backimg, (kz, kx))
             print(nbc.dtype)
         ips.backimg = nbc
-        '''
+        """

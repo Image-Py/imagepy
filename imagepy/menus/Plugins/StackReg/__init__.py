@@ -1,1 +1,1 @@
-catlog = ['stackreg_plgs', '-', 'StackReg License']
+catlog = ["stackreg_plgs", "-", "StackReg License"]

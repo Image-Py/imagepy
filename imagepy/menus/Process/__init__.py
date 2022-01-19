@@ -1,1 +1,15 @@
-catlog = ['Math', 'Binary', 'Filters', 'FFT', '-', 'Threshold', 'Hydrology', 'Features', 'Segment', 'Classify', 'repair_plg', '-', 'calculator_plg']
+catlog = [
+    "Math",
+    "Binary",
+    "Filters",
+    "FFT",
+    "-",
+    "Threshold",
+    "Hydrology",
+    "Features",
+    "Segment",
+    "Classify",
+    "repair_plg",
+    "-",
+    "calculator_plg",
+]

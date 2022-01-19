@@ -1,1 +1,1 @@
-catlog = ['convert_plg', '-', 'tostack_plg']
+catlog = ["convert_plg", "-", "tostack_plg"]

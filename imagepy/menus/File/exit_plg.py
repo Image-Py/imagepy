@@ -5,9 +5,10 @@ Created on Mon Dec  5 05:43:50 2016
 """
 from sciapp.action import Free
 
-class Plugin(Free):
-	title = 'Exit'
-	asyn = False
 
-	def run(self, para = None):
-		self.app.Close()
+class Plugin(Free):
+    title = "Exit"
+    asyn = False
+
+    def run(self, para=None):
+        self.app.Close()

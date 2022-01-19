@@ -1,1 +1,1 @@
-catlog = ['select_plg', 'roiwindow_wgt']
+catlog = ["select_plg", "roiwindow_wgt"]

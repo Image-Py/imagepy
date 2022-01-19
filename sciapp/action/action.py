@@ -1,8 +1,9 @@
 class SciAction:
-	name = 'SciAction'
+    name = "SciAction"
 
-	def __init__(self): pass
+    def __init__(self):
+        pass
 
-	def start(self, app, para=None, callafter=None): 
-		self.app = app
-		print(self.name, 'started!')
+    def start(self, app, para=None, callafter=None):
+        self.app = app
+        print(self.name, "started!")

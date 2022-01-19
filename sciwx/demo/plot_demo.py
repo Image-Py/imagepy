@@ -1,5 +1,6 @@
 import wx, sys
-sys.path.append('../../')
+
+sys.path.append("../../")
 
 import numpy as np
 from sciwx.plot import PlotCanvas, PlotFrame, PlotNoteBook, PlotNoteFrame
@@ -7,18 +8,21 @@ from sciwx.plot import PlotCanvas, PlotFrame, PlotNoteBook, PlotNoteFrame
 x = np.linspace(0, 10, 100)
 y = np.sin(x)
 
+
 def plot_canvas_test():
-    frame = wx.Frame(None, title='PlotCanvas')
+    frame = wx.Frame(None, title="PlotCanvas")
     pcanvas = PlotCanvas(frame)
     ax = pcanvas.add_subplot()
     ax.plot(x, y)
     frame.Show()
+
 
 def plot_frame_test():
     pframe = PlotFrame(None)
     ax = pframe.add_subplot()
     ax.plot(x, y)
     pframe.Show()
+
 
 def plot_note_book():
     frame = wx.Frame(None)
@@ -28,8 +32,9 @@ def plot_note_book():
     ax.plot(x, y)
     figure2 = pnb.add_figure()
     ax = figure2.add_subplot()
-    ax.plot(x, y, 'r-.')
+    ax.plot(x, y, "r-.")
     frame.Show()
+
 
 def plot_note_frame():
     pnf = PlotNoteFrame(None)
@@ -37,13 +42,14 @@ def plot_note_frame():
     ax = figure1.add_subplot()
     ax.plot(x, y)
     ax.grid()
-    ax.set_title('abc')
+    ax.set_title("abc")
     figure2 = pnf.add_figure()
     ax = figure2.add_subplot()
     ax.plot(x, y)
     pnf.Show()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app = wx.App()
     plot_canvas_test()
     plot_frame_test()

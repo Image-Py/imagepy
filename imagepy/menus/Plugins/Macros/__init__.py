@@ -1,1 +1,1 @@
-catlog = ['recorder_wgt', 'recorder_plg']
+catlog = ["recorder_wgt", "recorder_plg"]

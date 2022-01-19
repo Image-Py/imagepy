@@ -1,1 +1,1 @@
-catlog = ['histogram_wgt', 'curve_wgt']
+catlog = ["histogram_wgt", "curve_wgt"]
