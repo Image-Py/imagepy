@@ -232,7 +232,7 @@ class Plugin(wx.Panel):
 		Macros('', ['ROI Add>None']).start(self.app, callafter=self.UpdateData)
 
 	def on_add_nameless(self, event):
-		ips = ImageManager.get()
+		ips = self.app.get_img()
 		if ips is None: return self.app.alert('No image opened!')
 		if ips.roi is None: return self.app.alert('No Roi found!')
 		Macros('', ['ROI Add>{"name":"%s-roi"}'%ips.title]).start(self.app, callafter=self.UpdateData)
@@ -313,10 +313,14 @@ class Plugin(wx.Panel):
 		Macros('', ['ROI Setting>None']).start(self.app)
 
 	def UpdateData(self):
-		names = self.app.manager('roi').gets('name')
-		objs = self.app.manager('roi').gets('obj')
-		types = [ROI(mark2shp(i)).roitype for i in objs]
+		names = self.app.manager('roi').names()
+		if len(names) == 0:
+			objs = []
+		else:
+			objs = self.app.manager('roi').gets()
+		types = [ROI(mark2shp(i[1])).roitype for i in objs]
 		self.lst_rois.SetValue(list(zip(names, types)))
+		self.lst_rois.Refresh()
 
 	def __del__( self ):
 		pass
