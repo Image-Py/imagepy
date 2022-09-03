@@ -17,4 +17,4 @@ moderngl
 dulwich
 matplotlib
 vispy
-pystackseg
+pystackreg
