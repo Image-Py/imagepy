@@ -2,7 +2,8 @@ from sciapp.action import ImageTool
 import numpy as np
 from time import time
 from skimage.morphology import flood_fill, flood
-from skimage.draw import line, circle
+# from skimage.draw import line, circle
+from skimage.draw import line, disk
 from skimage.segmentation import felzenszwalb
 from sciapp.util import mark2shp
 from scipy.ndimage import binary_fill_holes, binary_dilation, binary_erosion
@@ -21,7 +22,8 @@ def local_brush(img, back, r, c, color, sigma, msize):
 
 def local_pen(img, r, c, R, color):
     img = img.reshape((img.shape+(1,))[:3])
-    rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    # rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    rs, cs = disk((r, c), R/2+1e-6, shape=img.shape)
     img[rs, cs] = color
 
 def local_in_fill(img, r, c, R, color, bcolor):
@@ -29,7 +31,8 @@ def local_in_fill(img, r, c, R, color, bcolor):
     msk = (img == color).min(axis=2)
     filled = binary_fill_holes(msk)
     filled ^= msk
-    rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    # rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    rs, cs = disk((r, c), R/2+1e-6, shape=img.shape)
     msk[:] = 0
     msk[rs, cs] = 1
     msk &= filled
@@ -38,7 +41,8 @@ def local_in_fill(img, r, c, R, color, bcolor):
 def local_out_fill(img, r, c, R, color, bcolor):
     img = img.reshape((img.shape+(1,))[:3])
     msk = (img != color).max(axis=2)
-    rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    # rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    rs, cs = disk((r, c), R/2+1e-6, shape=img.shape)
     buf = np.zeros_like(msk)
     buf[rs, cs] = 1
     msk &= buf
@@ -49,7 +53,8 @@ def local_sketch(img, r, c, R, color, bcolor):
     msk = (img == color).min(axis=2)
     dilation = binary_dilation(msk, np.ones((3,3)))
     dilation ^= msk
-    rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    # rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    rs, cs = disk((r, c), R/2+1e-6, shape=img.shape)
     msk[:] = 0
     msk[rs, cs] = 1
     msk &= dilation

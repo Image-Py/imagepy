@@ -1,7 +1,8 @@
 import numpy as np
 from sciapp.action import Simple, Filter
 from scipy.ndimage import label, generate_binary_structure
-from skimage.measure import marching_cubes_lewiner, mesh_surface_area
+# from skimage.measure import marching_cubes_lewiner, mesh_surface_area # scikit-image 0.15
+from skimage.measure import marching_cubes, mesh_surface_area # scikit-image 0.19
 from skimage.segmentation import find_boundaries
 from skimage.measure import regionprops
 from numpy.linalg import norm
@@ -65,7 +66,8 @@ class RegionCounter(Simple):
             dt.append([round(i.centroid[2]*k,1) for i in ls])
         if para['surf']:
             buf[find_boundaries(buf, mode='outer')] = 0
-            vts, fs, ns, cs = marching_cubes_lewiner(buf, level=0)
+            # vts, fs, ns, cs = marching_cubes_lewiner(buf, level=0) # scikit-image 0.15
+            vts, fs, ns, cs = marching_cubes(buf, level=0, method='lewiner') # scikit-image 0.19
             lst = [[] for i in range(n+1)]
             for i in fs: lst[int(cs[i[0]])].append(i)
             dt.append([0 if len(i)==0 else mesh_surface_area(vts, np.array(i))*k**2 for i in lst][1:])
