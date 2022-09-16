@@ -1,5 +1,6 @@
 from sciapp.action import Filter
-from skimage.measure import marching_cubes_lewiner, mesh_surface_area
+from skimage.measure import marching_cubes, mesh_surface_area
+# from skimage.measure import marching_cubes_lewiner, mesh_surface_area
 import numpy as np
 import pandas as pd
 
@@ -37,7 +38,8 @@ class Plugin(Filter):
         sfront = (ips.imgs[::ds,::ds,::ds]>lev).sum() * ds ** 3 * k**3
         sback = scube - sfront
         print(scube, sfront, sback)
-        vts, fs, ns, cs =  marching_cubes_lewiner(ips.imgs[::ds,::ds,::ds], lev, step_size=step)
+        # vts, fs, ns, cs =  marching_cubes_lewiner(ips.imgs[::ds,::ds,::ds], lev, step_size=step)
+        vts, fs, ns, cs =  marching_cubes(ips.imgs[::ds,::ds,::ds], lev, step_size=step, method='lewiner')
         area = mesh_surface_area(vts, fs) * (ds**2 * k **2)
         rst = [round(i,3) for i in [scube, sfront, sback, sfront/scube, area, area/sfront]]
         titles = ['Cube Volume', 'Volume', 'Blank', 'Volume/Cube', 'Surface', 'Volume/Surface']

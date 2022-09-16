@@ -15,3 +15,6 @@ markdown
 python-markdown-math
 moderngl
 dulwich
+matplotlib
+vispy
+pystackreg
