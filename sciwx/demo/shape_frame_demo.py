@@ -48,8 +48,9 @@ def note_frame_test():
     frame.Show()
     
 if __name__ == '__main__':
+    from sciapp.action import ShapeTool
     app = wx.App()
-    # frame_test()
+    frame_test()
     # note_test()
-    note_frame_test()
+    # note_frame_test()
     app.MainLoop()

@@ -2,14 +2,14 @@ from sciapp.action import ImageTool
 import numpy as np
 from time import time
 from skimage.morphology import flood_fill, flood
-from skimage.draw import line, circle
+from skimage.draw import line, disk
 from skimage.segmentation import felzenszwalb
 from sciapp.util import mark2shp
 from scipy.ndimage import binary_fill_holes, binary_dilation, binary_erosion
 
 def fill_normal(img, r, c, color, con, tor):
     img = img.reshape((img.shape+(1,))[:3])
-    msk = np.ones(img.shape[:2], dtype=np.bool)
+    msk = np.ones(img.shape[:2], dtype='bool')
     for i in range(img.shape[2]):
         msk &= flood(img[:,:,i], (r, c), connectivity=con, tolerance=tor)
     img[msk] = color
@@ -21,7 +21,7 @@ def local_brush(img, back, r, c, color, sigma, msize):
 
 def local_pen(img, r, c, R, color):
     img = img.reshape((img.shape+(1,))[:3])
-    rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    rs, cs = disk((r, c), R/2+1e-6, shape=img.shape)
     img[rs, cs] = color
 
 def local_in_fill(img, r, c, R, color, bcolor):
@@ -29,7 +29,7 @@ def local_in_fill(img, r, c, R, color, bcolor):
     msk = (img == color).min(axis=2)
     filled = binary_fill_holes(msk)
     filled ^= msk
-    rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    rs, cs = disk((r, c), R/2+1e-6, shape=img.shape)
     msk[:] = 0
     msk[rs, cs] = 1
     msk &= filled
@@ -38,7 +38,7 @@ def local_in_fill(img, r, c, R, color, bcolor):
 def local_out_fill(img, r, c, R, color, bcolor):
     img = img.reshape((img.shape+(1,))[:3])
     msk = (img != color).max(axis=2)
-    rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    rs, cs = disk((r, c), R/2+1e-6, shape=img.shape)
     buf = np.zeros_like(msk)
     buf[rs, cs] = 1
     msk &= buf
@@ -49,7 +49,7 @@ def local_sketch(img, r, c, R, color, bcolor):
     msk = (img == color).min(axis=2)
     dilation = binary_dilation(msk, np.ones((3,3)))
     dilation ^= msk
-    rs, cs = circle(r, c, R/2+1e-6, shape=img.shape)
+    rs, cs = disk((r, c), R/2+1e-6, shape=img.shape)
     msk[:] = 0
     msk[rs, cs] = 1
     msk &= dilation
@@ -57,7 +57,7 @@ def local_sketch(img, r, c, R, color, bcolor):
 
 def global_both_line(img, r, c, color):
     img = img.reshape((img.shape+(1,))[:3])
-    msk = np.ones(img.shape[:2], dtype=np.bool)
+    msk = np.ones(img.shape[:2], dtype='bool')
     for i in range(img.shape[2]):
         msk &= flood(img[:,:,i], (r, c), connectivity=2)
     dilation = binary_dilation(msk, np.ones((3,3)))
@@ -66,7 +66,7 @@ def global_both_line(img, r, c, color):
 
 def global_out_line(img, r, c, color):
     img = img.reshape((img.shape+(1,))[:3])
-    msk = np.ones(img.shape[:2], dtype=np.bool)
+    msk = np.ones(img.shape[:2], dtype='bool')
     for i in range(img.shape[2]):
         msk &= flood(img[:,:,i], (r, c), connectivity=2)
     msk = binary_fill_holes(msk)
@@ -76,7 +76,7 @@ def global_out_line(img, r, c, color):
 
 def global_in_line(img, r, c, color):
     img = img.reshape((img.shape+(1,))[:3])
-    msk = np.ones(img.shape[:2], dtype=np.bool)
+    msk = np.ones(img.shape[:2], dtype='bool')
     for i in range(img.shape[2]):
         msk &= flood(img[:,:,i], (r, c), connectivity=2)
     inarea = binary_fill_holes(msk)
@@ -86,7 +86,7 @@ def global_in_line(img, r, c, color):
 
 def global_in_fill(img, r, c, color):
     img = img.reshape((img.shape+(1,))[:3])
-    msk = np.ones(img.shape[:2], dtype=np.bool)
+    msk = np.ones(img.shape[:2], dtype='bool')
     for i in range(img.shape[2]):
         msk &= flood(img[:,:,i], (r, c), connectivity=2)
     filled = binary_fill_holes(msk)
@@ -95,7 +95,7 @@ def global_in_fill(img, r, c, color):
 
 def global_out_fill(img, r, c, color):
     img = img.reshape((img.shape+(1,))[:3])
-    ori = np.ones(img.shape[:2], dtype=np.bool)
+    ori = np.ones(img.shape[:2], dtype='bool')
     for i in range(img.shape[2]):
         ori &= flood(img[:,:,i], (r, c), connectivity=2)
     filled = binary_fill_holes(ori)

@@ -48,11 +48,11 @@ class RegionCounter(Simple):
         if para['fa']:titles.extend(['FilledArea'])
         if para['solid']:titles.extend(['Solidity'])
         if para['cov']:titles.extend(['Major','Minor','Ori'])
-        buf = imgs[0].astype(np.uint32)
+        buf = np.zeros(imgs[0].shape, dtype=np.uint32)
         data, mark = [], {'type':'layers', 'body':{}}
         strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
         for i in range(len(imgs)):
-            np.copyto(imgs[i], buf) if para['labeled'] else label(imgs[i], strc, output=buf)
+            np.copyto(buf, imgs[i]) if para['labeled'] else label(imgs[i], strc, output=buf)
             ls = regionprops(buf)
 
             dt = [[i]*len(ls), list(range(len(ls)))]

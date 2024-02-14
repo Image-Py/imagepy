@@ -14,7 +14,7 @@ class Data(Free):
         img = self.data()
         if isinstance(img, tuple):
             return self.app.show_img(list(img), self.title)
-        if img.dtype == np.bool: 
+        if img.dtype == 'bool': 
             img.dtype = np.uint8
             img *= 255
         self.app.show_img([img], self.title)

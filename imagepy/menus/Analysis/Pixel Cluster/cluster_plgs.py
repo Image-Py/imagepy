@@ -26,7 +26,7 @@ def grayselect(img, pts, k, usecov=True):
 
 def within(msk, pts):
     lab, n = ndimg.label(msk)
-    hist = np.zeros(n+1, dtype=np.bool)
+    hist = np.zeros(n+1, dtype='bool')
     hist[lab[pts]] = 1
     hist[0] = 0
     return hist[lab]

@@ -1,5 +1,5 @@
 from skimage.filters import frangi, sato, hessian ,meijering
-from skimage.feature import structure_tensor, structure_tensor_eigvals
+from skimage.feature import structure_tensor, structure_tensor_eigenvalues
 from sciapp.action import Filter, Simple
 import numpy as np
 

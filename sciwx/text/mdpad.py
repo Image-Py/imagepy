@@ -5,7 +5,7 @@ from markdown import markdown
 from .mdutil import md2html
 
 class MDPad(wx.Panel):
-    def __init__(self, parent, cont='', url='', title='markdown pad'):
+    def __init__(self, parent, cont='', url='', home='.', title='markdown pad'):
         wx.Panel.__init__(self, parent)
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.wv = webview.WebView.New(self)
@@ -13,17 +13,19 @@ class MDPad(wx.Panel):
         sizer.Add(self.wv, 1, wx.EXPAND)
         self.SetSizer(sizer)
         self.num = 0
+        self.home = home
         if url != '': self.load_url(url)
-        elif cont!='': self.set_cont(cont)
+        elif cont!='': self.set_cont(cont, home)
         self.title = title
 
-    def set_cont(self, value, url=''):
-        return self.wv.SetPage(md2html(value), url)
+    def set_cont(self, value):
+        value = value.replace('](./', '](%s/'%self.home)
+        # return self.wv.SetPage(md2html(value), '')
         # I do not know why use SetPage the js would not run, So I write a file here
         here = osp.split(osp.abspath(__file__))
         for n in range(1,10):
             path = osp.join(here[0], 'index%s.htm'%n)
-            if not osp.exists(path):break
+            if not osp.exists(path): break
         self.num = n
         with open(path, 'w') as f:
             f.write(md2html(value))
@@ -101,16 +103,16 @@ class MDNoteFrame(wx.Frame):
         self.Layout()
         
 if __name__ == '__main__':
-    '''
     app = wx.App()
     frame = wx.Frame(None)
-    mnb = MDNoteBook(frame)
-    mdpanel1 = mnb.add_page('markdown1')
-    mdpanel1.set_cont('abc')
-    mdpanel2 = mnb.add_page('markdown2')
-    mdpanel2.set_cont('def')
+
+    with open('./test.md', encoding='utf-8') as f:
+        cont = f.read()
+    mpd = MDPad(frame, home='E:/opensource/imagepy/sciwx/text')
+    mpd.set_cont(cont)
     frame.Show()
     app.MainLoop()
+
     '''
     app = wx.App()
     mnf = MDNoteFrame(None)
@@ -120,3 +122,4 @@ if __name__ == '__main__':
     mdpanel2.set_cont('def')
     mnf.Show()
     app.MainLoop()
+    '''

@@ -292,7 +292,7 @@ class BaseEditor(ShapeTool):
 				pts = np.vstack(pts)
 				key['canvas'].marks['anchor'] = Points(pts, color=(255,0,0))
 			self.p = x, y
-			self.pick_m.dirty =shp.dirty = True
+			self.pick_m.dirty = shp.dirty = True
 
 	def mouse_wheel(self, shp, x, y, d, **key):
 		if d>0: key['canvas'].zoomout(x, y, coord='data')

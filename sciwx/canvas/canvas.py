@@ -8,11 +8,12 @@ from time import time
 class Canvas (wx.Panel):
     scales = [0.03125, 0.0625, 0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 8, 10, 15, 20, 30, 50]
     
-    def __init__(self, parent, autofit=False, ingrade=False, up=False):
+    def __init__(self, parent, autofit=False, within=False, ingrade=False, up=False):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY,
             pos = wx.DefaultPosition, size = wx.DefaultSize, style = wx.TAB_TRAVERSAL )
 
         self.winbox = None
+        self.within = within
         self.conbox = [0,0,1,1]
         self.oribox = [0,0,1,1]
         
@@ -119,7 +120,7 @@ class Canvas (wx.Panel):
         if min(csbox[2]-csbox[0], csbox[3]-csbox[1])<5: return
         shp = csbox[3]-csbox[1], csbox[2]-csbox[0]
         o, m = mat(self.oribox, self.conbox, cellbox, csbox)
-        shp = tuple(np.array(shp).round().astype(np.int))
+        shp = tuple(np.array(shp).round().astype(np.int32))
         if out is None or (out.shape, out.dtype) != (shp, img.dtype):
             self.outimg = np.zeros(shp, dtype=img.dtype)
         if not back is None and not back.img is None and (
@@ -139,21 +140,28 @@ class Canvas (wx.Panel):
             img.log, cns=img.cn, mode=img.mode)
         
         self.outbmp.CopyFromBuffer(memoryview(self.outrgb))
-        dc.DrawBitmap(self.outbmp, *csbox[:2])
+        dc.DrawBitmap(self.outbmp, int(csbox[0]), int(csbox[1]))
         
     def update(self, counter = [0,0]):
         #self.update_box()
+        #if self.conbox[2] - self.conbox[0]>1: self.update_box()
+
         if None in [self.winbox, self.conbox]: return
-        if self.first:
+        if self.within :lay(self.winbox, self.conbox)
+        
+        if self.first and self.conbox[2] - self.conbox[0]>1:
             self.first = False
             return self.fit()
+        
         counter[0] += 1
         start = time()
         # lay(self.winbox, self.conbox)
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
         #dc.SetBackground(wx.Brush((255,255,255)))
         dc.Clear()
-        for i in self.images: self.draw_image(dc, i, i.back, 0)
+        for i in self.images: 
+            if i.img is None: continue
+            self.draw_image(dc, i, i.back, 0)
         
         for i in self.marks.values():
             if i is None: continue
@@ -190,10 +198,11 @@ class Canvas (wx.Panel):
         self.update()
 
     def on_size(self, event):
-        if max(self.GetClientSize())>20 and self.images[0].img is not None:
+        if max(self.GetClientSize())>20: # and self.images[0].img is not None:
             self.initBuffer()
-        if len(self.images)+len(self.marks)==0: return
-        if self.conbox[2] - self.conbox[0] > 1: self.update()
+        return self.update()
+        # if len(self.images)+len(self.marks)==0: return
+        # if self.conbox[2] - self.conbox[0] > 1: self.update()
 
     def on_idle(self, event):
         need = sum([i.dirty for i in self.images])
@@ -260,7 +269,7 @@ class Canvas (wx.Panel):
         x += -self.oribox[0] * self.scale + self.conbox[0]
         y += -self.oribox[1] * self.scale + self.conbox[1]
         if self.up: y = (self.winbox[3]-self.winbox[1]) - y
-        return x, y
+        return (x+0.5).astype(np.int32), (y+0.5).astype(np.int32)
 
     def save_buffer(self, path):
         dcSource = wx.BufferedDC(wx.ClientDC(self), self.buffer)
@@ -308,6 +317,9 @@ if __name__=='__main__':
     app = wx.App()
     frame = wx.Frame(None, title='Canvas')
     canvas = Canvas(frame, autofit=False, ingrade=True, up=True)
+
+    '''
+    canvas = Canvas(frame, autofit=False, ingrade=True, up=True)
     
     line = mark2shp({'type':'polygon', 'color':(255,0,0), 'lstyle':'o', 'fill':True,
                      'body':[[(0,0),(1000,1000),(2000,0), (0,0)],
@@ -327,11 +339,12 @@ if __name__=='__main__':
     canvas.marks.append(layer)
     
     '''
+    
     image = Image()
     image.img = camera()
     image.pos = (0,0)
     canvas.images.append(image)
-    '''
+    
     '''
     image = Image()
     image.img = astronaut()

@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.ndimage as ndimg
 from skimage.filters import sobel
-from skimage.feature import structure_tensor, structure_tensor_eigvals
+from skimage.feature import structure_tensor, structure_tensor_eigenvalues
 
 # chans 是通道，可以是int，list，默认None，代表所有通道
 para = {'chans':None, 'grade':2, 'w':1, 'items':['ori', 'blr', 'sob', 'eig']}
@@ -10,7 +10,7 @@ def get_feature_one(img, msk=None, para=para):
     chans, grade, w, items = para['chans'], para['grade'], para['w'], para['items']
     feats, titles = [], []
     img = img.reshape(img.shape[:2]+(-1,))
-    if msk is None: msk = np.ones(img.shape[:2], dtype=np.bool)
+    if msk is None: msk = np.ones(img.shape[:2], dtype='bool')
     if chans is None: chans = range(img.shape[2])
     for c in [chans] if isinstance(chans, int) else chans:
         if 'ori' in items:
@@ -55,7 +55,7 @@ def get_feature(imgs, labs, key=para, size=1024, callback=print):
     out_slice, in_slice = grid_slice(*imgs[0].shape[:2], size, 2**(key['grade']-1)*3)
     m, n = len(out_slice), len(labs)
     feats, vs = [], []
-    msk = np.zeros(imgs[0].shape[:2], dtype=np.bool)
+    msk = np.zeros(imgs[0].shape[:2], dtype='bool')
     for i, img, lab in zip(range(n), imgs, labs):
         for j, outs, ins in zip(range(m), out_slice, in_slice):
             callback(i*m+j, m*n)
@@ -92,7 +92,7 @@ def get_predict(imgs, model, key=para, out=None, size=1024, callback=print):
         temp = imgs[0] if imgs[0].ndim==2 else imgs[0][:,:,0]
         out = [temp.astype(np.uint8)]; out[0] *= 0;
         for i in range(1, len(imgs)): out.append(out[0].copy())
-    msk = np.zeros(imgs[0].shape[:2], dtype=np.bool)
+    msk = np.zeros(imgs[0].shape[:2], dtype='bool')
     for i, img, ot in zip(range(len(imgs)), imgs, out):
         for j, outs, ins in zip(range(len(out_slice)), out_slice, in_slice):
             callback(i*m+j, m*n)

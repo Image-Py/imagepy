@@ -1,6 +1,6 @@
 from sciapp.action import Simple
 from skimage import data, io, segmentation, color
-from skimage.future import graph
+from skimage import graph
 import numpy as np
 
 class RagThreshold(Simple):

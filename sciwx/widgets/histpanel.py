@@ -58,12 +58,12 @@ class HistPanel(wx.Panel):
             hist = self.hist[np.linspace(0, len(self.hist)-1, self.w, dtype=np.int16)]
             dc.SetPen(wx.Pen((200,200,200), width=1, style=wx.SOLID)) 
             for i in range(self.w):
-                dc.DrawLine(i,self.h,i,self.h-self.logh[i])
+                dc.DrawLine(i,self.h,i,self.h-int(self.logh[i]+0.5))
             dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID)) 
             for i in range(self.w):
-                dc.DrawLine(i,self.h,i,self.h-self.hist[i])            
+                dc.DrawLine(i,self.h,i,self.h-int(self.hist[i]+0.5))            
         dc.SetPen(wx.Pen((0,0,0), width=1, style=wx.SOLID))
-        dc.DrawLine(self.x1, self.h, self.x2, 0)
+        dc.DrawLine(int(self.x1+0.5), self.h, int(self.x2+0.5), 0)
         dc.DrawLines([(0,0),(self.w-1,0),(self.w-1,self.h),(0,self.h),(0,0)])
 
 if __name__ == '__main__':

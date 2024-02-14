@@ -62,4 +62,4 @@ class Plugin(Simple):
         rst = build(ips.img)
         print(len(rst))
         print(rst[0].shape)
-        IPy.show_img(rst, 'ips.title-%s'%'stroke')
+        self.app.show_img(rst, 'ips.title-%s'%'stroke')

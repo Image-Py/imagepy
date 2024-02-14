@@ -1,6 +1,6 @@
 import numpy as np
 from time import time
-from collections import Iterable
+from collections.abc import Iterable
 import shapely.geometry as geom
 from shapely.ops import unary_union
 
@@ -266,11 +266,13 @@ class Text(Shape):
     dtype = 'text'
     def __init__(self, body=[], **key):
         Shape.__init__(self, body, **key)
+        self.offset = key.get('offset', [0,0])
         self.body = np.array(body[:2], dtype=np.float32)
         self.txt = body[2]
 
     def to_mark(self):
-        return Shape.to_mark(self, tuple(self.body.tolist())+(self.txt,))
+        mark = Shape.to_mark(self, tuple(self.body.tolist())+(self.txt,))
+        mark['offset'] = self.offset; return mark
 
     def to_geom(self):
         return geom.Point(self.body)
@@ -279,12 +281,14 @@ class Texts(Shape):
     dtype = 'texts'
     def __init__(self, body=[], **key):
         Shape.__init__(self, body, **key)
-        body = np.array(body, dtype=object)
+        self.offset = key.get('offset', [0,0])
+        body = np.array(body, dtype=object).reshape(-1,3)
         self.body = body[:,:2].astype(np.float32)
         self.txt = body[:,2]
 
     def to_mark(self):
-        return Shape.to_mark(self, [(i,j,t) for (i,j), t in zip(self.body.tolist(), self.txt.tolist())])
+        mark = Shape.to_mark(self, [(i,j,t) for (i,j), t in zip(self.body.tolist(), self.txt.tolist())])
+        mark['offset'] = self.offset; return mark
 
     def to_geom(self):
         return geom.MultiPoint(self.body)

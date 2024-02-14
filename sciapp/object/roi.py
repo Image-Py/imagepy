@@ -39,7 +39,7 @@ class ROI(Layer):
 		if isinstance(mode, int):
 			draw_shp(self.to_geom(), msk, 1, mode)
 			np.clip(msk, 0, 1, out=msk)
-		msk.dtype, self.msk = np.bool, mode
+		msk.dtype, self.msk = 'bool', mode
 		return msk
 
 class Measure(Layer): 

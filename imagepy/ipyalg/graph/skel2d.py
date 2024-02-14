@@ -4,7 +4,7 @@ from numba import jit
 
 from scipy.ndimage import label, generate_binary_structure
 from scipy.ndimage import distance_transform_edt
-strc = np.ones((3,3), dtype=np.bool)
+strc = np.ones((3,3), dtype='bool')
     
 # check whether this pixcel can be removed
 def check(n):

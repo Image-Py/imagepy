@@ -104,7 +104,7 @@ class CurvePanel(wx.Panel):
         self.update()
         
     def set_pts(self, pts):
-        self.x1, self.x2 = x1, x2
+        self.x1, self.x2 = int(x1+0.5), int(x2+0.5)
         self.update()
 
     def draw(self):
@@ -118,11 +118,11 @@ class CurvePanel(wx.Panel):
         
         if not self.hist is None:      
             dc.SetPen(wx.Pen((200,200,200), width=1, style=wx.SOLID))
-            for i in np.linspace(0,self.l,256).astype(np.int16):
-                dc.DrawLine(i+ox,self.l+1+oy,i+ox,self.l+1-self.logh[i]+oy)
+            for i in np.linspace(0,self.l,256).astype(np.int32):
+                dc.DrawLine(i+ox,self.l+1+oy,i+ox, int(self.l+1-self.logh[i]+oy+0.5))
             dc.SetPen(wx.Pen((100,100,100), width=1, style=wx.SOLID))
-            for i in np.linspace(0,self.l,256).astype(np.int16):
-                dc.DrawLine(i+ox,self.l+1+oy,i+ox,self.l+1-self.hist[i]+oy)
+            for i in np.linspace(0,self.l,256).astype(np.int32):
+                dc.DrawLine(i+ox,self.l+1+oy,i+ox,int(self.l+1-self.hist[i]+oy+0.5))
         x, y = np.array(self.pts).T
         kind = 'linear' if len(self.pts)==2 else 'quadratic'
         f = interpolate.interp1d(x, y, kind=kind)
@@ -133,10 +133,10 @@ class CurvePanel(wx.Panel):
         for i in self.pts: 
             dc.DrawCircle(round(i[0]*self.k+ox), round(self.l+1-i[1]*self.k+oy), 2)
         xs, ys = np.linspace(0,self.l, self.l+1)+ox, self.l+1-ys*self.k+oy
-        dc.DrawPointList(list(zip(xs.round(), ys.round())))
+        dc.DrawPointList(list(zip(xs.astype(np.int32), ys.astype(np.int32))))
 
         dc.SetPen(wx.Pen((0,0,0), width=1, style=wx.SOLID))
-        for i in np.linspace(0, self.l+1, 5):
+        for i in np.linspace(0, self.l+1, 5).round().astype(np.int32):
             dc.DrawLine(0+ox, i+oy, self.l+1+ox, i+oy)
             dc.DrawLine(i+ox, 0+oy, i+ox, self.l+1+oy)
         dc.SetBrush(wx.Brush((0,0,0), wx.BRUSHSTYLE_TRANSPARENT))

@@ -69,7 +69,10 @@ class ShapeTool(DefaultTool):
     default = None
     title = 'Shape Tool'
 
-    def mouse_move(self, img, x, y, btn, **key):
+    def mouse_move(self, shp, x, y, btn, **key):
+        DefaultTool.mouse_move(self, shp, x, y, btn, **key)
+        if self.app is None: return
+        r, c = int(y), int(x)
         if self.app: self.app.info('%d, %d'%(x, y))
 
     def start(self, app, para=None, callafter=None): 

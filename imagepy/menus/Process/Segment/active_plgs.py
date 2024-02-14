@@ -81,7 +81,7 @@ class MorphGeoChanVese(Filter):
     def preview(self, ips, para):
         snap, img = ips.snap, ips.img
         gimage = inverse_gaussian_gradient(img_as_float(snap))
-        init = np.ones(img.shape, dtype=np.bool)
+        init = np.ones(img.shape, dtype='bool')
         msk = morphological_geodesic_active_contour(gimage, para['iter'], 
             init_level_set=init, smoothing=para['smooth'], 
             threshold='auto' if para['auto'] else para['thr'], balloon=para['balloon']) > 0
@@ -94,7 +94,7 @@ class MorphGeoChanVese(Filter):
         stackimg = []
         callback = lambda x: stackimg.append((x*255).astype(np.uint8)) if para['sub'] else 0
         gimage = inverse_gaussian_gradient(img_as_float(snap))
-        init = np.ones(img.shape, dtype=np.bool)
+        init = np.ones(img.shape, dtype='bool')
         msk = morphological_geodesic_active_contour(gimage, para['iter'], 
             init_level_set=init, smoothing=para['smooth'], 
             threshold='auto' if para['auto'] else para['thr'], 

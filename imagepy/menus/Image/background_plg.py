@@ -25,6 +25,7 @@ class BackgroundSelf(Simple):
             (float, 'k', (0, 1), 1, 'ratial', '')]
     
     def run(self, ips, imgs, para = None):
+        print(para)
         if ips.isarray: imgs = imgs.copy()
         else: imgs = [i.copy() for i in imgs]
         back = Image(imgs)

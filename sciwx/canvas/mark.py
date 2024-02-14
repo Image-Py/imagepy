@@ -75,7 +75,7 @@ def plot(pts, dc, f, **key):
 		r = 2
 		x, y = pts.body.T[:2]
 		xy = np.vstack(f(x, y)).T
-		lst = np.hstack((xy-r, np.ones((len(x),2))*(r*2)))
+		lst = np.hstack((xy-r, np.ones((len(x),2), dtype=np.int32)*(r*2)))
 		isline = pts.lstyle and '-' in pts.lstyle
 		ispoint = pts.lstyle and 'o' in pts.lstyle
 		if pts.dtype == 'polygon':
@@ -160,12 +160,12 @@ def draw_circle(pts, dc, f, **key):
 	if pts.dtype == 'circle':
 		x, y ,r = pts.body
 		x, y =  f(x, y)
-		dc.DrawCircle(x, y, r*key['k'])
+		dc.DrawCircle(x, y, int(r*key['k']+0.5))
 	if pts.dtype == 'circles':
 		lst = []
 		x, y, r = pts.body.T
 		x, y = f(x, y)
-		r = r * key['k']
+		r = (r * key['k'] + 0.5).astype(np.int32)
 		lst = np.vstack([x-r, y-r, r*2, r*2]).T
 		dc.DrawEllipseList(lst)
 
@@ -283,17 +283,21 @@ def draw_text(pts, dc, f, **key):
 
 	if pts.dtype == 'text':
 		(x, y), text = pts.body, pts.txt
+		ox, oy = pts.offset
 		x, y = f(x, y)
-		dc.DrawText(text, x+1, y+1)
+		dc.DrawText(text, x+1+ox, y+1+oy)
 		if not pts.lstyle is None:
-			dc.DrawEllipse(x-2,y-2,4,4)
+			dc.DrawEllipse(x+ox-2,y+oy-2,4,4)
 	if pts.dtype == 'texts':
 		tlst, clst, elst = [], [], []
 		x, y = pts.body.T
+		ox, oy = pts.offset
 		tlst = pts.txt
+
 		x, y = f(x, y)
+		x += ox; y += oy;
 		r = x * 0 + 4
-		dc.DrawTextList(tlst, np.vstack((x,y)).T)
+		dc.DrawTextList(tlst, np.vstack((x+1,y+1)).T)
 		if pts.fill:
 			dc.DrawEllipseList(np.vstack((x,y,r,r)).T)
 

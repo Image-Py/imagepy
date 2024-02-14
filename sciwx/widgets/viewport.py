@@ -73,13 +73,13 @@ class ViewPort(wx.Panel):
         bmp = wx.Bitmap.FromBuffer(img.shape[1], img.shape[0], memoryview(img.copy()))
         if 1.0*self.box[0]/self.box[1]<1.0*self.ibox[0]/self.ibox[1]:
             k = 1.0*self.box[0]/self.ibox[0]
-            self.imgw, self.imgh = self.box[0], self.ibox[1]*k
-            self.offx, self.offy = 0, (self.box[1]-self.imgh)/2.0
+            self.imgw, self.imgh = int(self.box[0]+0.5), int(self.ibox[1]*k+0.5)
+            self.offx, self.offy = 0, int((self.box[1]-self.imgh)/2.0+0.5)
             self.img = bmp.ConvertToImage().Rescale(self.imgw, self.imgh).ConvertToBitmap()
         else:
             k = 1.0*self.box[1]/self.ibox[1]
-            self.imgw, self.imgh = self.ibox[0]*k, self.box[1]
-            self.offx, self.offy = (self.box[0]-self.imgw)/2.0, 0
+            self.imgw, self.imgh = int(self.ibox[0]*k+0.5), int(self.box[1]+0.5)
+            self.offx, self.offy = int((self.box[0]-self.imgw)/2.0+0.5), 0
             self.img = bmp.ConvertToImage().Rescale(self.imgw, self.imgh).ConvertToBitmap()
 
     def set_box(self, boximg, boxpan):
@@ -109,7 +109,7 @@ class ViewPort(wx.Panel):
         dc.DrawRectangle(self.offx, self.offy, self.imgw, self.imgh)
         x,y,w,h = l*self.imgw+self.offx, t*self.imgh+self.offy,(r-l)*self.imgw,(b-t)*self.imgh
         dc.SetPen(wx.Pen((255,0,0), width=1, style=wx.SOLID))
-        dc.DrawRectangle(x,y,w,h)
+        dc.DrawRectangle(int(x), int(y), int(w), int(h))
 
         
     def on_view(self, event): print(event)

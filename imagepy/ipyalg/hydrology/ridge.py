@@ -3,7 +3,7 @@ from numba import jit
 
 from scipy.ndimage import label, generate_binary_structure
 
-strc = np.ones((3,3), dtype=np.bool)
+strc = np.ones((3,3), dtype='bool')
 
 def count(n):
     a = [(n>>i) & 1 for i in range(8)]

@@ -6,8 +6,8 @@ from sciapp.object.image import Image
 from sciapp.action import Tool, ImageTool, ShapeTool
 
 class ICanvas(Canvas):
-    def __init__(self, parent, autofit=False):
-        Canvas.__init__(self, parent, autofit)
+    def __init__(self, parent, autofit=False, within=False, ingrade=False, up=False):
+        Canvas.__init__(self, parent, autofit, within, ingrade, up)
         self.images.append(Image())
         #self.images[0].back = Image()
         self.Bind(wx.EVT_IDLE, self.on_idle)
@@ -91,8 +91,8 @@ class ICanvas(Canvas):
         Canvas.on_idle(self, event)
 
 class VCanvas(Canvas):
-    def __init__(self, parent, autofit=False, ingrade=True, up=True):
-        Canvas.__init__(self, parent, autofit, ingrade, up)
+    def __init__(self, parent, autofit=False, within=False, ingrade=True, up=True):
+        Canvas.__init__(self, parent, autofit, within, ingrade, up)
 
     def get_obj_tol(self):
         return self.shape, ShapeTool.default

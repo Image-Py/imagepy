@@ -1,7 +1,7 @@
 import numpy as np
 from sciapp.action import Simple, Filter
 from scipy.ndimage import label, generate_binary_structure
-from skimage.measure import marching_cubes_lewiner, mesh_surface_area
+from skimage.measure import marching_cubes, mesh_surface_area
 from skimage.segmentation import find_boundaries
 from skimage.measure import regionprops
 from numpy.linalg import norm

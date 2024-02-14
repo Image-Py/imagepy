@@ -25,7 +25,7 @@ class Plugin(ImageTool):
         ips.snapshot()
         connectivity=(self.para['con']=='8-connect')+1
         img = ips.img.reshape((ips.img.shape+(1,))[:3])
-        msk = np.ones(img.shape[:2], dtype=np.bool)
+        msk = np.ones(img.shape[:2], dtype='bool')
         for i in range(img.shape[2]):
             msk &= flood(img[:,:,i], (int(y),int(x)), 
                 connectivity=connectivity, tolerance=self.para['tor'])

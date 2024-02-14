@@ -49,7 +49,7 @@ def geom_flatten(obj, geoms=None):
     if isinstance(obj, geom.GeometryCollection):
         for i in obj: geom_flatten(i, geoms)
     elif type(obj) in {geom.MultiPolygon, geom.MultiPoint, geom.MultiLineString}: 
-        geoms.extend(list(obj))
+        geoms.extend(list(obj.geoms))
     else: geoms.append(obj)
     if root: return geom.GeometryCollection(geoms)
 

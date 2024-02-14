@@ -114,7 +114,7 @@ class IntensityFilter(Filter):
         buf, n = ndimage.label(snap, strc, output=np.uint32)
         index = range(1, n+1)
         idx = (np.ones(n+1)*para['front']).astype(np.uint8)
-        msk = np.ones(n, dtype=np.bool)
+        msk = np.ones(n, dtype='bool')
 
         if para['mean']>0: msk *= ndimage.mean(intenimg, buf, index)>=para['mean']
         if para['mean']<0: msk *= ndimage.mean(intenimg, buf, index)<-para['mean']

@@ -20,7 +20,10 @@ class Reader(Free):
     def run(self, para = None):
         #add_recent(para['path'])
         fp, fn = os.path.split(para['path'])
-        fn, fe = os.path.splitext(fn)
+        fn = fn.split('.')
+        print(fn)
+        fn, fe = fn[0], '.'+'.'.join(fn[1:])
+        # fn, fe = os.path.splitext(fn)
         readers = ReaderManager.gets(fe[1:].lower(), tag=self.tag)
         if len(readers)==0: 
             return self.app.alert('no reader found for %s file'%fe[1:])

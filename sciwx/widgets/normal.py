@@ -164,8 +164,9 @@ class PathCtrl(wx.Panel):
         filt = '|'.join(['%s files (*.%s)|*.%s'%(i.upper(),i,i) for i in self.filt])
         dic = {'open':wx.FD_OPEN, 'save':wx.FD_SAVE}
         if self.io=='folder':
-            dialog = wx.DirDialog(self, 'Path Select', '.', wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST | wx.FD_CHANGE_DIR)
+            dialog = wx.DirDialog(self, 'Path Select', '', wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST | wx.FD_CHANGE_DIR)
         else: dialog = wx.FileDialog(self, 'Path Select', '', '.', filt, dic[self.io] | wx.FD_CHANGE_DIR)
+
         rst = dialog.ShowModal()
         if rst == wx.ID_OK:
             path = dialog.GetPath()

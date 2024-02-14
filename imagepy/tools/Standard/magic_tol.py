@@ -28,7 +28,7 @@ def polygonize(conts, withholes = True):
 
 def magic_cont(img, x, y, conn, tor):
     img = img.reshape((img.shape+(1,))[:3])
-    msk = np.ones(img.shape[:2], dtype=np.bool)
+    msk = np.ones(img.shape[:2], dtype='bool')
     for i in range(img.shape[2]):
         msk &= flood(img[:,:,i], (int(y),int(x)), 
             connectivity=conn, tolerance=tor)
