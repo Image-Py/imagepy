@@ -1,0 +1,1 @@
+catlog = ['template_plgs']
