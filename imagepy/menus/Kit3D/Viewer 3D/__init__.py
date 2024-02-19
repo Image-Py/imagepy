@@ -1,2 +1,1 @@
-catlog = ['surface2d_plg', 'surface3d_plg', 
-          '-', '2DSurface Demo.mc']
+catlog = ['surface_plgs', '-', 'colorpts_plg', 'tablepoints_plg', '-', '2DSurface Demo.mc']

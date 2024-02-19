@@ -1,0 +1,169 @@
+Table IO::表格输入输出
+
+CSV Open::打开CSV文件
+
+CSV Save::保存CSV文件
+
+Excel Open::打开Excel文件
+
+Excel Save::保存Excel文件
+
+Universal Generator::通用生成器
+
+Unit Matrix::单元矩阵
+	size::尺寸
+
+Uniform Random::均匀随机分布矩阵
+	low::最小值
+	high::最大值
+	row::行数
+	col::列数
+
+Gaussian Random::高斯随机分布矩阵
+	mean::均值
+	std::标准差
+	row::行数
+	col::列数
+
+Calendar::日历
+	year::年份
+	month::月份
+
+Basic Operator::基础操作
+
+Table Transpose::表格转置
+
+Table Duplicate::表格复制
+	name::名称
+
+Table Crop::表格裁剪
+
+Delete Rows::删除行
+
+Delete Columns::删除列
+
+Append Rows::添加行
+	count::行数
+	fill by last row::用最后一行填充
+
+Add Column::添加列
+	name::名称
+	value::数值
+
+Statistic::统计
+
+Table Statistic::表格统计
+	axis::轴
+	sum::和
+	mean::均值
+	max::最大值
+	min::最小值
+	var::方差
+	std::标准差
+	skew::偏斜度
+	kurt::峭度
+
+Group Statistic::分组统计
+	field to statistic::选择统计区域
+	group by::组类别
+	major::主组
+	minor::副组
+	sum::和
+	mean::均值
+	max::最大值
+	min::最小值
+	var::方差
+	std::标准差
+	skew::偏斜度
+
+Values Frequency::数值频率
+	fields to count::选择统计区域
+
+Table Bins Frequency::表格直方图频率
+	bins::直方图
+	n::个数
+	auto scale::自动变换范围
+	min range::最小值
+	max range::最大值
+	fields to count::选择统计区域
+	count times::统计出现次数
+	count frequency::统计出现频率
+	count weight::统计权重
+
+Table Sort By Key::通过键值排序
+	major::主类
+	key::键值
+	minor::副类
+	descend::降序
+
+Selection::选择
+
+Sel By C Name R Count::通过列名和行号选择
+	fields::所选列
+	all columns::选择所有列
+	start rows::起始行
+	end rows::结束行
+	all rows::选择所有行
+
+Signal::信号处理
+
+Signal Uniform Filter::信号均匀滤波器
+	size::尺寸
+
+Chart::作图
+
+Plot Chart::折线图
+	title::名称
+	select fields::选择作图区域
+	line width::线宽
+	grid::显示网格
+
+Area Chart::面积图
+	title::名称
+	select fields::选择作图区域
+	alpha::透明度
+	stacked::层叠显示
+	grid::显示网格
+
+Bar Chart::条形图
+	title::名称
+	select fields::选择作图区域
+	horizon::水平显示
+	stacked::层叠
+	grid::显示网格
+
+Box Chart::箱形图
+	title::名称
+	select fields::选择作图区域
+	by::通过
+	group::组别
+	horizontal::水平显示
+	grid::显示网格
+
+Hist Chart::直方图
+	title::名称
+	select fields::选择作图区域
+	bins::直方图区间个数
+	alpha::透明度
+	orientation::显示方向
+	stacked::层叠显示
+	draw every columns in one::所有列在一张图中绘制
+	grid::显示网格
+
+Pie Chart::饼图
+	title::名称
+	select fields::选择作图区域
+
+Scatter Chart::散点图
+	title::名称
+	x data::x轴数据
+	y data::y轴数据
+	size::尺寸
+	pix::像素数
+	radius column::半径按照此列
+	optional::可选
+	alpha::透明度
+	color::颜色
+	color column::颜色按照此列
+	color map::颜色映射
+	grid::显示网格

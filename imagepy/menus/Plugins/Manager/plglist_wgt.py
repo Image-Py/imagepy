@@ -5,8 +5,7 @@ Created on Sat Jan  7 16:01:14 2017
 @author: yxl
 """
 import wx, os
-from imagepy import IPy, root_dir
-from imagepy.core.manager import PluginsManager
+#from imagepy import IPy, root_dir
 
 class VirtualListCtrl(wx.ListCtrl):
     def __init__(self, parent, title, data=[]):
@@ -35,13 +34,15 @@ class VirtualListCtrl(wx.ListCtrl):
 class Plugin( wx.Panel ):
     title = 'Plugin List View'
     single = None
-    def __init__( self, parent,):
+
+    def __init__( self, parent, app=None):
         wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size( 500,300 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        self.app = app
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
         bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
-        self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, "Search:", 
+        self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, "Search", 
                                             wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText1.Wrap( -1 )
         bSizer2.Add( self.m_staticText1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -66,7 +67,7 @@ class Plugin( wx.Panel ):
     
     #def list_plg(self, lst, items
     def load(self):
-        lst = list(PluginsManager.plgs.values())
+        lst = [i[1] for i in list(self.app.plugin_manager.gets())]
         self.plgs = [(i.title, i.__module__) for i in lst]
         self.plgs.sort()
         self.buf = self.plgs
@@ -80,4 +81,5 @@ class Plugin( wx.Panel ):
         self.lst_plgs.Refresh()
         
     def on_run(self, event):
-        PluginsManager.plgs[self.buf[event.GetIndex()][0]]().start()
+        name=self.buf[event.GetIndex()][0]
+        self.app.manager('plugin').get(name)().start(self.app)

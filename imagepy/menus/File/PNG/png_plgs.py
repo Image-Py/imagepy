@@ -1,16 +1,25 @@
-from imagepy.core.util import fileio
-from scipy.misc import imread, imsave
-from imagepy.core.manager import ReaderManager, WriterManager
+from sciapp.action import dataio
+from skimage.io import imread, imsave
 
-ReaderManager.add('png', imread)
-WriterManager.add('png', imsave)
+def read_png(path):
+	img = imread(path)
+	if img.ndim==3 and img.shape[-1]==4:
+		msk = img[:,:,3]
+		img = img[:,:,:3].copy()
+		img[msk==0] = 255
+	return img
 
-class OpenFile(fileio.Reader):
+dataio.ReaderManager.add('png', read_png, 'img')
+dataio.WriterManager.add('png', imsave, 'img')
+
+class OpenFile(dataio.Reader):
 	title = 'PNG Open'
+	tag = 'img'
 	filt = ['PNG']
 
-class SaveFile(fileio.Writer):
+class SaveFile(dataio.ImageWriter):
 	title = 'PNG Save'
+	tag = 'img'
 	filt = ['PNG']
 
 plgs = [OpenFile, SaveFile]

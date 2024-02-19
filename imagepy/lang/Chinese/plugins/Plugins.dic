@@ -1,0 +1,92 @@
+New::新建
+
+New Filter::新建Filter
+
+New Simple::新建Simple
+
+New Free::新建Free
+
+New Tool::新建Tool
+
+Macros::宏
+
+Macros Recorder::宏录制器
+
+Run Macros::运行宏
+
+Manager::管理
+
+Plugins Manager::插件管理
+	Search::搜索
+	Name::名称
+	Author::作者
+	Version::版本
+	Status::状态
+	installed::已安装
+	only installed::只显示已安装
+	Install::安装
+	Update::更新
+	Remove::移除
+
+Plugin Tree View::插件树浏览
+	Plugin Information::插件信息
+	[SourceCode]::[查看源码]
+
+Tool Tree View::工具树浏览
+	Tool Information::插件信息
+	[SourceCode]::[查看源码]
+
+Plugin List View::插件列表
+	Search::搜索
+
+Shortcut Editor::快捷键编辑器
+
+Command Line::命令行
+
+Install::安装
+
+Install Packages::安装包
+
+List Packages::包列表
+
+Install Plugins::安装插件
+	input a zipfile url or github url as http://github.com/username/project::输入一个zip文件链接或github链接，例如http://github.com/username/project
+	package::链接
+	Use proxy::使用代理
+	Protocol::协议类型
+	IP Address::IP地址
+	Port::端口号
+
+List Plugins::插件列表
+
+Contribute::参与改进
+
+Contribute Document::提交文档
+
+Contribute Plugin::提交插件
+
+Plugins Manager::插件管理
+
+Contributions::支持信息
+
+Update Software::软件升级
+
+Reload Plugins::重新载入插件
+
+StackReg::StackReg(图像栈对齐)
+
+Stack Register::生成图像栈
+
+Register By Mats::矩阵生成图像栈
+
+StackReg License::许可文件
+
+Games::游戏
+
+Cross Stick::十字绣
+
+Stroke Step::笔迹
+
+Game Of Life::生命游戏
+
+Screen Capture::截屏

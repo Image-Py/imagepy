@@ -5,19 +5,23 @@ Created on Mon Jan 16 21:13:16 2017
 @author: yxl
 """
 
-from imagepy.core.engine import Free
+from sciapp.action import Free
 import wx,os
-from imagepy import IPy, root_dir
-from imagepy.core.loader import loader
+from imagepy import root_dir
+from imagepy.app import loader, ConfigManager, DocumentManager
 from wx.py.editor import EditorFrame
+#from imagepy.ui.mkdownwindow import HtmlPanel, md2html
+from sciwx.text import MDPad
+from glob import glob
 
 class Plugin ( wx.Panel ):
     title = 'Tool Tree View'
     single = None
-    def __init__( self, parent ):
+    def __init__( self, parent, app=None):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, 
                             pos = wx.DefaultPosition, size = wx.Size( 500,300 ), 
                             style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        self.app = app
         bSizer1 = wx.BoxSizer( wx.HORIZONTAL )
         
         self.tre_plugins = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, 
@@ -28,7 +32,7 @@ class Plugin ( wx.Panel ):
         bSizer3 = wx.BoxSizer( wx.VERTICAL )
         bSizer4 = wx.BoxSizer( wx.HORIZONTAL )
         
-        self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, "Tool Infomation:", 
+        self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, "Tool Information", 
                                             wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText2.Wrap( -1 )
         bSizer4.Add( self.m_staticText2, 0, wx.ALL, 5 )
@@ -42,8 +46,7 @@ class Plugin ( wx.Panel ):
         bSizer4.Add( self.m_staticText3, 0, wx.ALL, 5 )
         bSizer3.Add( bSizer4, 0, wx.EXPAND, 5 )
         
-        self.txt_info = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, 
-                                     wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+        self.txt_info = MDPad( self )
         bSizer3.Add( self.txt_info, 1, wx.ALL|wx.EXPAND, 5 )
         
         
@@ -61,9 +64,7 @@ class Plugin ( wx.Panel ):
         self.load()
         
     def addnode(self, parent, data):
-        print('aaa', data)
         for i in data:
-            print(i)
             if i=='-':continue
             if isinstance(i, tuple):
                 item = self.tre_plugins.AppendItem(parent, i[0].title)
@@ -74,9 +75,14 @@ class Plugin ( wx.Panel ):
                 self.tre_plugins.SetItemData(item, i[0])
                 
     def load(self):
-        data = loader.build_tools('tools')
+        datas = loader.build_tools('tools')
+        extends = glob('plugins/*/tools')
+        for i in extends:
+            tols = loader.build_tools(i)
+            if len(tols)!=0: datas[1].extend(tols[1])
+
         root = self.tre_plugins.AddRoot('Tools')
-        for i in data[1]:
+        for i in datas[1]:
             item = self.tre_plugins.AppendItem(root, i[0].title)
             self.tre_plugins.SetItemData(item, i[0])
             for j in i[1]:
@@ -86,18 +92,17 @@ class Plugin ( wx.Panel ):
     # Virtual event handlers, overide them in your derived class
     def on_run( self, event ):
         plg = self.tre_plugins.GetItemData(event.GetItem())
-        if hasattr(plg, 'start'):plg().start()
+        if hasattr(plg, 'start'):plg().start(self.app)
     
     def on_select( self, event ):
         plg = self.tre_plugins.GetItemData(event.GetItem())
-        print(type(plg))
         if plg!=None:
             self.plg = plg
-            if plg.__doc__!=None:
-                self.txt_info.SetValue(plg.__doc__)
-            elif hasattr(plg, '__module__'): 
-                self.txt_info.SetValue('plugin at %s'%plg.__module__)
-            else: self.txt_info.SetValue('package at %s'%plg.__name__)
+            name = self.tre_plugins.GetItemText(event.GetItem())
+            lang = ConfigManager.get('language')
+            doc = DocumentManager.get(name, tag=lang)
+            doc = doc or DocumentManager.get(name, tag='English')
+            self.txt_info.set_cont(doc or 'No Document!')
     
     def on_source(self, event):
         ## TODO: should it be absolute path ?

@@ -1,2 +1,2 @@
 #
-catlog = ['regionprops_plgs', '-', 'statistic_plgs']
+catlog = ['regionprops_plgs', 'connect_plg', '-', 'statistic_plgs']

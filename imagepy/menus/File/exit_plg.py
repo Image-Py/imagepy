@@ -3,11 +3,11 @@
 Created on Mon Dec  5 05:43:50 2016
 @author: yxl
 """
-from imagepy import IPy
-from imagepy.core.engine import Free
+from sciapp.action import Free
 
 class Plugin(Free):
 	title = 'Exit'
+	asyn = False
 
 	def run(self, para = None):
-		IPy.curapp.on_close(None)
+		self.app.Close()

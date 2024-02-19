@@ -1,16 +1,19 @@
-from imagepy.core.util import fileio
-from scipy.misc import imread, imsave
-from imagepy.core.manager import ReaderManager, WriterManager
+from sciapp.action import dataio
+from imageio import imread, imsave
 
-ReaderManager.add('jpg', imread)
-WriterManager.add('jpg', imsave)
+dataio.ReaderManager.add('jpg', imread, 'img')
+dataio.WriterManager.add('jpg', imsave, 'img')
+dataio.ReaderManager.add('jpeg', imread, 'img')
+dataio.WriterManager.add('jpeg', imsave, 'img')
 
-class OpenFile(fileio.Reader):
+class OpenFile(dataio.Reader):
 	title = 'JPG Open'
-	filt = ['JPG']
+	tag = 'img'
+	filt = ['JPG','JPEG']
 
-class SaveFile(fileio.Writer):
+class SaveFile(dataio.ImageWriter):
 	title = 'JPG Save'
-	filt = ['JPG']
+	tag = 'img'
+	filt = ['JPG','JPEG']
 
 plgs = [OpenFile, SaveFile]

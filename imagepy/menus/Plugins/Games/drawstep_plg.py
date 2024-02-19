@@ -1,11 +1,11 @@
-from scipy.misc import imread
+from skimage.io import imread
 import matplotlib.pyplot as plt
 from skimage.morphology import skeletonize
-from scipy.ndimage import distance_transform_edt
+from imagepy.ipyalg import distance_transform_edt
 import numpy as np
 from imagepy.ipyalg.graph import sknw
-from imagepy.core.engine import Simple
-from imagepy import IPy
+from sciapp.action import Simple
+
 
 def draw_pixs(img, xs, ys, color=None):
     mskx = (xs>=0) * (xs<img.shape[1])
@@ -41,8 +41,8 @@ def build_graph(graph, dis, step=True):
         for i in eds:
             if step:ls.append(ls[-1].copy())
             pts = eds[i]['pts']
-            ptss = graph.node[s]['pts']
-            ptse = graph.node[e]['pts']
+            ptss = graph.nodes[s]['pts']
+            ptse = graph.nodes[e]['pts']
             pts = np.vstack((ptss,pts,ptse))
             draw_edge(ls[-1], dis, pts)
     return ls if step else ls[0]
@@ -62,4 +62,4 @@ class Plugin(Simple):
         rst = build(ips.img)
         print(len(rst))
         print(rst[0].shape)
-        IPy.show_img(rst, 'ips.title-%s'%'stroke')
+        self.app.show_img(rst, 'ips.title-%s'%'stroke')

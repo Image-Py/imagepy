@@ -1,2 +1,2 @@
-Open Url>{'url': 'http://data.imagepy.org/testdata/dem.jpg'}
-2D Surface>{'name': 'dem', 'scale': 1, 'sigma': 1, 'h': 0.3}
+moon>None
+2D Surface>{'name': 'moon', 'sample': 2, 'sigma': 0.7, 'h': 0.3, 'cm': 'Green_Fire_Blue'}

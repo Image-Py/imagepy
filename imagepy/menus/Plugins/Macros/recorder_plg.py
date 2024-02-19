@@ -1,23 +1,24 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Dec 28 23:24:43 2016
+from sciapp.action import dataio
 
-@author: yxl
-"""
-import wx 
-from imagepy.core.engine import Free, Macros
-from imagepy import IPy
 
-class Plugin(Free):
+def readmc(path):
+    with open(path) as f: return f.readlines()
+
+dataio.ReaderManager.add('mc', readmc, 'mc')
+
+class Macros(dataio.Reader):
     title = 'Run Macros'
-    para = {'path':''}
-    
-    def show(self):
-        filt = 'Macros files (*.mc)|*.mc'
-        return IPy.getpath('open..', filt, 'open', self.para)
-        
-    def run(self, para = None):
-        f = open(para['path'])
-        lines = f.readlines()
-        f.close()
-        Macros('noname', lines).start()
+    tag = 'mc'
+    filt = ['MC']
+
+def readwf(path):
+    with open(path) as f: return f.read()
+
+dataio.ReaderManager.add('wf', readwf, 'wf')
+
+class WorkFlow(dataio.Reader):
+    title = 'Run WorkFlow'
+    tag = 'wf'
+    filt = ['wf']
+
+plgs = [Macros, WorkFlow]

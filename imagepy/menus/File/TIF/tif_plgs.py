@@ -1,16 +1,33 @@
-from imagepy.core.util import fileio
-from scipy.misc import imread, imsave
-from imagepy.core.manager import ReaderManager, WriterManager
+from sciapp.action import dataio
+from skimage.io import imread, imsave
 
-ReaderManager.add('tif', imread)
-WriterManager.add('tif', imsave)
+dataio.ReaderManager.add('tif', imread, 'imgs')
+dataio.ReaderManager.add('tiff', imread, 'imgs')
+dataio.WriterManager.add('tif', imsave, 'imgs')
 
-class OpenFile(fileio.Reader):
+dataio.ReaderManager.add('tif', imread, 'img')
+dataio.ReaderManager.add('tiff', imread, 'img')
+dataio.WriterManager.add('tif', imsave, 'img')
+
+class OpenTIF(dataio.Reader):
 	title = 'TIF Open'
-	filt = ['TIF']
+	tag = 'img'
+	filt = ['TIF', 'TIFF']
 
-class SaveFile(fileio.Writer):
+class SaveTIF(dataio.ImageWriter):
 	title = 'TIF Save'
+	tag = 'img'
 	filt = ['TIF']
 
-plgs = [OpenFile, SaveFile]
+class OpenTIFS(dataio.Reader):
+	title = 'TIF 3D Open'
+	tag = 'imgs'
+	filt = ['TIF', 'TIFF']
+
+class SaveTIFS(dataio.ImageWriter):
+	title = 'TIF 3D Save'
+	tag = 'imgs'
+	filt = ['TIF']
+	note = ['all', 'stack3d']
+
+plgs = [OpenTIF, SaveTIF, '-', OpenTIFS, SaveTIFS]

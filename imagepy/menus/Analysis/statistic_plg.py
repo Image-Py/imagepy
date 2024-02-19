@@ -3,14 +3,15 @@
 Created on Mon Dec 26 20:34:59 2016
 @author: yxl
 """
-from imagepy import IPy, root_dir
+from imagepy import root_dir
 import wx, numpy as np, os
-from imagepy.core.engine import Simple
-from imagepy.core.roi import PointRoi
-from imagepy.core.manager import ImageManager, WindowsManager
-from imagepy.ui.widgets import HistCanvas
-from wx.lib.pubsub import pub
+from sciapp.action import Filter,Simple
+from pubsub import pub
 import pandas as pd
+
+from skimage.graph import route_through_array
+from sciapp.object import mark2shp, Circles
+from sciwx.widgets.histpanel import HistPanel
 
 class HistogramFrame(wx.Frame):
     def __init__(self, parent, title, hist):
@@ -27,8 +28,8 @@ class HistogramFrame(wx.Frame):
         sizer = wx.BoxSizer( wx.VERTICAL )
         rgb = ['Red', 'Green', 'Blue']
         for i in (0,1,2):
-            histc = HistCanvas(panel)
-            histc.set_hist(hist[i])
+            histc = HistPanel(panel)
+            histc.SetValue(hist[i])
             txt = wx.StaticText( panel, wx.ID_ANY, 'Channel:'+ rgb[i], wx.DefaultPosition, wx.DefaultSize, 0 )
             sizer.Add( txt, 0, wx.LEFT|wx.RIGHT, 8 )
             sizer.Add( histc, 0, wx.LEFT|wx.RIGHT, 8 )
@@ -45,8 +46,8 @@ class HistogramFrame(wx.Frame):
         back = wx.BoxSizer( wx.VERTICAL )
         back.Add(panel, 1, wx.EXPAND)
         sizer = wx.BoxSizer( wx.VERTICAL )
-        histc = HistCanvas(panel)
-        histc.set_hist(hist)
+        histc = HistPanel(panel)
+        histc.SetValue(hist)
         txt = wx.StaticText( panel, wx.ID_ANY, 'Channel:'+'Gray', wx.DefaultPosition, wx.DefaultSize, 0 )
         sizer.Add( txt, 0, wx.LEFT|wx.RIGHT, 8 )
         sizer.Add( histc, 0, wx.LEFT|wx.RIGHT, 8 )
@@ -58,7 +59,6 @@ class HistogramFrame(wx.Frame):
         self.SetSizer(back)
         self.Fit()
 
-
 def showhist(parent, title, hist):
     HistogramFrame(parent, title, hist).Show()
 
@@ -68,18 +68,16 @@ def show_hist(parent, title, hist):
 
 class Histogram(Simple):
     title = 'Histogram'
-    note = ['8-bit', '16-bit', 'rgb']
+    note = ['all']
 
     def run(self, ips, imgs, para = None):
-        msk = ips.get_msk('in')
-        if ips.imgtype == 'rgb':
-            img = ips.img if msk is None else ips.img[msk]
-            hist = [np.histogram(img[:,i], np.arange(257))[0] for i in (0,1,2)]
-        else:
-            img = ips.lookup() if msk is None else ips.lookup()[msk]
-            hist = np.histogram(img, np.arange(257))[0]
-        show_hist(WindowsManager.get(), ips.title+'-Histogram', hist)
-
+        msk = ips.mask('in')
+        rg = np.linspace(*ips.range, 257)
+        img = ips.img if msk is None else ips.img[msk]
+        if ips.channels == 3:
+            hist = [np.histogram(img.ravel()[i::3], rg)[0] for i in (0,1,2)]
+        else: hist = np.histogram(img,rg)[0]
+        show_hist(self.app, ips.title+'-Histogram', hist)
 
 class Frequence(Simple):
     title = 'Frequence'
@@ -87,19 +85,17 @@ class Frequence(Simple):
     
     para = {'fre':True, 'slice':False}
     view = [(bool, 'fre', 'count frequence'),
-            (bool, 'slice', 'each slices')]
+            (bool, 'slice', 'slice')]
         
     def run(self, ips, imgs, para = None):
         if not para['slice']: imgs = [ips.img]
         data = []
-        msk = ips.get_msk('in')
+        msk = ips.mask('in')
         for i in range(len(imgs)):
             img = imgs[i] if msk is None else imgs[i][msk]
-            maxv = img.max()
-            if maxv==0:continue
-            ct = np.histogram(img, maxv, [1,maxv+1])[0]
+            ct = np.bincount(img.ravel()) #np.histogram(img, maxv+1, [0,maxv])[0]
             titles = ['slice','value','count']
-            dt = [[i]*len(ct), list(range(maxv+1)), ct]
+            dt = [np.ones(len(ct), dtype=np.uint32)+i, np.arange(len(ct)), ct]
             if not para['slice']:
                 titles, dt = titles[1:], dt[1:]
             if self.para['fre']:
@@ -109,27 +105,27 @@ class Frequence(Simple):
             dt = list(zip(*dt))
             data.extend(dt)
 
-        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-histogram')
+        self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-histogram')
         
 class Statistic(Simple):
     title = 'Pixel Statistic'
-    note = ['8-bit', '16-bit', 'int', 'float']
+    note = ['all']
     
     para = {'max':True, 'min':True,'mean':False,'var':False,'std':False,'slice':False}
     view = [(bool, 'max', 'max'),
             (bool, 'min', 'min'),
             (bool, 'mean', 'mean'),
-            (bool, 'variance', 'var'),
-            (bool, 'standard', 'std'),
+            (bool, 'var', 'variance'),
+            (bool, 'std', 'standard'),
             (bool, 'slice', 'slice')]
         
     def count(self, img, para):
         rst = []
         if para['max']: rst.append(img.max())
         if para['min']: rst.append(img.min())
-        if para['mean']: rst.append(img.mean().round(2))
-        if para['var']: rst.append(img.var().round(2))
-        if para['std']: rst.append(img.std().round(2))
+        if para['mean']: rst.append(img.mean())
+        if para['var']: rst.append(img.var())
+        if para['std']: rst.append(img.std())
         return rst
         
     def run(self, ips, imgs, para = None):
@@ -139,33 +135,12 @@ class Statistic(Simple):
 
         if not self.para['slice']:imgs = [ips.img]
         data = []
-        msk = ips.get_msk('in')
+        msk = ips.mask('in')
         for n in range(len(imgs)):
             img = imgs[n] if msk is None else imgs[n][msk]
             data.append(self.count(img, para))
             self.progress(n, len(imgs))
-        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-statistic')
-        
-class Mark:
-    def __init__(self, data):
-        self.data = data
-
-    def draw(self, dc, f, **key):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
-        dc.SetTextForeground((255,255,0))
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
-                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        
-        dc.SetFont(font)
-        data = self.data[0 if len(self.data)==1 else key['cur']]
-
-        for i in range(len(data)):
-            pos = f(*(data[i][0], data[i][1]))
-            dc.SetBrush(wx.Brush((255,255,255)))
-            dc.DrawCircle(pos[0], pos[1], 2)
-            dc.SetBrush(wx.Brush((0,0,0), wx.BRUSHSTYLE_TRANSPARENT))
-            dc.DrawCircle(pos[0], pos[1], data[i][2]*key['k'])
-            dc.DrawText('id={}, r={}'.format(i, data[i][2]), pos[0], pos[1])
+        self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-statistic')
 
 class PointsValue(Simple):
     title = 'Points Value'
@@ -176,9 +151,8 @@ class PointsValue(Simple):
             (bool, 'slice', 'slice')]
         
     def load(self, ips):
-        if not isinstance(ips.roi, PointRoi):
-            IPy.alert('a PointRoi needed!')
-            return False
+        if ips.roi.roitype != 'point' and ips.roi.roitype != 'points':
+            return self.app.alert('a PointRoi needed!')
         return True
     
         
@@ -188,17 +162,58 @@ class PointsValue(Simple):
         if not para['slice']:
             imgs = [ips.img]
             titles = titles[1:]
-        data, mark = [], []
-        pts = np.array(ips.roi.body).round().astype(np.int)
+        data = []
+        pts = np.vstack([i.body.reshape(-1,2) for i in ips.roi.body])
+        layers = {'type':'layers', 'body':{}}
         for n in range(len(imgs)):
-            xs, ys = (pts.T*k).round(2)
+            xs, ys = (pts.T[:2]*k).round(2).astype(np.int16)
             vs = imgs[n][ys, xs]
             cont = ([n]*len(vs), xs, ys, vs.round(2))
             if not para['slice']: cont = cont[1:]
             data.extend(zip(*cont))
-            if para['buf']:mark.append(list(zip(xs, ys, vs.round(2))))
+            if para['buf']:
+                layers['body'][n] = {'type':'circles', 'body':list(zip(xs, ys, vs.round(2)))}
             self.progress(n, len(imgs))
-        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-points')
-        if para['buf']:ips.mark = Mark(mark)
+        self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-points')
+        if para['buf']:ips.mark = mark2shp(layers)
 
-plgs = [Frequence, Statistic, Histogram, PointsValue]
+class ShortRoute(Filter):
+    title = 'Shortest Route'
+    note = ['auto_snap','8-bit', '16-bit','int', 'float', 'req_roi', '2int', 'preview']
+    
+    para = {'fully connected':True, 'lcost':0, 'max':False, 'geometric':True, 'type':'white line'}
+    view = [(float, 'lcost', (0, 1e5), 3, 'step', 'cost'),
+            (bool, 'max', 'max cost'),
+            (bool, 'fully connected', 'fully connected'),
+            (bool, 'geometric', 'geometric'),
+            (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', '')]
+        
+    def load(self, ips):
+        if ips.roi.roitype != 'line':
+            return self.app.alert('LineRoi are needed!')
+        return True
+
+    def run(self, ips, snap, img, para = None):
+        img[:] = snap
+        if para['max']: img *= -1
+        np.add(img, para['lcost']-img.min(), casting='unsafe', out=img)
+
+        minv, maxv = ips.range
+        routes = []
+        for line in ips.roi.body:
+            pts = np.array(list(zip(line.body[:-1], line.body[1:])))
+            for p0, p1 in pts[:,:,::-1].astype(int):
+                indices, weight = route_through_array(img, p0, p1)
+                routes.append(indices)
+        rs, cs = np.vstack(routes).T
+        if para['type']=='white line on ori':
+            img[:] = snap
+            img[rs,cs] = maxv
+        elif para['type']=='gray line':
+            img[:] = minv
+            img[rs,cs] = snap[rs,cs]
+        elif para['type']=='white line':
+            img[:] = minv
+            img[rs,cs] = maxv
+        
+plgs = [Frequence, Statistic, Histogram, PointsValue,ShortRoute]

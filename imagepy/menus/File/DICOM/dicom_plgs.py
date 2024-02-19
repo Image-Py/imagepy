@@ -1,16 +1,14 @@
-from imagepy.core.util import fileio
+from sciapp.action import dataio
 import pydicom
-from imagepy.core.manager import ReaderManager, WriterManager
-
-
 
 def imread(path):
 	return pydicom.read_file(path, force=True).pixel_array
 
-ReaderManager.add('dcm', imread)
+dataio.ReaderManager.add('dcm', imread, 'img')
 
-class OpenFile(fileio.Reader):
+class OpenFile(dataio.Reader):
 	title = 'DCM Open'
 	filt = ['DCM']
+	tag = 'img'
 
 plgs = [OpenFile]

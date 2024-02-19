@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from imagepy.core.engine import Free
+from sciapp.action import Free
 from imagepy import IPy
 
 class Plugin(Free):

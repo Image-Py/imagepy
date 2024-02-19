@@ -1,13 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Oct 19 17:35:09 2016
+from sciapp.action import ImageTool
 
-@author: yxl
-"""
-from imagepy.core.engine import Tool
-from imagepy.core.manager import ColorManager
-
-class Plugin(Tool):
+class Plugin(ImageTool):
     """ColorPicker class plugin with events callbacks"""
     title = 'Color Picker'
     para = {'front':(255,255,255), 'back':(0,0,0)}
@@ -15,14 +8,13 @@ class Plugin(Tool):
             ('color', 'back', 'back', 'color')]
         
     def config(self):
-        ColorManager.set_front(self.para['front'])
-        ColorManager.set_back(self.para['back'])
+        self.app.manager('color').add('front', self.para['front'])
+        self.app.manager('color').add('back', self.para['back'])
         
     def mouse_down(self, ips, x, y, btn, **key):
-        if btn == 1:ColorManager.set_front(ips.img[int(y), int(x)])
-        if btn == 3:ColorManager.set_back(ips.img[int(y), int(x)])
-        print(ips.img[int(y), int(x)])
-        print(ColorManager.get_front())
+        manager = self.app.manager('color')
+        if btn == 1: manager.add('front', ips.img[int(y), int(x)])
+        if btn == 3: manager.add('back', ips.img[int(y), int(x)])
     
     def mouse_up(self, ips, x, y, btn, **key):
         pass

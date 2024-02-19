@@ -1,11 +1,9 @@
-from imagepy import IPy
 import numpy as np
-from imagepy.core.engine import Filter
-from imagepy.ui.panelconfig import ParaDialog, widgets
-from imagepy.ui.widgets import CurvePanel
+from sciapp.action import Filter
+#from imagepy.ui.widgets import CurvePanel
 from scipy import interpolate
 
-widgets['curve'] = CurvePanel
+#widgets['curve'] = CurvePanel
 
 class Plugin(Filter):
     title = 'Curve Adjust'
@@ -13,7 +11,7 @@ class Plugin(Filter):
     para = {'curve': [(0,0), (255, 255)]}
 
     def load(self, ips):
-        hist = np.histogram(self.ips.lookup(),list(range(257)))[0]
+        hist = ips.histogram(chans='all', step=512)
         self.view = [('curve', 'curve', hist)]
         return True
 

@@ -1,4 +1,4 @@
-from imagepy.core.engine import Table
+from sciapp.action import Table
 import pandas as pd
 import numpy as np
 
@@ -12,7 +12,7 @@ class Select(Table):
 			('any', 'r2', 'end rows'),
 			(bool, 'rall', 'all rows')]
 
-	def run(self, tps, data, snap, para=None):
+	def run(self, tps, snap, data, para=None):
 		if not para['call']:
 			cmsk = para['cn']
 		else: cmsk=[]

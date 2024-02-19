@@ -1,9 +1,8 @@
-import wx,os,sys
+import os,sys
 import numpy as np
 import io# urllib2 urllib.request, urllib.error, urllib.parse
-from scipy.misc import imread
-from imagepy import IPy
-from imagepy.core.engine import Free
+from skimage.io import imread
+from sciapp.action import Free
 
 class Plugin(Free):
     title = 'Open Raw'
@@ -16,9 +15,9 @@ class Plugin(Free):
             (list, 'c', [1,3], int, 'channel', '')]
     
     def load(self):
-        filt = 'RAW files (*.raw)|*.raw'
-        rst = IPy.getpath('Open..', filt, 'open', self.para)
-        if rst!=None:return True
+        filt = 'raw'
+        self.para['path'] = self.app.get_path('Open..', filt, 'open', '')
+        return not self.para['path'] is None
 
     #process
     def run(self, para = None):
@@ -28,12 +27,7 @@ class Plugin(Free):
         img = np.fromfile(para['path'], dtype=para['type'])
         sp = (para['h'], para['w'], para['c'])[:2 if para['c']==1 else 3]
         if img.size != para['h']*para['w']*para['c']:
-            IPy.alert('raw data error!')
+            self.app.alert('raw data error!')
             return
         img.shape = sp
-        IPy.show_img([img], fn)
-
-if __name__ == '__main__':
-    print(Plugin.title)
-    app = wx.App(False)
-    Plugin().run()
+        self.app.show_img([img], fn)

@@ -12,6 +12,7 @@ imagepy/plugins/
 # Distribution / packaging
 .Python
 env/
+.metadata/
 build/
 develop-eggs/
 dist/
@@ -71,6 +72,7 @@ target/
 
 # IPython Notebook
 .ipynb_checkpoints
+.ipynb
 
 # pyenv
 .python-version
@@ -90,3 +92,7 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Pycharm project
+.idea/
+*.nov

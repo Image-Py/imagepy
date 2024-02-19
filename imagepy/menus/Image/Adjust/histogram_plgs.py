@@ -3,11 +3,8 @@
 Created on Sun Nov 27 00:56:00 2016
 @author: yxl
 """
-
-from imagepy import IPy
 import numpy as np
-from imagepy.core.engine import Filter, Simple
-from imagepy.core.manager import ImageManager
+from sciapp.action import Filter, Simple
 
 def like(hist1, hist2):
     hist1 = np.cumsum(hist1)/hist1.sum()
@@ -20,7 +17,7 @@ def like(hist1, hist2):
         i2+=1
     return hist
 
-def match(img1, img2):
+def match(img2, img1):
     if img1.ndim == 2:
         temp = np.histogram(img1, np.arange(257))[0]
         if img2.ndim == 2:
@@ -55,37 +52,17 @@ class Normalize(Filter):
         ahist = like(temp, hist)
         img[:] = ahist[img]
         
-class Match(Simple):
-    """Calculator Plugin derived from imagepy.core.engine.Simple """
+class Match(Filter):
+    """Calculator Plugin derived from sciapp.action.Simple """
     title = 'Histogram Match'
-    note = ['all']
-    para = {'img1':'', 'img2':''}
+    note = ['all', 'not_channel', 'auto_snap', 'auto_msk']
+    para = {'img':None}
+    view = [('img', 'img', 'temp', '')]
     
-    def load(self, ips):
-        titles = ImageManager.get_titles()
-        self.para['img1'] = titles[0]
-        self.para['img2'] = titles[0]
-        Match.view = [(list, 'img1', titles, str, 'template', ''),
-                      (list, 'img2', titles, str, 'object', '')]
-        return True
-    
-    def run(self, ips, imgs, para = None):
-        ips1 = ImageManager.get(para['img1'])
-        ips2 = ImageManager.get(para['img2'])
-        ips2.snapshot()
-
-        img = ips1.img
-        imgs = ips2.imgs
-
-        sl1, sl2 = ips1.get_nslices(), ips2.get_nslices()
-        cn1, cn2 = ips1.get_nchannels(), ips2.get_nchannels()
-        if not(ips1.img.dtype == np.uint8 and ips2.img.dtype == np.uint8):
-            IPy.alert('Two image must be type of 8-bit or rgb!')
-            return
-        
-        for i in range(sl2):
-            self.progress(i, sl2)
-            match(img, imgs[i])
-        ips2.update = 'pix'
+    def run(self, ips, snap, img, para = None):
+        temp = self.app.get_img(para['img']).img
+        if not(ips.dtype == np.uint8 and temp.dtype == np.uint8):
+            return self.app.alert('Two image must be type of 8-bit or rgb!')
+        match(img, temp)
 
 plgs = [Normalize, Match]

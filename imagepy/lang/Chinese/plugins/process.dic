@@ -1,0 +1,392 @@
+Math::数学运算
+
+Add::加法
+
+Subtract::减法
+
+Multiply::乘法
+
+Max::最大值
+
+Min::最小值
+
+Square Root::平方根
+
+Gamma::伽马矫正
+
+Binary::二值图像
+
+Binary Dilation::膨胀
+	width::结构元宽
+	height::结构元高
+
+Binary Erosion::腐蚀
+	width::结构元宽
+	height::结构元高
+
+Binary Closing::闭运算
+	width::结构元宽
+	height::结构元高
+
+Binary Opening::开运算
+	width::结构元宽
+	height::结构元高
+
+Binary Outline::轮廓线
+
+Fill Holes::填充空洞
+
+Clear Border::清理边界线
+
+Binary ConvexHull::凸包
+
+Skeleton::骨架线
+
+Medial Axis::中轴线
+
+Distance Transform::距离变换
+
+Binary Watershed::二值分水岭
+	tolerance::容错
+
+Binary Voronoi::Voronoi区域划分
+
+Filters::滤波器
+
+Uniform::均值滤波
+	size::核大小
+
+Gaussian::高斯滤波
+	sigma::标准差
+
+Maximum::最大值滤波
+	size::核大小
+
+Minimum::最小值滤波
+	size::核大小
+
+Median::中值滤波
+	size::核大小
+	pix::像素
+
+Percent::百分比滤波
+	size::核大小
+	percent::百分比
+
+Prewitt::Prewitt梯度滤波
+
+Sobel::Sobel梯度滤波
+	direction::方向
+	aixs::轴
+
+Laplace::拉普拉斯滤波
+
+Gaussian Laplace::高斯拉普拉斯滤波
+	sigma::标准差
+
+DOG::高斯差分
+	sigma1::标准差1
+	sigma2::标准差2
+
+Variance::方差滤波
+	size::核大小
+
+Laplace Sharp::拉普拉斯锐化
+	weight::权重
+
+Unsharp Mask::USM锐化
+	sigma::标准差
+	weight::权重
+
+FFT::傅里叶变换
+
+FFT::傅里叶变换
+
+Inverse FFT::傅里叶逆变换
+
+Zero Center::零点到中心
+
+Zero Edge::零点到边缘
+
+Split Real And Image::实部序部分离
+
+Threshold::阈值
+
+Simple Threshold::简单阈值
+
+Auto Threshold::自动阈值
+
+Adaptive Threshold::自适应阈值
+	method::方法
+	blocksize::局部块大小
+	offset::偏离值
+
+Niblack Threshold::Niblack阈值
+	blocksize::局部块大小
+	offset::偏离值
+
+Sauvola Threshold::Sauvola阈值
+	blocksize::局部块大小
+	offset::偏离值
+
+Hysteresis Threshold::双阈值
+
+Hydrology::水文算法
+
+Find Maximum::查找极大值
+	tolerance::容错
+
+Find Minimum::查找极小值
+	tolerance::容错
+
+Find IsoLine::查找等高线
+	low::下阈值
+	high::上阈值
+	step::步长
+	output::输出
+
+Find Ridge::查找山脊线
+	sigma::标准差
+	Low::阈值
+	ascend::涨水
+	output::输出
+
+Active Ridge::交互查找山脊线
+	Low::阈值
+	ascend::涨水
+	output::输出
+
+Find Watershed::分水岭
+	sigma::标准差
+	Low::阈值
+	full connectivity::八邻域连通
+	ascend::涨水
+	output::输出
+
+Up And Down Watershed::上下阈值分水岭
+	Low::下阈值
+	High::上阈值
+	output::输出
+
+Watershed With ROI::带ROI的分水岭
+	full connectivity::八邻域连通
+	ascend::涨水
+	output::输出
+
+Features::特征点选取
+
+Canny::Canny边缘检测
+	sigma::标准差
+
+Harris::Harris角点检测
+	sigma::标准差
+	K::灵敏度
+
+Kitchen Rosenfeld::Kitchen角点检测
+	cval::边界外值
+
+Moravec::Moravec角点检测
+	size::窗口大小
+
+Tomasi::Tomasi角点检测
+	sigma::标准差大小
+
+Frangi::Frangi脊线检测
+	sigma start::起始标准差
+	sigma end::终止标准差
+	sigma step::步长
+	alpha::blob灵敏度
+	beta::纹理灵敏度
+	gamma::伽马值
+
+Meijering::Meijering脊线检测
+	sigma start::起始标准差
+	sigma end::终止标准差
+	sigma step::步长
+
+Sato::Sato脊线检测
+	sigma start::起始标准差
+	sigma end::终止标准差
+	sigma step::步长
+
+Hessian::Hessian特征提取
+	sigma start::起始标准差
+	sigma end::终止标准差
+	sigma step::步长
+	alpha::blob灵敏度
+	beta::纹理灵敏度
+	gamma::伽马值
+
+Blob Dog::Dog尺度特征
+	min::最小标准偏差
+	max::最大标准偏差
+	ratio::步长比例
+	threshold::强度阈值
+	overlab::临近聚合
+
+Blob Doh::Doh尺度特征
+	min::最小标准偏差
+	max::最大标准偏差
+	ratio::步长比例
+	threshold::强度阈值
+	overlab::临近聚合
+
+Blob Log::Log尺度特征
+	min::最小标准偏差
+	max::最大标准偏差
+	ratio::步长比例
+	threshold::强度阈值
+	overlab::临近聚合
+
+Segment::分割
+
+SLIC Superpixel::SLIC超像素
+	segments::分割数量
+	campactness::紧凑性
+	max_iter::最大迭代次数
+	sigma::高斯平滑
+	smooth::标准差
+	n::
+	color-space::色彩
+
+Quick Shift::快速Shift聚类
+	ratio::色彩/空间平衡
+	kernel_size::卷积核宽度
+	distance::到切点距离
+	cut off::
+	sigma::高斯平滑标准差
+	color-space::比例
+	sigma::高斯平滑
+	smooth::标准差
+
+Felzenszwalb::Felzenszwalb聚类
+	scale::尺度参数
+	sigma::高斯平滑内核的宽度
+	min_size::最小区域面积
+
+SLIC Superpixel Label::SLIC超像素标记
+	segments::分割数量
+	campactness::紧凑性
+	max_iter::最大迭代次数
+	sigma::高斯平滑
+	smooth::标准差
+	n::
+	color-space::色彩
+	stack::序列
+
+Quickshift Label::快速Shift聚类标记
+	ratio::色彩/空间平衡
+	kernel_size::卷积核宽度
+	distance::到切点距离
+	cut off::
+	sigma::高斯平滑标准差
+	color-space::比例
+	sigma::高斯平滑
+	smooth::标准差
+	stack::序列
+
+Felzenszwalb Label::Felzenszwalb聚类标记
+	scale::尺度参数
+	sigma::高斯平滑内核的宽度
+	min_size::最小区域面积
+	stack::序列
+
+RAG Threshold::相邻区域阈值融合
+	threshold::阈值
+	sigma::标准差
+
+RAG Cut Normalized::相邻区域关系简化
+	threshold::阈值
+	num::数量
+	sigma::标准差
+
+RAG Merge Hierarchical::相邻区域层级融合
+	threshold::阈值
+	sigma::标准差
+
+Evolving Level Set::水平集收敛
+	mu::距离正则系数R(phi)
+	lambda1::加权长度系数L(phi)
+	lambda2::加权面积系数A(phi)
+	tol::容错
+	max_iter::最大迭代次数
+	dt::步长
+
+Morphological Snake Fit::形态学蛇行收敛
+	iterations::迭代次数
+	smoothing::平滑因子
+	lambda1::外轮廓权重
+	lambda2::内轮廓权重
+
+Bound Snake Fit::外接矩蛇行收敛
+	iterations::迭代次数
+	smoothing::平滑因子
+	threshold::阈值
+	balloon::张力
+
+ROI Snake Fit::选区蛇行拟合
+	iterations::迭代次数
+	smoothing::平滑因子
+	threshold::阈值
+	balloon::张力
+
+Random Walker::随机游走分割
+	beta::扩散系数
+	tolerance::容错
+
+Classify::分类器
+
+Label Tool::特征标记工具
+
+Feature Classify Panel::特征标记面板
+
+Random Forest Classify::随机森林分类器
+	===== Classifier Parameter =====::===== 分类器参数 =====
+	===== Feature Parameter =====::===== 特征提取参数 =====
+	img::目标图像
+	back::背景
+	estimators::决策树数量
+	n::个
+	features::特征
+	depth::树最大深度
+	max::层
+	grade::多尺度等级
+	sigma::结构标准差
+	tensor::结构张量
+	add image feature::原始图像作为特征
+	add blur feature::图像多尺度特征
+	add sobel feature::图像梯度特征
+	add eig feature::结构张量特征
+
+ExtraTrees Classify::拓展决策树分类器
+	estimators::估计参数
+	depth::树深度
+	grade::多尺度等级
+	sigma::结构标准差
+
+Bagging Classify::词袋分类器
+	estimators::分类器个数
+	depth::决策树深度
+	grade::多尺度等级
+	sigma::结构标准差
+
+AdaBoost Classify::AdaBoost分类器
+	estimators::分类器个数
+	depth::决策深度
+	grade::多尺度等级
+	sigma::结构标准差
+
+Gradient Boosting Classsify::梯度增强分类器
+	estimators::估计参数
+	depth::决策树深度
+	learn::学习率
+	grade::多尺度等级
+	sigma::结构标准差
+
+Feature Predictor::特征预测
+
+Build Mark Image::生成空白标记
+
+Fragment Repair::碎片修复
+
+Image Calculator::通道运算

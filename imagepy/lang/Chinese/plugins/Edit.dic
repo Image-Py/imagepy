@@ -1,0 +1,17 @@
+Undo::撤回
+
+Copy::拷贝
+
+Paste::粘贴
+
+Sketch::描边
+	width::宽度
+	pix::像素
+
+Fill::填充
+
+Invert::反转
+
+Clear::清空(ROI内)
+
+Clear Out::清空(ROI外)

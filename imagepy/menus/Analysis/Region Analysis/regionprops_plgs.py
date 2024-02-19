@@ -3,45 +3,20 @@
 Created on Tue Dec 27 01:06:59 2016
 @author: yxl
 """
-from imagepy import IPy, wx
 import numpy as np
-from imagepy.core.engine import Simple, Filter
-from imagepy.core.manager import ImageManager
+from sciapp.action import Simple, Filter
 from scipy.ndimage import label, generate_binary_structure
 from skimage.measure import regionprops
+from sciapp.object import mark2shp
 import pandas as pd
-
-class Mark:
-    def __init__(self, data):
-        self.data = data
-
-    def draw(self, dc, f, **key):
-        dc.SetPen(wx.Pen((255,255,0), width=1, style=wx.SOLID))
-        dc.SetTextForeground((255,255,0))
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
-                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        
-        dc.SetFont(font)
-        data = self.data[0 if len(self.data)==1 else key['cur']]
-        for i in range(len(data)):
-            pos = f(*(data[i][0][1], data[i][0][0]))
-            dc.DrawCircle(pos[0], pos[1], 2)
-            dc.DrawText('id={}'.format(i), pos[0], pos[1])
-            if data[i][1]==None:continue
-            k1, k2, a = data[i][1]
-            aixs = np.array([[-np.sin(a), np.cos(a)],
-                             [np.cos(a), np.sin(a)]])*[k1/2, k2/2]
-            ar = np.linspace(0, np.pi*2,25)
-            xy = np.vstack((np.cos(ar), np.sin(ar)))
-            arr = np.dot(aixs, xy).T+data[i][0]
-            dc.DrawLines([f(*i) for i in arr[:,::-1]])
+from imagepy.app import ColorManager
 
 # center, area, l, extent, cov
 class RegionCounter(Simple):
     title = 'Geometry Analysis'
-    note = ['8-bit', '16-bit']
+    note = ['8-bit', '16-bit', 'int']
     para = {'con':'8-connect', 'center':True, 'area':True, 'l':True, 'extent':False, 'cov':False, 'slice':False,
-            'ed':False, 'holes':False, 'ca':False, 'fa':False, 'solid':False}
+            'ed':False, 'holes':False, 'ca':False, 'fa':False, 'solid':False, 'labeled':False}
     view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             (bool, 'slice', 'slice'),
             ('lab', None, '=========  indecate  ========='),
@@ -54,7 +29,8 @@ class RegionCounter(Simple):
             (bool, 'holes', 'holes'),
             (bool, 'fa', 'filled area'),
             (bool, 'solid', 'solidity'),
-            (bool, 'cov', 'cov')]
+            (bool, 'cov', 'cov'),
+            (bool, 'labeled', 'has been labeled')]
 
     #process
     def run(self, ips, imgs, para = None):
@@ -72,20 +48,25 @@ class RegionCounter(Simple):
         if para['fa']:titles.extend(['FilledArea'])
         if para['solid']:titles.extend(['Solidity'])
         if para['cov']:titles.extend(['Major','Minor','Ori'])
-        buf = imgs[0].astype(np.uint16)
-        data, mark = [], []
+        buf = np.zeros(imgs[0].shape, dtype=np.uint32)
+        data, mark = [], {'type':'layers', 'body':{}}
         strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
         for i in range(len(imgs)):
-            label(imgs[i], strc, output=buf)
+            np.copyto(buf, imgs[i]) if para['labeled'] else label(imgs[i], strc, output=buf)
             ls = regionprops(buf)
 
             dt = [[i]*len(ls), list(range(len(ls)))]
             if not para['slice']:dt = dt[1:]
 
-            if not para['cov']: cvs = [None] * len(ls)
-            else: cvs = [(i.major_axis_length, i.minor_axis_length, i.orientation) for i in ls]
-            centroids = [i.centroid for i in ls]
-            mark.append([(center, cov) for center,cov in zip(centroids, cvs)])
+            layer = {'type':'layer', 'body':[]}
+            texts = [(i.centroid[::-1])+('id=%d'%n,) for i,n in zip(ls,range(len(ls)))]
+            layer['body'].append({'type':'texts', 'body':texts})
+            if para['cov']:
+                ellips = [i.centroid[::-1] + (i.major_axis_length/2,i.minor_axis_length/2, i.orientation+np.pi/2) for i in ls]
+                layer['body'].append({'type':'ellipses', 'body':ellips})
+
+            if len(ls)>0: mark['body'][i] = layer
+
             if para['center']:
                 dt.append([round(i.centroid[1]*k,1) for i in ls])
                 dt.append([round(i.centroid[0]*k,1) for i in ls])
@@ -112,13 +93,13 @@ class RegionCounter(Simple):
                 dt.append([round(i.orientation*k, 1) for i in ls])
 
             data.extend(list(zip(*dt)))
-        ips.mark = Mark(mark)
-        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-region')
+        ips.mark = mark2shp(mark if para['slice'] else mark['body'][0])
+        self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-region')
 
 # center, area, l, extent, cov
 class RegionFilter(Filter):
     title = 'Geometry Filter'
-    note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap','preview']
+    note = ['8-bit', '16-bit', 'int', 'auto_msk', 'auto_snap','preview']
     para = {'con':'4-connect', 'inv':False, 'area':0, 'l':0, 'holes':0, 'solid':0, 'e':0, 'front':255, 'back':100}
     view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
             (bool, 'inv', 'invert'),
@@ -131,12 +112,11 @@ class RegionFilter(Filter):
             (float, 'solid', (-1, 1,), 1, 'solidity', 'ratio'),
             (float, 'e', (-100,100), 1, 'eccentricity', 'ratio')]
 
-    #process
     def run(self, ips, snap, img, para = None):
         k, unit = ips.unit
         strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
 
-        lab, n = label(snap==0 if para['inv'] else snap, strc, output=np.uint16)
+        lab, n = label(snap==0 if para['inv'] else snap, strc, output=np.uint32)
         idx = (np.ones(n+1)*(0 if para['inv'] else para['front'])).astype(np.uint8)
         ls = regionprops(lab)
         
@@ -179,4 +159,43 @@ class RegionFilter(Filter):
 
         idx[0] = para['front'] if para['inv'] else 0
         img[:] = idx[lab]
-plgs = [RegionCounter, RegionFilter]
+
+# center, area, l, extent, cov
+class PropertyMarker(Filter):
+    title = 'Property Marker'
+    note = ['8-bit', '16-bit', 'auto_msk', 'auto_snap','preview']
+    para = {'con':'4-connect', 'pro':'area', 'cm':'gray'}
+    view = [(list, 'con', ['4-connect', '8-connect'], str, 'conection', 'pix'),
+            (list, 'pro', ['area', 'perimeter', 'solid', 'eccentricity'], str, 'property', ''),
+            ('cmap', 'cm', 'color map')]
+
+    def load(self, ips): 
+        self.lut = ips.lut
+        return True
+
+    def cancel(self, ips):
+        ips.lut = self.lut
+        Filter.cancel(self, ips)
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        strc = generate_binary_structure(2, 1 if para['con']=='4-connect' else 2)
+
+        lab, n = label(snap, strc, output=np.uint32)
+        idx = (np.zeros(n+1)).astype(np.uint8)
+        ls = regionprops(lab)
+        
+        if para['pro'] == 'area': ps = [i.area for i in ls]
+        if para['pro'] == 'perimeter': ps = [i.perimeter for i in ls]
+        if para['pro'] == 'solid': ps = [i.solidity for i in ls]
+        if para['pro'] == 'eccentricity': ps = [i.major_axis_length/i.minor_axis_length for i in ls]
+
+        ps = np.array(ps)
+        if ps.max() != ps.min():
+            ps = (ps - ps.min()) / (ps.max() - ps.min())
+        else: ps = ps / ps.max()
+        idx[1:] = ps * 245 + 10
+        img[:] = idx[lab]
+        ips.lut = ColorManager.get(para['cm'])
+
+plgs = [RegionCounter, RegionFilter, PropertyMarker]

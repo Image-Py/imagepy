@@ -1,0 +1,111 @@
+New Image::新建图像
+	name::名称
+	width::宽度
+	height::高度
+	pix::像素
+	type::类型
+	slice::层数
+
+Open::打开图像
+
+Open Url::打开链接
+	Input the URL, eg. http://data.imagepy.org/testdata/yxdragon.jpg::输入链接, 例如 http://data.imagepy.org/testdata/yxdragon.jpg
+	Url::链接
+
+Open Recent::打开最近
+
+Samples Local::本地图像样例
+
+Samples Online::在线图像样例
+
+Samples ImageJ::ImageJ图像样例
+
+Import::导入
+
+Open Raw::打开Raw文件
+
+Import Rois from IJ::导入ImageJ感兴趣区域
+
+Import Sequence::导入图像序列
+
+Export::导出
+
+Save Sequence::导出图像序列
+
+BMP::BMP图像
+
+BMP Open::打开BMP图像
+
+BMP Save::保存BMP图像
+
+JPG::JPG图像
+
+JPG Open::打开JPG图像
+
+JPG Save::保存JPG图像
+
+PNG::PNG图像
+
+PNG Open::打开PNG图像
+
+PNG Save::保存PNG图像
+
+TIF::TIF图像
+
+TIF Open::打开TIF图像
+
+TIF Save::保存TIF图像
+
+TIF 3D Open::打开3D TIF图像
+
+TIF 3D Save::保存3D TIF图像
+
+GIF::GIF图像
+
+GIF Open::打开GIF图像
+
+GIF Save::保存GIF图像
+
+GIF Animate Open::打开GIF动画
+
+GIF Animate Save::保存GIF动画
+
+DICOM::DICOM图像
+
+DCM Open::打开DICOM图像
+
+DAT::DAT图像
+
+DAT Open::打开DAT图像
+
+DAT Save::保存DAT图像
+
+Numpy::Numpy文件
+
+Numpy Open::打开Numpy文件
+
+Numpy Save::保存Numpy文件
+
+Numpy 3D Open::打开3D Numpy文件
+
+Numpy 3D Save::保存3D Numpy文件
+
+MAT::MAT图像
+
+Mat Open::打开Mat图像
+
+Mat Save::保存Mat图像
+
+Mat 3D Open::打开3D Mat图像
+
+Mat 3D Save::保存3D Mat图像
+
+MarkDown::MarkDown文件
+
+MarkDown Open::打开MarkDown文件
+
+Save::保存图像
+
+Save With Mark::保存图像及标记
+
+Exit::退出

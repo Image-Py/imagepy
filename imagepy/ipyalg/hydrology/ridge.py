@@ -3,7 +3,7 @@ from numba import jit
 
 from scipy.ndimage import label, generate_binary_structure
 
-strc = np.ones((3,3), dtype=np.bool)
+strc = np.ones((3,3), dtype='bool')
 
 def count(n):
     a = [(n>>i) & 1 for i in range(8)]
@@ -201,7 +201,7 @@ def ridge(img, mark, up=True):
         else: mark[i] = 0
 
 if __name__ == '__main__':
-    from scipy.misc import imread
+    from skimage.io import imread
     import scipy.ndimage as ndimg
     import matplotlib.pyplot as plt
     from time import time

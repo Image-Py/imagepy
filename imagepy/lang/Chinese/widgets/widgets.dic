@@ -1,0 +1,18 @@
+Curve Adjust::曲线调整
+	apply::刷新
+	clear::清除
+	reset::重置
+	invert::反向
+
+Histogram::直方图
+	min-max::极限
+	slice::单张
+	stack::序列
+
+Channels RGB::通道
+	stack::序列
+
+Navigator::导航栏
+	Apply::刷新
+	Fit::适应屏幕
+	Normal::原始大小

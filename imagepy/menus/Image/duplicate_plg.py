@@ -4,55 +4,71 @@ Created on Tue Dec  6 19:47:34 2016
 @author: yxl
 """
 
-from imagepy.core.engine import Simple
-from imagepy.core import ImagePlus
-from imagepy.ui.canvasframe import CanvasFrame
+from sciapp.action import Simple
+from sciapp.object import Image, ROI
+from sciapp.util import offset, mark2shp
 import numpy as np
-from imagepy import IPy
 
-class Plugin(Simple):
+class Duplicate(Simple):
     title = 'Duplicate'
     note = ['all']
     
-    para = {'name':'Undefined','stack':True}
-    
     def load(self, ips):
-        self.para['name'] = ips.title+'-copy'
-        self.view = [(str, 'name', 'Name', '')]
-        if ips.get_nslices()>1:
-            self.view.append((bool, 'stack', 'duplicate stack'))
+        if ips.slices > 1:
+            self.para = {'stack':True}
+            self.view = [(bool, 'stack', 'duplicate stack')]
+        else: 
+            self.para = {'stack':True}
+            self.view = None
         return True
+
+    def run(self, ips, imgs, para = None):
+        if not para['stack']: imgs = [ips.img]
+        sli = ips.rect
+        imgs = [i[sli].copy() for i in imgs]
+        if ips.isarray: imgs = np.array(imgs)
+        new = Image(imgs, ips.name + '-duplicate')
+        if not ips.roi is None:
+            new.roi = ROI(mark2shp(ips.roi.to_mark()))
+            offset(new.roi, new.roi.box[0]*-1, new.roi.box[1]*-1)
+            new.roi.dirty = True
+        if not ips.back is None and not ips.back.imgs is None:
+            back = [i[sli].copy() for i in ips.back.imgs]
+            if ips.isarray: back = np.array(back)
+            back = Image(back, ips.back.name+'-duplicate')
+            back.cn, back.rg, back.mode = ips.back.cn, ips.back.rg, ips.back.mode
+            new.back, new.mode = back, ips.mode
+            self.app.show_img(back)
+        self.app.show_img(new)
+
+class Crop(Simple):
+    title = 'Crop'
+    note = ['all', 'req_roi']
+
+    def run(self, ips, imgs, para = None):
+        sc, sr = ips.rect
+        if ips.isarray: imgs = imgs[:, sc, sr].copy()
+        else: imgs = [i[sc,sr].copy() for i in imgs]
+        ips.set_imgs(imgs)
+        if not ips.back is None:
+            if ips.back.isarray: imgs = ips.back.imgs[:, sc, sr].copy()
+            else: imgs = [i[sc,sr].copy() for i in ips.back.imgs]
+            ips.back.set_imgs(imgs)
+        offset(ips.roi, ips.roi.box[0]*-1, ips.roi.box[1]*-1)
+
+class Rename(Simple):
+    title = 'Rename'
+    note = ['all']
+    
+    para = {'name':'Undefined'}
+    view = [(str, 'name', 'name', '')]
     #process
     def run(self, ips, imgs, para = None):
-        name = para['name']
-        print('name------------------', name)
-        if ips.get_nslices()==1 or self.para['stack']==False:
-            if ips.roi == None:
-                img = ips.img.copy()
-                ipsd = ImagePlus([img], name)
-                ipsd.backimg = ips.backimg
-            else:
-                img = ips.get_subimg().copy()
-                ipsd = ImagePlus([img], name)
-                box = ips.roi.get_box()
-                ipsd.roi = ips.roi.affine(np.eye(2), (-box[0], -box[1]))
-                if not ips.backimg is None:
-                    sr, sc = ips.get_rect()
-                    ipsd.backimg = ips.backimg[sr, sc]
-        elif ips.get_nslices()>1 and self.para['stack']:
-            if ips.roi == None:
-                if ips.is3d:imgs=imgs.copy()
-                else:imgs = [i.copy() for i in imgs]
-                backimg = ips.backimg
-            else:
-                sc, sr = ips.get_rect()
-                if ips.is3d: imgs=imgs[:, sc, sr].copy()
-                else: imgs = [i[sc,sr].copy() for i in imgs]
-                if not ips.backimg is None:
-                    backimg = ips.backimg[sr, sr]
-            ipsd = ImagePlus(imgs, name)
-            if ips.roi != None:
-                ipsd.roi = ips.roi.affine(np.eye(2), (-sr.start, -sc.start))
-            if not ips.backimg is None: ipsd.backimg = backimg
-        ipsd.backmode = ips.backmode
-        IPy.show_ips(ipsd)
+        win = self.app.wimg_manager.get(ips.name)
+        self.app.img_manager.remove(ips.name)
+        self.app.wimg_manager.remove(ips.name)
+        ips.name = self.app.img_manager.name(para['name'])
+        self.app.img_manager.add(ips.name, ips)
+        self.app.wimg_manager.add(ips.name, win)
+
+plgs = [Rename, Duplicate, Crop]

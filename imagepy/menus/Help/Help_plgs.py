@@ -3,26 +3,26 @@
 Created on Sat Nov 19 14:05:12 2016
 @author: yxl
 """
-from imagepy import IPy
 import webbrowser
-from imagepy.core.engine import Free
+from sciapp.action import Free
 
 ## TODO:Fixme!
 class About(Free):
     title = 'About'
     asyn = False
+
     def run(self, para=None):
-        IPy.alert('ImagePy v0.2')
+        self.app.alert('ImagePy v0.2')
         
 class Topic(Free):
     title = 'Topic'
-    asyn = False
+
     def run(self, para=None):
         webbrowser.open('http://www.imagepy.org/document')
         
 class Home(Free):
     title = 'Home Page'
-    asyn = False
+
     def run(self, para=None):
         webbrowser.open('http://imagepy.org')
 

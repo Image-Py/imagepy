@@ -5,7 +5,7 @@ Created on Wed Dec 28 00:26:45 2016
 @author: yxl
 """
 import os, wx
-from imagepy.core.engine import Free
+from sciapp.action import Free
 from wx.py.editor import EditorFrame
 from imagepy import root_dir
 

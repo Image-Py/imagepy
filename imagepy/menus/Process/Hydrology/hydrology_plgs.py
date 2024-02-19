@@ -1,13 +1,12 @@
 import scipy.ndimage as ndimg
 import numpy as np
-from numba import jit
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 from imagepy.ipyalg import find_maximum, ridge, stair, isoline, watershed
-from imagepy.core.roi import PointRoi
+# from imagepy.core.roi import PointRoi
+from sciapp.object import Points, ROI
 #from skimage.morphology import watershed, disk
 from skimage.filters import rank
 from skimage.filters import sobel
-from imagepy import IPy
 
 class IsoLine(Filter):
     title = 'Find IsoLine'
@@ -43,8 +42,8 @@ class FindMax(Filter):
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'])
-        self.ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
-        self.ips.update = True
+        ips.roi = ROI([Points(pts[:,::-1])])
+        ips.update()
 
 class FindMin(Filter):
     title = 'Find Minimum'
@@ -55,11 +54,11 @@ class FindMin(Filter):
 
     def run(self, ips, snap, img, para = None):
         pts = find_maximum(self.ips.img, para['tol'], False)
-        self.ips.roi = PointRoi([tuple(i) for i in pts[:,::-1]])
-        self.ips.update = True
+        ips.roi = ROI([Points(pts[:,::-1])])
+        ips.update()
 
 class UPRidge(Filter):
-    title = 'Find Riedge'
+    title = 'Find Ridge'
     note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'preview']
     
     para = {'sigma':1.0, 'thr':0, 'ud':True, 'type':'white line'}
@@ -79,7 +78,7 @@ class UPRidge(Filter):
             ips.lut[:para['thr']] = [0,255,0]
         else:
             ips.lut[para['thr']:] = [255,0,0]
-        ips.update = 'pix'
+        ips.update()
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -99,11 +98,11 @@ class UPRidge(Filter):
 
 class ARidge(Filter):
     title = 'Active Ridge'
-    note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel']
+    note = ['8-bit', 'not_slice', 'auto_snap', 'not_channel', 'req_roi']
     
     para = {'sigma':1.0, 'ud':True, 'type':'white line'}
-    view = [(float, (0,5), 1, 'sigma', 'sigma', 'pix'),
-    (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', ''),
+    view = [(float, 'sigma', (0,5), 1, 'sigma', 'pix'),
+            (list, 'type', ['white line', 'gray line', 'white line on ori'], str, 'output', ''),
             (bool, 'ud', 'ascend')]
     
     def run(self, ips, snap, img, para = None):
@@ -123,7 +122,7 @@ class Watershed(Filter):
     note = ['8-bit', 'auto_snap', 'not_channel', 'preview']
     
     para = {'sigma':1.0, 'thr':0, 'con':False, 'ud':True, 'type':'white line'}
-    view = [(float, (0,5), 1, 'sigma', 'sigma', 'pix'),
+    view = [(float, 'sigma', (0,5), 1, 'sigma', 'pix'),
             ('slide', 'thr', (0,255), 0, 'Low'),
             (bool, 'con', 'full connectivity'),
             (bool, 'ud', 'ascend'),
@@ -140,7 +139,7 @@ class Watershed(Filter):
             ips.lut[:para['thr']] = [0,255,0]
         else:
             ips.lut[para['thr']:] = [255,0,0]
-        ips.update = 'pix'
+        ips.update()
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -178,11 +177,11 @@ class UPWatershed(Filter):
         ips.lut[:] = self.buflut
         ips.lut[:para['thr1']] = [0,255,0]
         ips.lut[para['thr2']:] = [255,0,0]
-        ips.update = 'pix'
+        ips.update()
 
     def cancel(self, ips):
         ips.lut = self.buflut
-        ips.update = 'pix'
+        ips.update()
 
     #process
     def run(self, ips, snap, img, para = None):
@@ -214,11 +213,11 @@ class ROIWatershed(Filter):
         #gradient = rank.gradient(denoised, disk(para['gdt']))
         ndimg.gaussian_filter(snap, para['sigma'], output=img)
 
-        markers, n = ndimg.label(ips.get_msk(), np.ones((3,3)), output=np.uint32)
+        markers, n = ndimg.label(ips.mask(), np.ones((3,3)), output=np.uint32)
         if not para['ud']:img[:] = 255-img
         mark = watershed(img, markers, line=True, conn=para['con']+1)
         mark = np.multiply((mark==0), 255, dtype=np.uint8)
-
+        
         if para['type'] == 'white line':
             img[:] = mark
         if para['type'] == 'gray line':

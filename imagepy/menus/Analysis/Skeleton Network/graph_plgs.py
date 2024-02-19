@@ -1,28 +1,19 @@
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 from imagepy.ipyalg.graph import sknw
 import numpy as np
+from numpy.linalg import norm
 import networkx as nx, wx
-from imagepy import IPy
 from numba import jit
 import pandas as pd
+from sciapp.object import mark2shp
 
-# build   statistic  sumerise   cut  edit
-class Mark:
-    def __init__(self, graph):
-        self.graph = graph
-
-    def draw(self, dc, f, **key):
-        dc.SetPen(wx.Pen((255,255,0), width=3, style=wx.SOLID))
-        dc.SetTextForeground((255,255,0))
-        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, 
-                       wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        dc.SetFont(font)
-
-        ids = self.graph.nodes()
-        pts = [self.graph.node[i]['o'] for i in ids]
-        pts = [f(i[1], i[0]) for i in pts]
-        dc.DrawPointList(pts)
-        dc.DrawTextList([str(i) for i in ids], pts)
+def graph_mark(graph):
+    ids = graph.nodes()
+    pts = [graph.nodes[i]['o'] for i in ids]
+    pts = {'type':'points', 'body':[(i[1], i[0]) for i in pts]}
+    txt = [(a,b,str(c)) for (a,b),c in zip(pts['body'], ids)]
+    txt = {'type':'texts', 'body':txt}
+    return mark2shp({'type':'layer', 'body':[pts, txt]})
 
 class BuildGraph(Filter):
     title = 'Build Graph'
@@ -32,7 +23,7 @@ class BuildGraph(Filter):
     def run(self, ips, snap, img, para = None):
         ips.data = sknw.build_sknw(img, True)
         sknw.draw_graph(img, ips.data)
-        ips.mark = Mark(ips.data)
+        ips.mark = graph_mark(ips.data)
 
 class Statistic(Simple):
     title = 'Graph Statistic'
@@ -40,7 +31,7 @@ class Statistic(Simple):
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):
-            IPy.alert("Please build graph!");
+            self.app.alert("Please build graph!");
             return False;
         return True;
 
@@ -50,9 +41,11 @@ class Statistic(Simple):
         etitles = ['PartID', 'StartID', 'EndID', 'Length']
         k, unit = ips.unit
         comid = 0
-        for g in nx.connected_component_subgraphs(ips.data, False):
+        # for g in nx.connected_components(ips.data):
+        #     for idx in g.nodes():
+        for g in [ips.data.subgraph(c).copy() for c in nx.connected_components(ips.data)]:
             for idx in g.nodes():
-                o = g.node[idx]['o']
+                o = g.nodes[idx]['o']
                 print(idx, g.degree(idx))
                 nodes.append([comid, idx, g.degree(idx), round(o[1]*k,2), round(o[0]*k,2)])
             for (s, e) in g.edges():
@@ -61,8 +54,8 @@ class Statistic(Simple):
                     edges.append([comid, s, e, round(eds[i]['weight']*k, 2)])
             comid += 1
 
-        IPy.show_table(pd.DataFrame(nodes, columns=ntitles), ips.title+'-nodes')
-        IPy.show_table(pd.DataFrame(edges, columns=etitles), ips.title+'-edges')
+        self.app.show_table(pd.DataFrame(nodes, columns=ntitles), ips.title+'-nodes')
+        self.app.show_table(pd.DataFrame(edges, columns=etitles), ips.title+'-edges')
 
 class Sumerise(Simple):
     title = 'Graph Summarise'
@@ -73,7 +66,7 @@ class Sumerise(Simple):
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):
-            IPy.alert("Please build graph!");
+            self.app.alert("Please build graph!");
             return False;
         return True;
 
@@ -81,7 +74,7 @@ class Sumerise(Simple):
         titles = ['PartID', 'Noeds', 'Edges', 'TotalLength', 'Density', 'AveConnect']
         k, unit = ips.unit
         
-        gs = nx.connected_component_subgraphs(ips.data, False) if para['parts'] else [ips.data]
+        gs = [ips.data.subgraph(c).copy() for c in nx.connected_components(ips.data)] if para['parts'] else [ips.data]
         comid, datas = 0, []
         for g in gs:
             sl = 0
@@ -90,7 +83,9 @@ class Sumerise(Simple):
             datas.append([comid, g.number_of_nodes(), g.number_of_edges(), round(sl*k, 2), 
                 round(nx.density(g), 2), round(nx.average_node_connectivity(g),2)][1-para['parts']:])
             comid += 1
-        IPy.show_table(pd.DataFrame(datas, columns=titles[1-para['parts']:]), ips.title+'-graph')
+        # print('======datas=========', datas)
+        # print('======columns=========', titles[1-para['parts']:])
+        self.app.show_table(pd.DataFrame(datas, columns=titles[1-para['parts']:]), ips.title+'-graph')
 
 class CutBranch(Filter):
     title = 'Cut Branch'
@@ -102,18 +97,19 @@ class CutBranch(Filter):
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):
-            IPy.alert("Please build graph!");
+            self.app.alert("Please build graph!");
             return False;
+        self.buf = ips.data
         return True;
 
     def run(self, ips, snap, img, para = None):
-        g = ips.data.copy()
+        g = ips.data = self.buf.copy()
         k, unit = ips.unit
         while True:
             rm = []
             for i in g.nodes():
                 if g.degree(i)!=1:continue
-                s,e = g.edges(i)[0]
+                s,e = list(g.edges(i))[0]
                 if g[s][e][0]['weight']*k<=para['lim']:
                     rm.append(i)
             g.remove_nodes_from(rm)
@@ -121,24 +117,60 @@ class CutBranch(Filter):
         img *= 0
         sknw.draw_graph(img, g)
 
+    def cancel(self, ips):
+        if 'auto_snap' in self.note:
+            ips.swap()
+            ips.update()
+        ips.data = self.buf
+
 class RemoveIsolate(Filter):
     title = 'Remove Isolate Node'
-    note = ['all']
+    note = ['all', 'not_slice', 'not_channel', 'auto_snap']
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):
-            IPy.alert("Please build graph!");
+            self.app.alert("Please build graph!");
             return False;
         return True;
 
     def run(self, ips, snap, img, para = None):
         g = ips.data
-        for n in g.nodes():
+        for n in list(g.nodes()):
             if len(g[n])==0: g.remove_node(n)
         img *= 0
         sknw.draw_graph(img, g)
+        ips.mark = graph_mark(ips.data)
 
-@jit
+class Remove2Node(Simple):
+    title = 'Remove 2Path Node'
+    note = ['all']
+
+    def load(self, ips):
+        if not isinstance(ips.data, nx.MultiGraph):
+            self.app.alert("Please build graph!");
+            return False;
+        return True;
+
+    def run(self, ips, imgs, para = None):
+        g = ips.data
+        for n in list(g.nodes()):
+            if len(g[n])!=2 or n in g[n]: continue 
+            (k1, e1), (k2, e2) = g[n].items()
+            if isinstance(g, nx.MultiGraph):
+                if len(e1)!=1 or len(e2)!=1: continue
+                e1, e2 = e1[0], e2[0]
+            l1, l2 = e1['pts'], e2['pts']
+            d1 = norm(l1[0]-g.nodes[n]['o']) > norm(l1[-1]-g.nodes[n]['o'])
+            d2 = norm(l2[0]-g.nodes[n]['o']) < norm(l2[-1]-g.nodes[n]['o'])
+            pts = np.vstack((l1[::[-1,1][d1]], l2[::[-1,1][d2]]))
+            l = np.linalg.norm(pts[1:]-pts[:-1], axis=1).sum()
+            g.remove_node(n)
+            g.add_edge(k1, k2, pts=pts, weight=l)
+        ips.img[:] = 0
+        sknw.draw_graph(ips.img, g)
+        ips.mark = graph_mark(ips.data)
+
+@jit(nopython=True)
 def floodfill(img, x, y):
     buf = np.zeros((131072,2), dtype=np.uint16)
     color = img[int(y), int(x)]
@@ -165,10 +197,10 @@ def floodfill(img, x, y):
 
 class CutROI(Filter):
     title = 'Cut By ROI'
-    note = ['8-bit', 'not_slice', 'not_channel', 'auto_snap', 'preview']
+    note = ['8-bit', 'req_roi', 'not_slice', 'not_channel', 'auto_snap', 'preview']
 
     def run(self, ips, snap, img, para = None):
-        msk = ips.get_msk(3) * (img>0)
+        msk = ips.mask(3) * (img>0)
         r,c = np.where(msk)
         for x,y in zip(c,r):
             if img[y,x]>0:
@@ -184,7 +216,7 @@ class ShortestPath(Simple):
 
     def load(self, ips):
         if not isinstance(ips.data, nx.MultiGraph):
-            IPy.alert("Please build graph!");
+            self.app.alert("Please build graph!");
             return False;
         return True;
 
@@ -197,11 +229,13 @@ class ShortestPath(Simple):
             pts = sorted([(i['weight'], i['pts']) for i in ps])
             paths.append(((s,e), pts[0]))
         sknw.draw_graph(ips.img, ips.data)
+
         for i in paths:
             ips.img[i[1][1][:,0], i[1][1][:,1]] = 255
-            IPy.write('%s-%s:%.4f'%(i[0][0], i[0][1], i[1][0]), 'ShortestPath')
-        IPy.write('Nodes:%s, Length:%.4f'%(len(nodes), sum([i[1][0] for i in paths])), 'ShortestPath')
+
+        data = [(a[0], a[1], b[0]) for a,b in paths]
+        self.app.show_table(pd.DataFrame(data, columns=['from','to','l']), 'shortest-path')
 
 
 
-plgs = [BuildGraph, Statistic, Sumerise, '-', RemoveIsolate, CutBranch, CutROI, '-', ShortestPath]
+plgs = [BuildGraph, Statistic, Sumerise, '-', RemoveIsolate, Remove2Node, CutBranch, CutROI, '-', ShortestPath]

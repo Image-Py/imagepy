@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 import scipy.ndimage as nimg
-from imagepy.core.engine import Filter, Simple
+from sciapp.action import Filter, Simple
 import numpy as np
 
 class Uniform(Filter):
@@ -16,15 +16,12 @@ class Uniform(Filter):
         nimg.uniform_filter(snap, para['size'], output=img)
 
 class Gaussian(Filter):
-    """Gaussian: derived from imagepy.core.engine.Filter """
     title = 'Gaussian'
     note = ['all', 'auto_msk', 'auto_snap','preview']
     para = {'sigma':2}
     view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix')]
     
     def run(self, ips, snap, img, para = None):
-        #l = int(para['sigma']*3)*2+1
-        #cv2.GaussianBlur(snap, (l, l), para['sigma'], dst=img)
         nimg.gaussian_filter(snap, para['sigma'], output=img)
         
 class GaussianLaplace(Filter):
@@ -163,6 +160,19 @@ class LaplaceSharp(Filter):
         np.multiply(img, -para['weight'], out=img, casting='unsafe')
         img += snap
 
+class Variance(Filter):
+    title = 'Variance'
+    note = ['all', 'auto_msk', '2float', 'auto_snap','preview']
+
+    #parameter
+    para = {'size':2}
+    view = [(float, 'size', (0,30), 1,  'size', 'pix')]
+
+    #process
+    def run(self, ips, snap, img, para = None):
+        nimg.uniform_filter(snap**2, para['size'], output=img)
+        img -= nimg.uniform_filter(snap, para['size'])**2
+
 class USM(Filter):
     title = 'Unsharp Mask'
     note = ['all', 'auto_msk', 'auto_snap', '2int', 'preview']
@@ -180,4 +190,12 @@ class USM(Filter):
         img += snap
 
 plgs = [Uniform, Gaussian, '-', Maximum, Minimum, Median, Percent, '-', 
-    Prewitt, Sobel, Laplace, GaussianLaplace, DOG, '-', LaplaceSharp, USM]
+    Prewitt, Sobel, Laplace, GaussianLaplace, DOG, '-', Variance, LaplaceSharp, USM]
+
+if __name__ == '__main__':
+    from skimage.data import camera, astronaut
+    from sciwx.app import ImageApp
+
+    ImageApp.start(
+        imgs = [('astronaut', astronaut())], 
+        plgs=[('U', USM), ('G', Gaussian)])

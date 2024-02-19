@@ -3,23 +3,21 @@
 Created on Mon Dec  5 03:19:13 2016
 @author: yxl
 """
-from imagepy.core.util import fileio
-from imagepy import IPy, root_dir
-from imagepy.core.manager import WriterManager, ImageManager, WindowsManager
-from imagepy.core.engine import Simple
+from sciapp.action import dataio
+from sciapp.action import Simple
 
-class SaveImage(fileio.Writer):
+class SaveImage(dataio.ImageWriter):
 	title = 'Save'
 
 	def load(self, ips):
-		self.filt = sorted(WriterManager.all())
+		self.filt = [i for i in sorted(dataio.WriterManager.names())]
 		return True
 
-class WindowCapture(fileio.Writer):
+class WindowCapture(dataio.ImageWriter):
 	title = 'Save With Mark'
 	filt = ['PNG']
 
 	def run(self, ips, imgs, para = None):
-		WindowsManager.get().canvas.save_buffer(para['path'])
+		self.app.get_img_win().canvas.save_buffer(para['path'])
 
 plgs = [SaveImage, WindowCapture]

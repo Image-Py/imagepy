@@ -12,7 +12,7 @@ def neighbors(shape):
 	acc = np.cumprod((1,)+shape[::-1][:-1])
 	return np.dot(idx, acc[::-1])
 
-@jit
+@jit(nopython=True)
 def stair(img, low=0, high=255, step=20):
 	img = img.ravel()
 	for i in range(len(img)):
@@ -20,18 +20,19 @@ def stair(img, low=0, high=255, step=20):
 		elif img[i]>high:img[i]=high
 		else: img[i] = (img[i]-low)//step*step+low
 
-@jit # my mark
+@jit(nopython=True) # my mark
+def isoline_jit(img, mark, nbs):
+	for p in range(len(img)):
+		if mark[p]==0:continue
+		s = 0
+		for dp in nbs:
+		    if img[p] > img[p+dp]:s+=1
+		if s==0:mark[p] = 0
+
 def isoline(img, low=0, high=255, step=20):
 	stair(img, low, high, step)
 	nbs = neighbors(img.shape)
 	mark = np.zeros_like(img, dtype=np.uint8)
 	mark[tuple([slice(1,-1)]*img.ndim)] = 255
-	img = img.ravel()
-	mark1 = mark.ravel()
-	for p in range(len(img)):
-		if mark1[p]==0:continue
-		s = 0
-		for dp in nbs:
-		    if img[p] > img[p+dp]:s+=1
-		if s==0:mark1[p] = 0
+	isoline_jit(img.ravel(), mark.ravel(), nbs)
 	return mark

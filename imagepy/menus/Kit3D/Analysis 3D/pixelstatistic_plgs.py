@@ -1,6 +1,5 @@
-from imagepy import IPy
 import numpy as np
-from imagepy.core.engine import Simple, Filter
+from sciapp.action import Simple, Filter
 import pandas as pd
 
 class Statistic(Simple):
@@ -32,7 +31,7 @@ class Statistic(Simple):
         titles = [i for i in titles if para[key[i]]]
         if para['nozero']: imgs = imgs[imgs!=0]
         data = self.count(imgs, para)
-        IPy.show_table(pd.DataFrame(data, columns=titles), ips.title+'-statistic')
+        self.app.show_table(pd.DataFrame(data, columns=titles), ips.title+'-statistic')
 
 class Frequence(Simple):
     title = 'Frequence 3D'
@@ -52,6 +51,6 @@ class Frequence(Simple):
         dt = [bins[:-1].round(2), ct, (ct/ct.sum()).round(4)]
         dt = list(zip(*dt))
 
-        IPy.show_table(pd.DataFrame(dt, columns=titles), ips.title+'-histogram')
+        self.app.show_table(pd.DataFrame(dt, columns=titles), ips.title+'-histogram')
 
 plgs = [Statistic, Frequence]

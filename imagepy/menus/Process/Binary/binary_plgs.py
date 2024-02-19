@@ -8,12 +8,13 @@ Created on Fri Nov 18 22:51:57 2016
 # -*- coding: utf-8 -*
 import scipy.ndimage as ndimg
 import numpy as np
-from imagepy.core.engine import Filter
+from sciapp.action import Filter
 from skimage.morphology import convex_hull_object
+from skimage.segmentation import clear_border
 
 class Closing(Filter):
-    """Closing: derived from imagepy.core.engine.Filter """
-    title = 'Binary Closeing'
+    """Closing: derived from sciapp.action.Filter """
+    title = 'Binary Closing'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
     para = {'w':3, 'h':3}
     view = [(int, 'w', (1,15), 0, 'width', 'pix'),
@@ -25,7 +26,7 @@ class Closing(Filter):
         img *= 255
         
 class Opening(Filter):
-    """Opening: derived from imagepy.core.engine.Filter """
+    """Opening: derived from sciapp.action.Filter """
     title = 'Binary Opening'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
     para = {'w':3, 'h':3}
@@ -38,7 +39,7 @@ class Opening(Filter):
         img *= 255
         
 class Dilation(Filter):
-    """Dilation: derived from imagepy.core.engine.Filter """
+    """Dilation: derived from sciapp.action.Filter """
     title = 'Binary Dilation'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
     para = {'w':3, 'h':3}
@@ -51,7 +52,7 @@ class Dilation(Filter):
         img *= 255
         
 class Erosion(Filter):
-    """Erosion: derived from imagepy.core.engine.Filter """
+    """Erosion: derived from sciapp.action.Filter """
     title = 'Binary Erosion'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
     para = {'w':3, 'h':3}
@@ -64,7 +65,7 @@ class Erosion(Filter):
         img *= 255
         
 class Outline(Filter):
-    """Outline: derived from imagepy.core.engine.Filter """
+    """Outline: derived from sciapp.action.Filter """
     title = 'Binary Outline'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
@@ -74,7 +75,7 @@ class Outline(Filter):
         img -= snap
         
 class FillHoles(Filter):
-    """FillHoles: derived from imagepy.core.engine.Filter """
+    """FillHoles: derived from sciapp.action.Filter """
     title = 'Fill Holes'
     note = ['8-bit', 'auto_msk', 'auto_snap','preview']
 
@@ -82,13 +83,20 @@ class FillHoles(Filter):
         ndimg.binary_fill_holes(snap, output=img)
         img *= 255
 
+class ClearBorder(Filter):
+    title = 'Clear Border'
+    note = ['8-bit', 'auto_msk', 'auto_snap']
+
+    def run(self, ips, snap, img, para = None):
+        clear_border(img, in_place=True)
+        
+
 class Convex(Filter):
     title = 'Binary ConvexHull'
     note = ['8-bit', 'auto_msk', 'auto_snap']
 
-    #process
     def run(self, ips, snap, img, para = None):
         img[convex_hull_object(snap)] = 255
         
 
-plgs = [Dilation, Erosion, '-', Closing, Opening, '-', Outline, FillHoles, Convex]
+plgs = [Dilation, Erosion, '-', Closing, Opening, '-', Outline, FillHoles, ClearBorder, Convex]

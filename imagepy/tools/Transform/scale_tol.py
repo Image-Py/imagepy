@@ -1,9 +1,12 @@
-import wx
 import numpy as np
-from imagepy.core.engine import Tool, Filter
+from sciapp.action import Filter
+from sciapp.action import ImageTool
+from sciapp.util import mark2shp, geom2shp
+from shapely.affinity import affine_transform
+from sciapp.object import ROI
 import scipy.ndimage as nimg
 
-class ScaleTool(Tool):
+class ScaleTool(ImageTool):
     def __init__(self, plg):
         self.plg = plg
         self.para = plg.para
@@ -25,19 +28,21 @@ class ScaleTool(Tool):
         return False
         
     def mouse_down(self, ips, x, y, btn, **key):  
-        lim = 5.0/key['canvas'].get_scale()  
+        lim = 5.0/key['canvas'].scale  
         self.moving = self.snap(x, y, lim)
         print(self.moving)
         
     def mouse_up(self, ips, x, y, btn, **key):
-        if self.moving : self.plg.preview(ips, self.para)
+        if self.moving : 
+            print('moving ==========')
+            self.plg.preview(ips, self.para)
         
     def mouse_move(self, ips, x, y, btn, **key):
-        lim = 5.0/key['canvas'].get_scale()
+        lim = 5.0/key['canvas'].scale
         if btn==None:
-            self.cursor = wx.CURSOR_CROSS
+            self.cursor = 'cross'
             if isinstance(self.snap(x, y, lim), str):
-                self.cursor = wx.CURSOR_HAND
+                self.cursor = 'hand'
         elif self.moving==True:
             self.plg.lt+=x-self.ox
             self.plg.rt+=x-self.ox
@@ -45,48 +50,46 @@ class ScaleTool(Tool):
             self.plg.tp+=y-self.oy
             self.ox, self.oy = x, y
             self.plg.count()
-            self.plg.dialog.reset()
-            ips.update = True
+            self.plg.make_mark()
+            ips.update()
         elif self.moving != False:
-            print("scale_tol.ScaleTool.mouse_move")
             if 'l' in self.moving:self.plg.lt = x
             if 'r' in self.moving:self.plg.rt = x
             if 't' in self.moving:self.plg.tp = y
             if 'b' in self.moving:self.plg.bm = y
             self.plg.count()
-            self.plg.dialog.reset()
-            ips.update = True
+            self.plg.make_mark()
+            ips.update()
 
 class Plugin(Filter):
     modal = False
     title = 'Scale'
     note = ['all', 'auto_msk', 'auto_snap', 'preview']
     para = {'kx': 1, 'ky':1, 'ox':0, 'oy':0, 'img':True, 'msk':False}
-    view = [(float, 'KX', (-100,100), 3, ''),
-            (float, 'kx', (-100,100), 3, 'KY', 'ky', ''),
+    view = [(float, 'kx', (-100,100), 3, 'KX', ''),
+            (float, 'ky', (-100,100), 3, 'KY', ''),
             (int, 'ox', (-10000,10000), 0, 'OffX', 'pix'),
             (int, 'oy', (-10000,10000), 0, 'OffY', 'pix'),
             (bool, 'img', 'scale image'),
             (bool, 'msk', 'scale mask')]
+        
+    def make_mark(self):
+        mark = {'type':'layer', 'body':[
+            {'type':'rectangle', 'color':(0,255,0), 
+            'body':(self.lt, self.tp, self.rt-self.lt, self.bm-self.tp)},
+            {'type':'points', 'color':(0,255,0), 'body':[(self.lt, self.tp), 
+            (self.lt, self.bm), (self.rt, self.tp), (self.rt, self.bm), 
+            (self.lt, (self.tp+self.bm)/2), (self.rt, (self.tp+self.bm)/2),
+            ((self.lt+self.rt)/2, self.tp), ((self.lt+self.rt)/2, self.bm)]}
+        ]}
+        self.ips.mark = mark2shp(mark)
 
-        
-    def draw(self, dc, f, **key):
-        body = [(self.lt,self.bm),(self.rt,self.bm),
-                (self.rt,self.tp),(self.lt,self.tp),(self.lt,self.bm)]
-        dc.SetPen(wx.Pen((0,255,0), width=1, style=wx.SOLID))
-        dc.DrawLines([f(*i) for i in body])
-        for i in body:dc.DrawCircle(f(*i),2)
-        dc.DrawCircle(f(self.lt, (self.tp+self.bm)/2),2)
-        dc.DrawCircle(f(self.rt, (self.tp+self.bm)/2),2)
-        dc.DrawCircle(f((self.lt+self.rt)/2, self.tp),2)
-        dc.DrawCircle(f((self.lt+self.rt)/2, self.bm),2)
-        
     def load(self, ips):      
         self.bufroi = ips.roi
-        self.lt, self.tp, self.rt, self.bm = 0, 0, ips.size[1], ips.size[0]
+        self.lt, self.tp, self.rt, self.bm = 0, 0, ips.shape[1], ips.shape[0]
         
         if ips.roi!=None:
-            box = ips.roi.get_box()
+            box = ips.roi.box
             if box[0]!=box[2] and box[1]!=box[3]:
                 self.lt, self.tp, self.rt, self.bm = box
 
@@ -97,15 +100,15 @@ class Plugin(Filter):
         self.para['oy'] = (self.tp+self.bm)/2
         self.para['kx'] = self.para['ky'] = 1
         
-        ips.mark = self
-        ips.update = True
-        ips.tool = ScaleTool(self)
+        self.make_mark()
+        ips.update()
+        ips.tool = ScaleTool(self).start(self.app, 'local')
         return True
         
     def count(self, dir=True):
         if dir:
-            self.para['ox'] = int((self.lt+self.rt)/2)
-            self.para['oy'] = int((self.tp+self.bm)/2)
+            self.para['ox'] = (self.lt+self.rt)/2
+            self.para['oy'] = (self.tp+self.bm)/2
             self.para['kx'] = (self.rt-self.lt)*1.0/self.oriw
             self.para['ky'] = (self.tp-self.bm)*1.0/self.orih
         else:
@@ -115,17 +118,18 @@ class Plugin(Filter):
             self.tp = self.para['oy']+self.orih*self.para['ky']/2
 
     def ok(self, ips, para=None):
+        ips.mark = ips.tool = None
         Filter.ok(self, ips, para)
-        ips.mark = None
-        ips.tool = None
         
     def cancel(self, ips):
         Filter.cancel(self, ips)
         ips.roi = self.bufroi
-        ips.mark = None
-        ips.tool = None
-        ips.update = 'pix'
+        ips.mark = ips.tool = None
         
+    def preview(self, ips, para):
+        Filter.preview(self, ips, para)
+        self.make_mark()
+
     def run(self, ips, img, buf, para = None):
         if para == None: para = self.para
         self.count(False)
@@ -135,8 +139,7 @@ class Plugin(Filter):
         if self.para['img']:
             nimg.affine_transform(img, trans, output=buf, offset=offset)
         trans = np.array([[self.para['kx'],0],[0, self.para['ky']]])
-        offset = o[::-1]-trans.dot(self.orio)
-        if self.para['msk'] and self.bufroi!=None:ips.roi = self.bufroi.affine(trans, offset)
-        if self.para['img'] and not ips.get_msk('out') is None: 
-            buf[ips.get_msk('out')] = img[ips.get_msk('out')]
-        ips.update = True
+        if self.para['msk'] and self.bufroi!=None:
+            m, o = trans, o[::-1]-trans.dot(self.orio)
+            mat = [m[0,0], m[0,1], m[1,0], m[1,1], o[0], o[1]]
+            ips.roi = ROI(geom2shp(affine_transform(self.bufroi.to_geom(), mat)))

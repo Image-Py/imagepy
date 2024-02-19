@@ -1,0 +1,57 @@
+Windows Style::窗口样式
+	Shown in ImageJ style when next setup!::下次启动将会以ImageJ风格展示
+	Shown in ImagePy style when next setup!::下次启动将会以ImagePy风格展示
+
+Pay Tribute To ImageJ::ImageJ布局风格
+
+Elegant ImagePy Style::ImagePy布局风格
+
+Kill Image::关闭图像
+	name::图像名称
+	close all images::关闭所有图像
+	OK::确认
+	cancel::取消
+	Help::帮助
+
+Kill Table::关闭表格
+	name::表格名称
+	close all tables::关闭所有表格
+
+Widgets::控件列表
+
+Toolbar::工具栏
+
+Tables Window::表格窗口
+
+Macros Recorder::宏记录器
+
+Command Line::命令行
+
+Plugin List View::插件列表
+
+Plugin Tree View::插件树浏览
+
+Tool Tree View::工具树形图
+
+Develop Tool Sute::开发工具集
+	Plugin Tree View::插件树浏览
+	Tool Tree View::工具树浏览
+	Plugin List View::插件列表
+	Shortcut Editor::快捷键编辑器
+	Macros Recorder::宏录制器
+	Command Line::命令行
+	Search::搜索
+	Name::名称
+	Author::作者
+	Version::版本
+	Status::状态
+	installed::已安装
+	only installed::只显示已安装
+	Install::安装
+	Update::更新
+	Remove::移除
+	Plugin Information::插件信息
+	[SourceCode]::[查看源码]
+	Tool Information::插件信息
+	[SourceCode]::[查看源码]
+	Search::搜索

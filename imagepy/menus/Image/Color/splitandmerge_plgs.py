@@ -3,11 +3,8 @@
 Created on Sat Dec 17 10:49:15 2016
 @author: yxl
 """
-from imagepy import IPy
 import numpy as np
-from imagepy.ui.canvasframe import CanvasFrame
-from imagepy.core.manager import ImageManager
-from imagepy.core.engine import Simple
+from sciapp.action import Simple
 from skimage import color
 
 class SplitRGB(Simple):
@@ -20,15 +17,15 @@ class SplitRGB(Simple):
     #process
     def run(self, ips, imgs, para = None):
         r,g,b = [],[],[]
-        for i,n in zip(imgs,list(range(ips.get_nslices()))):
+        for i,n in zip(imgs,list(range(ips.slices))):
             for c,ci in zip((r,g,b),(0,1,2)):
                 if self.para['copy']:c.append(i[:,:,ci].copy())
                 else: c.append(i[:,:,ci])
-            self.progress(i, n)
+            self.progress(n+1, len(imgs))
         for im, tl in zip([r,g,b],['red','green','blue']):
-            IPy.show_img(im, ips.title+'-'+tl)
+            self.app.show_img(im, ips.title+'-'+tl)
         if self.para['destory']:
-            ImageManager.close(ips.title)
+            self.app.close_img(ips.title)
 
 class ToRGB(Simple):
     title = 'RGB to RGB'
@@ -39,36 +36,34 @@ class ToRGB(Simple):
 
     def load(self, ips):
         r, g, b = self.titles()[1:]
-        self.view = [('img', r, 'red', ''),
-                    ('img', g, 'green', ''),
-                    ('img', b, 'blue', ''),
+        self.view = [('img', 'red', r, ''),
+                    ('img', 'green', g, ''),
+                    ('img', 'blue', b, ''),
                     (bool, 'destory', 'destory')]
         return True
     
-    def titles(self): return 'RGB-Merge', 'Red', 'Green', 'Blue'
+    def titles(self): return 'RGB-Merge', 'red', 'green', 'blue'
 
     def trans(self, img1, img2, img3):
         return np.array([img1.T, img2.T, img3.T], dtype=np.uint8).T
     
     def run(self, ips, imgs, para = None):
         idx = ['red','green','blue']
-        imr,img,imb = [ImageManager.get(para[i]) for i in idx]
-        sr,sg,sb = [i.get_nslices() for i in [imr,img,imb]]
+        imr, img, imb = [self.app.get_img(para[i]) for i in idx]
+        sr,sg,sb = [i.slices for i in [imr,img,imb]]
         
-        if imr.imgtype!='8-bit' or img.imgtype!='8-bit' or imb.imgtype!='8-bit' or \
-            imr.size!=img.size or img.size!=imb.size or sr!=sg or sg!=sb:
-            IPy.alert('three images must be 8-bit image, with the same size and  slices!')
-            return
+        if imr.dtype!=np.uint8 or img.dtype!=np.uint8 or imb.dtype!=np.uint8 or \
+            imr.shape!=img.shape or img.shape!=imb.shape or sr!=sg or sg!=sb:
+            return self.app.alert('three images must be 8-bit image, with the same size and  slices!')
             
         rgbs = []
-        w,h = imr.size
+        w,h = imr.shape
         for i in range(sr):
             self.progress(i,sr)
             rgbs.append(self.trans(imr.imgs[i], img.imgs[i], imb.imgs[i]))
-        IPy.show_img(rgbs, self.titles()[0])
+        self.app.show_img(rgbs, self.titles()[0])
         if self.para['destory']:
-            for title in [para[i] for i in idx]:
-                ImageManager.close(title)
+            for title in [para[i] for i in idx]: self.app.close_img(title)
 
 class RGB2(Simple):
     title = 'RGB To RGB'
@@ -81,14 +76,14 @@ class RGB2(Simple):
 
     def run(self, ips, imgs, para = None):
         nr, ng, nb = [],[],[]
-        for i in range(ips.get_nslices()):
+        for i in range(ips.slices):
             nrgb = self.trans(imgs[i])
             nr.append(nrgb[:,:,0])
             ng.append(nrgb[:,:,1])
             nb.append(nrgb[:,:,2])
             self.progress(i, len(imgs))
         for im, tl in zip([nr, ng, nb], self.titles()):
-            IPy.show_img(im, ips.title+'-'+tl)
+            self.app.show_img(im, ips.title+'-'+tl)
 
 class MergeRGB(ToRGB):
     title = 'Merge RGB Channels'
@@ -102,7 +97,6 @@ class RGB2HSV(RGB2):
     def trans(self, img):
         rst = color.rgb2hsv(img)
         rst *= 255
-        print('============', rst.min(), rst.max())
         return rst.astype(np.uint8)
 
 class HSV2RGB(ToRGB):
@@ -184,7 +178,6 @@ class RGB2Lab(RGB2):
 
     def trans(self, img):
         rst = color.rgb2lab(img)
-        print('============', rst.min(), rst.max())
         rst+=100; rst*=(255/200.0)
         return (rst).astype(np.uint8)
 
@@ -208,10 +201,10 @@ class RGB2Gray(Simple):
 
     def run(self, ips, imgs, para = None):
         gray = []
-        for i in range(ips.get_nslices()):
+        for i in range(ips.slices):
             gray.append(color.rgb2gray(imgs[i])*255)
             self.progress(i, len(imgs))
-        IPy.show_img(gray, ips.title+'-Gray')
+        self.app.show_img(gray, ips.title+'-Gray')
 
 # ============= RGB - XYZ ============
 class RGB2XYZ(RGB2):
@@ -223,7 +216,6 @@ class RGB2XYZ(RGB2):
 
     def trans(self, img):
         rst = color.rgb2xyz(img)
-        print('============', rst.min(), rst.max())
         return (rst*(200)).astype(np.uint8)
 
 class XYZ2RGB(ToRGB):
@@ -235,7 +227,6 @@ class XYZ2RGB(ToRGB):
 
     def trans(self, img1, img2, img3):
         rst = color.xyz2rgb(np.array((img1.T, img2.T, img3.T)).T/200.0)*255
-        #print('============', rst.min(), rst.max())
         return rst.astype(np.uint8)
 
 plgs = [RGB2Gray, '-', SplitRGB, MergeRGB, '-', RGB2HSV, HSV2RGB, '-', RGB2CIE, CIE2RGB, '-', RGB2LUV, LUV2RGB, '-', RGB2Lab, Lab2RGB, '-', RGB2XYZ, XYZ2RGB]

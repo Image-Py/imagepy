@@ -1,4 +1,4 @@
-import sys, os
-sys.path.append('..')
-import imagepy
-imagepy.show()
+import sys
+sys.path.append('../')
+from imagepy.app import startup
+startup.start()

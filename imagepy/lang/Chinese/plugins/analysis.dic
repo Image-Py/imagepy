@@ -1,0 +1,181 @@
+Label Image::区域标记
+
+Mark Boundaries::标记边界
+	structure::联通
+	connect::邻域
+	slice::序列
+	mode::边界模式
+
+Label Render::标记着色
+	structure::联通
+	connect::邻域
+	colors::颜色数量
+	background::标记背景
+	slice::序列
+
+Frequence::频数统计
+	count frequence::统计频率
+	slice::序列
+
+Pixel Statistic::像素统计
+	max::最大值
+	min::最小值
+	mean::平均值
+	var::方差
+	std::标准差
+	slice::序列
+
+Histogram::直方图
+
+Points Value::ROI灰度
+	buffer by the value::以中心为中心，灰度为半径
+	slice::序列
+
+Shortest Route::最小代价路径
+	step::几何距离
+	cost::权重
+	output::输出类型
+	geometric::几何
+	fully connected::允许走对角线
+	max cost::最大代价
+
+Pixel Cluster::像素聚类
+
+Gray Cluster::灰度聚类
+	torlerance::容错
+	use cov instead of distance::使用协方差椭圆
+	only points within::仅提取与种子点联通的区域
+	result as new mask::结果作为掩膜
+	mask::掩膜方式
+
+Color Cluster::色彩聚类
+	torlerance::容错
+	use cov instead of distance::使用协方差椭圆
+	only points within::仅提取与种子点联通的区域
+	result as new mask::结果作为掩膜
+	mask::掩膜方式
+
+Gray Cluster 3D::3D灰度图聚类
+	torlerance::容错
+	use cov instead of distance::使用协方差椭圆
+	only points within::仅提取与种子点联通的区域
+	result as new mask::结果作为掩膜
+	mask::掩膜方式
+
+Color Cluster 3D::3D彩色图聚类
+	torlerance::容错
+	use cov instead of distance::使用协方差椭圆
+	only points within::仅提取与种子点联通的区域
+	result as new mask::结果作为掩膜
+	mask::掩膜方式
+
+Gray Points Statistic::灰度ROI统计
+
+Color Points Statistic::彩色图ROI统计
+
+K-Means::K均值聚类
+	k::质心数
+	iterate::迭代次数
+	threshold::变化阈值
+	resample::采样间隔
+
+Region Analysis::区域分析
+
+Geometry Analysis::几何分析
+	conection::联通
+	pix::邻域
+	slice::序列
+	=========  indecate  =========::=========  指标  =========
+	center::质心
+	area::面积
+	perimeter::周长
+	extent::外接矩形
+	equivalent diameter::等效直径
+	convex area::凸包面积
+	holes::镂空
+	filled area::填充面积
+	solidity::丰满度
+	cov::质量协方差
+
+Geometry Filter::几何特征过滤
+	front color::前景色
+	back color::背景色
+	area::面积
+	perimeter::周长
+	holes::镂空数
+	solidity::丰满度
+	eccentricity::偏心率
+	ratio::比例
+	unit::单位
+	unit^2::单位^2
+	invert::过滤黑色区域
+	conection::联通
+	pix::邻域
+	num::个
+	Filter: "+" means >=, "-" means <::"+" 代表 >=, "-" 代表 <
+
+Property Marker::属性标记
+	conection::联通
+	property::染色属性
+	color map::色谱
+	pix::邻域
+
+Connective Analysis::区域邻接分析
+	conection::联通
+	pix::邻域
+	it is a label image::图像已标记
+	nonzero::只分析非0区域
+	slice::序列
+
+Intensity Analysis::区域灰度分析
+	intensity::目标图像
+	conection::联通
+	pix::邻域
+	slice::序列
+	has labeled::图像已标记
+	=========  indecate  =========::=========  指标  =========
+	center::质心
+	extent::外接矩
+	max::最大值
+	min::最小值
+	mean::平均值
+	standard::标准差
+	sum::求和
+
+Intensity Filter::区域灰度过滤
+	intensity::目标图像
+	conection::联通
+	pix::邻域
+	slice::序列
+	Filter: "+" means >=, "-" means <::"+" 代表 >=, "-" 
+	front color::前景色
+	back color::背景色
+	max::最大值
+	min::最小值
+	mean::平均值
+	std::标准差
+	sum::求和
+
+Skeleton Network::骨架网络
+
+Graph Statistic::边，节点统计
+
+Build Graph::从骨架建立图
+
+Graph Summarise::图信息汇总
+
+Remove Isolate Node::移除孤立节点
+
+Remove 2Path Node::移除双路径节点
+
+Cut Branch::分支剪切
+	limit::阈值
+	unit::单位
+	recursion::递归剪枝
+
+Cut By ROI::用ROI剪枝
+
+Graph Shortest Path::图最短路径
+	start::出发
+	end::到达
+	id::编号

@@ -1,30 +1,24 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 16 12:12:43 2016
+from sciapp.action import ImageTool
 
-@author: yxl
-"""
-import wx
-from imagepy.core.engine import Tool
-
-class Plugin(Tool):
-    title = 'Move'
-    def __init__(self):
-        self.ox, self.oy = 0, 0
-        self.cursor = wx.CURSOR_HAND
-            
-    def mouse_down(self, ips, x, y, btn, **key):
-        self.ox, self.oy = key['canvas'].to_panel_coor(x,y)
-    
-    def mouse_up(self, ips, x, y, btn, **key):
-        pass
-    
-    def mouse_move(self, ips, x, y, btn, **key):
-        if btn==None:return
-        x,y = key['canvas'].to_panel_coor(x,y)
-        key['canvas'].move(x-self.ox, y-self.oy)
-        self.ox, self.oy = x,y
+class Plugin(ImageTool):
+    title = 'Move And Scale'
+    def __init__(self): 
+        self.oldxy = None
         
-    def mouse_wheel(self, ips, x, y, d, **key):
-        if d>0:key['canvas'].zoomout(x,y)
-        if d<0:key['canvas'].zoomin(x,y)
+    def mouse_down(self, obj, x, y, btn, **key):
+        if btn==1: self.oldxy = key['px'], key['py']
+        if btn==3: key['canvas'].fit()
+        
+    def mouse_up(self, obj, x, y, btn, **key):
+        self.oldxy = None
+    
+    def mouse_move(self, obj, x, y, btn, **key):
+        if self.oldxy is None: return
+        ox, oy = self.oldxy
+        up = (1,-1)[key['canvas'].up]
+        key['canvas'].move(key['px']-ox, (key['py']-oy)*up)
+        self.oldxy = key['px'], key['py']
+    
+    def mouse_wheel(self, obj, x, y, d, **key):
+        if d>0: key['canvas'].zoomout(x, y, coord='data')
+        if d<0: key['canvas'].zoomin(x, y, coord='data')

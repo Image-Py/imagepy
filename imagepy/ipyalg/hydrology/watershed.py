@@ -1,7 +1,7 @@
 import numpy as np
 from numba import jit
 from scipy.ndimage import label, generate_binary_structure
-from scipy.misc import imread, imsave
+from skimage.io import imread, imsave
 
 def neighbors(shape, conn=1):
     dim = len(shape)
@@ -13,7 +13,7 @@ def neighbors(shape, conn=1):
     acc = np.cumprod((1,)+shape[::-1][:-1])
     return np.dot(idx, acc[::-1])
 
-@jit
+@jit(nopython=True)
 def step(img, msk, line, pts, s, level, up, nbs):
     cur = 0
     while cur<s:
@@ -42,7 +42,7 @@ def step(img, msk, line, pts, s, level, up, nbs):
         cur+=1
     return cur
 
-@jit
+@jit(nopython=True)
 def clear(pts, s, cur):
     ns = 0; nc=0;
     for c in range(s):
@@ -52,7 +52,7 @@ def clear(pts, s, cur):
             if c<cur:nc += 1
     return ns, nc
         
-@jit
+@jit(nopython=True)
 def collect(img, mark, nbs, pts):
     bins = np.zeros(img.max()+1, dtype=np.uint32)
     cur = 0
@@ -67,7 +67,7 @@ def collect(img, mark, nbs, pts):
                 break
     return cur, bins
 
-@jit
+@jit(nopython=True)
 def erose(mark):
     for i in range(len(mark)):
         if mark[i]>0xfffffff0:mark[i]=0
@@ -113,11 +113,11 @@ if __name__ == '__main__':
     markers[coins > 150] = 2
     plt.imshow(markers)
     plt.show()
-    watershed(dem, markers)
+    markers = watershed(dem, markers)
     plt.imshow(markers)
     plt.show()
     '''
-    from scipy.misc import imread
+    from skimage.io import imread
     import matplotlib.pyplot as plt
     from time import time
     

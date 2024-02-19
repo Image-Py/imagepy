@@ -1,10 +1,10 @@
 import wx
-from imagepy.core.engine import Tool
-from imagepy.core import myvi
-from imagepy import IPy
+from sciapp.action import ImageTool
+#from imagepy.core import myvi
+#from imagepy import IPy
 import numpy as np
 
-class Plugin(Tool):
+class Plugin(ImageTool):
     title = 'Cursor 3D'
     para = {'r':1, 'color':(255,0,0)}
     view = [(int, 'r', (0,100), 0,  'radius', 'pix'),
@@ -56,6 +56,6 @@ class Plugin(Tool):
                 ips.cur+=1
         if d<0:
             if ips.cur>0:ips.cur-=1
-        ips.update = 'pix'
+        ips.update()
         if not self.pressed: return
         self.set_cursor(y, ips.cur, x)

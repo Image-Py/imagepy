@@ -1,6 +1,5 @@
-from imagepy.core.engine import Filter
-from skimage.measure import marching_cubes_lewiner, mesh_surface_area
-from imagepy import IPy
+from sciapp.action import Filter
+from skimage.measure import marching_cubes, mesh_surface_area
 import numpy as np
 import pandas as pd
 
@@ -24,11 +23,11 @@ class Plugin(Filter):
     def preview(self, ips, para):
         ips.lut[:] = self.buflut
         ips.lut[:para['thr']] = [255,0,0]
-        ips.update = 'pix'
+        ips.update()
 
     def cancel(self, ips):
         ips.lut = self.buflut
-        ips.update = 'pix'
+        ips.update()
 
     def run(self, ips, snap, img, para = None):
         ips.lut = self.buflut
