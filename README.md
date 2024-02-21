@@ -46,7 +46,17 @@ In a command-prompt type `pip install imagepy`.
 ~~On Windows you currently need to first install shapely using conda.~~ This should also work for windows, now that shapely is available via pip.
 Once installed, ImagePy can be run by typing `python -m imagepy` in a command prompt.
 
+#### An Example of Installation on Ubuntu 22.04.3
 
+```Bash
+git clone https://github.com/Image-Py/imagepy.git
+cd imagepy
+sudo apt-get install libsdl2-2.0-0 libwxgtk3.0-gtk3-dev libwxgtk3.0-gtk3
+pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04 wxPython
+pip install shapely pystackreg vispy -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+python -m imagepy
+```
 
 ## Citation：
 [ImagePy: an open-source, Python-based and platform-independent software package for bioimage analysis](https://academic.oup.com/bioinformatics/article/34/18/3238/4989871)
